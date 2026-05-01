@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>15 — Medical & Emergencies</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Medical & Emergencies</h1>
+    <div class="subtitle">Lesson 15 · רפואה וחירום</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="14-restaurant-food.html">14</a>
+    <a href="15-medical-emergencies.html" class="active">15</a>
+    <a href="16-modal-verbs.html">16</a>
+  </div>
+</header>
+
+<p class="intro">
+  Vocabulary for describing symptoms, understanding a doctor, and reacting in emergencies. Includes Israeli emergency numbers and Kupot Cholim (health funds) terminology.
+</p>
+
+<div class="tip">
+  <strong>Israeli emergency numbers</strong> — 100 (police, mishtara) · 101 (ambulance / Magen David Adom, מָגֵן דָּוִד אָדוֹם) · 102 (fire, kabaut) · 1221 (anti-terror line).
+</div>
+
+<h2>Emergency Numbers & Services</h2>
+<div class="word-list" id="emergency"></div>
+
+<h2>Common Symptoms</h2>
+<div class="word-list" id="symptoms"></div>
+
+<h2>Medical Staff</h2>
+<div class="word-list" id="staff"></div>
+
+<h2>Medical Places</h2>
+<div class="word-list" id="places"></div>
+
+<h2>Medication & Care</h2>
+<div class="word-list" id="medication"></div>
+
+<h2>Health Funds (Kupot Cholim)</h2>
+
+<div class="tip">
+  <strong>4 main funds</strong> — כְּלָלִית (Clalit, biggest, ~50%) · מַכַּבִּי (Maccabi, ~25%) · מְאוּחֶדֶת (Meuhedet, ~15%) · לְאוּמִית (Leumit, ~10%). You choose yours within 6 months of arrival.
+</div>
+
+<div class="word-list" id="funds"></div>
+
+<hr class="section-divider">
+
+<h2>Emergency Phrases — Memorize These</h2>
+<div class="word-list" id="emergency-phrases"></div>
+
+<h2>At the Doctor's</h2>
+<div class="word-list" id="doctor-phrases"></div>
+
+<footer>
+  Lesson 15 · medical + emergencies · <a href="16-modal-verbs.html" style="color:var(--accent)">Next: Modal Verbs →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const EMERGENCY = [
+  { he: 'מִשְׁטָרָה',           translit: 'mishtara',         fr: '100 — police' },
+  { he: 'מָגֵן דָּוִד אָדוֹם', translit: 'magen david adom', fr: '101 — ambulance / EMS' },
+  { he: 'כַּבָּאוּת',           translit: 'kabaut',           fr: '102 — fire department' },
+  { he: 'אַמְבּוּלַנְס',        translit: 'ambulans',         fr: 'ambulance' },
+  { he: 'חֵירוּם',              translit: 'cheyrum',          fr: 'emergency' }
+];
+
+const SYMPTOMS = [
+  { he: 'כּוֹאֵב לִי',     translit: "ko'ev li",      fr: 'I have pain (m. or general)' },
+  { he: 'כְּאֵב רֹאשׁ',    translit: "k'ev rosh",     fr: 'headache' },
+  { he: 'כְּאֵב בֶּטֶן',   translit: "k'ev beten",    fr: 'stomachache' },
+  { he: 'כְּאֵב גָּרוֹן',  translit: "k'ev garon",    fr: 'sore throat' },
+  { he: 'כְּאֵב שִׁנַּיִם', translit: "k'ev shinayim", fr: 'toothache' },
+  { he: 'חֹם',              translit: 'chom',          fr: 'fever' },
+  { he: 'שַׁפַּעַת',        translit: "shapa'at",      fr: 'flu' },
+  { he: 'הִצְטַנֵּן',       translit: 'hitztanen',     fr: 'cold / to catch cold' },
+  { he: 'שִׁעוּל',           translit: "shi'ul",        fr: 'cough' },
+  { he: 'בְּחִילָה',         translit: 'bechila',       fr: 'nausea' },
+  { he: 'הֲקָאָה',           translit: "haka'a",        fr: 'vomiting' },
+  { he: 'שִׁלְשׁוּל',        translit: 'shilshul',      fr: 'diarrhea' },
+  { he: 'סְחַרְחֹרֶת',       translit: 'scharchoret',   fr: 'dizziness' },
+  { he: 'אֲלֶרְגְּיָה',      translit: 'alergya',       fr: 'allergy' },
+  { he: 'פֶּצַע',            translit: 'petza',         fr: 'wound / injury' },
+  { he: 'דָּם',              translit: 'dam',           fr: 'blood' }
+];
+
+const STAFF = [
+  { he: 'רוֹפֵא',            translit: 'rofe',           fr: 'doctor (m.)' },
+  { he: 'רוֹפְאָה',          translit: 'rof\'a',         fr: 'doctor (f.)' },
+  { he: 'רוֹפֵא מִשְׁפָּחָה', translit: 'rofe mishpacha', fr: 'family doctor' },
+  { he: 'מוּמְחֶה',          translit: 'mumche',         fr: 'specialist' },
+  { he: 'אָחוֹת',            translit: 'achot',          fr: 'nurse (f.)' },
+  { he: 'אָח',               translit: 'ach',            fr: 'nurse (m.)' },
+  { he: 'רוֹקֵחַ',           translit: "roke'ach",       fr: 'pharmacist' },
+  { he: 'רוֹפֵא שִׁנַּיִם', translit: 'rofe shinayim',  fr: 'dentist' },
+  { he: 'מַטַפֵּל',          translit: 'metapel',        fr: 'caregiver / therapist' }
+];
+
+const PLACES = [
+  { he: 'בֵּית חוֹלִים',  translit: 'beit cholim',  fr: 'hospital' },
+  { he: 'מִיוֹן',         translit: 'miyun',        fr: 'ER (lit. "triage")' },
+  { he: 'קוּפַּת חוֹלִים', translit: 'kupat cholim', fr: 'health fund / HMO' },
+  { he: 'מִרְפָּאָה',     translit: 'mirpa\'a',     fr: 'clinic' },
+  { he: 'בֵּית מִרְקַחַת', translit: 'beit mirkachat', fr: 'pharmacy' },
+  { he: 'חֲדַר רוֹפֵא',   translit: 'chadar rofe',  fr: "doctor's office" },
+  { he: 'מַעְבָּדָה',     translit: "ma'abada",     fr: 'lab' }
+];
+
+const MEDICATION = [
+  { he: 'תְּרוּפָה',        translit: 'trufa',           fr: 'medication' },
+  { he: 'כַּדּוּר',          translit: 'kadur',           fr: 'pill / tablet' },
+  { he: 'אַנְטִיבּיוֹטִיקָה', translit: 'antibiotika',    fr: 'antibiotic' },
+  { he: 'מִשְׁחָה',          translit: 'mishcha',         fr: 'ointment' },
+  { he: 'טִפּוֹת',           translit: 'tipot',           fr: 'drops' },
+  { he: 'מִרְשָׁם',          translit: 'mirsham',         fr: 'prescription' },
+  { he: 'בְּדִיקָה',         translit: 'bedika',          fr: 'exam / test' },
+  { he: 'בְּדִיקַת דָּם',    translit: 'bedikat dam',     fr: 'blood test' },
+  { he: 'צִילּוּם',          translit: 'tzilum',          fr: 'X-ray / scan' },
+  { he: 'חִסּוּן',           translit: 'chisun',          fr: 'vaccine' },
+  { he: 'כּוֹאֵב',           translit: "ko'ev",           fr: 'painful' },
+  { he: 'רָגוּעַ',           translit: "ragu'a",          fr: 'calm' }
+];
+
+const FUNDS = [
+  { he: 'כְּלָלִית',           translit: 'klalit',           fr: 'Clalit (biggest fund)' },
+  { he: 'מַכַּבִּי',           translit: 'maccabi',          fr: 'Maccabi' },
+  { he: 'מְאוּחֶדֶת',          translit: 'meuhedet',         fr: 'Meuhedet' },
+  { he: 'לְאוּמִית',           translit: 'leumit',           fr: 'Leumit' },
+  { he: 'תָּעוּדַת חָבֵר',    translit: 'teudat chaver',    fr: 'membership card' },
+  { he: 'בִּיטוּחַ',           translit: 'bituach',          fr: 'insurance' },
+  { he: 'הִשְׁתַּתְּפוּת עַצְמִית', translit: 'hishtatfut atzmit', fr: 'co-pay / deductible' }
+];
+
+const EMERGENCY_PHRASES = [
+  { he: 'תַּעֲזֹר!',                       translit: 'taazor!',                fr: 'help me! (to a m.)' },
+  { he: 'תַּעַזְרִי!',                     translit: 'taazri!',                fr: 'help me! (to a f.)' },
+  { he: 'תִּקְרָא לְאַמְבּוּלַנְס!',      translit: 'tikra le-ambulans!',     fr: 'call an ambulance! (m.)' },
+  { he: 'אֲנִי צָרִיךְ רוֹפֵא',           translit: 'ani tzarich rofe',       fr: 'I need a doctor (m.)' },
+  { he: 'זֶה דָּחוּף',                     translit: 'ze dachuf',              fr: "it's urgent" },
+  { he: 'יֵשׁ פֶּצַע',                     translit: 'yesh petza',             fr: "there's an injury" },
+  { he: 'אִי אֶפְשָׁר לְהֵרָדֵם',         translit: 'i efshar leheradem',     fr: "I can't sleep" },
+  { he: 'אֲנִי לֹא נוֹשֵׁם טוֹב',         translit: 'ani lo noshem tov',      fr: "I'm not breathing well (m.)" }
+];
+
+const DOCTOR_PHRASES = [
+  { he: 'אֲנִי לֹא מַרְגִּישׁ טוֹב',       translit: 'ani lo margish tov',     fr: "I don't feel well (m.)" },
+  { he: 'יֵשׁ לִי חֹם',                     translit: 'yesh li chom',           fr: 'I have a fever' },
+  { he: 'כּוֹאֵב לִי הָרֹאשׁ',             translit: "ko'ev li ha-rosh",       fr: 'my head hurts' },
+  { he: 'מֵאֵיזֶה זְמַן זֶה כּוֹאֵב?',     translit: "me-eyze zman ze ko'ev?", fr: 'how long has it hurt?' },
+  { he: 'אֲנִי לוֹקֵחַ תְּרוּפָה',         translit: "ani loke'ach trufa",     fr: "I'm taking medication (m.)" },
+  { he: 'יֵשׁ לִי אֲלֶרְגְּיָה',           translit: 'yesh li alergya',        fr: "I have an allergy" },
+  { he: 'אֲנִי בָּרִיא',                    translit: 'ani bari',               fr: "I'm healthy (m.)" },
+  { he: 'אֲנִי בְּרִיאָה',                  translit: 'ani bri\'a',             fr: "I'm healthy (f.)" },
+  { he: 'תֵּן לִי מִרְשָׁם',                translit: 'ten li mirsham',         fr: "give me a prescription (m.)" },
+  { he: 'הַחְלָמָה מְהִירָה',              translit: 'hachlama mehira',        fr: 'speedy recovery' },
+  { he: 'לִבְרִיאוּת',                     translit: 'livriut',                fr: 'bless you / to your health' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('emergency', EMERGENCY);
+renderRows('symptoms', SYMPTOMS);
+renderRows('staff', STAFF);
+renderRows('places', PLACES);
+renderRows('medication', MEDICATION);
+renderRows('funds', FUNDS);
+renderRows('emergency-phrases', EMERGENCY_PHRASES);
+renderRows('doctor-phrases', DOCTOR_PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) {
+    count++;
+    if (count >= 20) markLessonDone('medical');
+  }
+});
+
+addExtraVocab('Medical Specialists & Places', [
+  { he: 'רוֹפֵא מִשְׁפָּחָה', translit: 'rofe mishpacha', fr: 'family doctor' },
+  { he: 'רוֹפֵא יְלָדִים', translit: 'rofe yeladim', fr: 'pediatrician' },
+  { he: 'רוֹפֵא נָשִׁים', translit: 'rofe nashim', fr: 'gynecologist' },
+  { he: 'רוֹפֵא שִׁנַּיִם', translit: 'rofe shinayim', fr: 'dentist' },
+  { he: 'רוֹפֵא עוֹר', translit: 'rofe or', fr: 'dermatologist' },
+  { he: 'אַף-אֹזֶן-גָּרוֹן', translit: 'af-ozen-garon', fr: 'ENT specialist' },
+  { he: 'אוֹרְתוֹפֵּד', translit: 'ortoped', fr: 'orthopedist' },
+  { he: 'פְּסִיכִיאָטֵר', translit: 'psichiater', fr: 'psychiatrist' },
+  { he: 'פִיזְיוֹתֵרָפִּיסְט', translit: 'fiziyoterapist', fr: 'physiotherapist' },
+  { he: 'מִיוּן', translit: 'miyun', fr: 'ER (emergency room)' },
+  { he: 'בֵּית חוֹלִים', translit: 'beit cholim', fr: 'hospital' },
+  { he: 'מִרְפָּאָה', translit: 'mirpa\'a', fr: 'clinic' },
+  { he: 'מַעְבָּדָה', translit: 'ma\'abada', fr: 'lab (for blood tests)' },
+  { he: 'אַחֵרת', translit: 'achot', fr: 'nurse (f.)' },
+  { he: 'אַח', translit: 'ach', fr: 'nurse (m.) / brother' }
+]);
+
+addExtraVocab('More Body Parts & Symptoms', [
+  { he: 'כְּאֵב גַּב', translit: 'ke\'ev gav', fr: 'back pain' },
+  { he: 'כְּאֵב רֹאשׁ', translit: 'ke\'ev rosh', fr: 'headache' },
+  { he: 'כְּאֵב גָּרוֹן', translit: 'ke\'ev garon', fr: 'sore throat' },
+  { he: 'כְּאֵב בֶּטֶן', translit: 'ke\'ev beten', fr: 'stomach ache' },
+  { he: 'בְּחִילָה', translit: 'bchila', fr: 'nausea' },
+  { he: 'הֲקָאָה', translit: 'haka\'a', fr: 'vomiting' },
+  { he: 'שִׁלְשׁוּל', translit: 'shilshul', fr: 'diarrhea' },
+  { he: 'עֲצִירוּת', translit: 'atzirut', fr: 'constipation' },
+  { he: 'חוֹם גָּבֹהַּ', translit: 'chom gavoha', fr: 'high fever' },
+  { he: 'סְחַרְחֹרֶת', translit: 'scharchoret', fr: 'dizziness' },
+  { he: 'קֹצֶר נְשִׁימָה', translit: 'kotzer neshima', fr: 'shortness of breath' },
+  { he: 'דְּפִיקוֹת לֵב', translit: 'dfikot lev', fr: 'heart palpitations' },
+  { he: 'שִׁעוּל יָבֵשׁ', translit: 'shi\'ul yavesh', fr: 'dry cough' },
+  { he: 'שִׁעוּל לַח', translit: 'shi\'ul lach', fr: 'wet cough' },
+  { he: 'נַזֶּלֶת', translit: 'nazelet', fr: 'runny nose' }
+]);
+
+addExtraVocab('Pharmacy & Medications', [
+  { he: 'בֵּית מִרְקַחַת', translit: 'beit mirkachat', fr: 'pharmacy' },
+  { he: 'תְּרוּפָה', translit: 'trufa', fr: 'medication' },
+  { he: 'מִרְשָׁם', translit: 'mirsham', fr: 'prescription' },
+  { he: 'כַּדּוּר', translit: 'kadur', fr: 'pill' },
+  { he: 'סִירוֹפ שִׁעוּל', translit: 'sirop shi\'ul', fr: 'cough syrup' },
+  { he: 'מִשְׁחָה', translit: 'mishcha', fr: 'ointment' },
+  { he: 'אַנְטִיבּיוֹטִיקָה', translit: 'antibiotika', fr: 'antibiotics' },
+  { he: 'מַשְׁכַּךְ כְּאֵבִים', translit: 'mashkach ke\'evim', fr: 'painkiller' },
+  { he: 'אַקַּמוֹל', translit: 'akamol', fr: 'paracetamol (brand)' },
+  { he: 'נוּרוֹפֵן', translit: 'nurofen', fr: 'ibuprofen (brand)' },
+  { he: '3 פְּעָמִים בְּיוֹם', translit: '3 pe\'amim be-yom', fr: '3 times per day' },
+  { he: 'אַחֲרֵי הָאֲרוּחָה', translit: 'acharey ha-arucha', fr: 'after the meal' }
+]);
+
+addMiniQuiz('Medical Quiz', [
+  { q: 'What number do you call for an ambulance?', options: ['100', '101', '102', '911'], answer: 1, explain: '101 = Magen David Adom' },
+  { q: 'How do you say "I have a headache"?', options: ['יֵשׁ לִי כְּאֵב גָּרוֹן', 'יֵשׁ לִי כְּאֵב רֹאשׁ', 'יֵשׁ לִי חוֹם', 'יֵשׁ לִי סְחַרְחֹרֶת'], answer: 1, explain: 'yesh li ke\'ev rosh' },
+  { q: 'What is a קֻפַּת חוֹלִים?', options: ['Pharmacy', 'Hospital', 'Health insurance fund (HMO)', 'Emergency room'], answer: 2, explain: 'Kupat cholim = the 4 health funds (Klalit, Maccabi, Meuhedet, Leumit)' },
+  { q: 'בֵּית מִרְקַחַת is...', options: ['Hospital', 'Pharmacy', 'Doctor\'s office', 'Lab'], answer: 1 },
+  { q: 'You feel dizzy — how to say it?', options: ['יֵשׁ לִי כְּאֵב גַּב', 'יֵשׁ לִי סְחַרְחֹרֶת', 'יֵשׁ לִי שִׁעוּל', 'יֵשׁ לִי נַזֶּלֶת'], answer: 1 }
+]);
+
+addCulturalText('Calling Magen David Adom (101) — Emergency Dialogue', 'The Israeli ambulance line. Memorize this — it could save a life. Operator usually speaks fast Hebrew + English.', [
+  { he: 'מוֹקְדָן: 101, מַצַּב הַחֵירוּם, מָה קָרָה?', translit: "Mokdan: 101, matzav ha-cherum, ma kara?", fr: 'Operator: 101 emergency, what happened?' },
+  { he: 'אַתָּה: מִישֶׁהוּ הִתְעַלֵּף, צָרִיךְ אַמְבּוּלָנְס', translit: "Ata: Mishehu hit\'alef, tzarich ambulance", fr: 'You: Someone fainted, need an ambulance' },
+  { he: 'מוֹקְדָן: כְּתֹבֶת מְדֻיָּקֶת בְּבַקָּשָׁה', translit: "Mokdan: Ktovet meduyeket bevakasha", fr: 'Operator: Exact address please' },
+  { he: 'אַתָּה: רְחוֹב הֶרְצְל 23, תֵּל אָבִיב, קוֹמָה 4', translit: "Ata: Rechov Herzl 23, Tel Aviv, koma 4", fr: 'You: 23 Herzl Street, Tel Aviv, 4th floor' },
+  { he: 'מוֹקְדָן: הוּא נוֹשֵׁם? יֵשׁ דֹּפֶק?', translit: "Mokdan: Hu noshem? Yesh dofek?", fr: 'Operator: Is he breathing? Pulse?' },
+  { he: 'אַתָּה: נוֹשֵׁם, אֲבָל לֹא מֵגִיב', translit: "Ata: Noshem, aval lo megiv", fr: "You: Breathing, but unresponsive" },
+  { he: 'מוֹקְדָן: שִׂים אוֹתוֹ עַל הַצַּד, אַמְבּוּלָנְס בָּא תּוֹךְ 5 דַּקּוֹת', translit: "Mokdan: Sim oto al ha-tzad, ambulance ba toch 5 dakot", fr: 'Operator: Put him on his side, ambulance in 5 minutes' },
+  { he: 'מוֹקְדָן: תִּשְׁאֵר אִתִּי עַל הַקַּו', translit: "Mokdan: Tisha\'er iti al ha-kav", fr: 'Operator: Stay with me on the line' },
+  { he: '101 = אַמְבּוּלָנְס · 100 = מִשְׁטָרָה · 102 = כִּבּוּי אֵשׁ', translit: "101 = ambulance · 100 = police · 102 = fire", fr: 'Emergency numbers' }
+]);
+</script>
+
+</body>
+</html>

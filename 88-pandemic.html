@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>88 — Pandemic & Public Health</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Pandemic & Public Health</h1><div class="subtitle">Lesson 88 · מגיפה ובריאות הציבור</div></div><div class="nav"><a href="index.html">Home</a><a href="88-pandemic.html" class="active">88</a></div></header>
+
+<p class="intro">COVID changed Israeli vocabulary forever. Now used for any health crisis. "Bidud" (isolation), "Migun" (precaution), "Tav yarok" (green pass) entered daily speech.</p>
+
+<h2>Pandemic Vocabulary</h2>
+<div class="word-list" id="pandemic"></div>
+
+<h2>Vaccines</h2>
+<div class="word-list" id="vaccines"></div>
+
+<h2>Restrictions</h2>
+<div class="word-list" id="restrictions"></div>
+
+<h2>Tests & Medical</h2>
+<div class="word-list" id="tests"></div>
+
+<h2>Public Health Authorities</h2>
+<div class="word-list" id="authorities"></div>
+
+<hr class="section-divider">
+<h2>Real Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 88 · pandemic · <a href="89-diversity.html" style="color:var(--accent)">Next: Diversity →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const PANDEMIC = [
+  { he: 'מַגֵּפָה', translit: 'magefa', fr: 'epidemic / pandemic' },
+  { he: 'קוֹרוֹנָה', translit: 'corona', fr: 'corona' },
+  { he: 'נְגִיף', translit: 'negif', fr: 'virus' },
+  { he: 'הִדָּבְקוּת', translit: 'hidavkut', fr: 'infection' },
+  { he: 'נִדְבַּק', translit: 'nidbak', fr: 'infected' },
+  { he: 'תַּחֲלוֹאָה', translit: 'tachlu\'a', fr: 'morbidity / illness rate' },
+  { he: 'אִשְׁפּוּז', translit: 'ishpuz', fr: 'hospitalization' },
+  { he: 'מָוֶת', translit: 'mavet', fr: 'death' },
+  { he: 'שִׁעוּר תַּחֲלוֹאָה', translit: 'shi\'ur tachlu\'a', fr: 'infection rate' },
+  { he: 'גַּל הַדְבָּקוֹת', translit: 'gal hadbakot', fr: 'infection wave' }
+];
+const VACCINES = [
+  { he: 'חִסּוּן', translit: 'chisun', fr: 'vaccine' },
+  { he: 'מְחֻסָּן', translit: 'mechusan', fr: 'vaccinated' },
+  { he: 'בּוּסְטֶר', translit: 'booster', fr: 'booster' },
+  { he: 'מָנָה שְׁלִישִׁית', translit: 'mana shlishit', fr: 'third dose' },
+  { he: 'פָּייזֶר', translit: 'Pfizer', fr: 'Pfizer' },
+  { he: 'מָדֶרְנָה', translit: 'Moderna', fr: 'Moderna' },
+  { he: 'תוֹפְעַת לְוַאי', translit: 'tofa\'at levai', fr: 'side effect' },
+  { he: 'תְּעוּדַת חִסּוּן', translit: 'teudat chisun', fr: 'vaccination certificate' }
+];
+const RESTRICTIONS = [
+  { he: 'סֶגֶר', translit: 'seger', fr: 'lockdown' },
+  { he: 'בִּדּוּד', translit: 'bidud', fr: 'isolation / quarantine' },
+  { he: 'מַסֵּכָה', translit: 'masecha', fr: 'mask' },
+  { he: 'רִחוּק חֶבְרָתִי', translit: 'richuk chevrati', fr: 'social distancing' },
+  { he: 'מֶרְחָק', translit: 'merchak', fr: 'distance' },
+  { he: 'הָגְבָּלוֹת', translit: 'hagbalot', fr: 'restrictions' },
+  { he: 'תַּו יָרֹק', translit: 'tav yarok', fr: 'green pass' },
+  { he: 'תַּו סָגוּל', translit: 'tav sagol', fr: 'purple pass (business)' },
+  { he: 'אֲפֹרְה', translit: 'aforh', fr: 'gathering ban' }
+];
+const TESTS = [
+  { he: 'בְּדִיקָה', translit: 'bdika', fr: 'test' },
+  { he: 'בְּדִיקַת PCR', translit: 'bdikat PCR', fr: 'PCR test' },
+  { he: 'בְּדִיקָה מְהִירָה', translit: 'bdika mehira', fr: 'rapid test' },
+  { he: 'בְּדִיקָה בֵּיתִית', translit: 'bdika beyitit', fr: 'home test' },
+  { he: 'תּוֹצָאָה חִיּוּבִית', translit: 'totza\'a chiyuvit', fr: 'positive result' },
+  { he: 'תּוֹצָאָה שְׁלִילִית', translit: 'totza\'a shlilit', fr: 'negative result' },
+  { he: 'נוֹגֵד', translit: 'noged', fr: 'antibody' }
+];
+const AUTHORITIES = [
+  { he: 'מִשְׂרַד הַבְּרִיאוּת', translit: 'misrad ha-briut', fr: 'Ministry of Health' },
+  { he: 'הַשָּׁר לִבְּרִיאוּת', translit: 'ha-sar livriut', fr: 'Health Minister' },
+  { he: 'מַגֵּן יִשְׂרָאֵל', translit: 'magen Yisrael', fr: 'IDF medical operations' },
+  { he: 'פִיקּוּד הָעֹרֶף', translit: 'pikud ha-oref', fr: 'Home Front Command' },
+  { he: 'הַסְבָּרָה', translit: 'hasbara', fr: 'public information' }
+];
+const PHRASES = [
+  { he: 'הִתְחַסַּנְתִּי שָׁלוֹשׁ פְּעָמִים', translit: 'hitchasanti shalosh pe\'amim', fr: 'I got vaccinated 3 times' },
+  { he: 'הַמַּסֵּכָה הִיא לֹא חוֹבָה יוֹתֵר', translit: 'ha-masecha hi lo chova yoter', fr: "the mask isn\'t mandatory anymore" },
+  { he: 'יָצָאתִי מֵבִדּוּד אֶתְמוֹל', translit: 'yatzati me-bidud etmol', fr: 'I came out of isolation yesterday' },
+  { he: 'הַבְּדִיקָה הִתְחַייבָה הָיְתָה חִיּוּבִית', translit: 'ha-bdika hayta chiyuvit', fr: 'the test was positive' },
+  { he: 'אֲנִי בְּסֶגֶר', translit: 'ani be-seger', fr: "I\'m in lockdown" },
+  { he: 'יֵשׁ לִי תַּו יָרֹק', translit: 'yesh li tav yarok', fr: 'I have a green pass' },
+  { he: 'הַחַיִּים חוֹזְרִים לְשִׁגְרָה', translit: 'ha-chayim chozrim le-shigra', fr: 'life is returning to routine' },
+  { he: 'אֲנִי לֹא חוֹשֵׁשׁ מֵהַנְּגִיף', translit: 'ani lo choshesh me-ha-negif', fr: "I'm not afraid of the virus (m.)" },
+  { he: 'אַל תִּדְאַג, רַק שַׁפַּעַת', translit: 'al tid\'ag, rak shapa\'at', fr: "don't worry, just flu (m.)" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('pandemic', PANDEMIC); R('vaccines', VACCINES); R('restrictions', RESTRICTIONS); R('tests', TESTS); R('authorities', AUTHORITIES); R('phrases', PHRASES);
+addExtraVocab('Public Health Vocabulary', [
+  { he: 'מַגֵּפָה', translit: 'magefa', fr: 'epidemic / plague' },
+  { he: 'פַּנְדֶּמְיָה', translit: 'pandemya', fr: 'pandemic' },
+  { he: 'נְגִיף', translit: 'negif', fr: 'virus' },
+  { he: 'חַיְדַּק', translit: 'chaydak', fr: 'bacteria' },
+  { he: 'הַדְבָּקָה', translit: 'hadbaka', fr: 'infection' },
+  { he: 'מָסֵכָה', translit: 'masecha', fr: 'mask' },
+  { he: 'בִּדּוּד', translit: 'bidud', fr: 'isolation' },
+  { he: 'הַסְגָּרָה', translit: 'hasgara', fr: 'quarantine' },
+  { he: 'בְּדִיקָה', translit: 'bdika', fr: 'test' },
+  { he: 'בְּדִיקַת אַנְטִיגֵן', translit: 'bdikat antigen', fr: 'antigen test' },
+  { he: 'בְּדִיקַת PCR', translit: 'bdikat PCR', fr: 'PCR test' },
+  { he: 'מְחֻסָּן', translit: 'mechusan', fr: 'vaccinated' },
+  { he: 'תּוֹפְעוֹת לְוַאי', translit: 'tof\'ot levay', fr: 'side effects' },
+  { he: 'מַעֲרֶכֶת חִסּוּן', translit: 'ma\'arechet chisun', fr: 'immune system' },
+  { he: 'תַּפּוּסַת אִשְׁפּוּז', translit: 'tfusat ishpuz', fr: 'hospital occupancy' }
+]);
+
+addMiniQuiz('Pandemic Quiz', [
+  { q: 'Israel was first to deploy...', options: ['COVID lockdown', 'Mass vaccination Dec 2020', 'Test-trace', 'Hospital ships'], answer: 1 },
+  { q: 'Vaccine in Hebrew =', options: ['חִסּוּן', 'תְּרוּפָה', 'בְּדִיקָה', 'מִקְלָט'], answer: 0 },
+  { q: '"Green Pass" allowed...', options: ['Free entry abroad', 'Vaccinated to attend events', 'Free coffee', 'Government discount'], answer: 1 },
+  { q: 'Hebrew word for "lockdown" =', options: ['סֶגֶר', 'הַסְגָּרָה', 'A and B', 'אֲנַרְכִיָה'], answer: 2 },
+  { q: 'COVID =', options: ['קוֹרוֹנָה', 'מַגֵּפָה', 'COVID-19', 'All used'], answer: 3 }
+]);
+
+addCulturalText('Israel as the World\'s Vaccine Lab (2021)', 'Israel was first to vaccinate at scale (Pfizer deal Dec 2020). The "Green Pass" became the model. Sharing data with Pfizer was the deal.', [
+  { he: 'יִשְׂרָאֵל הָיְתָה רִאשׁוֹנָה בְּחִסּוּן הַמּוֹנִי', translit: "Yisrael hayta rishona be-chisun hamoni", fr: 'Israel was first in mass vaccination' },
+  { he: 'הַ"תָּו הַיָּרוֹק" אֲפְשַׁר חַיִּים נוֹרְמָלִיִּים לִמְחֻסָּנִים', translit: "Ha-\"tav ha-yarok\" ifsher chayim normaliyim li-mchusanim", fr: 'The "Green Pass" allowed normal life for the vaccinated' },
+  { he: 'הָעִסְקָה עִם פָייזֶר: חִסּוּנִים תְּמוּרַת מֵידָע', translit: "Ha-iska im Pfizer: chisunim tmurat meda", fr: 'Pfizer deal: vaccines in exchange for data' },
+  { he: 'מַחֲקָר עוֹלָמִי הִסְתַּמֵּךְ עַל נְתוּנֵי בִּטּוּחַ לְאֻמִּי', translit: "Mechkar olami histamech al netunei bituach le\'umi", fr: 'Global research relied on Bituach Leumi data' },
+  { he: 'הַמַּנָּה הַשְּׁלִישִׁית — בּוּסְטֶר — נֻסְּתָה כָּאן רִאשׁוֹנָה', translit: "Ha-mana ha-shlishit — booster — nustah kan rishona", fr: 'The third dose — booster — tested here first' },
+  { he: 'הַמַּגֵּפָה גָּמְרָה רִשְׁמִית בְּ-2023', translit: "Ha-magefa gamra rishmit be-2023", fr: 'The pandemic ended officially in 2023' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('pandemic'); } });
+</script></body></html>

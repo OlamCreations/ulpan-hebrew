@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>53 — Tel Aviv</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Tel Aviv</h1><div class="subtitle">Lesson 53 · תל אביב</div></div><div class="nav"><a href="index.html">Home</a><a href="53-tel-aviv.html" class="active">53</a></div></header>
+
+<p class="intro">Tel Aviv-Yafo: Israel's economic and cultural capital, "the city that never stops". Founded 1909, ~470,000 in city, 4M in greater Gush Dan. Beach, tech, nightlife, secular. UNESCO Bauhaus heritage. Most expensive city in Israel.</p>
+
+<h2>Neighborhoods</h2>
+<div class="word-list" id="neighborhoods"></div>
+
+<h2>Streets & Areas</h2>
+<div class="word-list" id="streets"></div>
+
+<h2>Beach Culture</h2>
+<div class="word-list" id="beach"></div>
+
+<h2>Cultural Spots</h2>
+<div class="word-list" id="culture"></div>
+
+<h2>Tech Ecosystem</h2>
+<div class="word-list" id="tech"></div>
+
+<h2>Yafo (Jaffa)</h2>
+<div class="word-list" id="yafo"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 53 · Tel Aviv · <a href="54-haifa-north.html" style="color:var(--accent)">Next: Haifa & North →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const NEIGHBORHOODS = [
+  { he: 'הַצָּפוֹן הַיָּשָׁן', translit: 'ha-tzafon ha-yashan', fr: 'Old North (residential)' },
+  { he: 'הַצָּפוֹן הֶחָדָשׁ', translit: 'ha-tzafon he-chadash', fr: 'New North (yuppy)' },
+  { he: 'נְוֵה צֶדֶק', translit: 'Neve Tzedek', fr: 'Neve Tzedek (oldest, charm)' },
+  { he: 'פְּלוֹרֶנְטִין', translit: 'Florentin', fr: 'Florentin (hipster, gritty)' },
+  { he: 'רוֹטְשִׁילְד', translit: 'Rothschild', fr: 'Rothschild (Bauhaus, central)' },
+  { he: 'יָפוֹ הָעַתִּיקָה', translit: 'Yafo ha-atika', fr: 'Old Jaffa (mixed Arab-Jewish)' },
+  { he: 'הַתִּקְוָה', translit: 'ha-Tikva', fr: 'Hatikva (south, Mizrahi)' },
+  { he: 'נְוֵה אַבִיבִים', translit: 'Neve Avivim', fr: 'Neve Avivim (north, leafy)' },
+  { he: 'רָמַת אָבִיב', translit: 'Ramat Aviv', fr: 'Ramat Aviv (university area)' }
+];
+const STREETS = [
+  { he: 'רוֹטְשִׁילְד', translit: 'Rothschild', fr: 'Sderot Rothschild (boulevard)' },
+  { he: 'דִּיזֶנְגוֹף', translit: 'Dizengoff', fr: 'Dizengoff Street' },
+  { he: 'אִבְּן גְּבִירוֹל', translit: 'Ibn Gabirol', fr: 'Ibn Gabirol (main north-south)' },
+  { he: 'אַלֶנְבִּי', translit: 'Allenby', fr: 'Allenby (eclectic, market)' },
+  { he: 'בֵּן יְהוּדָה', translit: 'Ben Yehuda', fr: 'Ben Yehuda (parallel to beach)' },
+  { he: 'הַיַּרְקוֹן', translit: 'ha-Yarkon', fr: 'Hayarkon (along beach)' },
+  { he: 'נַחֲלַת בִּנְיָמִין', translit: 'Nachalat Binyamin', fr: 'Nachalat Binyamin (artisan market)' },
+  { he: 'כַּכַּר רַבִּין', translit: 'Kikar Rabin', fr: 'Rabin Square' },
+  { he: 'כַּכַּר דִּיזֶנְגוֹף', translit: 'Kikar Dizengoff', fr: 'Dizengoff Square' }
+];
+const BEACH = [
+  { he: 'חוֹף הַיָּם', translit: 'chof ha-yam', fr: 'beach' },
+  { he: 'טַיֶּלֶת', translit: 'tayelet', fr: 'promenade / boardwalk' },
+  { he: 'מַטְקוֹת', translit: 'matkot', fr: 'matkot (paddleball)' },
+  { he: 'כַּדּוּרְעָף חוֹפִי', translit: 'kaduraf chofi', fr: 'beach volleyball' },
+  { he: 'גַּלִּים', translit: 'galim', fr: 'waves' },
+  { he: 'מַצִּיל', translit: 'matzil', fr: 'lifeguard' },
+  { he: 'דֶּגֶל אָדוֹם', translit: 'degel adom', fr: 'red flag (no swim)' },
+  { he: 'גְּלִישָׁה', translit: 'glisha', fr: 'surfing' }
+];
+const CULTURE = [
+  { he: 'הַבִּימָה', translit: 'ha-Bima', fr: 'Habima (national theater)' },
+  { he: 'מוּזֵיאוֹן תֵּל אָבִיב', translit: 'Muzeon Tel Aviv', fr: 'Tel Aviv Museum of Art' },
+  { he: 'בֵּית בָּלִיק', translit: 'beit Bialik', fr: 'Bialik House' },
+  { he: 'הָעֲצְמָאוּת', translit: 'ha-atzmaut', fr: 'Independence Hall' },
+  { he: 'נָמַל תֵּל אָבִיב', translit: 'namal Tel Aviv', fr: 'Tel Aviv Port' },
+  { he: 'שׁוּק הַכַּרְמֶל', translit: 'shuk ha-Carmel', fr: 'Carmel Market' },
+  { he: 'שׁוּק הַפִּשְׁפְּשִׁים', translit: 'shuk ha-pishpshim', fr: 'flea market (Yafo)' }
+];
+const TECH = [
+  { he: 'גַּן הַטֶּכְנוֹלוֹגִי', translit: 'gan ha-technologi', fr: 'tech park' },
+  { he: 'סִילִיקוֹן וָדִי', translit: 'Silicon Wadi', fr: 'Silicon Wadi (Israel\'s Silicon Valley)' },
+  { he: 'גּוּגֶל תֵּל אָבִיב', translit: 'Google Tel Aviv', fr: 'Google Tel Aviv' },
+  { he: 'מָרְכָז סְטַארְטָאפ', translit: 'merkaz startup', fr: 'startup hub' },
+  { he: 'WeWork', translit: 'WeWork', fr: 'WeWork (popular here)' }
+];
+const YAFO = [
+  { he: 'יָפוֹ הָעַתִּיקָה', translit: 'Yafo ha-atika', fr: 'Old Jaffa' },
+  { he: 'נָמַל יָפוֹ', translit: 'namal Yafo', fr: 'Jaffa Port' },
+  { he: 'מִגְדַּל הַשָּׁעוֹן', translit: 'migdal ha-sha\'on', fr: 'Clock Tower' },
+  { he: 'אַבּוּ חַסָן', translit: 'Abu Hassan', fr: 'Abu Hassan (legendary hummus)' },
+  { he: 'גְּגוֹת יָפוֹ', translit: 'gagot Yafo', fr: 'Jaffa rooftops' }
+];
+const PHRASES = [
+  { he: 'תֵּל אָבִיב לֹא יְשֵׁנָה', translit: 'Tel Aviv lo yeshena', fr: 'Tel Aviv never sleeps' },
+  { he: 'אֲנִי גָּר בְּיָפוֹ', translit: 'ani gar be-Yafo', fr: 'I live in Jaffa (m.)' },
+  { he: 'בּוֹאוּ לְחוֹף הַיָּם', translit: 'bo\'u le-chof ha-yam', fr: "let's go to the beach" },
+  { he: 'תֵּל אָבִיב יְקָרָה מְאֹד', translit: 'Tel Aviv yekara me\'od', fr: 'Tel Aviv is very expensive' },
+  { he: 'נֵצֵא לְמִסְעָדָה', translit: 'netze le-mis\'ada', fr: "let's go out to a restaurant" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('neighborhoods', NEIGHBORHOODS); R('streets', STREETS); R('beach', BEACH); R('culture', CULTURE); R('tech', TECH); R('yafo', YAFO); R('phrases', PHRASES);
+
+addExtraVocab('Tel Aviv Neighborhoods & Landmarks', [
+  { he: 'נְוֵה צֶדֶק', translit: 'neve tzedek', fr: 'Neve Tzedek (oldest TLV neighborhood)' },
+  { he: 'פְּלוֹרֶנְטִין', translit: 'florentin', fr: 'Florentin (hipster south)' },
+  { he: 'יָפוֹ הָעַתִּיקָה', translit: 'yafo ha-atika', fr: 'Old Yafo' },
+  { he: 'נָמָל תֵּל אָבִיב', translit: 'namal Tel Aviv', fr: 'Tel Aviv Port' },
+  { he: 'הַסְּדֵרָה', translit: 'ha-sdera', fr: 'the boulevard' },
+  { he: 'רוֹטְשִׁילְד', translit: 'Rothschild', fr: 'Rothschild Boulevard' },
+  { he: 'אִבְּן גְּבִירוֹל', translit: 'Ibn Gabirol', fr: 'Ibn Gabirol street' },
+  { he: 'דִּיזֶנְגוֹף', translit: 'Dizengoff', fr: 'Dizengoff (shopping)' },
+  { he: 'הַטַּיֶּלֶת', translit: 'ha-tayelet', fr: 'beach promenade' },
+  { he: 'גַּן מֵאִיר', translit: 'gan Meir', fr: 'Meir Park' },
+  { he: 'שׁוּק הַכַּרְמֶל', translit: 'shuk ha-Carmel', fr: 'Carmel Market' },
+  { he: 'גָּרִיוֹן', translit: 'garion', fr: 'sneaker — slang Israeli sneaker culture' }
+]);
+
+addMiniQuiz('Tel Aviv Quiz', [
+  { q: 'Tel Aviv founding year?', options: ['1882', '1909', '1948', '1967'], answer: 1 },
+  { q: '"The White City" UNESCO site is...', options: ['Old Yafo', 'Tel Aviv Bauhaus area', 'Neve Tzedek', 'Sarona'], answer: 1, explain: '4000+ Bauhaus buildings, the largest concentration in the world' },
+  { q: 'Famous boulevard =', options: ['Rothschild', 'Allenby', 'Ibn Gabirol', 'All of these'], answer: 3 },
+  { q: 'TLV is famous for...', options: ['Snow', 'Beach + nightlife + tech', 'Religious sites', 'Mountains'], answer: 1 },
+  { q: 'Distance Tel Aviv to Jerusalem =', options: ['30 km', '~60 km', '120 km', '200 km'], answer: 1, explain: '~60 km, 1 hour drive' }
+]);
+
+addCulturalText('Tel Aviv Founding (April 11, 1909) — Lottery on Sand Dunes', "66 families gathered on a sand dune north of Yafo. They drew lots from seashells to assign plots. The city: Akhuzat Bayit, soon renamed Tel Aviv (\"Hill of Spring\" — title of Herzl's Altneuland Hebrew translation).", [
+  { he: 'אֲחוּזַת בַּיִת', translit: "Achuzat Bayit", fr: 'Achuzat Bayit — original founding name' },
+  { he: '11 בְּאַפְּרִיל 1909, 60 מִשְׁפָּחוֹת', translit: "11 be-april 1909, 60 mishpachot", fr: 'April 11, 1909, 60 families' },
+  { he: 'הִגְרִילוּ בְּצִדְפֵי יָם', translit: "Higrilu be-tzidpey yam", fr: 'They drew lots with seashells' },
+  { he: 'בְּאֶגֶד דְּיוּנָה רֵיקָה', translit: "Be-eged dyuna reyka", fr: 'On an empty sand dune' },
+  { he: 'תֵּל אָבִיב — מִתְּרְגוּם הֶרְצְל', translit: "Tel Aviv — mi-targum Herzl", fr: 'Tel Aviv — from Herzl\'s translation' },
+  { he: 'הָעִיר הָרִאשׁוֹנָה הָעִבְרִית', translit: "Ha-ir ha-rishona ha-ivrit", fr: 'The first Hebrew city' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('telaviv'); } });
+</script></body></html>

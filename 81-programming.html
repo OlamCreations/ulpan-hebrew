@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>81 — Programming & Developers</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Programming & Developers</h1><div class="subtitle">Lesson 81 · תכנות</div></div><div class="nav"><a href="index.html">Home</a><a href="81-programming.html" class="active">81</a></div></header>
+
+<p class="intro">Israel = "Start-up Nation". Most tech work in English, but Hebrew shapes the workplace, meetings, hiring. Vocabulary for daily standups, code reviews, sprint planning, and water-cooler tech talk.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israeli tech is famously direct. "Why is this bad?" is a normal question, not an attack. Hierarchies are flat. PMs argue with CEOs. Don't take "no" as personal — it's how decisions are made.</div>
+
+<h2>Roles & Titles</h2>
+<div class="word-list" id="roles"></div>
+
+<h2>Languages & Tools</h2>
+<div class="word-list" id="tools"></div>
+
+<h2>Coding Concepts</h2>
+<div class="word-list" id="concepts"></div>
+
+<h2>Daily Workflow</h2>
+<div class="word-list" id="workflow"></div>
+
+<h2>Bugs & Issues</h2>
+<div class="word-list" id="bugs"></div>
+
+<h2>Meetings & Standups</h2>
+<div class="word-list" id="meetings"></div>
+
+<hr class="section-divider">
+
+<h2>Real Workplace Phrases (for daily use)</h2>
+<div class="word-list" id="phrases"></div>
+
+<h2>Mini Dialogue: Code Review</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<footer>Lesson 81 · programming · <a href="82-ai-ml.html" style="color:var(--accent)">Next: AI & ML →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const ROLES = [
+  { he: 'מְפַתֵּחַ', translit: 'mefateach', fr: 'developer (m.)' },
+  { he: 'מְפַתַּחַת', translit: 'mefatachat', fr: 'developer (f.)' },
+  { he: 'מְהַנְדֵּס תּוֹכְנָה', translit: 'mehandes tochna', fr: 'software engineer' },
+  { he: 'פוּל סְטֵק', translit: 'full stack', fr: 'full stack' },
+  { he: 'פְרוֹנְט', translit: 'front', fr: 'frontend' },
+  { he: 'בֵּק', translit: 'back', fr: 'backend' },
+  { he: 'דֶבְ אוֹפְּס', translit: 'devops', fr: 'devops' },
+  { he: 'מַעֲצֵב', translit: 'me\'atzev', fr: 'designer' },
+  { he: 'מְנַהֵל מוּצָר', translit: 'menahel mutzar', fr: 'product manager (PM)' },
+  { he: 'מְנַהֵל פְּרוֹיֶקְט', translit: 'menahel proyekt', fr: 'project manager' },
+  { he: 'בּוֹדֵק תּוֹכְנָה', translit: 'bodek tochna', fr: 'QA / tester' },
+  { he: 'מַדְעַן נְתוּנִים', translit: 'mad\'an netunim', fr: 'data scientist' },
+  { he: 'מְהַנְדֵּס דָּטָה', translit: 'mehandes data', fr: 'data engineer' }
+];
+const TOOLS = [
+  { he: 'קוֹד', translit: 'kod', fr: 'code' },
+  { he: 'פַּיְתוֹן', translit: 'python', fr: 'Python' },
+  { he: 'גָ\'אבָה', translit: 'java', fr: 'Java' },
+  { he: 'גִ\'יט', translit: 'git', fr: 'Git' },
+  { he: 'גִיטְהָאב', translit: 'github', fr: 'GitHub' },
+  { he: 'מָאגַר', translit: 'ma\'agar', fr: 'database' },
+  { he: 'בָּסִיס נְתוּנִים', translit: 'basis netunim', fr: 'database' },
+  { he: 'עֲנָן', translit: 'anan', fr: 'cloud' },
+  { he: 'אַ.וֹ.אֵס', translit: 'AWS', fr: 'AWS' },
+  { he: 'מְכוֹלָה', translit: 'mechola', fr: 'container (Docker)' },
+  { he: 'דּוֹקֶר', translit: 'docker', fr: 'Docker' },
+  { he: 'קוּבֵּ', translit: 'kube', fr: 'Kubernetes' },
+  { he: 'אַ.פִּי.אַי', translit: 'API', fr: 'API' }
+];
+const CONCEPTS = [
+  { he: 'אַלְגוֹרִיתְם', translit: 'algoritm', fr: 'algorithm' },
+  { he: 'מִבְנֵה נְתוּנִים', translit: 'mivne netunim', fr: 'data structure' },
+  { he: 'פוּנְקְצְיָה', translit: 'funktzya', fr: 'function' },
+  { he: 'מַחְלָקָה', translit: 'machlaka', fr: 'class' },
+  { he: 'מָסַד', translit: 'masad', fr: 'framework' },
+  { he: 'סִפְרִיָּה', translit: 'sifriya', fr: 'library' },
+  { he: 'תָּלוּת', translit: 'talut', fr: 'dependency' },
+  { he: 'בַּקָּשָׁה', translit: 'bakasha', fr: 'request (HTTP)' },
+  { he: 'תְּגוּבָה', translit: 'tguva', fr: 'response' },
+  { he: 'אֶפְּלִיקַצְיָה', translit: 'aplikatzya', fr: 'application' },
+  { he: 'קוֹד פָּתוּחַ', translit: 'kod patuach', fr: 'open source' }
+];
+const WORKFLOW = [
+  { he: 'דַּחַף', translit: 'dachaf', fr: 'push (git)' },
+  { he: 'לִמְשֹׁךְ', translit: 'limshoch', fr: 'pull' },
+  { he: 'בַּקָּשַׁת מְשִׁיכָה', translit: 'bakashat mshicha', fr: 'pull request (PR)' },
+  { he: 'בִּקֹּרֶת קוֹד', translit: 'bikoret kod', fr: 'code review' },
+  { he: 'מַחֲלָצָה', translit: 'macheletza', fr: 'merge' },
+  { he: 'הִתְנַגְשׁוּת', translit: 'hitnagshut', fr: 'merge conflict' },
+  { he: 'דֶּפְּלוֹי', translit: 'deploy', fr: 'deploy / deployment' },
+  { he: 'שִׁחְרוּר', translit: 'shichrur', fr: 'release' },
+  { he: 'בְּדִיקָה', translit: 'bdika', fr: 'test' },
+  { he: 'בְּדִיקוֹת אוֹטוֹמָטִיּוֹת', translit: 'bdikot otomatiyot', fr: 'automated tests' }
+];
+const BUGS = [
+  { he: 'בָּג', translit: 'bag', fr: 'bug' },
+  { he: 'תַּקָּלָה', translit: 'takala', fr: 'malfunction' },
+  { he: 'שְׁגִיאָה', translit: 'shgi\'a', fr: 'error' },
+  { he: 'הִתְרַסְּקוּת', translit: 'hitraskut', fr: 'crash' },
+  { he: 'תִּקּוּן', translit: 'tikun', fr: 'fix' },
+  { he: 'הוֹט פִיקְס', translit: 'hot fix', fr: 'hotfix' },
+  { he: 'עִיכּוּב', translit: 'ikuv', fr: 'delay / blocker' },
+  { he: 'דִּיבָּגִינְג', translit: 'debugging', fr: 'debugging' }
+];
+const MEETINGS = [
+  { he: 'סְטֶנְד אַפ', translit: 'standup', fr: 'standup meeting' },
+  { he: 'יְשִׁיבָה', translit: 'yeshiva', fr: 'meeting' },
+  { he: 'סְפְּרִינְט', translit: 'sprint', fr: 'sprint' },
+  { he: 'תִּכְנוּן סְפְּרִינְט', translit: 'tichnun sprint', fr: 'sprint planning' },
+  { he: 'רֶטְרוֹ', translit: 'retro', fr: 'retrospective' },
+  { he: 'אֶחָד עַל אֶחָד', translit: 'echad al echad', fr: '1-on-1' },
+  { he: 'מַשְׂרָד', translit: 'masrad', fr: 'office' }
+];
+const PHRASES = [
+  { he: 'הַקּוֹד שֶׁלִּי לֹא עוֹבֵד', translit: 'ha-kod sheli lo oved', fr: "my code doesn't work" },
+  { he: 'יֵשׁ לִי בָּג בְּפְּרוֹדַקְשֵׁן', translit: 'yesh li bag be-production', fr: 'I have a bug in production' },
+  { he: 'תַּעֲשֶׂה לִי בִּקֹּרֶת קוֹד?', translit: 'ta\'ase li bikoret kod?', fr: 'will you review my code? (m.)' },
+  { he: 'הַ-PR מוּכָן לְמַחֲלָצָה', translit: 'ha-PR muchan le-machletza', fr: 'the PR is ready to merge' },
+  { he: 'הַשֶּׁרֶת לֹא מַגִּיב', translit: 'ha-sheret lo magiv', fr: 'the server is not responding' },
+  { he: 'אֲנִי דּוֹחֵף לַ-מָאסטֶר', translit: 'ani dochef la-master', fr: "I'm pushing to master (m.)" },
+  { he: 'יֵשׁ הִתְנַגְּשׁוּת בְּמַחֲלָצָה', translit: 'yesh hitnagshut be-machletza', fr: 'there\'s a merge conflict' },
+  { he: 'הַסְפְּרִינְט נִגְמַר בַּשִּׁשִּׁי', translit: 'ha-sprint nigmar ba-shishi', fr: 'the sprint ends Friday' },
+  { he: 'אֲנִי לֹא מַסְכִּים עִם הַתִּכְנוּן', translit: 'ani lo maskim im ha-tichnun', fr: "I don\'t agree with the design (m.)" },
+  { he: 'מָה אַתָּה חוֹשֵׁב עַל הַפִּתְרוֹן?', translit: 'ma ata choshev al ha-pitron?', fr: 'what do you think of the solution? (m.)' },
+  { he: 'בּוֹאוּ נְדַבֵּר עַל זֶה בָּרֶטְרוֹ', translit: 'bo\'u nedaber al ze ba-retro', fr: "let's discuss this in the retro" },
+  { he: 'יֵשׁ פֵּצֶ\' בַּזִּכָּרוֹן', translit: 'yesh patch ba-zikaron', fr: 'there\'s a memory patch' },
+  { he: 'הַקוֹד מוּכָן לְשִׁחְרוּר', translit: 'ha-kod muchan le-shichrur', fr: 'the code is ready for release' },
+  { he: 'אֲנִי צָרִיךְ לִכְתֹּב בְּדִיקוֹת', translit: 'ani tzarich lichtov bdikot', fr: 'I need to write tests (m.)' },
+  { he: 'הָאַיי-טי-אֵל הוּא יוֹמַיִם', translit: 'ha-eta hu yomayim', fr: 'the ETA is 2 days' }
+];
+const DIALOGUE = [
+  { speaker: 'A', he: 'הֵיי, יֵשׁ לִי PR מוּכָן. תּוּכַל לְבַקֵּר?', translit: 'Hey, yesh li PR muchan. Tuchal levaker?', fr: 'Hey, I have a PR ready. Can you review? (m.)' },
+  { speaker: 'B', he: 'כֵּן, סַבַּבָּה. מַה הִשְׁתַּנָּה?', translit: 'Ken, sababa. Ma hishtana?', fr: 'Yeah, sure. What changed?' },
+  { speaker: 'A', he: 'תִּקַּנְתִּי בָּג בָּאוּתֶנְטִיקַצְיָה.', translit: 'Tikanti bag ba-autentikatzya.', fr: 'I fixed a bug in authentication.' },
+  { speaker: 'B', he: 'יֵשׁ בְּדִיקוֹת? אֲנִי לֹא רוֹאֶה אוֹתָן.', translit: 'Yesh bdikot? Ani lo ro\'e otan.', fr: "Are there tests? I don\'t see them. (m.)" },
+  { speaker: 'A', he: 'אוּפְס, תֶּכֶף אוֹסִיף. תּוֹדָה.', translit: 'Ups, tachef osif. Toda.', fr: "Oops, I'll add them right away. Thanks." },
+  { speaker: 'B', he: 'בְּשִׁמְחָה. אַחֲרֵי זֶה אֲחָיֵב.', translit: 'Be-simcha. Acharey ze acha\'ev.', fr: "Happily. After that I'll approve. (m.)" }
+];
+
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('roles', ROLES); R('tools', TOOLS); R('concepts', CONCEPTS); R('workflow', WORKFLOW); R('bugs', BUGS); R('meetings', MEETINGS); R('phrases', PHRASES);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  dialogueEl.appendChild(el);
+});
+async function playDialogue() { for (const line of DIALOGUE) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 2400)); } markLessonDone('programming'); }
+
+addExtraVocab('Developer Vocabulary', [
+  { he: 'תּוֹכְנָה', translit: 'tochna', fr: 'software' },
+  { he: 'תּוֹכְנִית', translit: 'tochnit', fr: 'program' },
+  { he: 'קוֹד', translit: 'kod', fr: 'code' },
+  { he: 'בָּג', translit: 'bag', fr: 'bug' },
+  { he: 'תְּקַלָּה', translit: 'tkala', fr: 'malfunction' },
+  { he: 'אַלְגוֹרִיתְם', translit: 'algorithm', fr: 'algorithm' },
+  { he: 'בָּסִיס נְתוּנִים', translit: 'basis netunim', fr: 'database' },
+  { he: 'שָׂפַת תִּכְנוּת', translit: 'sfat tichnut', fr: 'programming language' },
+  { he: 'מֵהַדֵּר', translit: 'mehader', fr: 'compiler' },
+  { he: 'גִ\'יט', translit: 'git', fr: 'Git' },
+  { he: 'מַחְסָן קוֹד', translit: 'machsan kod', fr: 'code repository' },
+  { he: 'הִתְחַבְּרוּת', translit: 'hitchabrut', fr: 'login' },
+  { he: 'הֲרָצָה', translit: 'haratza', fr: 'execution / run' },
+  { he: 'תַּכְלִית', translit: 'tachlit', fr: 'production / live' },
+  { he: 'בְּדִיקָה', translit: 'bdika', fr: 'test' },
+  { he: 'בַּקָּשַׁת מִיזוּג', translit: 'bakashat mizug', fr: 'merge / pull request' }
+]);
+
+addMiniQuiz('Programming Quiz', [
+  { q: 'Israel is called "Startup Nation" because...', options: ['Lots of new restaurants', 'Highest startup density per capita', 'Many farms', 'Only banks'], answer: 1 },
+  { q: 'Most Israeli tech companies use code in...', options: ['Hebrew', 'English', 'Both', 'Yiddish'], answer: 1, explain: 'English code, Hebrew/English Slack' },
+  { q: 'Famous Israeli unicorn (cyber) =', options: ['Wix', 'Check Point', 'Mobileye', 'All Israeli'], answer: 3 },
+  { q: '"PR" in dev slang means...', options: ['Public Relations', 'Pull request', 'Project release', 'Permission'], answer: 1 },
+  { q: 'Israeli devs typically come from...', options: ['Bootcamps', 'IDF intelligence units (e.g. 8200)', 'Universities', 'All sources'], answer: 3 }
+]);
+
+addCulturalText('Israeli Tech Slang — On Slack', 'How developers actually talk in Hebrew Slack channels. Half English, half Hebrew, all chaos.', [
+  { he: 'יָאלָה, מֶרְג\' אֶת הַ-PR', translit: "Yalla, merge et ha-PR", fr: 'Yalla, merge the PR' },
+  { he: 'יֵשׁ פֹּה בָּג קְרִיטִי בָּפְּרוֹדַקְשֵׁן', translit: "Yesh po bug kriti ba-production", fr: 'There\'s a critical bug in production' },
+  { he: 'מִי בִּכְלָל כָּתַב אֶת הַקּוֹד הַזֶּה?', translit: "Mi bichlal katav et ha-code ha-ze?", fr: 'Who even wrote this code?' },
+  { he: 'אֲנִי מְרֵפַקְטֵר אֶת הַ-API', translit: "Ani merefakter et ha-API", fr: 'I\'m refactoring the API' },
+  { he: 'לֹא לִשְׁכֹּחַ לַעֲשׂוֹת push לַ-staging', translit: "Lo lishkoach la\'asot push la-staging", fr: 'Don\'t forget to push to staging' },
+  { he: 'הַ-stand-up בַּשָּׁעָה 10', translit: "Ha-stand-up ba-sha\'a 10", fr: 'Stand-up at 10 o\'clock' },
+  { he: 'אֲנִי בָּ-deep work, אַל תַּפְרִיעוּ', translit: "Ani ba-deep work, al tafri\'u", fr: 'I\'m in deep work, don\'t disturb' },
+  { he: 'תּוֹדָה אֲחִי, אַתָּה מַצִּיל אוֹתִי', translit: "Toda achi, ata matzil oti", fr: 'Thanks bro, you\'re saving me' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('programming'); } });
+</script></body></html>

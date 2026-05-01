@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>203 — Hesder: Yeshiva and Army Combined</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Hesder — Yeshiva and Army Combined</h1><div class="subtitle">Lesson 203 · יְשִׁיבוֹת הֶסְדֵּר</div></div><div class="nav"><a href="index.html">Home</a><a href="203-hesder.html" class="active">203</a></div></header>
+
+<p class="intro">"Hesder" means "arrangement" — a 5-year religious-Zionist program combining yeshiva learning with abbreviated military service (~17-19 months instead of 32-36). About 70 hesder yeshivot enroll roughly 10,000 students. Founded 1953 by Rav Yehuda Amital after the IDF asked yeshiva graduates to choose between Torah and Tzahal — Amital said both. Distinct from haredi yeshivot (full draft exemption) and from full IDF service.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Hesder soldiers serve almost exclusively in elite combat units: Kfir, Givati, Golani, Tzanchanim, Sayeret Givati, Sayeret Tzanchanim. Despite shorter service, casualty rates are higher than average — a hesder soldier is more likely to be in active combat than a regular conscript. The motto "with one hand the sword, with the other the Talmud" is taken literally. When you meet someone with a "kippa srugah" who served in Givati, ~80% chance they did hesder.</div>
+
+<h2>The Hesder Path</h2>
+<div class="word-list" id="path"></div>
+
+<h2>Major Hesder Yeshivot</h2>
+<div class="word-list" id="yeshivot"></div>
+
+<h2>Daily Yeshiva Schedule</h2>
+<div class="word-list" id="schedule"></div>
+
+<h2>Combat Units & Roles</h2>
+<div class="word-list" id="combat"></div>
+
+<h2>Hashkafa & Vocabulary</h2>
+<div class="word-list" id="hashkafa"></div>
+
+<hr class="section-divider">
+
+<h2>A Hesder Student Explains</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A talmid hesder in shana bet talks with his visiting parent about the year ahead.</div>
+  <div id="dialogue"></div>
+</div>
+
+<footer>Lesson 203 · Hesder · <a href="204-mercaz-harav.html" style="color:var(--accent)">Next: Mercaz HaRav →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const PATH = [
+  { he: 'הֶסְדֵּר', translit: 'hesder', fr: 'arrangement (the program itself)' },
+  { he: 'שָׁנָה אָלֶף', translit: 'shana aleph', fr: 'year 1 (first yeshiva year)' },
+  { he: 'שָׁנָה בֵּית', translit: 'shana bet', fr: 'year 2' },
+  { he: 'צַו רִאשׁוֹן', translit: 'tzav rishon', fr: 'first IDF order (initial draft notice)' },
+  { he: 'גִּבּוּשׁ', translit: 'gibbush', fr: 'selection (combat unit tryout)' },
+  { he: 'גִּיּוּס', translit: 'giyus', fr: 'enlistment' },
+  { he: 'שִׁחְרוּר', translit: 'shichrur', fr: 'release (end of compulsory service)' },
+  { he: 'מִילוּאִים', translit: 'miluim', fr: 'reserves' },
+  { he: 'מַסְלוּל', translit: 'maslul', fr: 'track (career path)' },
+  { he: '5 שָׁנִים', translit: '5 shanim', fr: '5 years (full hesder cycle)' }
+];
+const YESHIVOT = [
+  { he: 'יְשִׁיבַת הַר עֶצְיוֹן', translit: 'yeshivat har etzion', fr: 'Yeshivat Har Etzion (HaGush, Alon Shvut)' },
+  { he: 'יְשִׁיבַת שַׁעַלְבִים', translit: 'yeshivat sha\'alvim', fr: 'Yeshivat Sha\'alvim' },
+  { he: 'יְשִׁיבַת עָתְנִיאֵל', translit: 'yeshivat otniel', fr: 'Yeshivat Otniel (South Hebron Hills)' },
+  { he: 'יְשִׁיבַת אוֹר עֶצְיוֹן', translit: 'yeshivat or etzion', fr: 'Yeshivat Or Etzion (Rav Druckman)' },
+  { he: 'יְשִׁיבַת קַרְנֵי שׁוֹמְרוֹן', translit: 'yeshivat karnei shomron', fr: 'Yeshivat Karnei Shomron' },
+  { he: 'יְשִׁיבַת הַקִּבּוּץ הַדָּתִי', translit: 'yeshivat ha-kibbutz ha-dati', fr: 'Yeshivat HaKibbutz HaDati (Ein Tzurim)' },
+  { he: 'יְשִׁיבַת מַעֲלֵה אֵלִיָּהוּ', translit: 'yeshivat maale eliyahu', fr: 'Yeshivat Maale Eliyahu' },
+  { he: 'יְשִׁיבַת כֶּרֶם בְּיַבְנֶה', translit: 'yeshivat kerem b\'yavneh', fr: 'Yeshivat Kerem b\'Yavneh (the original, 1953)' },
+  { he: 'יְשִׁיבַת הַכֹּתֶל', translit: 'yeshivat ha-kotel', fr: 'Yeshivat HaKotel (Old City Jerusalem)' },
+  { he: 'יְשִׁיבַת רָמַת גַּן', translit: 'yeshivat ramat gan', fr: 'Yeshivat Ramat Gan' }
+];
+const SCHEDULE = [
+  { he: 'שַׁחֲרִית', translit: 'shacharit', fr: 'morning prayer (~6:30-7:30)' },
+  { he: 'סֵדֶר בֹּקֶר', translit: 'seder boker', fr: 'morning study session' },
+  { he: 'בֵּית מִדְרָשׁ', translit: 'beit midrash', fr: 'study hall (the main learning space)' },
+  { he: 'חַבְרוּתָא', translit: 'chevruta', fr: 'study partner (paired learning)' },
+  { he: 'שִׁעוּר כְּלָלִי', translit: 'shi\'ur klali', fr: 'general lecture (rosh yeshiva\'s weekly shiur)' },
+  { he: 'אֲרוּחַת צָהֳרַיִם', translit: 'aruchat tzohorayim', fr: 'lunch' },
+  { he: 'סֵדֶר אַחַר צָהֳרַיִם', translit: 'seder achar tzohorayim', fr: 'afternoon study session' },
+  { he: 'מִנְחָה', translit: 'mincha', fr: 'afternoon prayer' },
+  { he: 'סֵדֶר עֶרֶב', translit: 'seder erev', fr: 'evening study session' },
+  { he: 'עַרְבִית', translit: 'arvit', fr: 'evening prayer (ma\'ariv)' }
+];
+const COMBAT = [
+  { he: 'כְּפִיר', translit: 'Kfir', fr: 'Kfir Brigade (infantry, West Bank ops)' },
+  { he: 'גִּבְעָתִי', translit: 'Givati', fr: 'Givati Brigade (infantry, southern command)' },
+  { he: 'גוֹלָנִי', translit: 'Golani', fr: 'Golani Brigade (infantry, northern command)' },
+  { he: 'צַנְחָנִים', translit: 'tzanchanim', fr: 'paratroopers' },
+  { he: 'נַחַל', translit: 'Nachal', fr: 'Nachal Brigade (infantry + agriculture roots)' },
+  { he: 'סַיֶּרֶת', translit: 'sayeret', fr: 'recon / special forces unit' },
+  { he: 'קֶרַע שֵׁרוּת', translit: 'kru sherut', fr: 'compulsory service' },
+  { he: 'מִילוּאִים', translit: 'miluim', fr: 'reserves (active until ~age 40)' },
+  { he: 'פִּקּוּדָה', translit: 'pikuda', fr: 'command (military command structure)' },
+  { he: 'מְפַקְּדֵי כִּתָּה', translit: 'm\'fakdei kita', fr: 'squad leaders' }
+];
+const HASHKAFA = [
+  { he: 'תּוֹרָה וּמְלָאכָה', translit: 'Torah u\'melakha', fr: 'Torah and work / state service' },
+  { he: 'מִזּוּג', translit: 'mizug', fr: 'integration (of Torah and IDF)' },
+  { he: 'צִיּוֹנוּת דָּתִית', translit: 'tzionut datit', fr: 'religious Zionism' },
+  { he: 'מְסִירַת נֶפֶשׁ', translit: 'mesirat nefesh', fr: 'self-sacrifice' },
+  { he: 'קִדּוּשׁ הַשֵּׁם', translit: 'kiddush HaShem', fr: 'sanctification of the Name' },
+  { he: 'אַהֲבַת יִשְׂרָאֵל', translit: 'ahavat Yisrael', fr: 'love of the Jewish people' },
+  { he: 'אַהֲבַת הָאָרֶץ', translit: 'ahavat ha\'aretz', fr: 'love of the Land' },
+  { he: 'אַחְדוּת', translit: 'achdut', fr: 'unity' },
+  { he: 'מַמְלַכְתִּיּוּת', translit: 'mamlachtiut', fr: 'statehood (loyalty to the state apparatus)' },
+  { he: 'תּוֹרַת אֶרֶץ יִשְׂרָאֵל', translit: 'Torat Eretz Yisrael', fr: 'Torah of the Land of Israel' }
+];
+
+const DIALOGUE = [
+  { he: 'הוֹרֶה — אָז אַתָּה כְּבָר בְּשָׁנָה בֵּית. מָתַי הַגִּיּוּס?', translit: 'horeh — az atah k\'var b\'shana bet. matai ha-giyus?', fr: 'Parent — So you\'re already in year 2. When\'s the enlistment?' },
+  { he: 'תַּלְמִיד — שָׁנָה אָלֶף גָּמַרְתִּי, עַכְשָׁיו שָׁנָה בֵּית. בְּסוֹף הַשָּׁנָה הַזֹּאת — הַגִּבּוּשׁ לְגִּבְעָתִי, וְאַחַר כָּךְ הַגִּיּוּס.', translit: 'talmid — shana aleph gamarti, achshav shana bet. b\'sof ha-shana ha-zot — ha-gibbush l\'Givati, v\'achar kach ha-giyus.', fr: 'Student — I finished year 1, now year 2. End of this year — the Givati selection, then enlistment.' },
+  { he: 'הוֹרֶה — לָמָּה דַּוְקָא גִּבְעָתִי? לֹא יוֹתֵר בָּטוּחַ בְּפִקּוּדָה?', translit: 'horeh — lama davka Givati? lo yoter batuach b\'pikuda?', fr: 'Parent — Why specifically Givati? Wouldn\'t command be safer?' },
+  { he: 'תַּלְמִיד — אַבָּא, חַבְרוּתָא שֶׁלִּי הוֹלֵךְ לְגִּבְעָתִי, וְהָרֹאשׁ יְשִׁיבָה אוֹמֵר שֶׁזֶּה הַמַּסְלוּל הַנָּכוֹן. מִזּוּג אֲמִתִּי שֶׁל תּוֹרָה וּמְלָאכָה.', translit: 'talmid — aba, chevruta sheli holech l\'Givati, v\'ha-rosh yeshiva omer she-ze ha-maslul ha-nachon. mizug amiti shel Torah u\'melakha.', fr: 'Student — Dad, my chevruta is going to Givati, and the rosh yeshiva says it\'s the right path. Real integration of Torah and service.' },
+  { he: 'הוֹרֶה — וְאַחֲרֵי הַצָּבָא? חוֹזֵר לַיְּשִׁיבָה?', translit: 'horeh — v\'acharei ha-tzava? chozer la-yeshiva?', fr: 'Parent — And after the army? Back to yeshiva?' },
+  { he: 'תַּלְמִיד — כֵּן. שָׁנָה דָּלֶת בַּיְּשִׁיבָה אַחֲרֵי הַשִּׁחְרוּר, וְשָׁנָה הֵא לְסַיֵּם. סַךְ הַכֹּל 5 שָׁנִים.', translit: 'talmid — ken. shana dalet ba-yeshiva acharei ha-shichrur, v\'shana heh l\'sayem. sach ha-kol 5 shanim.', fr: 'Student — Yes. Year 4 in yeshiva after release, then year 5 to finish. 5 years total.' },
+  { he: 'הוֹרֶה — וּבַטִּיחוּת? אִמָּא לֹא יְשֵׁנָה.', translit: 'horeh — u-b\'tichut? ima lo y\'shena.', fr: 'Parent — And safety? Mom doesn\'t sleep.' },
+  { he: 'תַּלְמִיד — תַּגִּידוּ לָהּ שֶׁאֲנַחְנוּ פְּלוּגָה שְׁלֵמָה מֵהַיְּשִׁיבָה — חַבְרוּתָא בַּבֵּית מִדְרָשׁ, חַבְרוּתָא בַּפִּקּוּדָה. אַחְדוּת. זֶה מָה שֶׁשּׁוֹמֵר עָלֵינוּ.', translit: 'talmid — tagidu la she-anachnu pluga shlema me-ha-yeshiva — chevruta ba-beit midrash, chevruta ba-pikuda. achdut. ze ma she-shomer aleinu.', fr: 'Student — Tell her we\'re a whole company from the yeshiva — chevruta in the beit midrash, chevruta in the unit. Unity. That\'s what protects us.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('path', PATH);
+R('yeshivot', YESHIVOT);
+R('schedule', SCHEDULE);
+R('combat', COMBAT);
+R('hashkafa', HASHKAFA);
+
+renderTextBlock('dialogue', DIALOGUE);
+
+addMiniQuiz('Block 21 · Hesder Quiz', [
+  { q: 'The hesder program total length is...', options: ['3 years', '4 years', '5 years', '6 years'], answer: 2, explain: '5 years total — typically 3 yeshiva + 1.5 army + 0.5 yeshiva.' },
+  { q: 'Hesder was founded by...', options: ['Rav Kook', 'Rav Yehuda Amital', 'Rav Druckman', 'Rav Tau'], answer: 1, explain: 'Amital co-founded Yeshivat Har Etzion 1968 building on the hesder model from 1953.' },
+  { q: 'Hesder soldiers serve roughly how long in IDF?', options: ['12 months', '17-19 months', '24 months', '32 months'], answer: 1, explain: '~17-19 months versus 32-36 for regular conscripts.' },
+  { q: 'Hesder soldiers concentrate in...', options: ['intelligence units', 'elite combat units', 'logistics', 'Air Force'], answer: 1, explain: 'Kfir, Givati, Golani especially — Hesder companies attached to combat brigades.' },
+  { q: '"Mizug" in hesder context means...', options: ['sleep', 'integration of Torah and IDF', 'strict separation', 'commerce'], answer: 1, explain: 'mizug = blending; the integration of religious life and state service.' },
+  { q: 'The kippa typically worn by hesder students is...', options: ['kippa shchora', 'kippa srugah', 'kippa Yemenit', 'kippa lavan'], answer: 1, explain: 'kippa srugah (knitted) is the religious-Zionist marker.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('hesder');
+  }
+});
+</script></body></html>

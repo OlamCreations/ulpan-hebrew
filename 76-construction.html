@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>76 — Construction & Trades</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Construction & Trades</h1><div class="subtitle">Lesson 76 · בנייה ומלאכות</div></div><div class="nav"><a href="index.html">Home</a><a href="76-construction.html" class="active">76</a></div></header>
+
+<p class="intro">Vocabulary for construction, hardware stores, repairmen, contractors. Useful when something breaks in your apartment, you're renovating, or speaking with the building committee.</p>
+
+<h2>Construction Roles</h2>
+<div class="word-list" id="roles"></div>
+
+<h2>Tools</h2>
+<div class="word-list" id="tools"></div>
+
+<h2>Materials</h2>
+<div class="word-list" id="materials"></div>
+
+<h2>Building Parts</h2>
+<div class="word-list" id="parts"></div>
+
+<h2>Plumbing & Electrical</h2>
+<div class="word-list" id="plumbing"></div>
+
+<h2>Common Issues</h2>
+<div class="word-list" id="issues"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 76 · construction · <a href="77-agriculture.html" style="color:var(--accent)">Next: Agriculture →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const ROLES = [
+  { he: 'קַבְּלָן', translit: 'kablan', fr: 'contractor' },
+  { he: 'בַּנַּאי', translit: 'banai', fr: 'builder / mason' },
+  { he: 'נַגָּר', translit: 'nagar', fr: 'carpenter' },
+  { he: 'אִינְסְטָלָטוֹר', translit: 'instalator', fr: 'plumber' },
+  { he: 'חַשְׁמַלַּאי', translit: 'chashmalai', fr: 'electrician' },
+  { he: 'צַבָּע', translit: 'tzaba', fr: 'painter' },
+  { he: 'רוֹעֶה', translit: 'ro\'e', fr: 'tile setter (less common)' },
+  { he: 'אַדְרִיכָל', translit: 'adrichal', fr: 'architect' },
+  { he: 'מְהַנְדֵּס בִּנְיָן', translit: 'mehandes binyan', fr: 'building engineer' }
+];
+const TOOLS = [
+  { he: 'פַּטִּישׁ', translit: 'patish', fr: 'hammer' },
+  { he: 'מַסְמֵר', translit: 'masmer', fr: 'nail' },
+  { he: 'בֹּרֵג', translit: 'boreg', fr: 'screw' },
+  { he: 'מַבְרִיג', translit: 'mavrig', fr: 'screwdriver' },
+  { he: 'מְקָדֵחָה', translit: 'mekadecha', fr: 'drill' },
+  { he: 'מַסּוֹר', translit: 'masor', fr: 'saw' },
+  { he: 'מַפְתֵּחַ', translit: 'mafteach', fr: 'wrench / key' },
+  { he: 'סֻלָּם', translit: 'sulam', fr: 'ladder' },
+  { he: 'קוֹלֵט', translit: 'kolet', fr: 'tape measure' }
+];
+const MATERIALS = [
+  { he: 'בֵּטוֹן', translit: 'beton', fr: 'concrete' },
+  { he: 'לְבֵנִים', translit: 'lvenim', fr: 'bricks' },
+  { he: 'עֵץ', translit: 'etz', fr: 'wood' },
+  { he: 'מַתֶּכֶת', translit: 'matechet', fr: 'metal' },
+  { he: 'בַּרְזֶל', translit: 'barzel', fr: 'iron' },
+  { he: 'אֶלוּמִינְיוּם', translit: 'aluminium', fr: 'aluminum' },
+  { he: 'זְכוּכִית', translit: 'zchuchit', fr: 'glass' },
+  { he: 'קֶרָמִיקָה', translit: 'keramika', fr: 'ceramic' },
+  { he: 'שַׁיִשׁ', translit: 'shayish', fr: 'marble' },
+  { he: 'גֶּבֶס', translit: 'geves', fr: 'plaster / drywall' },
+  { he: 'צֶבַע', translit: 'tzeva', fr: 'paint' }
+];
+const PARTS = [
+  { he: 'קִיר', translit: 'kir', fr: 'wall' },
+  { he: 'תִּקְרָה', translit: 'tikra', fr: 'ceiling' },
+  { he: 'רִצְפָּה', translit: 'ritzpa', fr: 'floor' },
+  { he: 'יְסוֹדוֹת', translit: 'yesodot', fr: 'foundations' },
+  { he: 'גַּג', translit: 'gag', fr: 'roof' },
+  { he: 'מַדְרֵגוֹת', translit: 'madregot', fr: 'stairs' },
+  { he: 'מַעֲקֶה', translit: 'ma\'ake', fr: 'railing' },
+  { he: 'מִרְפֶּסֶת', translit: 'mirpeset', fr: 'balcony' }
+];
+const PLUMBING = [
+  { he: 'צִינּוֹר', translit: 'tzinor', fr: 'pipe' },
+  { he: 'בֶּרֶז', translit: 'berez', fr: 'faucet / tap' },
+  { he: 'דּוּד מַיִם', translit: 'dud mayim', fr: 'water heater (boiler)' },
+  { he: 'דּוּד שֶׁמֶשׁ', translit: 'dud shemesh', fr: 'solar water heater' },
+  { he: 'דּוֹלֵף', translit: 'dolef', fr: 'leaking' },
+  { he: 'נָטוֹף', translit: 'natof', fr: 'dripping' },
+  { he: 'חַשְׁמַל', translit: 'chashmal', fr: 'electricity' },
+  { he: 'שֶׁקַע', translit: 'sheka', fr: 'outlet' },
+  { he: 'מֶתֶג', translit: 'meteg', fr: 'switch' },
+  { he: 'נוּרָה', translit: 'nura', fr: 'lightbulb' }
+];
+const ISSUES = [
+  { he: 'תַּקָּלָה', translit: 'takala', fr: 'malfunction' },
+  { he: 'נֵזֶק', translit: 'nezek', fr: 'damage' },
+  { he: 'דְּלִיפָה', translit: 'dlifa', fr: 'leak' },
+  { he: 'סְתִימָה', translit: 'stima', fr: 'clog / blockage' },
+  { he: 'חֹסֶר חַשְׁמַל', translit: 'choser chashmal', fr: 'power outage' },
+  { he: 'תִּקּוּן', translit: 'tikun', fr: 'repair' },
+  { he: 'הַחְלָפָה', translit: 'hachlafa', fr: 'replacement' },
+  { he: 'שִׁפּוּצִים', translit: 'shiputzim', fr: 'renovations' }
+];
+const PHRASES = [
+  { he: 'יֵשׁ דְּלִיפָה בַּמִּטְבָּח', translit: 'yesh dlifa ba-mitbach', fr: "there's a leak in the kitchen" },
+  { he: 'אֲנִי צָרִיךְ אִינְסְטָלָטוֹר', translit: 'ani tzarich instalator', fr: 'I need a plumber (m.)' },
+  { he: 'הַחַשְׁמַל לֹא עוֹבֵד', translit: 'ha-chashmal lo oved', fr: "the electricity doesn\'t work" },
+  { he: 'כַּמָּה זֶה יַעֲלֶה?', translit: 'kama ze ya\'ale?', fr: 'how much will it cost?' },
+  { he: 'הַשִּׁפּוּצִים יִקְחוּ חֹדֶשׁ', translit: 'ha-shiputzim yikchu chodesh', fr: 'the renovations will take a month' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('roles', ROLES); R('tools', TOOLS); R('materials', MATERIALS); R('parts', PARTS); R('plumbing', PLUMBING); R('issues', ISSUES); R('phrases', PHRASES);
+addExtraVocab('Tools & Materials', [
+  { he: 'פַּטִּישׁ', translit: 'patish', fr: 'hammer' },
+  { he: 'מַסְמֵר', translit: 'masmer', fr: 'nail' },
+  { he: 'בֹּרֶג', translit: 'boreg', fr: 'screw' },
+  { he: 'מַבְרֵג', translit: 'mavreg', fr: 'screwdriver' },
+  { he: 'מַשּׂוֹר', translit: 'masor', fr: 'saw' },
+  { he: 'מַקְדֵּחָה', translit: 'makdecha', fr: 'drill' },
+  { he: 'מַפְתֵּחַ צִינוֹר', translit: 'mafte\'ach tzinor', fr: 'pipe wrench' },
+  { he: 'סֻלָּם', translit: 'sulam', fr: 'ladder' },
+  { he: 'מַזְלֵג', translit: 'mazleg', fr: 'fork' },
+  { he: 'בֶּטוֹן', translit: 'beton', fr: 'concrete' },
+  { he: 'לְבֵנָה', translit: 'lvena', fr: 'brick' },
+  { he: 'עֵץ', translit: 'etz', fr: 'wood' },
+  { he: 'בַּרְזֶל', translit: 'barzel', fr: 'iron' },
+  { he: 'צֶבַע', translit: 'tzeva', fr: 'paint' },
+  { he: 'בֶּטוֹן מָזוּין', translit: 'beton mazuyan', fr: 'reinforced concrete' }
+]);
+
+addMiniQuiz('Construction & Trades Quiz', [
+  { q: '"Plumber" =', options: ['חַשְׁמַלַאי', 'אִינְסְטָלָטוֹר', 'נַגָּר', 'בַּנַּאי'], answer: 1 },
+  { q: '"Electrician" =', options: ['חַשְׁמַלַאי', 'אִינְסְטָלָטוֹר', 'נַגָּר', 'מַכְלִיט'], answer: 0 },
+  { q: '"Carpenter" =', options: ['חַשְׁמַלַאי', 'אִינְסְטָלָטוֹר', 'נַגָּר', 'בַּנַּאי'], answer: 2 },
+  { q: 'Most tradesmen want payment in...', options: ['Credit card', 'Cash (better deal)', 'Crypto', 'Check'], answer: 1, explain: 'Mezuman = cash, often discount' },
+  { q: '"Renovation" =', options: ['שִׁפּוּץ', 'בְּנִיָּה', 'הֶרֶס', 'תִּקּוּן'], answer: 0 }
+]);
+
+addCulturalText('Calling a Plumber — Real Conversation', 'Every oleh learns this dialogue within the first 6 months. The plumber is always 4 hours late and his quote is always 30% higher than expected.', [
+  { he: 'אַתָּה: שָׁלוֹם, יֵשׁ לִי בְּעָיָה בָּאַמְבַּטְיָה', translit: "Ata: Shalom, yesh li be\'aya ba-ambatya", fr: 'You: Hello, I have a problem in the bathroom' },
+  { he: 'אִינְסְטָלָטוֹר: מָה קָרָה?', translit: "Instalator: Ma kara?", fr: "Plumber: What happened?" },
+  { he: 'אַתָּה: דָּלִיף מֵהַבְּרָז, וְהַנִּיקוּז סָתוּם', translit: "Ata: Dalif me-ha-braz, ve-ha-nikuz satum", fr: 'You: Leak from the faucet, and the drain is clogged' },
+  { he: 'אִינְסְטָלָטוֹר: בְּסֵדֶר, אֲנִי בָּא הַיּוֹם בָּעֶרֶב', translit: "Instalator: Beseder, ani ba ha-yom ba-erev", fr: "Plumber: OK, I'll come this evening" },
+  { he: 'אַתָּה: אֵיזוֹ שָׁעָה בְּעֶרֶךְ?', translit: "Ata: Eyzo sha\'a be-erech?", fr: 'You: What time approximately?' },
+  { he: 'אִינְסְטָלָטוֹר: בֵּין 6 ל-9', translit: "Instalator: Beyn 6 le-9", fr: "Plumber: Between 6 and 9" },
+  { he: 'אַתָּה: כַּמָּה זֶה יַעֲלֶה?', translit: "Ata: Kama ze ya\'aleh?", fr: 'You: How much will it cost?' },
+  { he: 'אִינְסְטָלָטוֹר: בִּקּוּר 200, וְעֲבוֹדָה לְפִי הַזְּמַן', translit: "Instalator: Bikur 200, ve-avoda lefi ha-zman", fr: 'Plumber: Visit 200, and work according to time' },
+  { he: 'אִינְסְטָלָטוֹר: רַק חַיֵּב מַזוּמָן, אֵין כַּרְטִיס אַשְׁרַאי', translit: "Instalator: Rak chayav mezuman, ein kartis ashrai", fr: 'Plumber: Cash only, no credit card' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('construction'); } });
+</script></body></html>

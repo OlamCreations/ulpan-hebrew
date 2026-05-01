@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>228 — Dental Care</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Dental Care — Rofe Shinayim</h1><div class="subtitle">Lesson 228 · רוֹפֵא שִׁנַּיִם</div></div><div class="nav"><a href="index.html">Home</a><a href="228-dental.html" class="active">228</a></div></header>
+
+<p class="intro">Israeli dental care is partially covered: ages 0-18 are fully subsidized via kupa (Reform 2010), adults pay private. Major chains: kupot operate clinics (Maccabi Dental, Clalit), private chains include Smile Dental and Sela. Common procedures: nikui (cleaning), m'lui (filling), shchen (canine extraction), shoresh (root canal), kotza (crown), shtilim (implants). Cost ranges: cleaning ~150-300 NIS, filling ~300-500, crown ~2000-4000, implant ~6000-12000.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Adult dental insurance in Israel is mostly supplemental (bituach mashlim), Maccabi Zahav and similar tiers. Israelis often defer dental work or fly to Hungary/Turkey for major procedures (cheaper). For acute pain, kupa-affiliated dentists offer same-day urgent slots. The vocabulary mixes Hebrew (rofe shinayim) with Arabic loanwords for tooth pain ("ze ke\'ev k\'tzat", it hurts a bit). Children 13 and under get full coverage at chosen kupa dentist.</div>
+
+<h2>Booking</h2>
+<div class="word-list" id="appointment"></div>
+
+<h2>Common Problems</h2>
+<div class="word-list" id="problems"></div>
+
+<h2>Procedures</h2>
+<div class="word-list" id="procedures"></div>
+
+<h2>Equipment & Materials</h2>
+<div class="word-list" id="instruments"></div>
+
+<h2>Conversation Vocabulary</h2>
+<div class="word-list" id="conversation"></div>
+
+<hr class="section-divider">
+
+<h2>An Oleh's First Dental Visit</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh with a chipped tooth visits a Maccabi Dental clinic.</div>
+  <div id="dental-visit"></div>
+</div>
+
+<footer>Lesson 228 · Dental · <a href="229-imaging.html" style="color:var(--accent)">Next: Imaging →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const APPOINTMENT = [
+  { he: 'רוֹפֵא שִׁנַּיִם', translit: 'rofe shinayim', fr: 'dentist' },
+  { he: 'קְבִיעַת תּוֹר', translit: 'kvi\'at tor', fr: 'booking appointment' },
+  { he: 'בְּדִיקַת שִׁנַּיִם', translit: 'bdikat shinayim', fr: 'dental exam' },
+  { he: 'נִיקּוּי', translit: 'nikui', fr: 'cleaning' },
+  { he: 'צִילּוּם פָּנוֹרָמִי', translit: 'tzilum panorami', fr: 'panoramic X-ray' },
+  { he: 'צִילּוּם שֵׁן', translit: 'tzilum shen', fr: 'single-tooth X-ray' },
+  { he: 'הֶרְאָחָה', translit: 'her\'aha', fr: 'consultation' },
+  { he: 'מְקַשְׁוִית', translit: 'm\'kashvit', fr: 'wait list' },
+  { he: 'תּוֹר דָּחוּף', translit: 'tor dachuf', fr: 'urgent appointment' },
+  { he: 'בֵּית עֲבוֹדַת שִׁנַּיִם', translit: 'beit avodet shinayim', fr: 'dental clinic' }
+];
+const PROBLEMS = [
+  { he: 'כְּאֵב שֵׁן', translit: 'k\'ev shen', fr: 'toothache' },
+  { he: 'כְּרוּתָה', translit: 'keruta', fr: 'cavity' },
+  { he: 'קַלְקָלַת שֵׁן', translit: 'kalkalat shen', fr: 'broken tooth' },
+  { he: 'זִיבּוּד', translit: 'zibud', fr: 'decay' },
+  { he: 'בִּיתּוּז', translit: 'bituz', fr: 'chip' },
+  { he: 'מִילּוּי שֶׁנִּשָּׁה', translit: 'm\'lui shenisha', fr: 'loose filling' },
+  { he: 'שֵׁן רָקוּק', translit: 'sheen rachok', fr: 'broken tooth' },
+  { he: 'כּוֹשֵׁר', translit: 'kosher', fr: 'gum disease' },
+  { he: 'שִׁעֲר דָּמָם', translit: 'shi\'ar damam', fr: 'bleeding gum' },
+  { he: 'אֵבֶס', translit: 'eves', fr: 'numbness' }
+];
+const PROCEDURES = [
+  { he: 'מִילּוּי', translit: 'm\'lui', fr: 'filling' },
+  { he: 'מִילּוּי שֵׁן', translit: 'm\'lui shen', fr: 'tooth filling' },
+  { he: 'מִילּוּי חוֹפֶשׁ', translit: 'm\'lui hofesh', fr: 'white filling' },
+  { he: 'שׁוֹרֶשׁ', translit: 'shoresh', fr: 'root canal' },
+  { he: 'כֹּתֶר', translit: 'kotza', fr: 'crown' },
+  { he: 'גֶּשֶׁר', translit: 'gesher', fr: 'bridge' },
+  { he: 'שְׁתִיל', translit: 'shtil', fr: 'implant' },
+  { he: 'סִלִּיוּת', translit: 'siliyut', fr: 'extraction' },
+  { he: 'מְסוֹקַק', translit: 'm\'sokak', fr: 'cleaning' },
+  { he: 'טִיפּוּל שִׁנַּיִם', translit: 'tipul shinayim', fr: 'dental treatment' }
+];
+const INSTRUMENTS = [
+  { he: 'מַקְדֵּחָה', translit: 'm\'kdacha', fr: 'drill' },
+  { he: 'אֵבֶס רִיפּוֹאִי', translit: 'eves rifoa', fr: 'anesthetic' },
+  { he: 'אֵבֶס מְקוֹמִי', translit: 'eves mekomi', fr: 'local anesthetic' },
+  { he: 'גַּד-תַּשְׁתִּית', translit: 'gad-tashtit', fr: 'filling material' },
+  { he: 'קוֹמְפּוֹזִיט', translit: 'composite', fr: 'composite' },
+  { he: 'אַמָּלְגָּם', translit: 'amalgam', fr: 'amalgam' },
+  { he: 'פּוֹרְצֶלָן', translit: 'porcelain', fr: 'porcelain' },
+  { he: 'שָׁדֶה', translit: 'shadeh', fr: 'matrix' },
+  { he: 'אֵלִיָה', translit: 'elia', fr: 'rubber dam' },
+  { he: 'רֶשֶׁת', translit: 'reshet', fr: 'tray' }
+];
+const CONVERSATION = [
+  { he: 'כּוֹאֵב לִי', translit: 'koev li', fr: 'it hurts' },
+  { he: 'מֵאָז מָתַי?', translit: 'me\'az matai', fr: 'since when?' },
+  { he: 'שְׁלוֹשָׁה יָמִים', translit: '3 yamim', fr: '3 days' },
+  { he: 'אַף פַּעַם', translit: 'af pa\'am', fr: 'never' },
+  { he: 'לִפְתּוֹחַ פִּיהַ', translit: 'liftoach piha', fr: 'open mouth' },
+  { he: 'תִּגְרֹשׁ עַכְשָׁיו', translit: 'tigrosh achshav', fr: 'pull now' },
+  { he: 'אֲנִי מַתִּיר אֶת הַצָּרָה', translit: 'ani matir hatzorah', fr: 'I\'ll alleviate the pain' },
+  { he: 'אַתָּה הוֹלֵךְ לִפְרוֹק', translit: 'atah holech lifrok', fr: 'you\'ll need a procedure' },
+  { he: 'כַּמָּה זֶה יוֹצֵא?', translit: 'kama ze yotze', fr: 'how much?' },
+  { he: 'תּוֹדָה אָחִי', translit: 'todah achi', fr: 'thanks bro' }
+];
+
+const DENTAL_VISIT = [
+  { he: 'רוֹפֵא: שָׁלוֹם, מָה הַבְּעָיָה הַיּוֹם?', translit: 'rofe: shalom, ma ha-be\'aya ha-yom?', fr: 'Dentist: Hello, what\'s the problem today?' },
+  { he: 'יוֹנָאס: שָׁלוֹם, שָׁבַרְתִּי שֵׁן טוֹחֶנֶת מִפּוֹפְּקוֹרְן.', translit: 'yonas: shalom, shavarti shen tochenet mi-popcorn.', fr: 'Jonas: Hello, I broke a molar from popcorn.' },
+  { he: 'רוֹפֵא: בּוֹא נִבְדֹּק. לִפְתּוֹחַ פִּיהַ בְּבַקָּשָׁה.', translit: 'rofe: bo nivdok. liftoach piha b\'vakasha.', fr: 'Dentist: Let\'s check. Open your mouth please.' },
+  { he: 'יוֹנָאס: זֶה כּוֹאֵב כְּשֶׁאֲנִי לוֹעֵס מִיָּמִין.', translit: 'yonas: ze koev k\'she-ani lo\'es mi-yamin.', fr: 'Jonas: It hurts when I chew on the right.' },
+  { he: 'רוֹפֵא: צָרִיךְ צִילּוּם שֵׁן קָטָן. רֶגַע.', translit: 'rofe: tzarich tzilum shen katan. rega.', fr: 'Dentist: We need a small X-ray. One moment.' },
+  { he: 'רוֹפֵא: זֶה בִּיתּוּז קָטָן, מִילּוּי קוֹמְפּוֹזִיט מַסְפִּיק. לֹא שׁוֹרֶשׁ.', translit: 'rofe: ze bituz katan, m\'lui composite maspik. lo shoresh.', fr: 'Dentist: It\'s a small chip, a composite filling is enough. No root canal.' },
+  { he: 'יוֹנָאס: כַּמָּה זֶה יוֹצֵא עִם מַכַּבִּי?', translit: 'yonas: kama ze yotze im maccabi?', fr: 'Jonas: How much is it with Maccabi?' },
+  { he: 'רוֹפֵא: עִם הַהֲנָחָה שֶׁל מַכַּבִּי דֶּנְטָל, שְׁלוֹשׁ מֵאוֹת חֲמִישִּׁים שֶׁ"ח.', translit: 'rofe: im ha-hanacha shel maccabi dental, 350 shach.', fr: 'Dentist: With the Maccabi Dental discount, 350 NIS.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('appointment', APPOINTMENT);
+R('problems', PROBLEMS);
+R('procedures', PROCEDURES);
+R('instruments', INSTRUMENTS);
+R('conversation', CONVERSATION);
+
+renderTextBlock('dental-visit', DENTAL_VISIT);
+
+addMiniQuiz('Block 23 · Dental Quiz', [
+  { q: 'Dental care is fully covered by kupa for ages...', options: ['0-12', '0-18', '18-65', '65+'], answer: 1, explain: '2010 reform brought full coverage for children up to 18.' },
+  { q: 'The Hebrew word for dentist is...', options: ['rofe ozen', 'rofe shinayim', 'rokeach', 'mumche'], answer: 1, explain: 'Literally "tooth doctor."' },
+  { q: 'A "shoresh" (root canal) procedure costs roughly...', options: ['50 NIS', '1500-3000 NIS', '50000 NIS', 'free'], answer: 1, explain: 'Root canal averages 1500-3000 NIS for adults.' },
+  { q: '"M\'lui" means...', options: ['filling', 'extraction', 'crown', 'cleaning'], answer: 0, explain: 'M\'lui = filling, composite or amalgam material into a cavity.' },
+  { q: 'Dental implants in Israel typically cost...', options: ['free', '6000-12000 NIS', '100 NIS', '100K NIS'], answer: 1, explain: 'Shtil (implant) is one of the more expensive procedures.' },
+  { q: 'For adult dental coverage above the basic basket, you need...', options: ['kupat cholim only', 'supplemental insurance (bituach mashlim)', 'private only', 'no coverage'], answer: 1, explain: 'Adult dental requires Mushlam/Zahav supplemental tiers.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('dental');
+  }
+});
+</script></body></html>

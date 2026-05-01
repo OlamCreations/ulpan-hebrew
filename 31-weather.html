@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>31 — Weather & Climate</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Weather & Climate</h1><div class="subtitle">Lesson 31 · מזג אוויר</div></div><div class="nav"><a href="index.html">Home</a><a href="31-weather.html" class="active">31</a></div></header>
+
+<p class="intro">Israeli weather is Mediterranean: hot dry summers (May-October), cool wet winters (November-April). The Negev is desert. Snow in Jerusalem maybe once a year. Vocabulary for daily small talk and weather forecasts.</p>
+
+<div class="tip"><strong>Mezeg avir (מֶזֶג אֲוִויר)</strong> — literally "temperament of air" = weather. The forecast is "tachazit mezeg ha-avir".</div>
+
+<h2>Basic Weather Words</h2>
+<div class="word-list" id="basic"></div>
+
+<h2>Sun, Rain, Wind, Snow</h2>
+<div class="word-list" id="elements"></div>
+
+<h2>Temperature</h2>
+<div class="word-list" id="temp"></div>
+
+<h2>Sky & Atmosphere</h2>
+<div class="word-list" id="sky"></div>
+
+<h2>Israeli Climate Phenomena</h2>
+<div class="word-list" id="climate"></div>
+
+<h2>Weather Forecast Phrases</h2>
+<div class="word-list" id="forecast"></div>
+
+<hr class="section-divider">
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 31 · weather · <a href="32-transportation.html" style="color:var(--accent)">Next: Transportation →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const BASIC = [
+  { he: 'מֶזֶג אֲוִויר', translit: 'mezeg avir', fr: 'weather' },
+  { he: 'תַּחֲזִית', translit: 'tachazit', fr: 'forecast' },
+  { he: 'יוֹם יָפֶה', translit: 'yom yafe', fr: 'nice day' },
+  { he: 'יוֹם מְעֻנָּן', translit: 'yom me\'unan', fr: 'cloudy day' },
+  { he: 'יוֹם גָּשׁוּם', translit: 'yom gashum', fr: 'rainy day' },
+  { he: 'מְזֻהָם', translit: 'mezuham', fr: 'polluted' },
+  { he: 'בָּהִיר', translit: 'bahir', fr: 'clear / bright' },
+  { he: 'נָעִים', translit: 'na\'im', fr: 'pleasant' }
+];
+const ELEMENTS = [
+  { he: 'שֶׁמֶשׁ', translit: 'shemesh', fr: 'sun' },
+  { he: 'שָׁמֶשׁ', translit: 'shamesh', fr: 'sunny' },
+  { he: 'גֶּשֶׁם', translit: 'geshem', fr: 'rain' },
+  { he: 'יוֹרֵד גֶּשֶׁם', translit: 'yored geshem', fr: 'it\'s raining' },
+  { he: 'רוּחַ', translit: 'ruach', fr: 'wind' },
+  { he: 'סְעָרָה', translit: 'se\'ara', fr: 'storm' },
+  { he: 'שֶׁלֶג', translit: 'sheleg', fr: 'snow' },
+  { he: 'בָּרָד', translit: 'barad', fr: 'hail' },
+  { he: 'עָנָן', translit: 'anan', fr: 'cloud' },
+  { he: 'עֲנָנִים', translit: 'ananim', fr: 'clouds' },
+  { he: 'ערפל', translit: 'arafel', fr: 'fog' },
+  { he: 'קֶשֶׁת', translit: 'keshet', fr: 'rainbow' },
+  { he: 'בָּרָק', translit: 'barak', fr: 'lightning' },
+  { he: 'רַעַם', translit: 'ra\'am', fr: 'thunder' }
+];
+const TEMP = [
+  { he: 'חַם', translit: 'cham', fr: 'hot' },
+  { he: 'קַר', translit: 'kar', fr: 'cold' },
+  { he: 'חַמְסִין', translit: 'chamsin', fr: 'heatwave (Arabic loan)' },
+  { he: 'מַעֲלָה', translit: 'ma\'ala', fr: 'degree' },
+  { he: 'מַעֲלוֹת', translit: 'ma\'alot', fr: 'degrees (plural)' },
+  { he: 'שְׁלוֹשִׁים מַעֲלוֹת', translit: 'shloshim ma\'alot', fr: '30 degrees' },
+  { he: 'לַח', translit: 'lach', fr: 'humid / wet' },
+  { he: 'יָבֵשׁ', translit: 'yavesh', fr: 'dry' },
+  { he: 'קָפוּא', translit: 'kafu', fr: 'frozen / freezing' }
+];
+const SKY = [
+  { he: 'שָׁמַיִם', translit: 'shamayim', fr: 'sky / heavens' },
+  { he: 'שֶׁמֶשׁ זוֹרַחַת', translit: 'shemesh zorachat', fr: 'sunrise' },
+  { he: 'שְׁקִיעָה', translit: 'shki\'a', fr: 'sunset' },
+  { he: 'יָרֵחַ', translit: 'yareach', fr: 'moon' },
+  { he: 'כּוֹכָב', translit: 'kochav', fr: 'star' },
+  { he: 'כּוֹכָבִים', translit: 'kochavim', fr: 'stars' }
+];
+const CLIMATE = [
+  { he: 'הַחַמְסִין', translit: 'ha-chamsin', fr: 'the chamsin (hot dry desert wind)' },
+  { he: 'יוֹרֶה', translit: 'yore', fr: 'first autumn rain (Oct-Nov)' },
+  { he: 'מַלְקוֹשׁ', translit: 'malkosh', fr: 'last spring rain' },
+  { he: 'עוֹנַת הַגְּשָׁמִים', translit: 'onat ha-gshamim', fr: 'rainy season' },
+  { he: 'עוֹנַת הַקַּיִץ', translit: 'onat ha-kayitz', fr: 'summer season' },
+  { he: 'מִדְבָּרִי', translit: 'midbari', fr: 'desert (adj.)' }
+];
+const FORECAST = [
+  { he: 'מָחָר יִהְיֶה חַם', translit: 'machar yihye cham', fr: 'tomorrow will be hot' },
+  { he: 'יִרְדּוּ גְּשָׁמִים', translit: 'yirdu gshamim', fr: 'rain will fall' },
+  { he: 'הַטֶּמְפֶּרָטוּרָה תַּעֲלֶה', translit: 'ha-temperatura ta\'ale', fr: 'the temperature will rise' },
+  { he: 'הַטֶּמְפֶּרָטוּרָה תֵּרֵד', translit: 'ha-temperatura tered', fr: 'the temperature will drop' },
+  { he: 'הָאֲוִויר נָעִים', translit: 'ha-avir na\'im', fr: 'the air is pleasant' },
+  { he: 'יוֹם בָּהִיר', translit: 'yom bahir', fr: 'a clear day' }
+];
+const PHRASES = [
+  { he: 'הַיּוֹם חַם מְאֹד', translit: 'ha-yom cham me\'od', fr: 'today is very hot' },
+  { he: 'יוֹרֵד גֶּשֶׁם בַּחוּץ', translit: 'yored geshem ba-chutz', fr: "it's raining outside" },
+  { he: 'בְּחוֹרֶף יוֹרֶה גֶּשֶׁם בְּיִשְׂרָאֵל', translit: 'be-choref yore geshem be-Yisrael', fr: 'in winter it rains in Israel' },
+  { he: 'אֲנִי לֹא אוֹהֵב חַמְסִין', translit: 'ani lo ohev chamsin', fr: "I don't like chamsin (m.)" },
+  { he: 'יָרַד שֶׁלֶג בִּירוּשָׁלַיִם', translit: 'yarad sheleg bi-Yerushalayim', fr: 'snow fell in Jerusalem' },
+  { he: 'מַה הַטֶּמְפֶּרָטוּרָה הַיּוֹם?', translit: 'ma ha-temperatura ha-yom?', fr: "what's the temperature today?" }
+];
+
+function R(id, items) {
+  const list = document.getElementById(id);
+  items.forEach(w => {
+    const r = document.createElement('div'); r.className = 'word-row';
+    r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`;
+    r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(r);
+  });
+}
+R('basic', BASIC); R('elements', ELEMENTS); R('temp', TEMP); R('sky', SKY); R('climate', CLIMATE); R('forecast', FORECAST); R('phrases', PHRASES);
+addCulturalText('Israeli Weather Forecast — Sample Bulletin', 'How a typical Hebrew weather report sounds on the news. Includes the chamsin warning that paralyzes the country.', [
+  { he: 'תַּחֲזִית מֶזֶג הָאֲוִיר לְיוֹם רְבִיעִי', translit: "Tachazit mezeg ha-avir le-yom revi\'i", fr: 'Weather forecast for Wednesday' },
+  { he: 'הַטֶּמְפֶּרָטוּרוֹת תַּעֲלֶינָה מַעֲלָה מֵהָרָגִיל', translit: "Ha-temperaturot ta\'aleyna ma\'ala me-ha-ragil", fr: 'Temperatures will rise above normal' },
+  { he: 'בַּמֶּרְכָּז 32 מַעֲלוֹת, בִּירוּשָׁלַיִם 28', translit: "Ba-merkaz 32 ma\'alot, bi-Yerushalayim 28", fr: 'In the center 32°, in Jerusalem 28°' },
+  { he: 'בָּעֵרֶב צְפוּיוֹת רוּחוֹת קַלּוֹת מִמַּעֲרָב', translit: "Ba-erev tzfuyot ruchot kalot mi-ma\'arav", fr: 'Light western winds expected in the evening' },
+  { he: 'הִתְרָעַת חַמְסִין: שִׁתְיוּ מַיִם, הִישָּׁאֲרוּ בַּצֵּל', translit: "Hitra\'at chamsin: shitu mayim, hisha\'aru ba-tzel", fr: 'Chamsin warning: drink water, stay in shade' },
+  { he: 'בְּשַׁבָּת תַּחֲזוֹר רַעֲנָנוּת', translit: "Be-shabbat tachzor ra\'ananut", fr: 'On Shabbat freshness will return' }
+]);
+
+addExtraVocab('Weather Adjectives', [
+  { he: 'חַם', translit: 'cham', fr: 'hot' },
+  { he: 'קַר', translit: 'kar', fr: 'cold' },
+  { he: 'נָעִים', translit: 'na\'im', fr: 'pleasant' },
+  { he: 'לַח', translit: 'lach', fr: 'humid' },
+  { he: 'יָבֵשׁ', translit: 'yavesh', fr: 'dry' },
+  { he: 'חָרִיף', translit: 'charif', fr: 'sharp / cold (cold air)' },
+  { he: 'מְעֻנָּן', translit: 'me\'unan', fr: 'cloudy' },
+  { he: 'בָּהִיר', translit: 'bahir', fr: 'clear / bright' },
+  { he: 'גָּשׁוּם', translit: 'gashum', fr: 'rainy' },
+  { he: 'מָעוּנָן', translit: 'ma\'unan', fr: 'overcast' },
+  { he: 'קוֹפֵא', translit: 'kofe', fr: 'freezing' },
+  { he: 'לוֹהֵט', translit: 'lohet', fr: 'scorching' },
+  { he: 'מַחֲנִיק', translit: 'machanik', fr: 'stuffy / suffocating' }
+]);
+
+addExtraVocab('Weather Verbs & Sensations', [
+  { he: 'יוֹרֵד גֶּשֶׁם', translit: 'yored geshem', fr: 'it is raining' },
+  { he: 'יוֹרֵד שֶׁלֶג', translit: 'yored sheleg', fr: 'it is snowing' },
+  { he: 'נוֹשֶׁבֶת רוּחַ', translit: 'noshevet ruach', fr: 'wind is blowing' },
+  { he: 'מַבְרִיק', translit: 'mavrik', fr: 'lightning' },
+  { he: 'רוֹעֵם', translit: 'ro\'em', fr: 'thundering' },
+  { he: 'קוֹפֵא', translit: 'kofe', fr: 'freezing' },
+  { he: 'יוֹשֵׁב כָּמוֹת בִּגְדֵּי גֶשֶׁם', translit: 'yoshev kmot bigdey geshem', fr: 'wear rain clothes' },
+  { he: 'מָעוּל לַחוֹף', translit: 'ma\'ul la-chof', fr: 'good for the beach' },
+  { he: 'אֲוִיר צָלוּל', translit: 'avir tzalul', fr: 'clear air' },
+  { he: 'אֲוִיר כָּבֵד', translit: 'avir kaved', fr: 'heavy air' },
+  { he: 'יוֹם מְעֻנָּן', translit: 'yom me\'unan', fr: 'cloudy day' },
+  { he: 'יוֹם בָּהִיר', translit: 'yom bahir', fr: 'bright day' }
+]);
+addMiniQuiz('Weather Quiz', [
+  { q: 'What does יוֹרֵד גֶּשֶׁם mean?', he: 'יוֹרֵד גֶּשֶׁם', translit: 'yored geshem', options: ['it\'s snowing', 'it\'s raining', 'it\'s windy', 'it\'s sunny'], answer: 1 },
+  { q: 'How do you say "very hot"?', options: ['קַר מְאֹד', 'חַם מְאֹד', 'נָעִים', 'יָבֵשׁ'], answer: 1, explain: 'cham me\'od = very hot' },
+  { q: 'What is a חַמְסִין?', options: ['Cold rain', 'Heat wave with desert wind', 'Snowstorm', 'Light breeze'], answer: 1, explain: 'A 1-3 day heat wave that paralyzes Israel' },
+  { q: 'How do Israelis usually say "the weather is nice"?', options: ['הָאֲוִיר יָפֶה', 'מֶזֶג הָאֲוִיר נֶהֱדָר', 'הַשֶּׁמֶשׁ טוֹב', 'יוֹם נָעִים'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('weather'); } });
+</script></body></html>

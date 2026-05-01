@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>41 — Aliyah Process Vocabulary</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Aliyah Process</h1><div class="subtitle">Lesson 41 · עלייה</div></div><div class="nav"><a href="index.html">Home</a><a href="41-aliyah-process.html" class="active">41</a></div></header>
+
+<p class="intro">The complete vocabulary of becoming an Israeli citizen — from the Sochnut (Jewish Agency) office in your home country to your first 90 days in Israel. Every olim needs these words.</p>
+
+<div class="tip"><strong>Olim path</strong> — Open file with Sochnut → Shaliach interview → consul approval → Teudat Olé issued at Ben Gurion → Misrad HaKlita stipend → choose city/Ulpan → Misrad HaPnim for Teudat Zehut → Bituach Leumi → bank account → Klita continues for ~3 years.</div>
+
+<h2>Status & Identity</h2>
+<div class="word-list" id="status"></div>
+
+<h2>Institutions</h2>
+<div class="word-list" id="institutions"></div>
+
+<h2>Documents & Verification</h2>
+<div class="word-list" id="docs"></div>
+
+<h2>Aliyah Steps</h2>
+<div class="word-list" id="steps"></div>
+
+<h2>Olim Benefits & Rights</h2>
+<div class="word-list" id="benefits"></div>
+
+<h2>Common Phrases at Sochnut / Misrad HaKlita</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 41 · Aliyah · <a href="42-misrad-hapnim.html" style="color:var(--accent)">Next: Misrad HaPnim →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const STATUS = [
+  { he: 'עוֹלֶה', translit: 'oleh', fr: 'new immigrant (m.)' },
+  { he: 'עוֹלָה', translit: 'ola', fr: 'new immigrant (f.)' },
+  { he: 'עוֹלֶה חָדָשׁ', translit: 'oleh chadash', fr: 'new immigrant (status, ~3 years)' },
+  { he: 'עוֹלִים', translit: 'olim', fr: 'new immigrants (pl.)' },
+  { he: 'תּוֹשָׁב', translit: 'toshav', fr: 'resident' },
+  { he: 'אֶזְרָחוּת', translit: 'ezrachut', fr: 'citizenship' },
+  { he: 'אֶזְרָח', translit: 'ezrach', fr: 'citizen (m.)' },
+  { he: 'תּוֹשָׁב חוֹזֵר', translit: 'toshav chozer', fr: 'returning resident' },
+  { he: 'אָב', translit: 'av', fr: 'parent (root for "father")' },
+  { he: 'יְהוּדִי', translit: 'yehudi', fr: 'Jewish (m.)' },
+  { he: 'בֶּן זוּג שֶׁל יְהוּדִי', translit: 'ben zug shel yehudi', fr: 'spouse of a Jew' }
+];
+const INSTITUTIONS = [
+  { he: 'הַסּוֹכְנוּת הַיְּהוּדִית', translit: 'ha-sochnut ha-yehudit', fr: 'the Jewish Agency' },
+  { he: 'מִשְׂרַד הַקְּלִיטָה', translit: 'misrad ha-klita', fr: 'Ministry of Aliyah & Integration' },
+  { he: 'מִשְׂרַד הַפְּנִים', translit: 'misrad ha-pnim', fr: 'Ministry of Interior' },
+  { he: 'בִּטּוּחַ לְאֻמִּי', translit: 'bituach le\'umi', fr: 'National Insurance' },
+  { he: 'נְפוּתָּחַ הַעֲלִיָה', translit: 'nefutach ha-aliya', fr: 'Aliyah desk (at airport)' },
+  { he: 'מֶרְכַּז קְלִיטָה', translit: 'merkaz klita', fr: 'absorption center' },
+  { he: 'נֶפֶשׁ בְּנֶפֶשׁ', translit: 'Nefesh B\'Nefesh', fr: 'Nefesh B\'Nefesh (NA olim org)' },
+  { he: 'קֶרֶן הַיְדִידוּת', translit: 'Keren Ha-Yedidut', fr: 'Keren Layedidout (IFCJ)' }
+];
+const DOCS = [
+  { he: 'דַּרְכּוֹן', translit: 'darkon', fr: 'passport' },
+  { he: 'תְּעוּדַת זֶהוּת', translit: 'teudat zehut', fr: 'Israeli ID card' },
+  { he: 'תְּעוּדַת עוֹלֶה', translit: 'teudat oleh', fr: 'olim certificate (~6 months)' },
+  { he: 'אִשּׁוּר עֲלִיָּה', translit: 'ishur aliya', fr: 'Aliyah approval' },
+  { he: 'תְּעוּדַת לֵדָה', translit: 'teudat leyda', fr: 'birth certificate' },
+  { he: 'תְּעוּדַת כְּשֵׁרוּת', translit: 'teudat ksherut', fr: 'eligibility certificate' },
+  { he: 'תְּעוּדַת יַהֲדוּת', translit: 'teudat yahadut', fr: 'Jewish status certificate' },
+  { he: 'אַפּוֹסְטִיל', translit: 'apostille', fr: 'apostille (Hague)' },
+  { he: 'תַּרְגּוּם נוֹטָרְיוֹנִי', translit: 'targum notaryoni', fr: 'notarized translation' }
+];
+const STEPS = [
+  { he: 'פְּתִיחַת תִּיק', translit: 'ptichat tik', fr: 'opening a file' },
+  { he: 'רֵיאַיוֹן עִם שָׁלִיחַ', translit: 're\'ayon im shaliach', fr: 'interview with shaliach' },
+  { he: 'אִשּׁוּר קוֹנְסוּלָרִי', translit: 'ishur konsulari', fr: 'consular approval' },
+  { he: 'טִיסַת אַלִיָּה', translit: 'tisat aliya', fr: 'Aliyah flight' },
+  { he: 'נְחִיתָה', translit: 'nechita', fr: 'landing' },
+  { he: 'הוֹצָאַת תְּעוּדַת זֶהוּת', translit: 'hotza\'at teudat zehut', fr: 'getting the ID card' },
+  { he: 'אוּלְפָּן', translit: 'ulpan', fr: 'ulpan (Hebrew school)' },
+  { he: 'שְׁלוֹשִׁים יוֹם', translit: 'shloshim yom', fr: '30 days (initial period)' },
+  { he: 'תְּשַׁעִים יוֹם', translit: 'tish\'im yom', fr: '90 days' },
+  { he: 'שְׁלוֹשׁ שָׁנִים', translit: 'shalosh shanim', fr: '3 years (olim status)' }
+];
+const BENEFITS = [
+  { he: 'סַל קְלִיטָה', translit: 'sal klita', fr: 'absorption basket (cash)' },
+  { he: 'הֲטָבוֹת', translit: 'hatavot', fr: 'benefits' },
+  { he: 'הַנָחָה', translit: 'hanacha', fr: 'discount' },
+  { he: 'אוּלְפָּן חִנָּם', translit: 'ulpan chinam', fr: 'free Hebrew classes' },
+  { he: 'בִּטּוּחַ בְּרִיאוּת חִנָּם', translit: 'bituach briut chinam', fr: 'free health insurance (1st year)' },
+  { he: 'פְּטוֹר מִמֶּכֶס', translit: 'ptor mi-meches', fr: 'customs exemption' },
+  { he: 'מַעֲנָק', translit: 'ma\'anak', fr: 'grant / subsidy' },
+  { he: 'מַשְׁכַּנְתָּא לְעוֹלִים', translit: 'mashkanta le-olim', fr: 'olim mortgage' },
+  { he: 'הַחְזָר מַס', translit: 'hechzer mas', fr: 'tax refund' }
+];
+const PHRASES = [
+  { he: 'אֲנִי עוֹלֶה חָדָשׁ', translit: 'ani oleh chadash', fr: "I'm a new immigrant (m.)" },
+  { he: 'הִגַּעְתִּי לְפִי שָׁבוּעַ', translit: 'higati lifney shavua', fr: 'I arrived a week ago' },
+  { he: 'אֲנִי צָרִיךְ תְּעוּדַת זֶהוּת', translit: 'ani tzarich teudat zehut', fr: 'I need an ID card (m.)' },
+  { he: 'מָתַי אֲקַבֵּל אֶת סַל הַקְּלִיטָה?', translit: 'matay akabel et sal ha-klita?', fr: 'when will I get the absorption basket?' },
+  { he: 'יֵשׁ לִי תּוֹר עִם הַמַּדְרִיכָה', translit: 'yesh li tor im ha-madricha', fr: 'I have an appointment with the (f.) advisor' },
+  { he: 'לְאֵיזֶה מֶרְכַּז קְלִיטָה אֲנִי שַׁיָּךְ?', translit: 'le-eyze merkaz klita ani shayach?', fr: 'which absorption center do I belong to?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('status', STATUS); R('institutions', INSTITUTIONS); R('docs', DOCS); R('steps', STEPS); R('benefits', BENEFITS); R('phrases', PHRASES);
+addExtraVocab('Aliyah Documents Required', [
+  { he: 'דַּרְכּוֹן בְּתוֹקֶף', translit: 'darkon be-tokef', fr: 'valid passport' },
+  { he: 'תְּעוּדַת לֵידָה', translit: 'teudat leyda', fr: 'birth certificate' },
+  { he: 'תְּעוּדַת נִשּׂוּאִין', translit: 'teudat nisu\'in', fr: 'marriage certificate' },
+  { he: 'תְּעוּדַת גֵּרוּשִׁין', translit: 'teudat gerushin', fr: 'divorce certificate' },
+  { he: 'תְּעוּדַת יַהֲדוּת', translit: 'teudat yahadut', fr: 'proof of Judaism' },
+  { he: 'אִישׁוּר רַב', translit: 'ishur rav', fr: 'rabbi confirmation' },
+  { he: 'תַּעֲסוּקָה / לִמּוּדִים', translit: 'ta\'asuka / limudim', fr: 'employment / studies status' },
+  { he: 'בְּדִיקַת רֶקַע פְּלִילִי', translit: 'bdikat reka plili', fr: 'criminal background check' },
+  { he: 'בְּדִיקָה רְפוּאִית', translit: 'bdika refu\'it', fr: 'medical exam' },
+  { he: 'תְּמוּנוֹת דַּרְכּוֹן', translit: 'tmunot darkon', fr: 'passport photos' },
+  { he: 'אִישׁוּר תּוֹשָׁבוּת', translit: 'ishur toshavut', fr: 'residency confirmation' },
+  { he: 'תַּצְהִיר עוֹלֶה', translit: 'tatzhir ole', fr: 'oleh declaration' }
+]);
+
+addExtraVocab('Aliyah Rights & Benefits Vocabulary', [
+  { he: 'תְּעוּדַת עוֹלֶה', translit: 'teudat ole', fr: 'oleh certificate' },
+  { he: 'סַל קְלִיטָה', translit: 'sal klita', fr: 'absorption basket (cash)' },
+  { he: 'מַעֲנָק קְלִיטָה', translit: 'ma\'anak klita', fr: 'absorption grant' },
+  { he: 'חוּג עוֹלִים', translit: 'chug olim', fr: 'olim group' },
+  { he: 'אוּלְפָּן עִברִית', translit: 'ulpan ivrit', fr: 'Hebrew ulpan (free for olim)' },
+  { he: 'תַּעֲסוּקָה', translit: 'ta\'asuka', fr: 'employment' },
+  { he: 'דִּיוּר זְמַנִּי', translit: 'diyur zmani', fr: 'temporary housing' },
+  { he: 'מֶרְכַּז קְלִיטָה', translit: 'merkaz klita', fr: 'absorption center' },
+  { he: 'פַּטוּר מִמָּכֶס', translit: 'patur mi-meches', fr: 'tax exemption' },
+  { he: 'הֲטָבוֹת מַס', translit: 'hatavot mas', fr: 'tax benefits' },
+  { he: 'מַעֲמָד תּוֹשָׁב', translit: 'ma\'amad toshav', fr: 'resident status' },
+  { he: 'אֶזְרָחוּת יִשְׂרְאֵלִית', translit: 'ezrachut yisre\'elit', fr: 'Israeli citizenship' },
+  { he: 'מִשְׂרַד הַקְּלִיטָה', translit: 'misrad ha-klita', fr: 'Ministry of Absorption' },
+  { he: 'הַסּוֹכְנוּת הַיְהוּדִית', translit: 'ha-sochnut ha-yehudit', fr: 'Jewish Agency (Sokhnut)' },
+  { he: 'נֶפֶשׁ בְּנֶפֶשׁ', translit: 'nefesh be-nefesh', fr: 'NBN (US/Canada Aliyah)' }
+]);
+
+addMiniQuiz('Aliyah Quiz', [
+  { q: 'What document marks you as an oleh?', options: ['דַּרְכּוֹן', 'תְּעוּדַת זֶהוּת', 'תְּעוּדַת עוֹלֶה', 'אִישׁוּר תּוֹשָׁב'], answer: 2 },
+  { q: 'סַל קְלִיטָה is...', options: ['Welcome basket of food', 'Cash absorption grant', 'Free apartment', 'Free Hebrew course'], answer: 1, explain: 'Initial cash payments to support first months' },
+  { q: 'Where do new olim go to learn Hebrew?', options: ['בֵּית סֵפֶר', 'אוּלְפָּן', 'אוּנִיבֶרְסִיטָה', 'מִכְלָלָה'], answer: 1 },
+  { q: 'How long do olim get tax benefits?', options: ['1 year', '5 years', '10 years', 'Lifetime'], answer: 2, explain: '10 years on foreign income' },
+  { q: 'מִשְׂרַד הַקְּלִיטָה means...', options: ['Tax authority', 'Interior Ministry', 'Ministry of Absorption', 'Immigration office'], answer: 2 }
+]);
+
+addCulturalText('At Ben Gurion Airport — The Aliyah Welcome Ceremony', 'What happens when you land as an oleh. The Misrad HaKlita representative meets you at the gate before passport control. You leave the airport already a citizen.', [
+  { he: 'נְצִיג: בָּרוּךְ הַבָּא הַבַּיְתָה!', translit: "Netzig: Baruch ha-ba ha-bayta!", fr: 'Rep: Welcome home!' },
+  { he: 'נְצִיג: שֵׁם וְשֵׁם מִשְׁפָּחָה?', translit: "Netzig: Shem ve-shem mishpacha?", fr: 'Rep: First and last name?' },
+  { he: 'אַתָּה: יוֹנַס נֶפְתָּלִי, מִצָּרְפַת', translit: "Ata: Yonas Nephtali, mi-Tzarfat", fr: 'You: Yonas Nephtali, from France' },
+  { he: 'נְצִיג: יֵשׁ אִישׁוּר אַלִיָּה? תְּעוּדָה צְרָפָתִית?', translit: "Netzig: Yesh ishur aliya? Teuda tzarfatit?", fr: 'Rep: Aliyah approval? French ID?' },
+  { he: 'אַתָּה: כָּן, הַכֹּל פֹּה', translit: "Ata: Ken, ha-kol po", fr: 'You: Yes, everything\'s here' },
+  { he: 'נְצִיג: תְּעוּדַת זֶהוּת זְמַנִּית, סִים יִשְׂרְאֵלִי, וְ-1000 שֶׁקֶל בִּמְזֻמָּן', translit: "Netzig: Teudat zehut zmanit, sim yisre\'eli, ve-1000 shekel bi-mzuman", fr: 'Rep: Temporary ID, Israeli SIM, and 1000 shekel cash' },
+  { he: 'נְצִיג: בְּעוֹד שָׁבוּעַ אַתָּה הוֹלֵךְ לְמִשְׂרַד הַפְּנִים', translit: "Netzig: Be-od shavua ata holech le-misrad ha-pnim", fr: 'Rep: In a week you go to Misrad HaPnim' },
+  { he: 'נְצִיג: שָׁם תְּקַבֵּל תְּעוּדַת זֶהוּת קְבוּעָה', translit: "Netzig: Sham tekabel teudat zehut kvua", fr: 'Rep: There you\'ll get a permanent ID' },
+  { he: 'נְצִיג: מַזָּל טוֹב — אַתָּה אֶזְרָח יִשְׂרְאֵלִי', translit: "Netzig: Mazal tov — ata ezrach yisre\'eli", fr: 'Rep: Mazal tov — you\'re an Israeli citizen' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('aliyah-process'); } });
+</script></body></html>

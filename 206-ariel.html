@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>206 — Ariel: City and University</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Ariel — City and University</h1><div class="subtitle">Lesson 206 · אֲרִיאֵל — עִיר וְאוּנִיבֶרְסִיטָה</div></div><div class="nav"><a href="index.html">Home</a><a href="206-ariel.html" class="active">206</a></div></header>
+
+<p class="intro">Ariel is the largest Israeli urban community in Yesha — about 22,000 residents in central Samaria, founded in 1978 by Ron Nachman, who served as founding mayor for over 30 years. Demographically it is distinct from most settlements: heavily Russian-speaking olim and a strong French-speaking population, mixed religious-secular (datlash and chiloni majority), populated by workers and academics rather than ideologues. Ariel University, originally a college, gained full university status in 2012. The status remains controversial internationally but is recognized by the Council for Higher Education-Yehuda and Shomron.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Ariel feels like a working-class development town transposed into Samaria. Russian is heard as much as Hebrew at the supermarket; French as much as either in the cafes near the university. The Trans-Samaria highway (Maaleh Israel, kvish 5) connects Ariel directly to Petach Tikva and Tel Aviv, and many residents commute. The university has been BDS-targeted abroad but routinely admits around 17,000 students, including Arab Israelis. Ron Nachman\'s vision was a normal Israeli city, not a religious enclave.</div>
+
+<h2>Ariel City</h2>
+<div class="word-list" id="city"></div>
+
+<h2>Ariel University</h2>
+<div class="word-list" id="university"></div>
+
+<h2>Demographics</h2>
+<div class="word-list" id="demographics"></div>
+
+<h2>Geography & Roads</h2>
+<div class="word-list" id="geography"></div>
+
+<h2>Daily Life</h2>
+<div class="word-list" id="daily"></div>
+
+<hr class="section-divider">
+
+<h2>A Russian-Israeli Resident Speaks</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A long-time Ariel resident from the Soviet aliyah of 1990 explains his life choice.</div>
+  <div id="resident"></div>
+</div>
+
+<footer>Lesson 206 · Ariel · <a href="207-kippa-srugah.html" style="color:var(--accent)">Next: Kippa Srugah →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CITY = [
+  { he: 'יְסוֹד 1978', translit: 'yesod 1978', fr: 'founded 1978' },
+  { he: 'רוֹן נַחְמָן', translit: 'Ron Nachman', fr: 'founder, first mayor' },
+  { he: 'עִיר', translit: 'ir', fr: 'city' },
+  { he: 'רֹאשׁ הָעִיר', translit: 'rosh ha\'ir', fr: 'mayor' },
+  { he: 'שְׁכוּנָה', translit: 'shchunah', fr: 'neighborhood' },
+  { he: 'עוֹלִים', translit: 'olim', fr: 'immigrants' },
+  { he: 'וָתִיקִים', translit: 'vatikim', fr: 'veterans (long-time residents)' },
+  { he: 'מִשְׁפָּחָה', translit: 'mishpacha', fr: 'family' },
+  { he: 'עִירִיָּה', translit: 'iriya', fr: 'municipality' },
+  { he: 'מוֹעֵצָה', translit: 'mo\'etza', fr: 'council' }
+];
+const UNIVERSITY = [
+  { he: 'אוּנִיבֶרְסִיטַת אֲרִיאֵל', translit: 'Universitat Ariel', fr: 'Ariel University' },
+  { he: 'מִכְלָלָה 1982', translit: 'mikhlala 1982', fr: 'college (founded 1982)' },
+  { he: 'מַעֲמָד אוּנִיבֶרְסִיטָה 2012', translit: 'maamad universita 2012', fr: 'university status 2012' },
+  { he: 'סְטוּדֶנְטִים', translit: 'studentim', fr: 'students' },
+  { he: 'פָּקוּלְטָה', translit: 'pakulta', fr: 'faculty' },
+  { he: 'רְפוּאָה', translit: 'refua', fr: 'medicine' },
+  { he: 'הַנְדָּסָה', translit: 'handasa', fr: 'engineering' },
+  { he: 'מַדַּע הַיַּהֲדוּת', translit: 'mada hayehadut', fr: 'Jewish studies' },
+  { he: 'פְּרוֹפֶסּוֹרִים', translit: 'professorim', fr: 'professors' },
+  { he: 'מַדָּעִים', translit: 'mada\'im', fr: 'sciences' }
+];
+const DEMOGRAPHICS = [
+  { he: 'עוֹלִים מֵרוּסְיָה', translit: 'olim me-Russya', fr: 'Russian olim' },
+  { he: 'עוֹלִים מִצָּרְפַת', translit: 'olim me-Tzarfat', fr: 'French olim' },
+  { he: 'דָּתִיִּים', translit: 'datim', fr: 'religious' },
+  { he: 'חִילוֹנִים', translit: 'chilonim', fr: 'secular' },
+  { he: 'מָסוֹרְתִיִּים', translit: 'masortim', fr: 'traditional' },
+  { he: 'דָּתְלָ"שׁ', translit: 'datlash', fr: 'formerly religious' },
+  { he: 'אַנְגְּלוֹ', translit: 'Anglo', fr: 'Anglo (English-speaking olim)' },
+  { he: 'יוֹצְאֵי בְּרִית הַמּוֹעָצוֹת', translit: 'Yotzei Brit HaMo\'atzot', fr: 'FSU origin' },
+  { he: 'דּוֹבְרֵי רוּסִית', translit: 'dovrei rusit', fr: 'Russian speakers' },
+  { he: 'כּוֹלְלִים', translit: 'kollelim', fr: 'kollel students' }
+];
+const GEOGRAPHY = [
+  { he: 'שׁוֹמְרוֹן', translit: 'Shomron', fr: 'Samaria' },
+  { he: 'כְּבִישׁ הַחוֹצֶה שׁוֹמְרוֹן', translit: 'Kvish HaChotze Shomron (kvish 5)', fr: 'Trans-Samaria highway (Route 5)' },
+  { he: 'מִגְדַּל עוֹז', translit: 'Migdal Oz', fr: 'Migdal Oz (settlement)' },
+  { he: 'קַרְנֵי שׁוֹמְרוֹן', translit: 'Karnei Shomron', fr: 'Karnei Shomron (neighboring town)' },
+  { he: 'הָרִים', translit: 'harim', fr: 'mountains' },
+  { he: 'גִּבְעָה', translit: 'giv\'a', fr: 'hill' },
+  { he: 'וָאדִי', translit: 'wadi', fr: 'wadi (dry valley)' },
+  { he: 'צָפוֹן', translit: 'tzafon', fr: 'north' },
+  { he: 'דָּרוֹם', translit: 'darom', fr: 'south' },
+  { he: 'הָרִים', translit: 'herim', fr: 'highlands' }
+];
+const DAILY = [
+  { he: 'קְנִיּוֹת', translit: 'kniyot', fr: 'shopping' },
+  { he: 'בֵּית קָפֶה', translit: 'beit cafe', fr: 'cafe' },
+  { he: 'קַנְיוֹן אֲרִיאֵל', translit: 'kanyon Ariel', fr: 'Ariel mall' },
+  { he: 'בֵּית חוֹלִים', translit: 'beit holim', fr: 'hospital' },
+  { he: 'בֵּית סֵפֶר', translit: 'beit sefer', fr: 'school' },
+  { he: 'גַּן יְלָדִים', translit: 'gan yeladim', fr: 'kindergarten' },
+  { he: 'סְפּוֹרְט', translit: 'sport', fr: 'sport' },
+  { he: 'מַקִּיף', translit: 'makif', fr: 'high school' },
+  { he: 'בֵּית כְּנֶסֶת', translit: 'beit knesset', fr: 'synagogue' },
+  { he: 'מֶרְכָּז מִסְחָרִי', translit: 'mercaz mischari', fr: 'commercial center' }
+];
+
+const RESIDENT = [
+  { he: 'תּוֹשָׁב — שְׁמִי בּוֹרִיס. עָלִיתִי מִמּוֹסְקְבָה בְּ-1990 עִם הַגַּל הַגָּדוֹל.', translit: 'toshav — shmi Boris. aliti mi-Moscva b-1990 im ha-gal ha-gadol.', fr: 'Resident — My name is Boris. I made aliyah from Moscow in 1990 with the great wave.' },
+  { he: 'תּוֹשָׁב — בָּהַתְחָלָה גַּרְנוּ בְּפֶּתַח תִּקְוָה, אֲבָל הַשְּׂכִירוּת הָיְתָה גְּבוֹהָה מִדַּי.', translit: 'toshav — ba-hatchala garnu b\'Petach Tikva, aval ha-schirut hayta gvoha midai.', fr: 'Resident — At first we lived in Petach Tikva, but the rent was too high.' },
+  { he: 'תּוֹשָׁב — בְּ-1995 עָבַרְנוּ לְאֲרִיאֵל. דִּירָה גְּדוֹלָה, מְחִיר נָמוּךְ, אֲוִיר נָקִי.', translit: 'toshav — b-1995 avarnu l\'Ariel. dira gdola, mechir namuch, avir naki.', fr: 'Resident — In 1995 we moved to Ariel. Big apartment, low price, clean air.' },
+  { he: 'תּוֹשָׁב — אָז הָעִיר הָיְתָה קְטַנָּה. הַיּוֹם יֵשׁ אוּנִיבֶרְסִיטָה, קַנְיוֹן, הַכֹּל.', translit: 'toshav — az ha-ir hayta ktana. ha-yom yesh universita, kanyon, ha-kol.', fr: 'Resident — Back then the city was small. Today there is a university, a mall, everything.' },
+  { he: 'תּוֹשָׁב — שְׁנֵי הַיְלָדִים שֶׁלִּי לָמְדוּ בְּאוּנִיבֶרְסִיטַת אֲרִיאֵל. הַנְדָּסָה וּרְפוּאָה.', translit: 'toshav — shnei ha-yeladim sheli lamdu b\'Universitat Ariel. handasa u-refua.', fr: 'Resident — My two children studied at Ariel University. Engineering and medicine.' },
+  { he: 'תּוֹשָׁב — הַחַיִּים פֹּה נוֹרְמָלִיִּים. אֲנִי הוֹלֵךְ לָעֲבוֹדָה, חוֹזֵר הַבַּיְתָה, שׁוֹתֶה תֵּה.', translit: 'toshav — ha-chayim po normaliyim. ani holech la-avoda, chozer ha-bayta, shote teh.', fr: 'Resident — Life here is normal. I go to work, come home, drink tea.' },
+  { he: 'תּוֹשָׁב — לֹא אֶחֱזוֹר לְתֵל אָבִיב. יוֹתֵר מִדַּי רַעַשׁ, יוֹתֵר מִדַּי כֶּסֶף, פָּחוֹת חַיִּים.', translit: 'toshav — lo echezor l\'Tel Aviv. yoter midai ra\'ash, yoter midai kesef, pachot chayim.', fr: 'Resident — I would not move back to Tel Aviv. Too much noise, too much money, less life.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('city', CITY);
+R('university', UNIVERSITY);
+R('demographics', DEMOGRAPHICS);
+R('geography', GEOGRAPHY);
+R('daily', DAILY);
+
+renderTextBlock('resident', RESIDENT);
+
+addMiniQuiz('Block 21 · Ariel Quiz', [
+  { q: 'Ariel was founded in...', options: ['1948', '1967', '1978', '1985'], answer: 2, explain: 'Ron Nachman led the founding in 1978 and became the first and longest-serving mayor.' },
+  { q: 'Ariel\'s population is approximately...', options: ['~5K', '~22K', '~50K', '~100K'], answer: 1, explain: '~22,000 residents — the largest Israeli urban community in Yesha.' },
+  { q: 'Ariel University gained full university status in...', options: ['1982', '1996', '2012', '2020'], answer: 2, explain: '2012 — the Council for Higher Education-Yehuda and Shomron upgraded it from a college.' },
+  { q: 'The largest immigrant community in Ariel is...', options: ['American', 'Russian-speaking', 'Ethiopian', 'Yemeni'], answer: 1, explain: 'Russian-speakers dominated the 1990s aliyah and settled Ariel for affordable housing.' },
+  { q: 'Ariel sits in...', options: ['Y\'huda', 'Shomron', 'Aza', 'Galil'], answer: 1, explain: 'Central Samaria.' },
+  { q: 'The mayor most associated with Ariel\'s founding is...', options: ['Ehud Barak', 'Ron Nachman', 'Naftali Bennett', 'Yair Lapid'], answer: 1, explain: 'Nachman was mayor from 1985 to 2013 and the founding figure of the city.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('ariel');
+  }
+});
+</script></body></html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>63 — Synagogue</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Synagogue</h1><div class="subtitle">Lesson 63 · בית כנסת</div></div><div class="nav"><a href="index.html">Home</a><a href="63-synagogue.html" class="active">63</a></div></header>
+
+<p class="intro">The beit knesset is the heart of Jewish religious life. Vocabulary for the building, roles, services, and customs.</p>
+
+<h2>The Building</h2>
+<div class="word-list" id="building"></div>
+
+<h2>People & Roles</h2>
+<div class="word-list" id="people"></div>
+
+<h2>Service Types</h2>
+<div class="word-list" id="services"></div>
+
+<h2>Torah Reading</h2>
+<div class="word-list" id="torah"></div>
+
+<h2>Customs & Rituals</h2>
+<div class="word-list" id="customs"></div>
+
+<h2>Items & Objects</h2>
+<div class="word-list" id="items"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 63 · synagogue · <a href="64-prayer.html" style="color:var(--accent)">Next: Prayer →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BUILDING = [
+  { he: 'בֵּית כְּנֶסֶת', translit: 'beit knesset', fr: 'synagogue' },
+  { he: 'אָרוֹן הַקֹּדֶשׁ', translit: 'aron ha-kodesh', fr: 'Holy Ark (Torah cabinet)' },
+  { he: 'בִּימָה', translit: 'bima', fr: 'bimah (raised platform)' },
+  { he: 'מְחִצָּה', translit: 'mechitza', fr: 'mechitza (men/women separator)' },
+  { he: 'עֶזְרַת נָשִׁים', translit: 'ezrat nashim', fr: 'women\'s section' },
+  { he: 'נֵר תָּמִיד', translit: 'ner tamid', fr: 'eternal light' },
+  { he: 'מְנוֹרָה', translit: 'menora', fr: 'menorah' },
+  { he: 'פָּרֹכֶת', translit: 'parochet', fr: 'curtain (over Ark)' }
+];
+const PEOPLE = [
+  { he: 'רַב', translit: 'rav', fr: 'rabbi' },
+  { he: 'רַבָּנִית', translit: 'rabbanit', fr: 'rebbetzin (rabbi\'s wife)' },
+  { he: 'חַזָּן', translit: 'chazan', fr: 'cantor' },
+  { he: 'גַּבַּאי', translit: 'gabbai', fr: 'gabbai (synagogue manager)' },
+  { he: 'בַּעַל קוֹרֵא', translit: 'baal kore', fr: 'Torah reader' },
+  { he: 'מִתְפַּלֵּל', translit: 'mitpalel', fr: 'worshipper / one who prays' },
+  { he: 'מוֹחָה כְּנֶסֶת', translit: 'moche knesset', fr: 'congregation member' }
+];
+const SERVICES = [
+  { he: 'תְּפִלָּה', translit: 'tefilla', fr: 'prayer' },
+  { he: 'שַׁחֲרִית', translit: 'shacharit', fr: 'morning service' },
+  { he: 'מִנְחָה', translit: 'mincha', fr: 'afternoon service' },
+  { he: 'מַעֲרִיב / עַרְבִית', translit: 'maariv / arvit', fr: 'evening service' },
+  { he: 'מוּסָף', translit: 'musaf', fr: 'additional service (Shabbat, holidays)' },
+  { he: 'מִנְיָן', translit: 'minyan', fr: 'minyan (10-man quorum)' },
+  { he: 'תְּפִלָּה בְּצִבּוּר', translit: 'tefilla be-tzibur', fr: 'public prayer' }
+];
+const TORAH = [
+  { he: 'סֵפֶר תּוֹרָה', translit: 'sefer Torah', fr: 'Torah scroll' },
+  { he: 'פָּרָשַׁת הַשָּׁבוּעַ', translit: 'parashat ha-shavua', fr: 'weekly Torah portion' },
+  { he: 'עֲלִיָּה', translit: 'aliya', fr: 'aliyah (called to Torah)' },
+  { he: 'הַפְטָרָה', translit: 'haftara', fr: 'haftarah (prophetic reading)' },
+  { he: 'גְּלִילָה', translit: 'glila', fr: 'rolling (the Torah)' },
+  { he: 'הַגְבָּהָה', translit: 'hagbaha', fr: 'lifting (the Torah)' },
+  { he: 'יָד', translit: 'yad', fr: 'Torah pointer' }
+];
+const CUSTOMS = [
+  { he: 'נְשִׁיקַת תּוֹרָה', translit: 'neshikat Torah', fr: 'kissing the Torah' },
+  { he: 'דּוּכַן', translit: 'duchan', fr: 'priestly blessing platform' },
+  { he: 'בִּרְכַּת כֹּהֲנִים', translit: 'birkat kohanim', fr: 'priestly blessing' },
+  { he: 'אָמֵן', translit: 'amen', fr: 'amen' },
+  { he: 'יִשַּׁר כֹּחַ', translit: 'yishar koach', fr: '"strong of strength" (well done after aliya)' },
+  { he: 'גוּט שַׁבָּס', translit: 'gut shabes', fr: 'good Shabbat (Yiddish)' }
+];
+const ITEMS = [
+  { he: 'סִדּוּר', translit: 'siddur', fr: 'prayer book' },
+  { he: 'מַחֲזוֹר', translit: 'machzor', fr: 'holiday prayer book' },
+  { he: 'תְּהִלִּים', translit: 'tehilim', fr: 'Psalms' },
+  { he: 'תַּלִּית', translit: 'tallit', fr: 'prayer shawl' },
+  { he: 'תְּפִילִּין', translit: 'tefillin', fr: 'phylacteries' },
+  { he: 'כִּפָּה', translit: 'kippa', fr: 'kippah' },
+  { he: 'מְזוּזָה', translit: 'mezuza', fr: 'mezuzah' }
+];
+const PHRASES = [
+  { he: 'אֲנִי הוֹלֵךְ לְבֵית הַכְּנֶסֶת', translit: 'ani holech le-beit ha-knesset', fr: "I'm going to synagogue (m.)" },
+  { he: 'יֵשׁ מִנְיָן בָּשֵׁשׁ', translit: 'yesh minyan ba-shesh', fr: "there's a minyan at 6" },
+  { he: 'הָרַב יִדְרֹשׁ אַחַר הַתְּפִלָּה', translit: 'ha-rav yidrosh achar ha-tefilla', fr: 'the rabbi will speak after prayers' },
+  { he: 'יִשַּׁר כֹּחַ עַל הָעֲלִיָּה', translit: 'yishar koach al ha-aliya', fr: 'well done on the aliyah' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('building', BUILDING); R('people', PEOPLE); R('services', SERVICES); R('torah', TORAH); R('customs', CUSTOMS); R('items', ITEMS); R('phrases', PHRASES);
+addExtraVocab('Synagogue Items & Roles', [
+  { he: 'בֵּית כְּנֶסֶת', translit: 'beit knesset', fr: 'synagogue' },
+  { he: 'אֲרוֹן הַקֹּדֶשׁ', translit: 'aron ha-kodesh', fr: 'holy ark' },
+  { he: 'בִּימָה', translit: 'bima', fr: 'pulpit' },
+  { he: 'מְחִיצָה', translit: 'mechitza', fr: 'partition (men/women)' },
+  { he: 'עֶזְרַת נָשִׁים', translit: 'ezrat nashim', fr: 'women\'s section' },
+  { he: 'סֵפֶר תּוֹרָה', translit: 'sefer torah', fr: 'Torah scroll' },
+  { he: 'יָד', translit: 'yad', fr: 'pointer (Torah reading)' },
+  { he: 'נֵר תָּמִיד', translit: 'ner tamid', fr: 'eternal lamp' },
+  { he: 'סִדּוּר', translit: 'sidur', fr: 'prayer book' },
+  { he: 'מַחֲזוֹר', translit: 'machzor', fr: 'holiday prayer book' },
+  { he: 'רַב', translit: 'rav', fr: 'rabbi' },
+  { he: 'חַזָּן', translit: 'chazan', fr: 'cantor' },
+  { he: 'גַּבַּאי', translit: 'gabay', fr: 'sexton / synagogue manager' },
+  { he: 'קְהִילָּה', translit: 'kehila', fr: 'congregation' },
+  { he: 'מִנְיָן', translit: 'minyan', fr: 'quorum of 10' }
+]);
+
+addMiniQuiz('Synagogue Quiz', [
+  { q: 'Where is the Torah scroll kept?', options: ['On the bima', 'In the aron kodesh', 'In a back room', 'On the rabbi\'s table'], answer: 1, explain: 'aron kodesh = holy ark' },
+  { q: 'Mechitza separates...', options: ['Men\'s and women\'s sections (Orthodox)', 'Rabbis from congregation', 'Children from adults', 'Inside from outside'], answer: 0 },
+  { q: 'Minyan is...', options: ['A prayer', 'Quorum of 10 adult men', 'A part of the synagogue', 'A type of song'], answer: 1 },
+  { q: 'Kippa is worn by...', options: ['Men only (Orthodox)', 'Women only', 'Children only', 'Anyone, any time'], answer: 0, explain: 'Some Reform/Conservative women also wear' },
+  { q: 'A bimah is...', options: ['Door', 'Pulpit/platform for Torah reading', 'Bench', 'Mezuzah'], answer: 1 }
+]);
+
+addCulturalText('Lecha Dodi — Welcoming Shabbat (excerpt)', 'Sung at the Friday night service to welcome the Shabbat queen. Composed by Rabbi Shlomo Halevi Alkabetz, Safed, 16th century. Every congregation knows the refrain.', [
+  { he: 'לְכָה דוֹדִי לִקְרַאת כַּלָּה', translit: "Lecha dodi likrat kala", fr: 'Come, my beloved, to greet the bride' },
+  { he: 'פְּנֵי שַׁבָּת נְקַבְּלָה', translit: "Pnei shabbat nekabla", fr: 'the face of Shabbat let us welcome' },
+  { he: 'שָׁמוֹר וְזָכוֹר בְּדִבּוּר אֶחָד', translit: "Shamor ve-zachor be-dibur echad", fr: '"Keep" and "Remember" in one utterance' },
+  { he: 'הִשְׁמִיעָנוּ אֵל הַמְיֻחָד', translit: "Hishmianu El ha-meyuchad", fr: 'the Unique God made us hear' },
+  { he: 'ה\' אֶחָד וּשְׁמוֹ אֶחָד', translit: "Adonai echad u-shmo echad", fr: 'God is One and His name is One' },
+  { he: 'בּוֹאִי כַלָּה, בּוֹאִי כַלָּה', translit: "Bo\'i chala, bo\'i chala", fr: 'Come bride, come bride' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('synagogue'); } });
+</script></body></html>

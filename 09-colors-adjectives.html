@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09 — Colors & Adjectives</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Colors & Adjectives</h1>
+    <div class="subtitle">Lesson 09 · צבעים ושמות תואר</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="08-signs-admin.html">08</a>
+    <a href="09-colors-adjectives.html" class="active">09</a>
+    <a href="10-time-clock.html">10</a>
+  </div>
+</header>
+
+<p class="intro">
+  Like verbs, adjectives and colors agree with the noun in gender and number. The adjective ALWAYS comes after the noun, and takes the article if the noun is definite.
+</p>
+
+<div class="tip">
+  <strong>Agreement rule</strong> — For "the big book" → ה (article) on both: <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px; direction: rtl;">הַסֵּפֶר הַגָּדוֹל</span> (ha-sefer ha-gadol). For "a big book" → no article: <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px; direction: rtl;">סֵפֶר גָּדוֹל</span> (sefer gadol).
+</div>
+
+<h2>Colors (4 forms each — m. sg., f. sg., m. pl., f. pl.)</h2>
+<div id="colors-grid"></div>
+
+<h2>Common Adjectives</h2>
+<div id="adjectives-grid"></div>
+
+<hr class="section-divider">
+
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 09 · adjectives + colors · <a href="10-time-clock.html" style="color:var(--accent)">Next: Time & Clock →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const COLORS = [
+  { fr: 'red', forms: [
+    { he: 'אָדוֹם',     translit: 'adom',    context: 'm. sg.' },
+    { he: 'אֲדֻמָּה',   translit: 'aduma',   context: 'f. sg.' },
+    { he: 'אֲדֻמִּים',  translit: 'adumim',  context: 'm. pl.' },
+    { he: 'אֲדֻמּוֹת',  translit: 'adumot',  context: 'f. pl.' }
+  ]},
+  { fr: 'blue', forms: [
+    { he: 'כָּחֹל',     translit: 'kachol',  context: 'm. sg.' },
+    { he: 'כְּחֻלָּה',  translit: 'kchula',  context: 'f. sg.' },
+    { he: 'כְּחֻלִּים', translit: 'kchulim', context: 'm. pl.' },
+    { he: 'כְּחֻלּוֹת', translit: 'kchulot', context: 'f. pl.' }
+  ]},
+  { fr: 'yellow', forms: [
+    { he: 'צָהֹב',      translit: 'tzahov',   context: 'm. sg.' },
+    { he: 'צְהֻבָּה',   translit: 'tzehuba',  context: 'f. sg.' },
+    { he: 'צְהֻבִּים',  translit: 'tzehubim', context: 'm. pl.' },
+    { he: 'צְהֻבּוֹת',  translit: 'tzehubot', context: 'f. pl.' }
+  ]},
+  { fr: 'green', forms: [
+    { he: 'יָרֹק',      translit: 'yarok',   context: 'm. sg.' },
+    { he: 'יְרֻקָּה',   translit: 'yeruka',  context: 'f. sg.' },
+    { he: 'יְרֻקִּים',  translit: 'yerukim', context: 'm. pl.' },
+    { he: 'יְרֻקּוֹת',  translit: 'yerukot', context: 'f. pl.' }
+  ]},
+  { fr: 'black', forms: [
+    { he: 'שָׁחֹר',     translit: 'shachor',  context: 'm. sg.' },
+    { he: 'שְׁחֹרָה',   translit: 'shchora',  context: 'f. sg.' },
+    { he: 'שְׁחֹרִים',  translit: 'shchorim', context: 'm. pl.' },
+    { he: 'שְׁחֹרוֹת',  translit: 'shchorot', context: 'f. pl.' }
+  ]},
+  { fr: 'white', forms: [
+    { he: 'לָבָן',      translit: 'lavan',   context: 'm. sg.' },
+    { he: 'לְבָנָה',    translit: 'levana',  context: 'f. sg.' },
+    { he: 'לְבָנִים',   translit: 'levanim', context: 'm. pl.' },
+    { he: 'לְבָנוֹת',   translit: 'levanot', context: 'f. pl.' }
+  ]},
+  { fr: 'gray', forms: [
+    { he: 'אָפֹר',      translit: 'afor',    context: 'm. sg.' },
+    { he: 'אֲפֹרָה',    translit: 'afora',   context: 'f. sg.' },
+    { he: 'אֲפֹרִים',   translit: 'aforim',  context: 'm. pl.' },
+    { he: 'אֲפֹרוֹת',   translit: 'aforot',  context: 'f. pl.' }
+  ]},
+  { fr: 'brown', forms: [
+    { he: 'חוּם',       translit: 'chum',    context: 'm. sg.' },
+    { he: 'חוּמָה',     translit: 'chuma',   context: 'f. sg.' },
+    { he: 'חוּמִים',    translit: 'chumim',  context: 'm. pl.' },
+    { he: 'חוּמוֹת',    translit: 'chumot',  context: 'f. pl.' }
+  ]},
+  { fr: 'orange', forms: [
+    { he: 'כָּתֹם',     translit: 'katom',   context: 'm. sg.' },
+    { he: 'כְּתֻמָּה',  translit: 'ktuma',   context: 'f. sg.' },
+    { he: 'כְּתֻמִּים', translit: 'ktumim',  context: 'm. pl.' },
+    { he: 'כְּתֻמּוֹת', translit: 'ktumot',  context: 'f. pl.' }
+  ]}
+];
+
+const ADJECTIVES = [
+  { fr: 'big / large', forms: [
+    { he: 'גָּדוֹל',    translit: 'gadol',   context: 'm. sg.' },
+    { he: 'גְּדוֹלָה',  translit: 'gdola',   context: 'f. sg.' },
+    { he: 'גְּדוֹלִים', translit: 'gdolim',  context: 'm. pl.' },
+    { he: 'גְּדוֹלוֹת', translit: 'gdolot',  context: 'f. pl.' }
+  ]},
+  { fr: 'small', forms: [
+    { he: 'קָטָן',      translit: 'katan',   context: 'm. sg.' },
+    { he: 'קְטַנָּה',   translit: 'ktana',   context: 'f. sg.' },
+    { he: 'קְטַנִּים',  translit: 'ktanim',  context: 'm. pl.' },
+    { he: 'קְטַנּוֹת',  translit: 'ktanot',  context: 'f. pl.' }
+  ]},
+  { fr: 'good', forms: [
+    { he: 'טוֹב',       translit: 'tov',     context: 'm. sg.' },
+    { he: 'טוֹבָה',     translit: 'tova',    context: 'f. sg.' },
+    { he: 'טוֹבִים',    translit: 'tovim',   context: 'm. pl.' },
+    { he: 'טוֹבוֹת',    translit: 'tovot',   context: 'f. pl.' }
+  ]},
+  { fr: 'bad', forms: [
+    { he: 'רַע',        translit: 'ra',      context: 'm. sg.' },
+    { he: 'רָעָה',      translit: "ra'a",    context: 'f. sg.' },
+    { he: 'רָעִים',     translit: "ra'im",   context: 'm. pl.' },
+    { he: 'רָעוֹת',     translit: "ra'ot",   context: 'f. pl.' }
+  ]},
+  { fr: 'beautiful / pretty', forms: [
+    { he: 'יָפֶה',      translit: 'yafe',    context: 'm. sg.' },
+    { he: 'יָפָה',      translit: 'yafa',    context: 'f. sg.' },
+    { he: 'יָפִים',     translit: 'yafim',   context: 'm. pl.' },
+    { he: 'יָפוֹת',     translit: 'yafot',   context: 'f. pl.' }
+  ]},
+  { fr: 'new', forms: [
+    { he: 'חָדָשׁ',     translit: 'chadash',  context: 'm. sg.' },
+    { he: 'חֲדָשָׁה',   translit: 'chadasha', context: 'f. sg.' },
+    { he: 'חֲדָשִׁים',  translit: 'chadashim', context: 'm. pl.' },
+    { he: 'חֲדָשׁוֹת',  translit: 'chadashot', context: 'f. pl.' }
+  ]},
+  { fr: 'old', forms: [
+    { he: 'יָשָׁן',     translit: 'yashan',   context: 'm. sg.' },
+    { he: 'יְשָׁנָה',   translit: 'yeshana',  context: 'f. sg.' },
+    { he: 'יְשָׁנִים',  translit: 'yeshanim', context: 'm. pl.' },
+    { he: 'יְשָׁנוֹת',  translit: 'yeshanot', context: 'f. pl.' }
+  ]},
+  { fr: 'hot', forms: [
+    { he: 'חַם',        translit: 'cham',    context: 'm. sg.' },
+    { he: 'חַמָּה',     translit: 'chama',   context: 'f. sg.' },
+    { he: 'חַמִּים',    translit: 'chamim',  context: 'm. pl.' },
+    { he: 'חַמּוֹת',    translit: 'chamot',  context: 'f. pl.' }
+  ]},
+  { fr: 'cold', forms: [
+    { he: 'קַר',        translit: 'kar',     context: 'm. sg.' },
+    { he: 'קָרָה',      translit: 'kara',    context: 'f. sg.' },
+    { he: 'קָרִים',     translit: 'karim',   context: 'm. pl.' },
+    { he: 'קָרוֹת',     translit: 'karot',   context: 'f. pl.' }
+  ]},
+  { fr: 'difficult / hard', forms: [
+    { he: 'קָשֶׁה',     translit: 'kashe',   context: 'm. sg.' },
+    { he: 'קָשָׁה',     translit: 'kasha',   context: 'f. sg.' },
+    { he: 'קָשִׁים',    translit: 'kashim',  context: 'm. pl.' },
+    { he: 'קָשׁוֹת',    translit: 'kashot',  context: 'f. pl.' }
+  ]},
+  { fr: 'easy', forms: [
+    { he: 'קַל',        translit: 'kal',     context: 'm. sg.' },
+    { he: 'קַלָּה',     translit: 'kala',    context: 'f. sg.' },
+    { he: 'קַלִּים',    translit: 'kalim',   context: 'm. pl.' },
+    { he: 'קַלּוֹת',    translit: 'kalot',   context: 'f. pl.' }
+  ]},
+  { fr: 'expensive', forms: [
+    { he: 'יָקָר',      translit: 'yakar',   context: 'm. sg.' },
+    { he: 'יְקָרָה',    translit: 'yekara',  context: 'f. sg.' },
+    { he: 'יְקָרִים',   translit: 'yekarim', context: 'm. pl.' },
+    { he: 'יְקָרוֹת',   translit: 'yekarot', context: 'f. pl.' }
+  ]}
+];
+
+const PHRASES = [
+  { he: 'הַסֵּפֶר הַגָּדוֹל',     translit: 'ha-sefer ha-gadol',     fr: 'the big book' },
+  { he: 'בַּיִת קָטָן',           translit: 'bayit katan',           fr: 'a small house' },
+  { he: 'יוֹם טוֹב',              translit: 'yom tov',               fr: 'a good day / holiday' },
+  { he: 'הַשֻּׁלְחָן הַחָדָשׁ',  translit: 'ha-shulchan ha-chadash', fr: 'the new table' },
+  { he: 'הַחֲבֵרָה הַיָּפָה',    translit: 'ha-chavera ha-yafa',    fr: 'the pretty friend' },
+  { he: 'הַיּוֹם חַם',            translit: 'ha-yom cham',           fr: "today it's hot" },
+  { he: 'הַקָּפֶה יָקָר',         translit: 'ha-kafe yakar',         fr: 'the coffee is expensive' },
+  { he: 'הָעִבְרִית קָשָׁה',     translit: 'ha-ivrit kasha',        fr: 'Hebrew is hard' },
+  { he: 'אֲנִי עוֹלֶה חָדָשׁ',    translit: 'ani oleh chadash',      fr: "I'm a new immigrant (m.)" },
+  { he: 'אֲנִי עוֹלָה חֲדָשָׁה', translit: 'ani ola chadasha',      fr: "I'm a new immigrant (f.)" }
+];
+
+function renderAdjGrid(elementId, items) {
+  const container = document.getElementById(elementId);
+  items.forEach(item => {
+    const block = document.createElement('div');
+    block.style.cssText = 'background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 12px;';
+    block.innerHTML = `<div style="color: var(--accent); font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">${item.fr}</div>`;
+    item.forms.forEach(f => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr 1.5fr auto; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: center;';
+      row.innerHTML = `
+        <span class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right;">${f.he}</span>
+        <span style="color: var(--text-dim); font-style: italic; font-size: 13px;">${f.translit}</span>
+        <span style="font-size: 13px; color: var(--text-dim);">${f.context}</span>
+        <button class="btn icon-btn">▶</button>
+      `;
+      row.querySelector('button').addEventListener('click', () => speak(f.he, 0.85));
+      block.appendChild(row);
+    });
+    container.appendChild(block);
+  });
+}
+
+renderAdjGrid('colors-grid', COLORS);
+renderAdjGrid('adjectives-grid', ADJECTIVES);
+
+const phrasesList = document.getElementById('phrases');
+PHRASES.forEach(w => {
+  const row = document.createElement('div');
+  row.className = 'word-row';
+  row.innerHTML = `
+    <div class="he">${w.he}</div>
+    <div class="translit">${w.translit}</div>
+    <div class="fr">${w.fr}</div>
+    <button class="btn icon-btn">▶</button>
+  `;
+  row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+  phrasesList.appendChild(row);
+});
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) {
+    count++;
+    if (count >= 20) markLessonDone('colors');
+  }
+});
+
+addExtraVocab('All the Colors with Both Genders', [
+  { he: 'אָדֹם / אֲדֻמָּה', translit: 'adom / aduma', fr: 'red (m./f.)' },
+  { he: 'כָּחֹל / כְּחֻלָּה', translit: 'kachol / kchula', fr: 'blue' },
+  { he: 'יָרֹק / יְרֻקָּה', translit: 'yarok / yeruka', fr: 'green' },
+  { he: 'צָהֹב / צְהֻבָּה', translit: 'tzahov / tzehuba', fr: 'yellow' },
+  { he: 'לָבָן / לְבָנָה', translit: 'lavan / levana', fr: 'white' },
+  { he: 'שָׁחֹר / שְׁחֹרָה', translit: 'shachor / shchora', fr: 'black' },
+  { he: 'אָפֹר / אֲפֹרָה', translit: 'afor / afora', fr: 'gray' },
+  { he: 'חוּם / חוּמָה', translit: 'chum / chuma', fr: 'brown' },
+  { he: 'כָּתֹם / כְּתֻמָּה', translit: 'katom / ktuma', fr: 'orange' },
+  { he: 'סָגוֹל / סְגֻלָּה', translit: 'sagol / sgula', fr: 'purple' },
+  { he: 'וָרוֹד / וְרֻדָּה', translit: 'varod / vruda', fr: 'pink' },
+  { he: 'תְּכֵלֶת', translit: 'tchelet', fr: 'sky blue (Israeli flag)' },
+  { he: 'זָהָב', translit: 'zahav', fr: 'gold' },
+  { he: 'כֶּסֶף', translit: 'kesef', fr: 'silver' }
+]);
+
+addExtraVocab('Useful Adjective Pairs', [
+  { he: 'גָּדוֹל / קָטָן', translit: 'gadol / katan', fr: 'big / small' },
+  { he: 'גָּבֹהַּ / נָמוּךְ', translit: 'gavoha / namuch', fr: 'tall / short' },
+  { he: 'אָרֹךְ / קָצָר', translit: 'aroch / katzar', fr: 'long / short' },
+  { he: 'חָדָשׁ / יָשָׁן', translit: 'chadash / yashan', fr: 'new / old' },
+  { he: 'צָעִיר / זָקֵן', translit: 'tza\'ir / zaken', fr: 'young / old (person)' },
+  { he: 'יָפֶה / מְכֹעָר', translit: 'yafe / mecho\'ar', fr: 'beautiful / ugly' },
+  { he: 'טוֹב / רַע', translit: 'tov / ra', fr: 'good / bad' },
+  { he: 'חָכָם / טִפֵּשׁ', translit: 'chacham / tipesh', fr: 'smart / dumb' },
+  { he: 'מָהִיר / אִטִּי', translit: 'mahir / iti', fr: 'fast / slow' },
+  { he: 'חַם / קַר', translit: 'cham / kar', fr: 'hot / cold' },
+  { he: 'מָלֵא / רֵיק', translit: 'male / reik', fr: 'full / empty' },
+  { he: 'נָקִי / מְלֻכְלָךְ', translit: 'naki / meluchlach', fr: 'clean / dirty' },
+  { he: 'קַל / כָּבֵד', translit: 'kal / kaved', fr: 'light / heavy' },
+  { he: 'יָקָר / זוֹל', translit: 'yakar / zol', fr: 'expensive / cheap' },
+  { he: 'קָשֶׁה / קַל', translit: 'kashe / kal', fr: 'hard / easy' },
+  { he: 'חָשׁוּב / לֹא חָשׁוּב', translit: 'chashuv / lo chashuv', fr: 'important / unimportant' }
+]);
+
+addMiniQuiz('Colors & Adjectives Quiz', [
+  { q: '"A red car (f.)" =', options: ['מְכוֹנִית אָדֹם', 'מְכוֹנִית אֲדֻמָּה', 'אֲדֻמָּה מְכוֹנִית', 'אָדֹם מְכוֹנִית'], answer: 1, explain: 'mechonit (f.) + aduma (f.); adjective AFTER noun' },
+  { q: '"The big house" =', options: ['הַבַּיִת הַגָּדוֹל', 'בַּיִת הַגָּדוֹל', 'הַגָּדוֹל בַּיִת', 'גָּדוֹל הַבַּיִת'], answer: 0, explain: 'definite article on BOTH noun and adjective' },
+  { q: 'Color of שָׁמַיִם?', options: ['אָדֹם', 'יָרֹק', 'כָּחֹל', 'צָהֹב'], answer: 2, explain: 'sky = blue' },
+  { q: '"The young woman" =', options: ['אִשָּׁה צָעִיר', 'אִשָּׁה צְעִירָה', 'הָאִשָּׁה הַצְּעִירָה', 'B and C'], answer: 3 },
+  { q: 'Opposite of יָפֶה?', options: ['רַע', 'מְכֹעָר', 'גָּדוֹל', 'אָרֹךְ'], answer: 1 }
+]);
+
+addCulturalText('Colors in Sentences — Adjective Agreement', 'Adjectives agree with the noun in gender and number. The order is noun first, adjective second (opposite of English).', [
+  { he: 'הַכֶּלֶב הָאָדֹם', translit: "Ha-kelev ha-adom", fr: 'The red dog (m.s.)' },
+  { he: 'הַחֲתוּלָה הַשְּׁחֹרָה', translit: "Ha-chatula ha-shechora", fr: 'The black cat (f.s.)' },
+  { he: 'הַסְּפָרִים הַחֲדָשִׁים', translit: "Ha-sfarim ha-chadashim", fr: 'The new books (m.pl.)' },
+  { he: 'הַפְּרָחִים הַיָּפִים', translit: "Ha-prachim ha-yafim", fr: 'The pretty flowers (m.pl.)' },
+  { he: 'מְכוֹנִית גְּדוֹלָה וִירֻקָּה', translit: "Mechonit gdola vi-yeruka", fr: 'A big green car (f.s.)' },
+  { he: 'הַשָּׁמַיִם כְּחֻלִּים', translit: "Ha-shamayim kchulim", fr: 'The sky is blue (treated pl.)' },
+  { he: 'הַסַּלָּט טָרִי', translit: "Ha-salat tari", fr: 'The salad is fresh' },
+  { he: 'הַחֻלְצָה לְבָנָה אוֹ שְׁחֹרָה?', translit: "Ha-chultza levana o shechora?", fr: 'Is the shirt white or black?' }
+]);
+</script>
+
+</body>
+</html>

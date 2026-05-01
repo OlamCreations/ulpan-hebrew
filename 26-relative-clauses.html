@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26 — Relative Clauses</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Relative Clauses</h1>
+    <div class="subtitle">Lesson 26 · משפטי זיקה</div>
+  </div>
+  <div class="nav"><a href="index.html">Home</a><a href="26-relative-clauses.html" class="active">26</a></div>
+</header>
+
+<p class="intro">
+  Hebrew uses one tiny word — שֶׁ (she-) — for "that, which, who". It attaches as a prefix to whatever follows. הָאִישׁ שֶׁאֲנִי מַכִּיר (ha-ish she-ani makir) "the man (that) I know". Crucial for building real sentences.
+</p>
+
+<div class="tip">
+  <strong>שֶׁ vs אֲשֶׁר</strong> — שֶׁ (she-) is everyday spoken Hebrew. אֲשֶׁר (asher) is the literary/biblical form, same meaning. You'll see asher in formal writing, prayers, songs.
+</div>
+
+<h2>Basic "that / which / who"</h2>
+<div class="word-list" id="basic"></div>
+
+<h2>Relative + Place / Time</h2>
+<div class="word-list" id="place-time"></div>
+
+<h2>"because" and other connectives with שֶׁ</h2>
+<div class="word-list" id="connectives"></div>
+
+<h2>"to think that / hope that / know that"</h2>
+<div class="word-list" id="reported"></div>
+
+<hr class="section-divider">
+
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 26 · relative clauses · <a href="27-conditional.html" style="color:var(--accent)">Next: Conditional →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const BASIC = [
+  { he: 'שֶׁ',           translit: 'she-',          fr: 'that / which / who (prefix)' },
+  { he: 'אֲשֶׁר',        translit: 'asher',         fr: 'that / which (literary)' },
+  { he: 'הָאִישׁ שֶׁבָּא', translit: 'ha-ish she-ba', fr: 'the man who came' },
+  { he: 'הַסֵּפֶר שֶׁקָּנִיתִי', translit: 'ha-sefer she-kaniti', fr: 'the book that I bought' },
+  { he: 'הַחֲבֵרָה שֶׁלִּי שֶׁגָּרָה בְּפָּרִיז', translit: 'ha-chavera sheli she-gara be-Paris', fr: 'my friend who lives in Paris' },
+  { he: 'הַדָּבָר שֶׁאָמַרְתָּ', translit: 'ha-davar she-amarta', fr: 'the thing you said' }
+];
+
+const PLACE_TIME = [
+  { he: 'הַמָּקוֹם שֶׁבּוֹ',     translit: 'ha-makom she-bo',     fr: 'the place where' },
+  { he: 'הַזְּמָן שֶׁבּוֹ',     translit: 'ha-zman she-bo',      fr: 'the time when' },
+  { he: 'הַיּוֹם שֶׁבָּאתִי',   translit: 'ha-yom she-bati',     fr: 'the day I came' },
+  { he: 'כַּאֲשֶׁר',             translit: 'ka\'asher',           fr: 'when (formal)' },
+  { he: 'כְּשֶׁ',                translit: 'kshe-',               fr: 'when (everyday prefix)' },
+  { he: 'כְּשֶׁבָּאתִי',         translit: 'kshe-bati',           fr: 'when I came' },
+  { he: 'לִפְנֵי שֶׁ',           translit: 'lifney she-',         fr: 'before' },
+  { he: 'אַחֲרֵי שֶׁ',          translit: 'acharey she-',        fr: 'after' },
+  { he: 'מִכֵּיוָן שֶׁ',         translit: 'mikevan she-',        fr: 'since / because' }
+];
+
+const CONNECTIVES = [
+  { he: 'בִּגְלַל שֶׁ',     translit: 'biglal she-',     fr: 'because (everyday)' },
+  { he: 'מִפְּנֵי שֶׁ',     translit: 'mipney she-',     fr: 'because (more formal)' },
+  { he: 'כֵּיוָן שֶׁ',      translit: 'keyvan she-',     fr: 'since / because' },
+  { he: 'לַמְרוֹת שֶׁ',     translit: 'lamrot she-',     fr: 'although / despite' },
+  { he: 'כְּדֵי שֶׁ',       translit: 'kdey she-',       fr: 'in order that' },
+  { he: 'אִם שֶׁ',          translit: 'im she-',         fr: 'if (rare)' },
+  { he: 'בִּזְמַן שֶׁ',     translit: 'bi-zman she-',    fr: 'while / at the time that' }
+];
+
+const REPORTED = [
+  { he: 'אֲנִי חוֹשֵׁב שֶׁ',     translit: 'ani choshev she-',    fr: 'I think that (m.)' },
+  { he: 'אֲנִי מְקַוֶּה שֶׁ',    translit: 'ani mekave she-',     fr: 'I hope that (m.)' },
+  { he: 'אֲנִי יוֹדֵעַ שֶׁ',    translit: "ani yode'a she-",     fr: 'I know that (m.)' },
+  { he: 'אֲנִי בָּטוּחַ שֶׁ',   translit: 'ani batuach she-',    fr: "I'm sure that (m.)" },
+  { he: 'הִיא אָמְרָה שֶׁ',    translit: 'hi amra she-',         fr: 'she said that' },
+  { he: 'נִרְאֶה לִי שֶׁ',      translit: "nir'e li she-",        fr: 'it seems to me that' }
+];
+
+const PHRASES = [
+  { he: 'אֲנִי חוֹשֵׁב שֶׁזֶּה טוֹב',          translit: 'ani choshev she-ze tov',           fr: "I think it's good (m.)" },
+  { he: 'הָאִישׁ שֶׁדִּבַּרְתִּי אִתּוֹ',     translit: 'ha-ish she-dibarti ito',           fr: 'the man I spoke with' },
+  { he: 'כְּשֶׁבָּאתִי לְיִשְׂרָאֵל',          translit: 'kshe-bati le-Yisrael',             fr: 'when I came to Israel' },
+  { he: 'אֲנִי רוֹצֶה שֶׁתָּבוֹא',             translit: 'ani rotze she-tavo',               fr: 'I want you to come (m.)' },
+  { he: 'בִּגְלַל שֶׁאֲנִי עָיֵף',            translit: 'biglal she-ani ayef',              fr: "because I'm tired (m.)" },
+  { he: 'הַחֶבְרָה שֶׁאֲנִי עוֹבֵד בָּהּ',  translit: 'ha-chevra she-ani oved ba',        fr: 'the company I work at (m.)' },
+  { he: 'אֲנִי שָׂמֵחַ שֶׁבָּאתָ',             translit: 'ani sameach she-bata',             fr: "I'm glad you came (m.)" },
+  { he: 'אַחֲרֵי שֶׁנֶּאֱכַל',                 translit: "acharey she-ne'echal",              fr: 'after we eat' },
+  { he: 'לַמְרוֹת שֶׁזֶּה קָשֶׁה',             translit: 'lamrot she-ze kashe',               fr: "although it's hard" }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('basic', BASIC);
+renderRows('place-time', PLACE_TIME);
+renderRows('connectives', CONNECTIVES);
+renderRows('reported', REPORTED);
+renderRows('phrases', PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) { count++; if (count >= 15) markLessonDone('relative'); }
+});
+
+addExtraVocab('Conjunction Words (with she-)', [
+  { he: 'כִּי', translit: 'ki', fr: 'because' },
+  { he: 'מִכֵּיוָן שֶׁ-', translit: 'mikeyvan she-', fr: 'since / because' },
+  { he: 'בִּגְלַל שֶׁ-', translit: 'biglal she-', fr: 'because of' },
+  { he: 'כָּל זְמָן שֶׁ-', translit: 'kol zman she-', fr: 'as long as' },
+  { he: 'אַחֲרֵי שֶׁ-', translit: 'acharey she-', fr: 'after' },
+  { he: 'לִפְנֵי שֶׁ-', translit: 'lifney she-', fr: 'before' },
+  { he: 'כְּשֶׁ-', translit: 'kshe-', fr: 'when' },
+  { he: 'בִּזְמַן שֶׁ-', translit: 'bi-zman she-', fr: 'while' },
+  { he: 'עַד שֶׁ-', translit: 'ad she-', fr: 'until' },
+  { he: 'מֵאָז שֶׁ-', translit: 'me-az she-', fr: 'since (time)' },
+  { he: 'בִּמְקוֹם שֶׁ-', translit: 'bi-mkom she-', fr: 'instead of' },
+  { he: 'כְּדֵי שֶׁ-', translit: 'kdey she-', fr: 'so that' }
+]);
+
+addMiniQuiz('Relative Clauses Quiz', [
+  { q: 'Modern Hebrew "she-" attaches to...', options: ['Previous word', 'Next word', 'Both', 'Standalone'], answer: 1, explain: 'Always prefixed to the next word: שֶׁאֲנִי' },
+  { q: '"The book that I read" =', options: ['הַסֵּפֶר אֲשֶׁר קָרָאתִי', 'הַסֵּפֶר שֶׁקָּרָאתִי', 'הַסֵּפֶר קָרָאתִי', 'A or B'], answer: 3, explain: 'Asher = literary; she- = modern' },
+  { q: '"I know that you came" =', options: ['אֲנִי יוֹדֵעַ אַתָּה בָּאתָ', 'אֲנִי יוֹדֵעַ שֶׁאַתָּה בָּאתָ', 'אֲנִי יוֹדֵעַ אֶת אַתָּה בָּאתָ', 'אֲנִי יוֹדֵעַ כִּי אַתָּה בָּאתָ'], answer: 1 },
+  { q: '"Whatever you want" =', options: ['מָה תִּרְצֶה', 'כָּל מָה שֶׁתִּרְצֶה', 'מַשֶּׁהוּ אַתָּה רוֹצֶה', 'אִם אַתָּה רוֹצֶה'], answer: 1 },
+  { q: 'In speech, ratio of asher vs she-?', options: ['100% asher', 'Mostly she-', '50/50', 'Both equal'], answer: 1, explain: 'asher is mostly biblical/literary' }
+]);
+
+addCulturalText('Relative Clauses in Real Speech — "she-"', 'In modern Hebrew, "she-" (שֶׁ-) is the universal connector. Attached to the next word. "asher" is biblical/literary.', [
+  { he: 'הָאִישׁ שֶׁעוֹמֵד שָׁם הוּא הָאַבָּא שֶׁלִּי', translit: "Ha-ish she-omed sham hu ha-aba sheli", fr: 'The man who stands there is my father' },
+  { he: 'הַסֵּפֶר שֶׁקָּרָאתִי אֶתְמוֹל', translit: "Ha-sefer she-karati etmol", fr: 'The book I read yesterday' },
+  { he: 'הִיא אָמְרָה שֶׁהִיא בָּאָה', translit: "Hi amra she-hi ba\'a", fr: 'She said that she\'s coming' },
+  { he: 'אֲנִי יוֹדֵעַ שֶׁאַתָּה צוֹדֵק', translit: "Ani yode\'a she-ata tzodek", fr: "I know that you're right (m.)" },
+  { he: 'הָעִיר שֶׁבָּהּ נוֹלַדְתִּי', translit: "Ha-ir she-ba noladeti", fr: 'The city in which I was born' },
+  { he: 'הַחֲבֵרָה שֶׁאִתָּהּ הָלַכְתִּי', translit: "Ha-chavera she-ita halachti", fr: 'The friend with whom I went' },
+  { he: 'כָּל מָה שֶׁתִּרְצֶה', translit: "Kol ma she-tirtze", fr: 'Whatever you want (m.)' },
+  { he: 'אֵין סִכּוּי שֶׁזֶּה יִקְרֶה', translit: "Eyn sikui she-ze yikre", fr: "There's no chance this will happen" }
+]);
+</script>
+</body>
+</html>

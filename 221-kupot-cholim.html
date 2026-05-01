@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>221 — Kupot Cholim — Israel's HMO System</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Kupot Cholim — Israel's HMO System</h1><div class="subtitle">Lesson 221 · קוּפּוֹת חוֹלִים</div></div><div class="nav"><a href="index.html">Home</a><a href="221-kupot-cholim.html" class="active">221</a></div></header>
+
+<p class="intro">Israel's universal healthcare runs through 4 kupot cholim (HMO sick funds): Clalit (~52% market share, oldest, founded 1911), Maccabi (~26%), Meuhedet (~14%), Leumit (~8%). Funded via mandatory health tax (~5% of income, capped). Every Israeli citizen and permanent resident must enroll in one. Switching kupot allowed twice per year via website. Olim get automatic enrollment + 6-12 months free coverage from Bituach Leumi.</p>
+
+<div class="tip"><strong>Cultural note</strong> — The kupot rivalry is real. Clalit dominates north and periphery; Maccabi is strong in Tel Aviv tech. Each kupa has its own clinic network (mirpaot), urgent-care centers (Terem-style night clinics), and supplementary insurance tiers (Mushlam, Zahav, Platinum). When an Israeli says "ani b\'Maccabi" they mean "I\'m a Maccabi member" — not the basketball team. As an oleh, register at Bituach Leumi first, choose kupa second; the choice affects which doctors and hospitals you can use.</div>
+
+<h2 id="kupot">The 4 Kupot</h2>
+<div class="word-list" id="kupot-list"></div>
+
+<h2 id="enrollment">Enrollment & Switching</h2>
+<div class="word-list" id="enrollment-list"></div>
+
+<h2 id="coverage">Coverage Tiers</h2>
+<div class="word-list" id="coverage-list"></div>
+
+<h2 id="services">Services Vocabulary</h2>
+<div class="word-list" id="services-list"></div>
+
+<h2 id="vocabulary">Insurance Vocabulary</h2>
+<div class="word-list" id="vocabulary-list"></div>
+
+<hr class="section-divider">
+
+<h2 id="enrollment-dialogue">An Oleh Picks a Kupa</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A new oleh at Bituach Leumi office chooses between Maccabi and Clalit.</div>
+  <div id="enrollment-dialogue-block"></div>
+</div>
+
+<footer>Lesson 221 · Kupot Cholim · <a href="222-hospitals.html" style="color:var(--accent)">Next: Hospitals →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const KUPOT = [
+  { he: 'קוּפַּת חוֹלִים כְּלָלִית', translit: 'kupat cholim Clalit', fr: 'Clalit (largest HMO, ~52%, founded 1911)' },
+  { he: 'מַכַּבִּי שֵׁרוּתֵי בְּרִיאוּת', translit: 'Maccabi sherutei briut', fr: 'Maccabi Health Services (~26%, strong in Tel Aviv)' },
+  { he: 'מְאוּחֶדֶת', translit: 'Meuhedet', fr: 'Meuhedet (~14%)' },
+  { he: 'לְאוּמִית שֵׁרוּתֵי בְּרִיאוּת', translit: 'Leumit sherutei briut', fr: 'Leumit Health Services (~8%)' },
+  { he: 'קוּפַּת חוֹלִים', translit: 'kupat cholim', fr: 'sick fund / HMO' },
+  { he: 'בִּטּוּחַ בְּרִיאוּת', translit: 'bituach briut', fr: 'health insurance' },
+  { he: 'בִּטּוּחַ לְאֻמִּי', translit: 'bituach leumi', fr: 'national insurance' },
+  { he: 'מַס בְּרִיאוּת', translit: 'mas briut', fr: 'health tax' },
+  { he: 'מְבוּטָּח', translit: 'mevutach', fr: 'insured (person)' },
+  { he: 'חָבֵר', translit: 'chaver', fr: 'member' }
+];
+const ENROLLMENT = [
+  { he: 'לְהֵרָשֵׁם', translit: 'l\'hirashem', fr: 'to register' },
+  { he: 'טֹפֶס', translit: 'tofes', fr: 'form' },
+  { he: 'תְּעוּדַת זֶהוּת', translit: 'te\'udat zehut', fr: 'ID card' },
+  { he: 'כַּרְטִיס קוּפַּת חוֹלִים', translit: 'kartis kupat cholim', fr: 'HMO membership card' },
+  { he: 'הֲטָבוֹת עוֹלֶה', translit: 'hatavot oleh', fr: 'aliyah / oleh benefits' },
+  { he: 'תְּקוּפַת הַמְתָּנָה', translit: 'tkufat hamtana', fr: 'waiting period' },
+  { he: '6-12 חוֹדָשִׁים', translit: '6-12 chodashim', fr: '6-12 months (free oleh coverage)' },
+  { he: 'תַחֲלִיפֵי קוּפָּה', translit: 'tachalifei kupa', fr: 'switching kupa' },
+  { he: 'שְׁתֵּי פְּעָמִים בַּשָּׁנָה', translit: 'shtei pa\'amim ba-shana', fr: 'twice per year (switch limit)' },
+  { he: 'אַרְעִית', translit: 'ariit', fr: 'online process' }
+];
+const COVERAGE = [
+  { he: 'סַל הַבְּרִיאוּת', translit: 'sal habriut', fr: 'basic basket (legally mandated)' },
+  { he: 'מוּשְׁלָם', translit: 'Mushlam', fr: 'Mushlam (Clalit\'s mid-tier supplemental)' },
+  { he: 'זָהָב', translit: 'Zahav', fr: 'Gold supplemental tier' },
+  { he: 'פְּלָטִינוּם', translit: 'Platinum', fr: 'Platinum top tier' },
+  { he: 'תַּשְׁלוּם עַצְמִי', translit: 'tashlum atzmi', fr: 'copay / out-of-pocket payment' },
+  { he: 'קַשַׁבְבֶת', translit: 'kashvevet', fr: 'subsidy' },
+  { he: 'תְּרוּפָה', translit: 'trufa', fr: 'medication' },
+  { he: 'בִּטּוּחַ מַשְׁלִים', translit: 'bituach mashlim', fr: 'supplemental insurance' },
+  { he: 'בִּטּוּחַ פְּרָטִי', translit: 'bituach prati', fr: 'private insurance' },
+  { he: 'עֲבוֹדָה מִשְׁפַּחְתִּי', translit: 'avoda mishpachti', fr: 'family doctor (work)' }
+];
+const SERVICES = [
+  { he: 'מִרְפָּאָה', translit: 'mirpaa', fr: 'clinic' },
+  { he: 'רוֹפֵא מִשְׁפָּחָה', translit: 'rofe mishpacha', fr: 'family doctor' },
+  { he: 'רוֹפֵא יְלָדִים', translit: 'rofe yeladim', fr: 'pediatrician' },
+  { he: 'רוֹפֵא מוּמְחֶה', translit: 'rofe mumche / rofe achayot', fr: 'specialist' },
+  { he: 'בְּדִיקַת דָּם', translit: 'bdikat dam', fr: 'blood test' },
+  { he: 'בְּדִיקוֹת דָּם', translit: 'bdikot dam', fr: 'blood tests (plural)' },
+  { he: 'אִשְׁפּוּז', translit: 'iushpoz / aushpiz', fr: 'hospitalization' },
+  { he: 'אַבְחָנָה', translit: 'avhana', fr: 'diagnosis' },
+  { he: 'תּוֹר', translit: 'tor', fr: 'appointment' },
+  { he: 'תּוֹר דָּחוּף', translit: 'tor dahuf', fr: 'urgent appointment' }
+];
+const VOCABULARY = [
+  { he: 'פְּרֵמְיָה', translit: 'premia', fr: 'premium (insurance)' },
+  { he: 'תַּקָּנוֹן', translit: 'takanon', fr: 'regulations / bylaws' },
+  { he: 'מַמַ"ד / רוֹפֵא', translit: 'mam"d / rofe', fr: 'doctor' },
+  { he: 'אָחוֹת', translit: 'achot', fr: 'nurse' },
+  { he: 'אַבְחָנָה', translit: 'avhana', fr: 'diagnosis' },
+  { he: 'טִפּוּל', translit: 'tipul', fr: 'treatment' },
+  { he: 'טֹפֶס 17', translit: 'tofes 17', fr: 'form 17 (hospital authorization)' },
+  { he: 'נִדּוּי', translit: 'niduy', fr: 'referral' },
+  { he: 'הֶתֵּר', translit: 'heter', fr: 'authorization' },
+  { he: 'חֶשְׁבּוֹנִית', translit: 'heshbonit', fr: 'invoice' }
+];
+
+const ENROLLMENT_DIALOGUE = [
+  { he: 'פָקִיד — שָׁלוֹם, יוֹנָאס. בְּאֵיזוֹ קוּפַּת חוֹלִים אַתָּה רוֹצֶה לְהֵרָשֵׁם?', translit: 'pakid — shalom, yonas. b\'eizo kupat cholim atah rotze l\'hirashem?', fr: 'Clerk — Hello, Jonas. Which kupat cholim do you want to register with?' },
+  { he: 'יוֹנָאס — אֲנִי לֹא בָּטוּחַ. אַתָּה יָכוֹל לְיָעֵץ לִי?', translit: 'yonas — ani lo batuach. atah yachol l\'ya\'etz li?', fr: 'Jonas — I\'m not sure. Can you advise me?' },
+  { he: 'פָקִיד — כְּלָלִית הִיא הַגְּדוֹלָה בְּיוֹתֵר, חֲזָקָה בַּצָּפוֹן וּבַפֵּרִיפֵרְיָה. מַכַּבִּי חֲזָקָה בְּתֵל אָבִיב וּבְעוֹלָם הַהַיי-טֶק.', translit: 'pakid — Clalit hi ha-g\'dola b\'yoter, chazaka ba-tzafon u-va-periferya. Maccabi chazaka b\'Tel Aviv u-v\'olam ha-hi-tech.', fr: 'Clerk — Clalit is the biggest, strong in the north and periphery. Maccabi is strong in Tel Aviv and the tech world.' },
+  { he: 'יוֹנָאס — אֲנִי הוֹלֵךְ לָגוּר בְּאֵזוֹר תֵּל אָבִיב.', translit: 'yonas — ani holech la-gur b\'ezor Tel Aviv.', fr: 'Jonas — I\'m going to live in the Tel Aviv area.' },
+  { he: 'פָקִיד — אִם כֵּן, אֲנִי מַמְלִיץ עַל מַכַּבִּי. הָרֶשֶׁת שֶׁלָּהֶם בָּאֵזוֹר מְצוּיֶּנֶת וְהָרוֹפְאִים מְדַבְּרִים אַנְגְּלִית.', translit: 'pakid — im ken, ani mamlitz al Maccabi. ha-reshet shelahem ba-ezor m\'tzuyenet v\'ha-rof\'im m\'dabrim anglit.', fr: 'Clerk — In that case, I recommend Maccabi. Their network in the area is excellent and the doctors speak English.' },
+  { he: 'פָקִיד — הִנֵּה הַטֹּפֶס. צָרִיךְ תְּעוּדַת זֶהוּת וְחֲתִימָה.', translit: 'pakid — hine ha-tofes. tzarich te\'udat zehut v\'chatima.', fr: 'Clerk — Here is the form. You need ID card and signature.' },
+  { he: 'יוֹנָאס — תּוֹדָה. אֲנִי חוֹתֵם וְנִרְשָׁם לְמַכַּבִּי.', translit: 'yonas — todah. ani chotem v\'nirsham l\'Maccabi.', fr: 'Jonas — Thank you. I\'m signing and registering with Maccabi.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('kupot-list', KUPOT);
+R('enrollment-list', ENROLLMENT);
+R('coverage-list', COVERAGE);
+R('services-list', SERVICES);
+R('vocabulary-list', VOCABULARY);
+
+renderTextBlock('enrollment-dialogue-block', ENROLLMENT_DIALOGUE);
+
+addMiniQuiz('Block 23 · Kupot Cholim Quiz', [
+  { q: 'The 4 kupot cholim are...', options: ['Clalit, Maccabi, Meuhedet, Leumit', 'Tnuva, Strauss, Osem, Diplomat', 'Bezeq, HOT, Cellcom, Partner', 'Hapoel, Maccabi, Beitar, Bnei'], answer: 0, explain: '4 HMOs by Israeli law.' },
+  { q: 'The largest kupa by membership is...', options: ['Maccabi', 'Clalit', 'Meuhedet', 'Leumit'], answer: 1, explain: 'Clalit ~52%, founded 1911 by Histadrut.' },
+  { q: 'Health insurance is funded primarily by...', options: ['private payments', 'mandatory health tax (~5% income)', 'employer-only', 'lottery'], answer: 1, explain: 'Capped mandatory health tax + supplemental options.' },
+  { q: 'You can switch kupa...', options: ['once a year', 'twice a year', 'monthly', 'never'], answer: 1, explain: 'Twice yearly through Bituach Leumi.' },
+  { q: 'As a new oleh, your initial coverage period is typically...', options: ['1 month', '6-12 months free', '2 years free', '5 years free'], answer: 1, explain: 'Olim get automatic enrollment with subsidized period.' },
+  { q: 'The basic universal coverage package is called...', options: ['Mushlam', 'sal habriut', 'Platinum', 'Zahav'], answer: 1, explain: 'sal habriut = the legally-mandated basic basket; supplemental tiers add coverage.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('kupot-cholim');
+  }
+});
+</script></body></html>

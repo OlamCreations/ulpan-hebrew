@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>147 — Reading a Hebrew Cookbook</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Reading a Hebrew Cookbook</h1><div class="subtitle">Lesson 147 · קְרִיאַת סֵפֶר בִּשּׁוּל</div></div><div class="nav"><a href="index.html">Home</a><a href="147-cookbook.html" class="active">147</a></div></header>
+
+<p class="intro">Decoding a Hebrew recipe is its own skill. Imperative verbs (chop! stir! bake!), Hebrew measurements (כַּף, כַּפִּית, כּוֹס), Israeli units (גְּרָם, מ"ל), oven temperatures in Celsius. Lesson 40 introduced cooking; this one teaches you to read any Israeli cookbook — Erez Komarovsky, Eyal Shani, Yotam Ottolenghi (who writes mostly in English but with deep Hebrew kitchen roots).</p>
+
+<div class="tip"><strong>Cultural note</strong> — The Israeli cookbook canon: Janna Gur\'s "The Book of New Israeli Food" (English + Hebrew), Erez Komarovsky\'s bread books, Ezra Kedem\'s Levantine fusion. Online: "מַתְכּוֹנֵי שֶׁל" (Cooking with Sef), "אֲנִי שֶׁף" (I\'m Chef) — typical Hebrew recipe sites with active comment culture.</div>
+
+<h2>Imperative Verbs (recipe commands)</h2>
+<div class="word-list" id="verbs"></div>
+
+<h2>Measurements & Units</h2>
+<div class="word-list" id="units"></div>
+
+<h2>Common Ingredients</h2>
+<div class="word-list" id="ingredients"></div>
+
+<h2>Ingredient Modifiers</h2>
+<div class="word-list" id="modifiers"></div>
+
+<h2>Cookbook Section Headers</h2>
+<div class="word-list" id="headers"></div>
+
+<hr class="section-divider">
+
+<h2>A Full Recipe — Shakshuka (Standard Hebrew)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A real Hebrew shakshuka recipe in standard cookbook format. Ingredients listed first, then steps. Note the heavy use of imperatives.</div>
+  <div id="shakshuka"></div>
+</div>
+
+<h2>Recipe Comments Section (online cooking)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Israeli recipe sites have intense comment cultures. People share variations, complain, brag. These are typical comment patterns.</div>
+  <div id="comments"></div>
+</div>
+
+<footer>Lesson 147 · Cookbook · <a href="148-coffee-tea.html" style="color:var(--accent)">Next: Coffee & Tea Culture →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const VERBS = [
+  { he: 'חַתְכוּ', translit: 'chatchu', fr: 'cut! (pl. imperative)' },
+  { he: 'קַצְּצוּ', translit: 'katztzu', fr: 'chop / mince!' },
+  { he: 'פִּרְסוּ', translit: 'pirsu', fr: 'slice!' },
+  { he: 'גָרְדוּ', translit: 'gardu', fr: 'grate!' },
+  { he: 'עַרְבְּבוּ', translit: 'arvevu', fr: 'mix / stir!' },
+  { he: 'מַזְגוּ', translit: 'mazgu', fr: 'pour!' },
+  { he: 'שָׁפְכוּ', translit: 'shafchu', fr: 'pour out!' },
+  { he: 'הוֹסִיפוּ', translit: 'hosifu', fr: 'add!' },
+  { he: 'תַּבֲּלוּ', translit: 'tavlu', fr: 'season!' },
+  { he: 'מַלְחוּ', translit: 'malchu', fr: 'salt!' },
+  { he: 'הָבִיאוּ לִידֵי רְתִיחָה', translit: 'havi\'u li-dei r\'ticha', fr: 'bring to a boil!' },
+  { he: 'בַּשְּׁלוּ עַל אֵשׁ קְטַנָּה', translit: 'bashlu al esh k\'tana', fr: 'simmer on low!' },
+  { he: 'אַפּוּ', translit: 'afu', fr: 'bake!' },
+  { he: 'טַגְּנוּ', translit: 'tagnu', fr: 'fry!' },
+  { he: 'צַלּוּ', translit: 'tzalu', fr: 'grill / roast!' },
+  { he: 'הַגִּישׁוּ חַם', translit: 'hagishu cham', fr: 'serve hot!' },
+  { he: 'קָרְרוּ', translit: 'kar\'ru', fr: 'cool!' },
+  { he: 'צַמְצְמוּ', translit: 'tzamtzemu', fr: 'reduce!' },
+  { he: 'לַשׁוּ', translit: 'lashu', fr: 'knead!' },
+  { he: 'תַּפְתוּ', translit: 'tafetu', fr: 'leaven / let rise!' }
+];
+const UNITS = [
+  { he: 'גְּרָם', translit: 'gram', fr: 'gram (g)' },
+  { he: 'קִילוֹגְרָם', translit: 'kilogram', fr: 'kilogram (kg)' },
+  { he: 'מִילִילִיטֶר', translit: 'mililiter', fr: 'milliliter (ml)' },
+  { he: 'לִיטֶר', translit: 'liter', fr: 'liter' },
+  { he: 'כַּף', translit: 'kaf', fr: 'tablespoon (15 ml)' },
+  { he: 'כַּפִּית', translit: 'kapit', fr: 'teaspoon (5 ml)' },
+  { he: 'כּוֹס', translit: 'kos', fr: 'cup (240 ml)' },
+  { he: 'חֲצִי כּוֹס', translit: 'chatzi kos', fr: 'half cup' },
+  { he: 'רֹבַע כּוֹס', translit: 'rova kos', fr: 'quarter cup' },
+  { he: 'קֻרְט', translit: 'kort', fr: 'pinch / dash' },
+  { he: 'מַסְפִיק', translit: 'maspik', fr: '"enough" (rough measure)' },
+  { he: 'לְפִי הַטַּעַם', translit: 'l\'fi ha-ta\'am', fr: 'to taste' },
+  { he: 'לְפִי הַצֹרֶךְ', translit: 'l\'fi ha-tzorech', fr: 'as needed' },
+  { he: 'מַעֲלוֹת', translit: 'ma\'alot', fr: 'degrees (Celsius implied)' },
+  { he: '180 מַעֲלוֹת', translit: '180 ma\'alot', fr: '180°C (~350°F, standard baking)' },
+  { he: '200 מַעֲלוֹת', translit: '200 ma\'alot', fr: '200°C (~400°F, hot bake)' },
+  { he: 'דַּקּוֹת', translit: 'dakot', fr: 'minutes' },
+  { he: 'שָׁעוֹת', translit: 'sha\'ot', fr: 'hours' }
+];
+const INGREDIENTS = [
+  { he: 'בְּצָל', translit: 'batzal', fr: 'onion' },
+  { he: 'שׁוּם', translit: 'shum', fr: 'garlic' },
+  { he: 'עַגְבָנִיָּה', translit: 'agvaniya', fr: 'tomato' },
+  { he: 'פִּלְפֵּל', translit: 'pilpel', fr: 'pepper (capsicum or spice)' },
+  { he: 'מֶלַח', translit: 'melach', fr: 'salt' },
+  { he: 'פִּלְפֵּל שָׁחוֹר', translit: 'pilpel shachor', fr: 'black pepper' },
+  { he: 'שֶׁמֶן זַיִת', translit: 'shemen zayit', fr: 'olive oil' },
+  { he: 'מַיִם', translit: 'mayim', fr: 'water' },
+  { he: 'בֵּיצָה', translit: 'beitza', fr: 'egg' },
+  { he: 'חָלָב', translit: 'chalav', fr: 'milk' },
+  { he: 'חֶמְאָה', translit: 'chem\'a', fr: 'butter' },
+  { he: 'קֶמַח', translit: 'kemach', fr: 'flour' },
+  { he: 'סֻכָּר', translit: 'sukar', fr: 'sugar' },
+  { he: 'אֲבַק אֲפִיָּה', translit: 'avak afiya', fr: 'baking powder' },
+  { he: 'שְׁמָרִים', translit: 'sh\'marim', fr: 'yeast' },
+  { he: 'אוֹרֶז', translit: 'orez', fr: 'rice' },
+  { he: 'תַּפּוּחַ אֲדָמָה', translit: 'tapuach adama', fr: 'potato' },
+  { he: 'גֶּזֶר', translit: 'gezer', fr: 'carrot' },
+  { he: 'דְּלַעַת', translit: 'dela\'at', fr: 'pumpkin / squash' }
+];
+const MODIFIERS = [
+  { he: 'טָרִי', translit: 'tari', fr: 'fresh' },
+  { he: 'מְיוֹבָּשׁ', translit: 'm\'yubash', fr: 'dried' },
+  { he: 'קָפוּא', translit: 'kafu', fr: 'frozen' },
+  { he: 'חָרוּךְ', translit: 'charuch', fr: 'roasted / charred' },
+  { he: 'מְבֻשָּׁל', translit: 'm\'vushal', fr: 'cooked' },
+  { he: 'גָּדוֹל', translit: 'gadol', fr: 'large' },
+  { he: 'בֵּינוֹנִי', translit: 'beinoni', fr: 'medium' },
+  { he: 'קָטָן', translit: 'katan', fr: 'small' },
+  { he: 'דַק', translit: 'dak', fr: 'thin' },
+  { he: 'עָבֶה', translit: 'ave', fr: 'thick' },
+  { he: 'קְצוּצֵי-דַק', translit: 'k\'tzutzei-dak', fr: 'finely chopped' },
+  { he: 'גְּרוּסֵי-גַּס', translit: 'g\'rusei-gas', fr: 'roughly chopped' },
+  { he: 'בְּקוּבִיוֹת', translit: 'b\'kubiyot', fr: 'in cubes / diced' },
+  { he: 'מַהֲבְחָר', translit: 'mahavchar', fr: 'of choice (your choice)' }
+];
+const HEADERS = [
+  { he: 'מַצְרָכִים', translit: 'matzrachim', fr: 'ingredients (most-used cookbook word)' },
+  { he: 'מָנוֹת', translit: 'manot', fr: 'servings' },
+  { he: 'זְמַן הֲכָנָה', translit: 'z\'man hachana', fr: 'prep time' },
+  { he: 'זְמַן בִּשּׁוּל', translit: 'z\'man bishul', fr: 'cooking time' },
+  { he: 'זְמַן כּוֹלֵל', translit: 'z\'man kolel', fr: 'total time' },
+  { he: 'הוֹרָאוֹת', translit: 'hora\'ot', fr: 'instructions' },
+  { he: 'אֹפֶן הַהֲכָנָה', translit: 'ofen ha-hachana', fr: 'method of preparation' },
+  { he: 'הֲכָנַת מֻקְדֶּמֶת', translit: 'hachana mukdemet', fr: 'preparation in advance' },
+  { he: 'דְּרִישׁוֹת מַטְבָּח', translit: 'd\'rishot mitbach', fr: 'kitchen requirements (tools)' },
+  { he: 'טִיפ הַשֵּׁף', translit: 'tip ha-shef', fr: 'chef\'s tip' },
+  { he: 'וַארְיַאצְיוֹת', translit: 'variatziyot', fr: 'variations' },
+  { he: 'הַגָּשָׁה', translit: 'hagasha', fr: 'serving' },
+  { he: 'אִחְסוּן', translit: 'ichsun', fr: 'storage' },
+  { he: 'עוֹרֵר תַּגוּבוֹת', translit: 'orer t\'guvot', fr: '"trigger comments" (controversial recipe)' }
+];
+const SHAKSHUKA = [
+  { he: '== שַׁקְשׁוּקָה ==', translit: '== Shakshuka ==', fr: '== Shakshuka ==' },
+  { he: 'מָנוֹת: 4. זְמַן הֲכָנָה: 10 דַּקּוֹת. זְמַן בִּשּׁוּל: 25 דַּקּוֹת', translit: 'Manot: 4. Z\'man hachana: 10 dakot. Z\'man bishul: 25 dakot', fr: 'Servings: 4. Prep: 10 min. Cook: 25 min.' },
+  { he: 'מַצְרָכִים:', translit: 'Matzrachim:', fr: 'Ingredients:' },
+  { he: '6 עַגְבָנִיוֹת בְּשֵׁלוֹת, מְקֻלָּפוֹת', translit: '6 agvaniyot b\'shelot, m\'kulafot', fr: '6 ripe tomatoes, peeled' },
+  { he: 'בְּצָל גָּדוֹל אֶחָד, קָצוּץ דַּק', translit: 'Batzal gadol echad, katzutz dak', fr: '1 large onion, finely chopped' },
+  { he: '4 שִׁנֵּי שׁוּם, מָעוֹכוֹת', translit: '4 shinei shum, m\'uchot', fr: '4 cloves of garlic, crushed' },
+  { he: 'פִּלְפֵּל אָדוֹם וִירוֹק, חֲתוּכִים', translit: 'Pilpel adom vi-rok, chatuchim', fr: 'Red and green pepper, chopped' },
+  { he: '2 כַּפּוֹת רֶכֶז עַגְבָנִיוֹת', translit: '2 kapot rekez agvaniyot', fr: '2 tablespoons tomato paste' },
+  { he: 'כַּפִּית פַּפְרִיקָה מְתוּקָה', translit: 'Kapit paprika m\'tuka', fr: '1 teaspoon sweet paprika' },
+  { he: '½ כַּפִּית כַּמּוֹן', translit: '½ kapit kamon', fr: '½ teaspoon cumin' },
+  { he: 'מֶלַח, פִּלְפֵּל לְפִי הַטַּעַם', translit: 'Melach, pilpel l\'fi ha-ta\'am', fr: 'Salt, pepper to taste' },
+  { he: '4-6 בֵּיצוֹת', translit: '4-6 beitzot', fr: '4-6 eggs' },
+  { he: 'כּוּסְבָּרָה טְרִיָּה לְקִשּׁוּט', translit: 'Kusbara t\'riya l\'kishut', fr: 'Fresh cilantro for garnish' },
+  { he: 'הוֹרָאוֹת:', translit: 'Hora\'ot:', fr: 'Instructions:' },
+  { he: '1. בְּמַחֲבַת רְחָבָה — חַמְּמוּ שֶׁמֶן זַיִת', translit: '1. B\'machavat r\'chava — chamemu shemen zayit', fr: '1. In a wide pan — heat olive oil' },
+  { he: '2. הוֹסִיפוּ בָּצָל — טַגְּנוּ עַד שֶׁשָּׁקוּף', translit: '2. Hosifu batzal — tagnu ad she-shakuf', fr: '2. Add onion — fry until translucent' },
+  { he: '3. הוֹסִיפוּ שׁוּם וּפִלְפֵּל', translit: '3. Hosifu shum u-filpel', fr: '3. Add garlic and pepper' },
+  { he: '4. הוֹסִיפוּ עַגְבָנִיוֹת וְרֶכֶז', translit: '4. Hosifu agvaniyot ve-rekez', fr: '4. Add tomatoes and paste' },
+  { he: '5. תַּבְּלוּ בְּפַּפְרִיקָה וְכַמּוֹן', translit: '5. Tavlu b\'paprika ve-kamon', fr: '5. Season with paprika and cumin' },
+  { he: '6. בַּשְּׁלוּ 15 דַּקּוֹת עַל אֵשׁ קְטַנָּה', translit: '6. Bashlu 15 dakot al esh k\'tana', fr: '6. Simmer 15 minutes on low' },
+  { he: '7. עַשׁוּ "בְּגוּמוֹת" בְּעַזְרַת כַּף', translit: '7. Asu "b\'gumot" b\'ezrat kaf', fr: '7. Make "wells" with a spoon' },
+  { he: '8. שִׁבְרוּ אֶת הַבֵּיצוֹת בְּתוֹךְ הַגּוּמוֹת', translit: '8. Shivru et ha-beitzot b\'toch ha-gumot', fr: '8. Crack eggs into the wells' },
+  { he: '9. כַּסּוּ — בַּשְּׁלוּ 5 דַּקּוֹת עַד שֶׁהַחֶלְבּוֹן מִתְקַשֶּׁה', translit: '9. Kasu — bashlu 5 dakot ad she-ha-chelbon mitkashe', fr: '9. Cover — cook 5 min until whites set' },
+  { he: '10. קַשְׁטוּ בְּכוּסְבָּרָה. הַגִּישׁוּ מִיָּד עִם פִּיתָה', translit: '10. Kashtu b\'kusbara. Hagishu miyad im pita', fr: '10. Garnish with cilantro. Serve immediately with pita.' }
+];
+const COMMENTS = [
+  { he: 'מָה זֶה הַמַּעֲצָה הַזֹּאת? אֵיפֹה הַחָרִיף?', translit: 'Ma ze ha-ma\'atza ha-zot? Eifo ha-charif?', fr: 'What\'s this proposal? Where\'s the spicy?' },
+  { he: 'אַתֶּם שׁוֹכְחִים — שַׁקְשׁוּקָה אֲמִתִּית עִם פִּלְפֵּל הָרִיסָה', translit: 'Atem shochchim — shakshuka amitit im pilpel harisa', fr: 'You\'re forgetting — real shakshuka with harissa pepper' },
+  { he: 'עָשִׂיתִי וְזֶה הָיָה מַעֲלֶה', translit: 'Asiti ve-ze haya ma\'ale', fr: 'I made it and it was excellent' },
+  { he: 'הִשְׁתַּמַּשְׁתִּי בְּפַסְטַת עַגְבָנִיוֹת בִּמְקוֹם הַטּוֹיוֹת — יוֹתֵר טוֹב', translit: 'Hishtamashti b\'pasta agvaniyot bi-mkom ha-toiyot — yoter tov', fr: 'I used tomato pasta instead of fresh — better' },
+  { he: 'עֶמְמָה — אֲבָל אִמָּא שֶׁלִּי עוֹשֶׂה אַחֶרֶת', translit: 'Emma — aval ima sheli osa acheret', fr: 'OK — but my mom does it differently' },
+  { he: 'גַּם אֵצֶל סָבְתָא שֶׁלִּי הָיוּ זֵיתִים בִּפְנִים', translit: 'Gam etzel savta sheli hayu zeitim bi-pnim', fr: 'At my grandmother\'s, there were olives inside' },
+  { he: 'הַמַּתְכּוֹן יָצָא לִי מוּשְׁלָם. תּוֹדָה!', translit: 'Ha-matkon yatza li mushlam. Toda!', fr: 'The recipe came out perfect for me. Thanks!' },
+  { he: 'אֲנִי מוֹסִיף פֶטָה בַּסּוֹף — עוֹשֶׂה הֶבְדֵּל עָנָק', translit: 'Ani mosif feta ba-sof — ose hevdel anak', fr: 'I add feta at the end — makes a huge difference' },
+  { he: 'מָתַי הַסֵּפֶר חָדָשׁ יוֹצֵא?', translit: 'Matai ha-sefer chadash yotze?', fr: 'When is the new book coming out?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('verbs', VERBS); R('units', UNITS); R('ingredients', INGREDIENTS); R('modifiers', MODIFIERS); R('headers', HEADERS);
+renderTextBlock('shakshuka', SHAKSHUKA);
+renderTextBlock('comments', COMMENTS);
+
+addMiniQuiz('Cookbook Quiz', [
+  { q: 'A "כַּף" in a recipe is...', options: ['1 tsp', '1 tbsp (15 ml)', '1 cup', '1 liter'], answer: 1, explain: 'Kapit = teaspoon. Kaf = tablespoon.' },
+  { q: '"180 מַעֲלוֹת" means...', options: ['180°F', '180°C (Celsius — standard Israeli)', '180 minutes', '180 grams'], answer: 1, explain: 'Israel uses metric/Celsius' },
+  { q: 'מַצְרָכִים means...', options: ['Steps', 'Ingredients', 'Servings', 'Time'], answer: 1, explain: 'Most-used Hebrew cookbook header' },
+  { q: '"לְפִי הַטַּעַם" means...', options: ['Optional', 'To taste', 'Salt only', 'Skip'], answer: 1 },
+  { q: 'A "כּוֹס" is...', options: ['~120 ml', '~240 ml (1 cup)', '~500 ml', '~1 L'], answer: 1 },
+  { q: 'תַּבְּלוּ! is the imperative for...', options: ['Boil', 'Season', 'Serve', 'Slice'], answer: 1, explain: 'From t\'valin = spices/seasoning' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('cookbook'); } });
+</script></body></html>

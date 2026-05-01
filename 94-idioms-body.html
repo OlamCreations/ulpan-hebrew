@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>94 — Idioms with Body Parts</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Idioms with Body Parts</h1><div class="subtitle">Lesson 94 · ביטויים עם איברי גוף</div></div><div class="nav"><a href="index.html">Home</a><a href="94-idioms-body.html" class="active">94</a></div></header>
+
+<p class="intro">Hebrew is rich in idioms using body parts — heart, eye, hand, foot, head, mouth. Mastering 30 of these makes your Hebrew sound native instantly. Most are biblical or Talmudic in origin.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — When an Israeli says הָעֵינַיִם שֶׁלְּךָ גְּדוֹלוֹת מֵהַבֶּטֶן (your eyes are bigger than your stomach), they're not commenting on your anatomy — they mean you took too much food. Idioms are everywhere; literal translation will mislead you.</div>
+
+<h2>Heart (לֵב)</h2>
+<div class="word-list" id="heart"></div>
+
+<h2>Eye (עַיִן)</h2>
+<div class="word-list" id="eye"></div>
+
+<h2>Hand (יָד)</h2>
+<div class="word-list" id="hand"></div>
+
+<h2>Head (רֹאשׁ)</h2>
+<div class="word-list" id="head"></div>
+
+<h2>Mouth & Tongue (פֶּה / לָשׁוֹן)</h2>
+<div class="word-list" id="mouth"></div>
+
+<h2>Foot & Leg (רֶגֶל)</h2>
+<div class="word-list" id="foot"></div>
+
+<h2>Other Body Parts</h2>
+<div class="word-list" id="other"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Dialogue: Argument with a Friend</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<h2>Idioms in Context (Sentences)</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 94 · idioms · <a href="95-idioms-animals.html" style="color:var(--accent)">Next: Idioms (Animals) →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const HEART = [
+  { he: 'לֵב שָׁבוּר', translit: 'lev shavur', fr: 'broken heart' },
+  { he: 'לֵב זָהָב', translit: 'lev zahav', fr: 'heart of gold' },
+  { he: 'לֵב שֶׁל אֶבֶן', translit: 'lev shel even', fr: 'heart of stone' },
+  { he: 'לְשִׂים לֵב', translit: 'lasim lev', fr: 'to pay attention' },
+  { he: 'לִקְבֹּעַ אֶל הַלֵּב', translit: 'likboa el ha-lev', fr: 'to take to heart' },
+  { he: 'לֵב לֵב', translit: 'lev lev', fr: 'sweetheart (term of endearment)' },
+  { he: 'בְּכָל לִבִּי', translit: 'be-chol libi', fr: 'with all my heart' }
+];
+const EYE = [
+  { he: 'עַיִן הָרָע', translit: 'ayin ha-ra', fr: 'evil eye' },
+  { he: 'עַיִן בְּעַיִן', translit: 'ayin be-ayin', fr: 'eye to eye / agreed' },
+  { he: 'אַרְבַּע עֵינַיִם', translit: 'arba eynayim', fr: 'four eyes / private conversation' },
+  { he: 'עֵינַיִם גְּדוֹלוֹת', translit: 'eynayim gdolot', fr: 'big eyes / greedy' },
+  { he: 'בְּלִי לְהַחֲטִיא עַיִן', translit: 'bli lehachti ayin', fr: 'without missing a beat (lit. eye)' },
+  { he: 'אַל תַּעֲצוֹם עַיִן', translit: 'al ta\'atzom ayin', fr: "don't blink (m.)" }
+];
+const HAND = [
+  { he: 'יָד בְּיָד', translit: 'yad be-yad', fr: 'hand in hand' },
+  { he: 'יָד רְחָבָה', translit: 'yad rechava', fr: 'generous hand' },
+  { he: 'יָד קָמוּצָה', translit: 'yad kmutza', fr: 'closed hand / stingy' },
+  { he: 'בְּיָד אַחַת', translit: 'be-yad achat', fr: 'with one hand / easily' },
+  { he: 'לִתְקוֹעַ כַּף', translit: 'litkoa kaf', fr: 'to shake on it' },
+  { he: 'יָדַיִם רוֹעֲדוֹת', translit: 'yadayim ro\'adot', fr: 'shaking hands' },
+  { he: 'לִשְׁטוֹף יָדַיִם', translit: 'lishtof yadayim', fr: 'to wash hands of (also literal)' }
+];
+const HEAD = [
+  { he: 'רֹאשׁ קָטָן', translit: 'rosh katan', fr: 'small head / minimum effort' },
+  { he: 'רֹאשׁ גָּדוֹל', translit: 'rosh gadol', fr: 'big head / takes initiative' },
+  { he: 'רֹאשׁ פָּתוּחַ', translit: 'rosh patuach', fr: 'open mind' },
+  { he: 'רֹאשׁ סָגוּר', translit: 'rosh sagur', fr: 'closed mind' },
+  { he: 'רֹאשׁ בָּקִיר', translit: 'rosh ba-kir', fr: 'head against wall / stubborn' },
+  { he: 'בְּרֹאשׁ וּבְרִאשׁוֹנָה', translit: 'be-rosh u-vrishona', fr: 'first and foremost' },
+  { he: 'הִתְחִיל מֵרֹאשׁ', translit: 'hitchil me-rosh', fr: 'started over from scratch' }
+];
+const MOUTH = [
+  { he: 'פֶּה גָּדוֹל', translit: 'pe gadol', fr: 'big mouth' },
+  { he: 'מִפֶּה לְפֶה', translit: 'mi-pe le-pe', fr: 'word of mouth' },
+  { he: 'לִשְׁמוֹר עַל הַפֶּה', translit: 'lishmor al ha-pe', fr: 'to watch one\'s mouth' },
+  { he: 'לָשׁוֹן הָרָע', translit: 'lashon ha-ra', fr: 'gossip / evil tongue' },
+  { he: 'לָשׁוֹן חֲלָקָה', translit: 'lashon chalaka', fr: 'smooth tongue / flatterer' },
+  { he: 'מִלָּה בַּפֶּה', translit: 'mila ba-pe', fr: 'tip of the tongue' },
+  { he: 'סְתוֹם אֶת הַפֶּה', translit: 'stom et ha-pe', fr: 'shut your mouth (rude)' }
+];
+const FOOT = [
+  { he: 'בָּרֶגֶל', translit: 'ba-regel', fr: 'on foot' },
+  { he: 'רֶגֶל יְמִינִית', translit: 'regel yeminit', fr: 'right foot (lucky to start with)' },
+  { he: 'יָצָא בְּרֶגֶל יְמִינִית', translit: 'yatza be-regel yeminit', fr: 'started on the right foot' },
+  { he: 'לִשְׂרוֹף רַגְלַיִם', translit: 'lisrof raglayim', fr: 'to burn one\'s feet / hurry' },
+  { he: 'רֶגֶל קְצָרָה', translit: 'regel ktzara', fr: 'short foot / no patience to walk' },
+  { he: 'רוּחַ בָּרַגְלַיִם', translit: 'ruach ba-raglayim', fr: 'wind in the feet / restless' }
+];
+const OTHER = [
+  { he: 'אֶבֶן עַל הַלֵּב', translit: 'even al ha-lev', fr: 'stone on the heart / heavy worry' },
+  { he: 'גַּב לַקִּיר', translit: 'gav la-kir', fr: 'back to the wall / cornered' },
+  { he: 'אֹזֶן קֶשֶׁבֶת', translit: 'ozen keshevet', fr: 'listening ear' },
+  { he: 'אַף בָּעֲנָנִים', translit: 'af ba-ananim', fr: 'nose in the clouds / arrogant or daydreaming' },
+  { he: 'שִׁנַּיִם וְצִפָּרְנַיִם', translit: 'shinayim ve-tziporna\'im', fr: 'teeth and nails / fight hard' },
+  { he: 'דָּם בָּרֹאשׁ', translit: 'dam ba-rosh', fr: 'blood in the head / hot-tempered' }
+];
+const DIALOGUE = [
+  { speaker: 'A', he: 'לָמָּה אַתָּה לֹא מַקְשִׁיב לִי? יֵשׁ לְךָ אֹזֶן קֶשֶׁבֶת אוֹ לֹא?', translit: 'Lama ata lo makshiv li? Yesh lecha ozen keshevet o lo?', fr: 'Why aren\'t you listening to me? Do you have a listening ear or not?' },
+  { speaker: 'B', he: 'אֲנִי מַקְשִׁיב, אַתָּה פָּשׁוּט פֶּה גָּדוֹל.', translit: 'Ani makshiv, ata pashut pe gadol.', fr: 'I am listening, you\'re just a big mouth.' },
+  { speaker: 'A', he: 'תִּשְׁמוֹר עַל הַפֶּה!', translit: 'Tishmor al ha-pe!', fr: 'Watch your mouth! (m.)' },
+  { speaker: 'B', he: 'דַּי. בּוֹא נְדַבֵּר עַיִן בְּעַיִן.', translit: 'Day. Bo nedaber ayin be-ayin.', fr: 'Enough. Let\'s talk eye to eye.' },
+  { speaker: 'A', he: 'בְּסֵדֶר. אֲנִי שָׂם לֵב שֶׁאַתָּה צוֹדֵק.', translit: 'Beseder. Ani sam lev she-ata tzodek.', fr: 'OK. I notice (lit. put heart) that you\'re right.' },
+  { speaker: 'B', he: 'יָפֶה. תֵּן לִי יָד.', translit: 'Yafe. Ten li yad.', fr: 'Good. Give me a hand. (= shake on it)' }
+];
+const PHRASES = [
+  { he: 'יֵשׁ לוֹ לֵב שֶׁל זָהָב', translit: 'yesh lo lev shel zahav', fr: 'he has a heart of gold' },
+  { he: 'אַל תֵּלֵךְ בְּרֹאשׁ קָטָן', translit: 'al telech be-rosh katan', fr: "don't take the easy way out (m.)" },
+  { he: 'הִיא דִּבְּרָה לָשׁוֹן הָרָע עָלָיו', translit: 'hi dibra lashon ha-ra alav', fr: 'she gossiped about him' },
+  { he: 'בּוֹא נְדַבֵּר אַרְבַּע עֵינַיִם', translit: 'bo nedaber arba eynayim', fr: 'come let\'s talk privately (lit. four eyes)' },
+  { he: 'הוּא תָּקַע לִי כַּף', translit: 'hu taka li kaf', fr: 'he shook on it with me' },
+  { he: 'הִיא הִתְחִילָה בְּרֶגֶל יְמִינִית', translit: 'hi hitchila be-regel yeminit', fr: 'she started on the right foot' },
+  { he: 'אַתָּה מְדַבֵּר רֹאשׁ בָּקִיר', translit: 'ata medaber rosh ba-kir', fr: "you're stubborn (m.)" },
+  { he: 'יֵשׁ לִי אֶבֶן עַל הַלֵּב', translit: 'yesh li even al ha-lev', fr: 'I have a heavy worry' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('heart', HEART); R('eye', EYE); R('hand', HAND); R('head', HEAD); R('mouth', MOUTH); R('foot', FOOT); R('other', OTHER); R('phrases', PHRASES);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  dialogueEl.appendChild(el);
+});
+async function playDialogue() { for (const line of DIALOGUE) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 2600)); } markLessonDone('idioms-body'); }
+
+addExtraVocab('More Body-Part Idioms', [
+  { he: 'יָד עַל הַלֵּב', translit: 'yad al ha-lev', fr: 'hand on heart (sincerely)' },
+  { he: 'אֶצְבַּע מַאֲשִׁימָה', translit: 'etzba ma\'ashima', fr: 'pointing finger (blame)' },
+  { he: 'שֹׁכֶם אֶל הַשֵּׁכֶם', translit: 'shochem el ha-shechem', fr: 'shoulder to shoulder' },
+  { he: 'גַּב לַקִּיר', translit: 'gav la-kir', fr: 'back to the wall (cornered)' },
+  { he: 'עַיִן רָעָה', translit: 'ayin ra\'a', fr: 'evil eye' },
+  { he: 'עֵינַיִם בּוֹעֲרוֹת', translit: 'eynayim bo\'arot', fr: 'burning eyes (passionate)' },
+  { he: 'דָּם חַם', translit: 'dam cham', fr: 'hot blood (hot-tempered)' },
+  { he: 'דָּם קַר', translit: 'dam kar', fr: 'cold blood (calm)' },
+  { he: 'לֵב פָּתוּחַ', translit: 'lev patuach', fr: 'open heart' },
+  { he: 'יָד רוֹחֶצֶת יָד', translit: 'yad rochetzet yad', fr: 'one hand washes the other' },
+  { he: 'נִשְׁבַּר לוֹ הַלֵּב', translit: 'nishbar lo ha-lev', fr: 'his heart broke' }
+]);
+
+addMiniQuiz('Body Idioms Quiz', [
+  { q: '"To pay attention" =', options: ['לִתְפֹּס לֵב', 'לָשִׂים לֵב', 'לִשְׁבֹּר לֵב', 'לִקְרֹעַ לֵב'], answer: 1 },
+  { q: 'לֵב זָהָב =', options: ['Cold heart', 'Heart of gold', 'Broken heart', 'Heavy heart'], answer: 1 },
+  { q: '"Eye to eye" (= agreed) =', options: ['רֹאשׁ בְּרֹאשׁ', 'עַיִן בְּעַיִן', 'יָד בְּיָד', 'פֶּה אֶל פֶּה'], answer: 1 },
+  { q: 'פֶּה גָּדוֹל refers to...', options: ['Generous', 'Big mouth (gossip)', 'Hungry', 'Loud singer'], answer: 1 },
+  { q: 'רֹאשׁ קָטָן =', options: ['Small head', 'Doing minimum / passive', 'Smart', 'Forgetful'], answer: 1, explain: '"Small-head mode" = doing the minimum' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('idioms-body'); } });
+</script></body></html>

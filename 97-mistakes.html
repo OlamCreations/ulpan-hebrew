@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>97 — Common Mistakes & Tips</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Common Mistakes & Tips</h1><div class="subtitle">Lesson 97 · טעויות נפוצות</div></div><div class="nav"><a href="index.html">Home</a><a href="97-mistakes.html" class="active">97</a></div></header>
+
+<p class="intro">Every olé makes the same 30 mistakes. Knowing them in advance saves you from a year of being misunderstood at the bakery. Some are grammatical, some are pronunciation, some are cultural — but all are fixable.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — Israelis will correct your Hebrew loudly and immediately. This isn't rude — it's their way of helping. Don't take it personally. The fastest way to improve is to make mistakes in public daily.</div>
+
+<h2>Gender Confusion (Words You Get Wrong)</h2>
+<div class="word-list" id="gender"></div>
+
+<h2>False Friends (Sounds Like But Isn't)</h2>
+<div class="word-list" id="falsefriends"></div>
+
+<h2>Pronunciation Traps</h2>
+<div class="word-list" id="pronunciation"></div>
+
+<h2>Verb Tense Mistakes</h2>
+<div class="word-list" id="verbs"></div>
+
+<h2>Preposition Errors</h2>
+<div class="word-list" id="prep"></div>
+
+<h2>Cultural Faux Pas</h2>
+<div class="word-list" id="cultural"></div>
+
+<hr class="section-divider">
+
+<h2>Side-by-Side: Wrong → Right</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="corrections"></div>
+</div>
+
+<h2>Tips for Faster Learning</h2>
+<div class="word-list" id="tips"></div>
+
+<footer>Lesson 97 · mistakes · <a href="98-humor.html" style="color:var(--accent)">Next: Israeli Humor →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const GENDER = [
+  { he: 'הַשֶּׁמֶשׁ (ז"נ)', translit: 'ha-shemesh (m./f.)', fr: 'sun (treated as feminine)' },
+  { he: 'הַסַּכִּין (נ\')', translit: 'ha-sakin (f.)', fr: 'knife (feminine, surprising)' },
+  { he: 'הַבֶּטֶן (נ\')', translit: 'ha-beten (f.)', fr: 'belly (feminine)' },
+  { he: 'הַדֶּרֶךְ (נ\')', translit: 'ha-derech (f.)', fr: 'way / road (feminine)' },
+  { he: 'הָעַיִן (נ\')', translit: 'ha-ayin (f.)', fr: 'eye (feminine)' },
+  { he: 'הָאֹזֶן (נ\')', translit: 'ha-ozen (f.)', fr: 'ear (feminine)' },
+  { he: 'הַבַּיִת (ז\')', translit: 'ha-bayit (m.)', fr: 'house (masculine)' },
+  { he: 'הַשַּׁבָּת (נ\')', translit: 'ha-shabat (f.)', fr: 'Sabbath (feminine)' }
+];
+const FALSEFRIENDS = [
+  { he: 'גָּלִיל (region)', translit: 'galil', fr: 'Galilee, NOT "gallon"' },
+  { he: 'מוֹתֵק', translit: 'motek', fr: 'sweet (m. nickname), NOT "moot"' },
+  { he: 'בָּלַגַן', translit: 'balagan', fr: 'mess / chaos (Russian origin)' },
+  { he: 'פִּתָּה', translit: 'pita', fr: 'pita bread, NOT "patio"' },
+  { he: 'קָבָב', translit: 'kavav', fr: 'kebab' },
+  { he: 'אַחְלָה', translit: 'achla', fr: 'great (Arabic origin)' }
+];
+const PRONUNCIATION = [
+  { he: 'ח vs כ', translit: 'chet vs khaf', fr: 'both make "ch" sound — ח always, כ only without dagesh' },
+  { he: 'ע (ayin) — silent in Israeli', translit: 'ayin', fr: "in modern Hebrew, often silent" },
+  { he: 'ר (resh) — gargled French R', translit: 'resh', fr: 'rolled in back of throat' },
+  { he: 'הַ vs הָ', translit: 'ha vs ha', fr: 'definite article — short before most letters, long before gutturals' },
+  { he: 'shva mobile vs quiescent', translit: 'shva na vs nach', fr: 'two dots — pronounced as quick "e" or silent' },
+  { he: 'tz (צ)', translit: 'tzadi', fr: 'always "ts" sound, like pizza' }
+];
+const VERBS = [
+  { he: 'אוֹמֵר vs מְדַבֵּר', translit: 'omer vs medaber', fr: '"say" vs "speak" — not interchangeable' },
+  { he: 'יוֹדֵעַ vs מַכִּיר', translit: 'yode\'a vs makir', fr: '"know fact" vs "know person/place"' },
+  { he: 'אוֹהֵב vs רוֹצֶה', translit: 'ohev vs rotze', fr: '"love" vs "want" — distinct' },
+  { he: 'עוֹשֶׂה vs מַעֲשֶׂה', translit: 'ose vs ma\'ase', fr: '"do" verb vs "deed" noun' },
+  { he: 'הוֹלֵךְ vs נוֹסֵעַ', translit: 'holech vs nose\'a', fr: '"walking" vs "traveling/driving"' },
+  { he: 'יָכוֹל vs יָדַע', translit: 'yachol vs yada', fr: '"can" vs "know how to"' }
+];
+const PREP = [
+  { he: 'אֶת vs לְ', translit: 'et vs le', fr: 'direct object marker vs "to"' },
+  { he: 'בְּ + place', translit: 'be + place', fr: '"in" — combined with definite' },
+  { he: 'מ + place', translit: 'mi + place', fr: '"from" — adds prefix m-' },
+  { he: 'עִם vs אֶת', translit: 'im vs et', fr: '"with" vs object marker' },
+  { he: 'לָקַחַת אֶת', translit: 'lakachat et', fr: '"to take" requires et with definite' },
+  { he: 'לְהִתְחַתֵּן עִם', translit: 'lehitchaten im', fr: '"to marry" uses with' }
+];
+const CULTURAL = [
+  { he: 'אֶל תַּגִּיד "סְלִיחָה" יוֹתֵר מִדַּי', translit: 'al tagid "slicha" yoter miday', fr: "don't say sorry too much (m.) — Israelis don't" },
+  { he: 'אֶל תָּבוֹא בַּזְּמַן', translit: 'al tavo ba-zman', fr: "don't arrive on time (m.) — 15 min late is normal" },
+  { he: 'תָּמִיד תַּעֲנֶה לְפָּנִים בִּפְנִים', translit: 'tamid ta\'ane le-fanim bifnim', fr: 'always answer face to face (m.) — phone is rude' },
+  { he: 'אֶל תַּגִּיד "אֵיךְ אַתָּה?" אִם לֹא רוֹצֶה תְּשׁוּבָה', translit: 'al tagid "eich ata?" im lo rotze tshuva', fr: "don't ask 'how are you?' if you don't want answer (m.)" },
+  { he: 'תָּמִיד תְּבָרֵךְ "שַׁבַּת שָׁלוֹם" יוֹם שִׁשִּׁי', translit: 'tamid tevarech "shabat shalom" yom shishi', fr: 'always say Shabbat shalom Friday (m.)' }
+];
+const CORRECTIONS = [
+  { wrong: 'אֲנִי הוֹלֵךְ לְבָּית', wrong_t: 'ani holech le-bayit', right: 'אֲנִי הוֹלֵךְ הַבַּיְתָה', right_t: 'ani holech ha-bayta', why: '"home" uses suffix -ah, not "to a house"' },
+  { wrong: 'הוּא יָדַע אוֹתִי', wrong_t: 'hu yada oti', right: 'הוּא מַכִּיר אוֹתִי', right_t: 'hu makir oti', why: '"yada" = know facts, "makir" = know people' },
+  { wrong: 'אֲנִי אוֹהֵב לֶאֱכוֹל פֶּתָה', wrong_t: 'ani ohev le\'echol peta', right: 'אֲנִי אוֹהֵב לֶאֱכוֹל פִּתָּה', right_t: 'ani ohev le\'echol pita', why: 'pita has "ee" sound' },
+  { wrong: 'אֲנִי הוֹלֵךְ עִם אוֹטוֹבּוּס', wrong_t: 'ani holech im otobus', right: 'אֲנִי נוֹסֵעַ בְּאוֹטוֹבּוּס', right_t: 'ani nose\'a be-otobus', why: 'with vehicles, use "nose\'a be-" not "holech im"' },
+  { wrong: 'הָיָה לִי 5 שָׁעוֹת', wrong_t: 'haya li 5 sha\'ot', right: 'הָיוּ לִי 5 שָׁעוֹת', right_t: 'hayu li 5 sha\'ot', why: 'plural subject needs plural verb in past' },
+  { wrong: 'הִיא יָפָה מְאוֹד יָפָה', wrong_t: 'hi yafa me\'od yafa', right: 'הִיא יָפָה מְאוֹד', right_t: 'hi yafa me\'od', why: "Hebrew doesn't double-emphasize like that" }
+];
+const TIPS = [
+  { he: 'דַּבֵּר עִם זָקֵנִים בָּאוֹטוֹבּוּס', translit: 'daber im zkenim ba-otobus', fr: 'talk to elderly on the bus (m.)' },
+  { he: 'תִּשְׁמַע פּוֹדְקַסְט בְּעִבְרִית פָּשׁוּטָה', translit: 'tishma podcast be-ivrit pshuta', fr: 'listen to easy Hebrew podcasts (m.)' },
+  { he: 'תִּכְתֹּב בַּיּוֹמָן בְּעִבְרִית', translit: 'tichtov ba-yoman be-ivrit', fr: 'write a journal in Hebrew (m.)' },
+  { he: 'תִּטְעֶה בְּקוֹל גָּדוֹל', translit: 'tit\'e be-kol gadol', fr: 'make mistakes loudly (m.)' },
+  { he: 'תִּקְרָא חֲדָשׁוֹת מְקֻצָּרוֹת', translit: 'tikra chadashot mekutzarot', fr: 'read summarized news (m.)' },
+  { he: 'תַּחֲזוֹר עַל מִלִּים בְּקוֹל', translit: 'tachzor al milim be-kol', fr: 'repeat words aloud (m.)' },
+  { he: 'אֶל תְּתַרְגֵּם, תַּחְשׁוֹב בְּעִבְרִית', translit: 'al tetargem, tachshov be-ivrit', fr: "don't translate, think in Hebrew (m.)" },
+  { he: 'תְּחַפֵּשׁ חָבֵר יִשְׂרְאֵלִי לְשִׂיחוֹת יוֹמִיּוֹת', translit: 'techapes chaver yisre\'eli le-sichot yomiyot', fr: 'find an Israeli friend for daily chats (m.)' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('gender', GENDER); R('falsefriends', FALSEFRIENDS); R('pronunciation', PRONUNCIATION); R('verbs', VERBS); R('prep', PREP); R('cultural', CULTURAL); R('tips', TIPS);
+
+const corrEl = document.getElementById('corrections');
+CORRECTIONS.forEach(c => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 14px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `
+    <div style="display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px;">
+      <span style="color: #f87171; font-size: 12px; font-weight: 600; min-width: 60px;">WRONG</span>
+      <div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right; text-decoration: line-through; color: #aaa;">${c.wrong}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic;">${c.wrong_t}</div></div>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px;">
+      <span style="color: var(--accent); font-size: 12px; font-weight: 600; min-width: 60px;">RIGHT</span>
+      <div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right;">${c.right}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic;">${c.right_t}</div></div>
+    </div>
+    <div style="font-size: 13px; color: var(--text-dim); padding-left: 72px;">${c.why}</div>`;
+  corrEl.appendChild(el);
+});
+
+addExtraVocab('Common Mistakes — Wrong vs Right Pairs', [
+  { he: 'אֲנִי הוֹלֵךְ הַבַּיְתָה (✓)', translit: 'ani holech ha-bayta', fr: 'I\'m going home (correct)' },
+  { he: 'אֲנִי הוֹלֵךְ לְהַבַּיִת (✗)', translit: 'lo: ani holech le-habayit', fr: 'NOT: ani holech le-habayit' },
+  { he: 'אֲנִי מַכִּיר אוֹתָהּ (✓ person)', translit: 'ani makir ota', fr: 'I know her (person)' },
+  { he: 'אֲנִי יוֹדֵעַ אוֹתָהּ (✗)', translit: 'lo: ani yode\'a ota', fr: 'NOT: yode\'a for people' },
+  { he: 'יָמִינָה (✓ direction)', translit: 'yamina', fr: 'to the right' },
+  { he: 'יָמִין (✗ for direction)', translit: 'lo: yamin', fr: 'NOT alone for "to the right"' },
+  { he: 'הַיּוֹם הוּא יוֹם רִאשׁוֹן (✓)', translit: 'ha-yom hu yom rishon', fr: 'today is Sunday' },
+  { he: 'אֲנִי 30 שָׁנִים (✗)', translit: 'lo: ani 30 shanim', fr: 'use ben 30, not 30 shanim' },
+  { he: 'אֲנִי בֶּן 30 (✓)', translit: 'ani ben 30', fr: 'I am 30 (m.)' },
+  { he: 'אֲנִי בַּת 30 (✓ f.)', translit: 'ani bat 30', fr: 'I am 30 (f.)' }
+]);
+
+addMiniQuiz('Mistakes Quiz', [
+  { q: '"to know" — facts vs people:', options: ['yode\'a / yode\'a (same)', 'yode\'a / makir (different)', 'yode\'a / lomed', 'makir / chaver'], answer: 1 },
+  { q: 'Sun in Hebrew = שֶׁמֶשׁ — gender?', options: ['Masculine only', 'Both masculine and feminine', 'Feminine only', 'Neuter'], answer: 1, explain: 'Treated as both — usually feminine' },
+  { q: 'Common false friend: "pita" pronunciation =', options: ['pe-ta', 'pee-ta', 'paw-ta', 'puhta'], answer: 1, explain: 'pee-ta (long ee)' },
+  { q: 'Israelis correct your Hebrew because...', options: ['They\'re mean', 'They\'re trying to help you (cultural)', 'They\'re bored', 'They want to show off'], answer: 1 },
+  { q: 'Best way to improve =', options: ['Read silently', 'Speak loudly + make mistakes daily', 'Translate everything', 'Avoid speaking'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('mistakes'); } });
+</script></body></html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>211 — Unit 8200 — IDF's SIGINT Pipeline</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Unit 8200 — IDF's SIGINT Pipeline</h1><div class="subtitle">Lesson 211 · יְחִידָה 8200</div></div><div class="nav"><a href="index.html">Home</a><a href="211-unit-8200.html" class="active">211</a></div></header>
+
+<p class="intro">Unit 8200 (Yehida Shmone-Matayim) is the IDF's SIGINT and cyber intelligence unit, comparable in scale to the NSA. It is the largest single unit in the IDF, enrolling thousands of conscripts each year via competitive selection (gibbush). Alumni founded or led roughly 1000 Israeli tech companies including Check Point, Palo Alto Networks, Imperva, Cyota, and NSO Group. The "8200 mafia" is shorthand for the Israeli tech ecosystem's hidden recruiting pipeline.</p>
+
+<div class="tip"><strong>Cultural note</strong> — 8200 isn\'t just an army unit, it\'s the entry credential to Israeli hi-tech. A typical path: gibbush at age 18, 3-4 years operational, exit to founder/VC/engineer at 22-24, build company, sell at 28-32, repeat. Recruitment quietly draws from Talpiot (officer track), Magshimim (high-school cyber program), and Mamram (computing officers). When an Israeli says "I served in eight-two-hundred," English speakers should hear "Stanford CS plus 4 years operational experience."</div>
+
+<h2>The Unit</h2>
+<div class="word-list" id="unit"></div>
+
+<h2>Recruitment & Selection</h2>
+<div class="word-list" id="recruitment"></div>
+
+<h2>Roles in 8200</h2>
+<div class="word-list" id="roles"></div>
+
+<h2>Famous Alumni & Companies</h2>
+<div class="word-list" id="alumni"></div>
+
+<h2>Tech Industry Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>Two 8200 Vets Compare Notes</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Two former 8200 soldiers meet for coffee and compare their post-service paths.</div>
+  <div id="dialogue"></div>
+</div>
+
+<footer>Lesson 211 · Unit 8200 · <a href="212-vcs.html" style="color:var(--accent)">Next: VCs →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const UNIT = [
+  { he: 'יְחִידָה 8200', translit: 'yehida 8200', fr: 'Unit 8200' },
+  { he: 'שְׁמוֹנֶה מָאתַיִם', translit: 'shmone matayim', fr: 'eight hundred (8200)' },
+  { he: 'מוֹדִיעִין', translit: 'modi\'in', fr: 'intelligence' },
+  { he: 'SIGINT', translit: 'SIGINT', fr: 'signals intelligence' },
+  { he: 'קִבּוּץ נִצָּנִים', translit: 'kibbutz nitzanim', fr: 'Kibbutz Nitzanim (Urim base)' },
+  { he: 'דִּימוֹנָה', translit: 'dimona', fr: 'Dimona (north base)' },
+  { he: 'חֵיל הַמּוֹדִיעִין', translit: 'chayil ha-modi\'in', fr: 'Intelligence Corps' },
+  { he: 'אַמָ"ן', translit: 'aman', fr: 'Aman (military intelligence directorate)' },
+  { he: 'זְרוֹעַ', translit: 'zro\'a', fr: 'branch / arm' },
+  { he: 'צַהַ"ל', translit: 'tzahal', fr: 'IDF (Israel Defense Forces)' }
+];
+const RECRUITMENT = [
+  { he: 'גִּבּוּשׁ', translit: 'gibbush', fr: 'selection / try-out' },
+  { he: 'צַו רִאשׁוֹן', translit: 'tzav rishon', fr: 'first IDF order (initial summons)' },
+  { he: 'מִיוּן', translit: 'miun', fr: 'matching / placement' },
+  { he: 'צוֹפִים', translit: 'tzofim', fr: 'scouts (early talent spotters)' },
+  { he: 'מַגְשִׁימִים', translit: 'magshimim', fr: 'Magshimim (high-school cyber program)' },
+  { he: 'תַּלְפִּיוֹת', translit: 'talpiot', fr: 'Talpiot (officer-engineer track)' },
+  { he: 'קוּרְסָה', translit: 'kursa', fr: 'course' },
+  { he: 'מִיוּן', translit: 'miyun', fr: 'selection / sorting' },
+  { he: 'נִבְחָר', translit: 'nivchar', fr: 'chosen / selected' },
+  { he: 'תַּפְקִיד', translit: 'tafkid', fr: 'role / position' }
+];
+const ROLES = [
+  { he: 'חוֹבֵשׁ', translit: 'chovesh', fr: 'medic' },
+  { he: 'מְפַקְּדֵי כִּתָּה', translit: 'm\'fakdei kita', fr: 'squad leaders' },
+  { he: 'חַיָּלִים', translit: 'chayilim', fr: 'soldiers' },
+  { he: 'קָצִין', translit: 'kazon', fr: 'officer' },
+  { he: 'מְפַקֶּדֶת', translit: 'm\'pekedet', fr: 'commander (female)' },
+  { he: 'מְפַקֶּדֶת פְּלוּגָה', translit: 'm\'pekedet pluga', fr: 'company commander' },
+  { he: 'תַּחֲזוּקָן', translit: 'tachzukan', fr: 'technician / maintainer' },
+  { he: '8200 תַּלְמִיד', translit: '8200 talmid', fr: '8200 student / trainee' },
+  { he: 'מְרַחֶקֶת', translit: 'm\'racheket', fr: 'decrypter' },
+  { he: 'אֲנַלִיטִיקַאי', translit: 'analytikai', fr: 'analyst' }
+];
+const ALUMNI = [
+  { he: 'גִּיל שְׁוֵד', translit: 'Gil Shwed', fr: 'Gil Shwed (Check Point founder)' },
+  { he: 'שְׁלֹמֹה קְרָמֶר', translit: 'Shlomo Kramer', fr: 'Shlomo Kramer (Imperva)' },
+  { he: 'נִיר צוּק', translit: 'Nir Zuk', fr: 'Nir Zuk (Palo Alto Networks)' },
+  { he: 'אֲבִיגְדּוֹר וִילֶנְץ', translit: 'Avigdor Willenz', fr: 'Avigdor Willenz (Galileo, Mellanox)' },
+  { he: 'נַפְתָּלִי בֶּנֶט', translit: 'Naftali Bennett', fr: 'Naftali Bennett (Cyota)' },
+  { he: 'מַרְיוּס נַחְט', translit: 'Marius Nacht', fr: 'Marius Nacht (Check Point co-founder)' },
+  { he: 'רֶשֶׁת בּוֹגְרֵי 8200', translit: '8200 alumni network', fr: '8200 alumni network' },
+  { he: 'מָאפְיָה 8200', translit: 'mafia 8200', fr: '8200 mafia (informal alumni network)' },
+  { he: 'אַחִים מֵ-8200', translit: 'achim me-8200', fr: '8200 brothers' },
+  { he: 'הֶסְכֵּמִים', translit: 'heskemim', fr: 'deals' }
+];
+const VOCABULARY = [
+  { he: 'הַיי-טֵק', translit: 'hi-tech', fr: 'hi-tech' },
+  { he: 'סְטַארְט-אַפּ', translit: 'startup', fr: 'startup' },
+  { he: 'אֶקְזִיט', translit: 'exit', fr: 'exit (acquisition or IPO)' },
+  { he: 'הַנְפָּקָה', translit: 'IPO', fr: 'IPO (public offering)' },
+  { he: 'מַנְכַּ"ל', translit: 'mancal', fr: 'CEO' },
+  { he: 'מְיַסֵּד', translit: 'maakar', fr: 'founder' },
+  { he: 'מְפַתֵּחַ', translit: 'mefatech', fr: 'developer' },
+  { he: 'קוֹד', translit: 'kod', fr: 'code' },
+  { he: 'בָּאג', translit: 'bug', fr: 'bug' },
+  { he: 'צַעַד בְּבוֹרֶשׁ', translit: 'tza\'ad bevoresh', fr: 'debug (step through)' },
+  { he: 'מַפַּת מוּצָר', translit: 'reut katuv', fr: 'product roadmap' }
+];
+
+const DIALOGUE = [
+  { he: 'אֲרִיאֵל: זָכַרְתָּ אֶת הַיּוֹם הָרִאשׁוֹן בַּ-8200? יָרַדְתִּי מֵהָאוֹטוֹבּוּס בָּאוּרִים וְלֹא הֵבַנְתִּי לְאָן הִגַּעְתִּי.', translit: 'ariel: zacharta et ha-yom ha-rishon ba-8200? yaradeti me-ha-otobus ba-urim v\'lo hevanti l\'an higati.', fr: 'Ariel: Do you remember our first day at 8200? I got off the bus at Urim and had no idea where I had landed.' },
+  { he: 'יוֹאָב: בְּטַח. הַגִּבּוּשׁ הַהוּא הָיָה הַשָּׁבוּעַ הַקָשֶׁה בְּחַיַּי. שָׁלוֹשׁ מֵאוֹת מוּעֲמָדִים, רַק שִׁשִׁים נִבְחְרוּ.', translit: 'yoav: betach. ha-gibbush ha-hu haya ha-shavua ha-kashe b\'chayai. shlosh me\'ot mu\'amadim, rak shishim nivch\'ru.', fr: 'Yoav: For sure. That gibbush was the hardest week of my life. Three hundred candidates, only sixty were chosen.' },
+  { he: 'אֲרִיאֵל: אַרְבַּע שָׁנִים אֲנִי עָבַדְתִּי שָׁם. לְמַדְתִּי יוֹתֵר מִכָּל אוּנִיבֶרְסִיטָה.', translit: 'ariel: arba shanim ani avadeti sham. lamadeti yoter mi-kol universita.', fr: 'Ariel: I worked there four years. I learned more than at any university.' },
+  { he: 'יוֹאָב: וַאֲנִי שְׁלֹשׁ. בַּסּוֹף הָיָה לִי יְכוֹלֶת לְבַחוֹר — לְהִישָּׁאֵר קֶבַע אוֹ לָצֵאת לְהַיי-טֵק. בָּחַרְתִּי לָצֵאת.', translit: 'yoav: va-ani shalosh. ba-sof haya li yacholet livchor — l\'hisha\'er keva o latzet l\'hi-tech. bacharti latzet.', fr: 'Yoav: And I three. At the end I had a choice — stay career army or exit to hi-tech. I chose to exit.' },
+  { he: 'אֲרִיאֵל: גַּם אֲנִי. אַחֲרֵי שִׁשָּׁה חוֹדָשִׁים יָסַדְתִּי סְטַארְט-אַפּ עִם שְׁנֵי חֲבֵרִים מֵהַיְּחִידָה.', translit: 'ariel: gam ani. acharei shisha chodashim yasadeti startup im shnei chaverim me-ha-yechida.', fr: 'Ariel: Me too. After six months I founded a startup with two friends from the unit.' },
+  { he: 'יוֹאָב: גִּיוּסְתֶּם הוֹן? אִיךְ הָיָה הַסִּיבּוּב הָרִאשׁוֹן?', translit: 'yoav: giyusetem hon? eich haya ha-sivuv ha-rishon?', fr: 'Yoav: Did you raise capital? How was the first round?' },
+  { he: 'אֲרִיאֵל: שִׁשָּׁה מִילְיוֹן דּוֹלָר Seed, אַחַר כָּךְ אֶקְזִיט בִּשְׁלוֹשִׁים מִילְיוֹן. הַיְּחִידָה נָתְנָה לָנוּ הַכֹּל.', translit: 'ariel: shisha milyon dolar seed, achar kach exit bi-shloshim milyon. ha-yechida natna lanu ha-kol.', fr: 'Ariel: Six million dollar seed, then exit at thirty million. The unit gave us everything.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('unit', UNIT);
+R('recruitment', RECRUITMENT);
+R('roles', ROLES);
+R('alumni', ALUMNI);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('dialogue', DIALOGUE);
+
+addMiniQuiz('Block 22 · Unit 8200 Quiz', [
+  { q: 'Unit 8200 is most comparable to...', options: ['CIA', 'NSA', 'FBI', 'Mossad'], answer: 1, explain: 'SIGINT and cyber intelligence — analogous to NSA.' },
+  { q: 'Selection into 8200 begins with...', options: ['recommendation', 'competitive gibbush', 'lottery', 'payment'], answer: 1, explain: 'gibbush = formal IDF selection process at age 17-18.' },
+  { q: 'The "8200 mafia" refers to...', options: ['a criminal group', 'informal alumni network in tech', 'a band', 'a secret cabal'], answer: 1, explain: 'industry shorthand for the dense alumni network.' },
+  { q: 'Famous 8200 alum who founded Check Point is...', options: ['Gil Shwed', 'Shai Agassi', 'Yossi Vardi', 'Yair Goldfinger'], answer: 0, explain: 'Shwed founded Check Point in 1993, still CEO.' },
+  { q: 'The high-school cyber pipeline feeding 8200 is called...', options: ['Magshimim', 'Talpiot', 'Hesder', 'Mahal'], answer: 0, explain: 'Magshimim trains 10th-12th graders in cybersecurity.' },
+  { q: 'Typical post-8200 path is...', options: ['full army career', 'founder/engineer at 22-24', 'academic only', 'civil service'], answer: 1, explain: 'most exit operational service to tech industry.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('unit-8200');
+  }
+});
+</script></body></html>

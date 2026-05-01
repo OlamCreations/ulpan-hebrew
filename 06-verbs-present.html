@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 — Present-tense Verbs</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Present-tense Verbs</h1>
+    <div class="subtitle">Lesson 06 · פעלים בהווה</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="06-verbs-present.html" class="active">06</a>
+    <a href="07-articles-prepositions.html">07</a>
+  </div>
+</header>
+
+<p class="intro">
+  In the present tense, a Hebrew verb takes 4 forms based on the subject's gender and number: masculine singular, feminine singular, masculine plural, feminine plural. There are no separate "he/she/they" pronouns built into the verb — the pronoun is often dropped because the verb form already implies it (sort of).
+</p>
+
+<div class="tip">
+  <strong>4 present-tense forms</strong> — חוֹשֵׁב (choshev, I/you/he think, m.) · חוֹשֶׁבֶת (choshevet, I/you/she think, f.) · חוֹשְׁבִים (choshvim, we/you/they think, m.) · חוֹשְׁבוֹת (choshvot, we/you/they think, f.).
+</div>
+
+<div class="tip">
+  <strong>Personal pronouns</strong> — אֲנִי (ani, I) · אַתָּה (ata, you m.) · אַתְּ (at, you f.) · הוּא (hu, he) · הִיא (hi, she) · אֲנַחְנוּ (anachnu, we) · אַתֶּם (atem, you m. pl.) · אַתֶּן (aten, you f. pl.) · הֵם (hem, they m.) · הֵן (hen, they f.).
+</div>
+
+<h2>Personal Pronouns</h2>
+<div class="word-list" id="pronouns"></div>
+
+<h2>The Verb "to BE" — No Copula in Present Tense</h2>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 6px; margin-bottom: 16px;">
+  <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 12px;">
+    In Hebrew, you don't say "I <em>am</em> Jonas" — you simply say "I Jonas". The verb "to be" disappears in the present tense.
+  </p>
+  <div style="display: grid; gap: 8px; margin-top: 12px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl;">אֲנִי יוֹנָס</span>
+      <span style="color: var(--text-dim); font-style: italic;">ani Yonas</span>
+      <span>I am Jonas</span>
+      <button class="btn icon-btn" onclick="speak('אֲנִי יוֹנָס', 0.85)">▶</button>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl;">הוּא רוֹפֵא</span>
+      <span style="color: var(--text-dim); font-style: italic;">hu rofe</span>
+      <span>he is a doctor</span>
+      <button class="btn icon-btn" onclick="speak('הוּא רוֹפֵא', 0.85)">▶</button>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; padding: 8px 0;">
+      <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl;">הִיא יָפָה</span>
+      <span style="color: var(--text-dim); font-style: italic;">hi yafa</span>
+      <span>she is beautiful</span>
+      <button class="btn icon-btn" onclick="speak('הִיא יָפָה', 0.85)">▶</button>
+    </div>
+  </div>
+</div>
+
+<h2>10 Essential Verbs — All 4 Forms</h2>
+<div id="verbs-table"></div>
+
+<hr class="section-divider">
+
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 06 · present + pronouns · <a href="07-articles-prepositions.html" style="color:var(--accent)">Next: Articles & Prepositions →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const PRONOUNS = [
+  { he: 'אֲנִי',      translit: 'ani',       fr: 'I' },
+  { he: 'אַתָּה',     translit: 'ata',       fr: 'you (to a man)' },
+  { he: 'אַתְּ',      translit: 'at',        fr: 'you (to a woman)' },
+  { he: 'הוּא',       translit: 'hu',        fr: 'he' },
+  { he: 'הִיא',       translit: 'hi',        fr: 'she' },
+  { he: 'אֲנַחְנוּ',  translit: 'anachnu',   fr: 'we' },
+  { he: 'אַתֶּם',     translit: 'atem',      fr: 'you (m. plural)' },
+  { he: 'אַתֶּן',     translit: 'aten',      fr: 'you (f. plural)' },
+  { he: 'הֵם',        translit: 'hem',       fr: 'they (m.)' },
+  { he: 'הֵן',        translit: 'hen',       fr: 'they (f.)' }
+];
+
+const VERBS = [
+  { fr: 'to speak', root: 'דבר', forms: [
+    { he: 'מְדַבֵּר',     translit: 'medaber',     context: 'm. sg. — I/you/he speak' },
+    { he: 'מְדַבֶּרֶת',   translit: 'medaberet',   context: 'f. sg. — I/you/she speak' },
+    { he: 'מְדַבְּרִים',  translit: 'medabrim',    context: 'm. pl. — we/you/they speak' },
+    { he: 'מְדַבְּרוֹת',  translit: 'medabrot',    context: 'f. pl.' }
+  ]},
+  { fr: 'to learn / study', root: 'למד', forms: [
+    { he: 'לוֹמֵד',    translit: 'lomed',    context: 'm. sg.' },
+    { he: 'לוֹמֶדֶת',  translit: 'lomedet',  context: 'f. sg.' },
+    { he: 'לוֹמְדִים', translit: 'lomdim',   context: 'm. pl.' },
+    { he: 'לוֹמְדוֹת', translit: 'lomdot',   context: 'f. pl.' }
+  ]},
+  { fr: 'to go / walk', root: 'הלך', forms: [
+    { he: 'הוֹלֵךְ',    translit: 'holech',    context: 'm. sg.' },
+    { he: 'הוֹלֶכֶת',   translit: 'holechet',  context: 'f. sg.' },
+    { he: 'הוֹלְכִים', translit: 'holchim',   context: 'm. pl.' },
+    { he: 'הוֹלְכוֹת', translit: 'holchot',   context: 'f. pl.' }
+  ]},
+  { fr: 'to eat', root: 'אכל', forms: [
+    { he: 'אוֹכֵל',    translit: 'ochel',    context: 'm. sg.' },
+    { he: 'אוֹכֶלֶת',  translit: 'ochelet',  context: 'f. sg.' },
+    { he: 'אוֹכְלִים', translit: 'ochlim',   context: 'm. pl.' },
+    { he: 'אוֹכְלוֹת', translit: 'ochlot',   context: 'f. pl.' }
+  ]},
+  { fr: 'to drink', root: 'שתה', forms: [
+    { he: 'שׁוֹתֶה',  translit: 'shote',   context: 'm. sg.' },
+    { he: 'שׁוֹתָה',  translit: 'shota',   context: 'f. sg.' },
+    { he: 'שׁוֹתִים', translit: 'shotim',  context: 'm. pl.' },
+    { he: 'שׁוֹתוֹת', translit: 'shotot',  context: 'f. pl.' }
+  ]},
+  { fr: 'to see', root: 'ראה', forms: [
+    { he: 'רוֹאֶה',  translit: 'ro\'e',   context: 'm. sg.' },
+    { he: 'רוֹאָה',  translit: 'ro\'a',   context: 'f. sg.' },
+    { he: 'רוֹאִים', translit: 'ro\'im',  context: 'm. pl.' },
+    { he: 'רוֹאוֹת', translit: 'ro\'ot',  context: 'f. pl.' }
+  ]},
+  { fr: 'to know', root: 'ידע', forms: [
+    { he: 'יוֹדֵעַ',   translit: 'yode\'a',  context: 'm. sg.' },
+    { he: 'יוֹדַעַת',  translit: 'yoda\'at', context: 'f. sg.' },
+    { he: 'יוֹדְעִים', translit: 'yod\'im',  context: 'm. pl.' },
+    { he: 'יוֹדְעוֹת', translit: 'yod\'ot',  context: 'f. pl.' }
+  ]},
+  { fr: 'to want', root: 'רצה', forms: [
+    { he: 'רוֹצֶה',   translit: 'rotze',    context: 'm. sg.' },
+    { he: 'רוֹצָה',   translit: 'rotza',    context: 'f. sg.' },
+    { he: 'רוֹצִים',  translit: 'rotzim',   context: 'm. pl.' },
+    { he: 'רוֹצוֹת',  translit: 'rotzot',   context: 'f. pl.' }
+  ]},
+  { fr: 'to live (reside)', root: 'גור', forms: [
+    { he: 'גָּר',     translit: 'gar',      context: 'm. sg.' },
+    { he: 'גָּרָה',   translit: 'gara',     context: 'f. sg.' },
+    { he: 'גָּרִים',  translit: 'garim',    context: 'm. pl.' },
+    { he: 'גָּרוֹת',  translit: 'garot',    context: 'f. pl.' }
+  ]},
+  { fr: 'to write', root: 'כתב', forms: [
+    { he: 'כּוֹתֵב',   translit: 'kotev',    context: 'm. sg.' },
+    { he: 'כּוֹתֶבֶת', translit: 'kotevet',  context: 'f. sg.' },
+    { he: 'כּוֹתְבִים', translit: 'kotvim',  context: 'm. pl.' },
+    { he: 'כּוֹתְבוֹת', translit: 'kotvot',  context: 'f. pl.' }
+  ]}
+];
+
+const PHRASES = [
+  { he: 'אֲנִי לוֹמֵד עִבְרִית',         translit: 'ani lomed ivrit',         fr: 'I learn Hebrew (m.)' },
+  { he: 'אֲנִי לוֹמֶדֶת עִבְרִית',       translit: 'ani lomedet ivrit',       fr: 'I learn Hebrew (f.)' },
+  { he: 'הוּא גָּר בְּתֵל אָבִיב',       translit: 'hu gar be-Tel Aviv',      fr: 'he lives in Tel Aviv' },
+  { he: 'הִיא רוֹצָה קָפֶה',             translit: 'hi rotza kafe',           fr: 'she wants coffee' },
+  { he: 'אֲנַחְנוּ הוֹלְכִים לַשּׁוּק',  translit: 'anachnu holchim la-shuk', fr: 'we are going to the market' },
+  { he: 'הֵם אוֹכְלִים לֶחֶם',           translit: 'hem ochlim lechem',       fr: 'they eat bread' },
+  { he: 'אֲנִי לֹא יוֹדֵעַ',             translit: "ani lo yode'a",           fr: 'I don\'t know (m.)' },
+  { he: 'אֲנִי לֹא יוֹדַעַת',            translit: "ani lo yoda'at",          fr: 'I don\'t know (f.)' },
+  { he: 'אַתָּה מְדַבֵּר אַנְגְּלִית?',  translit: 'ata medaber anglit?',     fr: 'do you speak English? (m.)' },
+  { he: 'מָה אַתְּ רוֹצָה?',             translit: 'ma at rotza?',            fr: 'what do you want? (f.)' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn" title="Listen">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('pronouns', PRONOUNS);
+renderRows('phrases', PHRASES);
+
+const verbsTable = document.getElementById('verbs-table');
+VERBS.forEach(v => {
+  const block = document.createElement('div');
+  block.style.cssText = 'background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 14px;';
+  block.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
+      <span style="color: var(--accent); font-weight: 500; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">${v.fr}</span>
+      <span style="color: var(--text-dim); font-size: 13px;">root: <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px; direction: rtl;">${v.root}</span></span>
+    </div>
+  `;
+  v.forms.forEach(f => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr 2fr auto; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: center;';
+    row.innerHTML = `
+      <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right;">${f.he}</span>
+      <span style="color: var(--text-dim); font-style: italic; font-size: 13px;">${f.translit}</span>
+      <span style="font-size: 13px; color: var(--text-dim);">${f.context}</span>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(f.he, 0.85));
+    block.appendChild(row);
+  });
+  verbsTable.appendChild(block);
+});
+
+let viewedCount = 0;
+document.querySelectorAll('button.icon-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    viewedCount++;
+    if (viewedCount >= 15) {
+      markLessonDone('verbs');
+      flashHint('Lesson 06 complete');
+    }
+  });
+});
+
+addExtraVocab('Verbs of Movement & Action', [
+  { he: 'רָץ / רָצָה', translit: 'ratz / ratza', fr: 'runs (m./f.)' },
+  { he: 'קוֹפֵץ / קוֹפֶצֶת', translit: 'kofetz / kofetzet', fr: 'jumps' },
+  { he: 'נוֹפֵל / נוֹפֶלֶת', translit: 'nofel / nofelet', fr: 'falls' },
+  { he: 'עוֹלֶה / עוֹלָה', translit: 'ole / ola', fr: 'goes up' },
+  { he: 'יוֹרֵד / יוֹרֶדֶת', translit: 'yored / yoredet', fr: 'goes down' },
+  { he: 'נִכְנָס / נִכְנֶסֶת', translit: 'nichnas / nichneset', fr: 'enters' },
+  { he: 'יוֹצֵא / יוֹצֵאת', translit: 'yotze / yotzet', fr: 'exits' },
+  { he: 'חוֹזֵר / חוֹזֶרֶת', translit: 'chozer / chozeret', fr: 'returns' },
+  { he: 'עוֹזֵב / עוֹזֶבֶת', translit: 'ozev / ozevet', fr: 'leaves / abandons' },
+  { he: 'מַגִּיעַ / מַגִּיעָה', translit: 'magia / magi\'a', fr: 'arrives' },
+  { he: 'נוֹסֵעַ / נוֹסַעַת', translit: 'nose\'a / nosa\'at', fr: 'travels / drives' },
+  { he: 'מְחַפֵּשׂ / מְחַפֶּשֶׂת', translit: 'mechapes / mechapeset', fr: 'searches' },
+  { he: 'מוֹצֵא / מוֹצֵאת', translit: 'motze / motzet', fr: 'finds' }
+]);
+
+addExtraVocab('20 Most Useful Present-Tense Verbs', [
+  { he: 'הוֹלֵךְ / הוֹלֶכֶת', translit: 'holech / holechet', fr: 'goes (m./f.)' },
+  { he: 'בָּא / בָּאָה', translit: 'ba / ba\'a', fr: 'comes' },
+  { he: 'אוֹמֵר / אוֹמֶרֶת', translit: 'omer / omeret', fr: 'says' },
+  { he: 'מְדַבֵּר / מְדַבֶּרֶת', translit: 'medaber / medaberet', fr: 'speaks' },
+  { he: 'רוֹאֶה / רוֹאָה', translit: 'ro\'e / ro\'a', fr: 'sees' },
+  { he: 'שׁוֹמֵעַ / שׁוֹמַעַת', translit: 'shome\'a / shoma\'at', fr: 'hears' },
+  { he: 'קוֹרֵא / קוֹרֵאת', translit: 'kore / koret', fr: 'reads / calls' },
+  { he: 'כּוֹתֵב / כּוֹתֶבֶת', translit: 'kotev / kotevet', fr: 'writes' },
+  { he: 'אוֹכֵל / אוֹכֶלֶת', translit: 'ochel / ochelet', fr: 'eats' },
+  { he: 'שׁוֹתֶה / שׁוֹתָה', translit: 'shote / shota', fr: 'drinks' },
+  { he: 'יָשֵׁן / יְשֵׁנָה', translit: 'yashen / yeshena', fr: 'sleeps' },
+  { he: 'קָם / קָמָה', translit: 'kam / kama', fr: 'wakes / gets up' },
+  { he: 'יוֹדֵעַ / יוֹדַעַת', translit: 'yode\'a / yoda\'at', fr: 'knows (fact)' },
+  { he: 'מַכִּיר / מַכִּירָה', translit: 'makir / makira', fr: 'knows (person)' },
+  { he: 'אוֹהֵב / אוֹהֶבֶת', translit: 'ohev / ohevet', fr: 'loves' },
+  { he: 'רוֹצֶה / רוֹצָה', translit: 'rotze / rotza', fr: 'wants' },
+  { he: 'יָכוֹל / יְכוֹלָה', translit: 'yachol / yechola', fr: 'can / is able' },
+  { he: 'צָרִיךְ / צְרִיכָה', translit: 'tzarich / tzricha', fr: 'needs' },
+  { he: 'נוֹתֵן / נוֹתֶנֶת', translit: 'noten / notenet', fr: 'gives' },
+  { he: 'לוֹקֵחַ / לוֹקַחַת', translit: 'loke\'ach / lokachat', fr: 'takes' }
+]);
+
+addMiniQuiz('Present-Tense Quiz', [
+  { q: '"I (m.) am eating" =', options: ['אֲנִי אוֹכֶלֶת', 'אֲנִי אוֹכֵל', 'אֲנִי אָכַל', 'אֲנִי אֶאֱכַל'], answer: 1 },
+  { q: '"She wants" =', options: ['הִיא רוֹצָה', 'הִיא רוֹצֶה', 'הוּא רוֹצֶה', 'הִיא רָצְתָה'], answer: 0 },
+  { q: 'Difference between יוֹדֵעַ and מַכִּיר?', options: ['Same thing', 'yode\'a = facts; makir = people/places', 'yode\'a = past; makir = present', 'yode\'a = future; makir = past'], answer: 1 },
+  { q: '"They are speaking" =', options: ['הֵם מְדַבֵּר', 'הֵם מְדַבְּרִים', 'הוּא מְדַבְּרִים', 'הֵן מְדַבְּרוֹת'], answer: 1 },
+  { q: 'Hebrew present tense has how many forms per verb?', options: ['2', '3', '4', '7'], answer: 2, explain: '4 forms: m.s. / f.s. / m.pl. / f.pl.' }
+]);
+
+addCulturalText('Present Tense in Action — Tel Aviv Beach Sunday', "Present-tense verbs in real sentences. Notice the gender agreement on every verb.", [
+  { he: 'אֲנִי הוֹלֵךְ לַיָּם — m. / אֲנִי הוֹלֶכֶת לַיָּם — f.', translit: "Ani holech la-yam / Ani holechet la-yam", fr: "I'm going to the sea (m./f.)" },
+  { he: 'הוּא רוֹאֶה אֶת הַשַּׁמֶשׁ — m.', translit: "Hu ro\'e et ha-shemesh", fr: 'He sees the sun' },
+  { he: 'הִיא אוֹכֶלֶת פָּלָאפֶל — f.', translit: "Hi ochelet falafel", fr: 'She is eating falafel' },
+  { he: 'אֲנַחְנוּ שׁוֹתִים מַיִם קָרִים', translit: "Anachnu shotim mayim karim", fr: 'We are drinking cold water' },
+  { he: 'הֵם מְדַבְּרִים עַל הַחַיִּים', translit: "Hem medabrim al ha-chayim", fr: 'They are talking about life' },
+  { he: 'אַתָּה לוֹמֵד עִבְרִית? — m.', translit: "Ata lomed ivrit?", fr: 'Are you (m.) studying Hebrew?' },
+  { he: 'אֲנִי כּוֹתֵב הוֹדָעָה לְחָבֵר', translit: "Ani kotev hoda\'a le-chaver", fr: 'I am writing a message to a friend' },
+  { he: 'הִיא נוֹתֶנֶת לִי שֶׁקֶל', translit: "Hi notenet li shekel", fr: 'She gives me a shekel' }
+]);
+</script>
+
+</body>
+</html>

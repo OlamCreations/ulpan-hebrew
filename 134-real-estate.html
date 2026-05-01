@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>134 — Real Estate</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Real Estate — The Defining Issue</h1><div class="subtitle">Lesson 134 · נְדֵיל"ן</div></div><div class="nav"><a href="index.html">Home</a><a href="134-real-estate.html" class="active">134</a></div></header>
+
+<p class="intro">Real estate (נְדֵיל"ן) is Israel\'s defining economic issue. Tel Aviv apartment prices ~30x median annual income (vs ~6x in NYC). 93% of land owned by the state via the Israel Land Authority. New construction limited by planning bottlenecks. Most middle-class Israelis cannot buy without a "1.5-generation" parental help. Lesson 33 covered house parts; this one covers the market itself.</p>
+
+<div class="tip"><strong>Cultural note</strong> — When asked "מָה אַתָּה עוֹשֶׂה?" — "what do you do?" — Israelis often answer their job + their housing situation: "אֲנִי מְהַנְדֵּס תּוֹכְנָה, גָּר בִּשְׂכִירוּת בְּתֵל אָבִיב" — "I\'m a software engineer, renting in Tel Aviv." Whether you own (בַּעַל בַּיִת) or rent (שׂוֹכֵר) is a defining socioeconomic marker. The phrase "אֲנִי לֹא מַצְלִיחַ לִקְנוֹת" — "I can\'t manage to buy" — is a generation\'s lament.</div>
+
+<h2>Property Types</h2>
+<div class="word-list" id="types"></div>
+
+<h2>Buying & Selling</h2>
+<div class="word-list" id="transactions"></div>
+
+<h2>Mortgage Vocabulary</h2>
+<div class="word-list" id="mortgage"></div>
+
+<h2>Renting</h2>
+<div class="word-list" id="renting"></div>
+
+<h2>Real Estate Politics</h2>
+<div class="word-list" id="politics"></div>
+
+<hr class="section-divider">
+
+<h2>Real-Estate Listing — Sample Hebrew Apartment Ad</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Real-style ad as you\'d see on Yad2 or Madlan. Note the heavy abbreviation.</div>
+  <div id="listing"></div>
+</div>
+
+<h2>Apartment Viewing Dialogue</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical viewing conversation between a renter and an owner. Israeli landlords ask many questions — bring patience and humor.</div>
+  <div id="viewing"></div>
+</div>
+
+<footer>Lesson 134 · Real Estate · <a href="135-taxes.html" style="color:var(--accent)">Next: Taxes →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const TYPES = [
+  { he: 'דִּירָה', translit: 'dira', fr: 'apartment [modern]' },
+  { he: 'בַּיִת פְּרָטִי', translit: 'bayit p\'rati', fr: 'private house' },
+  { he: 'דּוּפְּלֶקְס', translit: 'duplex', fr: 'duplex (2 floors) [modern]' },
+  { he: 'פֶּנְטְהָאוּז', translit: 'penthouse', fr: 'penthouse [modern]' },
+  { he: 'גַּן', translit: 'gan', fr: 'garden apartment (ground floor with yard)' },
+  { he: 'דִּירַת גַּג', translit: 'dirat gag', fr: 'roof apartment' },
+  { he: 'מַרְתֵּף', translit: 'martef', fr: 'basement' },
+  { he: 'דִּירוֹת חֵדֶר וְחֵדֶר', translit: 'dirot cheder ve-cheder', fr: 'studio apartments (literally "room and room")' },
+  { he: 'דּוּ-מִשְׁפַּחְתִּי', translit: 'du-mishpachti', fr: 'two-family / duplex house' },
+  { he: 'מִגְדָּל', translit: 'migdal', fr: 'tower (highrise)' },
+  { he: 'מַחְסָן', translit: 'machsan', fr: 'storage room' },
+  { he: 'חֲנִיָּה צְמוּדָה', translit: 'chaniya tz\'muda', fr: 'attached parking' },
+  { he: 'מַמַּ"ד', translit: 'mamad', fr: 'safe room (mandatory in newer construction)' }
+];
+const TRANSACTIONS = [
+  { he: 'קְנִיָּה', translit: 'k\'niya', fr: 'purchase [modern]' },
+  { he: 'מְכִירָה', translit: 'm\'chira', fr: 'sale [modern]' },
+  { he: 'מַתָּוֵךְ', translit: 'm\'tavech', fr: 'real estate broker' },
+  { he: 'דְּמֵי תִּיּוּךְ', translit: 'd\'mei tiyuch', fr: 'broker fee (typically 2% + VAT each side)' },
+  { he: 'חוֹזֶה מְכֶר', translit: 'choze mecher', fr: 'sale contract' },
+  { he: 'עוֹרֵךְ דִּין נְדֵילָ"ן', translit: 'orech din nadlan', fr: 'real estate lawyer (mandatory)' },
+  { he: 'מַס רְכִישָׁה', translit: 'mas r\'chisha', fr: 'purchase tax (escalating, ~3-10%)' },
+  { he: 'מַס שֶׁבַח', translit: 'mas shevach', fr: 'capital appreciation tax (on seller)' },
+  { he: 'דְּמֵי הַסְכָּמָה', translit: 'd\'mei haskama', fr: 'agreement payment' },
+  { he: 'יָד 2 / יָד שְׁנִיָּה', translit: 'yad 2 / yad shniya', fr: 'second-hand (also Yad2 — top classifieds site)' },
+  { he: 'מַדְלָן', translit: 'Madlan', fr: 'Madlan (real estate price comparison site)' },
+  { he: 'תַ"ב"ה אִישׁוּר', translit: 'tabu', fr: 'Land Registry / Tabu (title)' },
+  { he: 'הַעֲבָרַת זְכוּיוֹת', translit: 'ha\'avarat z\'chuyot', fr: 'transfer of rights' }
+];
+const MORTGAGE = [
+  { he: 'מַשְׁכַּנְתָּא', translit: 'mashkanta', fr: 'mortgage [modern]' },
+  { he: 'יוֹעֵץ מַשְׁכַּנְתָּאוֹת', translit: 'yo\'etz mashkanta\'ot', fr: 'mortgage advisor' },
+  { he: 'אִישׁוּר עֶקְרוֹנִי', translit: 'ishur ekroni', fr: 'pre-approval' },
+  { he: 'קֶרֶן וְרִיבִּית', translit: 'keren ve-ribit', fr: 'principal + interest' },
+  { he: 'תַּמְהִיל', translit: 'tamhil', fr: 'mortgage mix (multiple tracks combined)' },
+  { he: 'פְּרִיים', translit: 'prime', fr: 'prime track (BoI rate + spread)' },
+  { he: 'קְבוּעָה לֹא צְמוּדָה', translit: 'k\'vu\'a lo tz\'muda', fr: 'fixed non-CPI-linked rate (most stable)' },
+  { he: 'קְבוּעָה צְמוּדָה', translit: 'k\'vu\'a tz\'muda', fr: 'fixed CPI-linked rate' },
+  { he: 'מִשְׁתַּנָּה', translit: 'mishtana', fr: 'variable rate' },
+  { he: 'מִחְזוּר מַשְׁכַּנְתָּא', translit: 'michzur mashkanta', fr: 'mortgage refinancing' },
+  { he: 'קְנַס פֵּרְעוֹן מֻקְדָּם', translit: 'knas pera\'on mukdam', fr: 'early payoff penalty' },
+  { he: 'הוֹן עַצְמִי', translit: 'hon atzmi', fr: 'down payment / equity (min 25% for 1st apt, 50% for 2nd)' },
+  { he: 'דִּירָה רִאשׁוֹנָה', translit: 'dira rishona', fr: 'first apartment (lower tax + higher mortgage limit)' },
+  { he: 'דִּירָה שְׁנִיָּה', translit: 'dira shniya', fr: 'second apartment (higher tax)' }
+];
+const RENTING = [
+  { he: 'שְׂכִירוּת', translit: 's\'chirut', fr: 'rental [modern]' },
+  { he: 'שׂוֹכֵר', translit: 'socher', fr: 'tenant [modern]' },
+  { he: 'מַשְׂכִּיר', translit: 'maskir', fr: 'landlord (one who rents out) [modern]' },
+  { he: 'בַּעַל בַּיִת', translit: 'ba\'al bayit', fr: 'property owner / landlord [modern, also = "boss"]' },
+  { he: 'שָׂכָר חָדְשִׁי', translit: 'sachar chodshi', fr: 'monthly rent' },
+  { he: 'פִּקְּדוֹן', translit: 'pikdon', fr: 'security deposit (usually 1-3 months)' },
+  { he: 'עֶרְבוּת בַּנְקָאִית', translit: 'arvut banka\'it', fr: 'bank guarantee (instead of cash deposit)' },
+  { he: 'עֲרֵבִים', translit: 'arevim', fr: 'co-signers (2 required, common)' },
+  { he: 'צֶ\'קִים דְּחוּיִים', translit: 'chekim d\'chuyim', fr: 'post-dated checks (12 months upfront)' },
+  { he: 'חוֹזֶה שְׂכִירוּת', translit: 'choze s\'chirut', fr: 'rental contract (1 year standard)' },
+  { he: 'הַאֲרָכָה', translit: 'ha\'aracha', fr: 'extension' },
+  { he: 'יְצִיאָה מֻקְדֶּמֶת', translit: 'y\'tzi\'a mukdemet', fr: 'early termination' },
+  { he: 'דָּמֵי אַרְנוֹנָה עַל הַשּׂוֹכֵר', translit: 'd\'mei arnona al ha-socher', fr: 'arnona [property tax] paid by tenant' },
+  { he: 'וַעַד בַּיִת', translit: 'va\'ad bayit', fr: 'building committee (monthly fee)' }
+];
+const POLITICS = [
+  { he: 'מִינְהַל מְקַרְקְעֵי יִשְׂרָאֵל', translit: 'minhal m\'kark\'ei Yisrael', fr: 'Israel Land Authority (controls 93% of land)' },
+  { he: 'תָּב"ע', translit: 'tav"a', fr: 'TBA (urban building plan, 7+ year approval cycle)' },
+  { he: 'הַוַּעֲדָה הַמְּקוֹמִית', translit: 'ha-va\'ada ha-m\'komit', fr: 'local planning committee' },
+  { he: 'הַוַּעֲדָה הַמְּחוֹזִית', translit: 'ha-va\'ada ha-m\'chozit', fr: 'district planning committee' },
+  { he: 'מַחֲאַת הַדִּיוּר', translit: 'macha\'at ha-diyur', fr: 'housing protests (2011, 2020-)' },
+  { he: 'מְחִיר לְמִשְׁתַּכֵּן', translit: 'm\'chir l\'mishtaken', fr: '"price for the dweller" (subsidized housing program)' },
+  { he: 'דִּיּוּר בַּר-הַשָּׂגָה', translit: 'diyur bar-hasaga', fr: 'affordable housing' },
+  { he: 'קַבּלָן', translit: 'kablan', fr: 'developer / contractor' },
+  { he: 'קַבּלַן מְבַצֵּעַ', translit: 'kablan m\'vatze\'a', fr: 'execution contractor' },
+  { he: 'תָּמַ"א 38', translit: 'TaMA 38', fr: 'TAMA 38 (earthquake reinforcement = added floors)' },
+  { he: 'פִּינוּי-בִּינוּי', translit: 'pinui-binui', fr: 'eviction-construction (urban renewal)' }
+];
+const LISTING = [
+  { he: 'דִּירָה לִמְכִירָה — תֵּל אָבִיב, פְּלוֹרֶנְטִין', translit: 'Dira li-m\'chira — Tel Aviv, Florentin', fr: 'Apartment for sale — Tel Aviv, Florentin' },
+  { he: '3.5 חַדְרֵי שֵׁנָה, 95 מ"ר, קוֹמָה 2 מִתּוֹךְ 4', translit: '3.5 chadrei shena, 95 m"r, koma 2 mi-toch 4', fr: '3.5 BR, 95 sqm, 2nd of 4 floors' },
+  { he: 'מַעֲלִית, חֲנִיָּה צְמוּדָה, מִרְפֶּסֶת 8 מ"ר, מַמַּ"ד', translit: 'ma\'alit, chaniya tz\'muda, mirpeset 8 m"r, mamad', fr: 'elevator, parking, 8sqm balcony, safe room' },
+  { he: 'מְשֻׁפֶּצֶת בְּאוֹפֶן יְסוֹדִי, מִטְבָּח חָדָשׁ', translit: 'm\'shupetzet b\'ofen y\'sodi, mitbach chadash', fr: 'thoroughly renovated, new kitchen' },
+  { he: 'מִיָּד פִּנּוּי. מַתְאִים גַּם לַהַשְׁקָעָה', translit: 'Miyad pinui. Mat\'im gam la-hashka\'a', fr: 'Immediately available. Suitable also for investment' },
+  { he: 'מְחִיר: 3.85 מִילְיוֹן ש"ח (גָּמִישׁ)', translit: 'm\'chir: 3.85 milyon sh"ch (gamish)', fr: 'Price: 3.85M NIS (flexible)' },
+  { he: 'בְּלִי תִּיּוּךְ. תְּאוּם לְצָפִיָּה: 050-123-4567', translit: 'B\'li tiyuch. Te\'um l\'tzfiya: 050-123-4567', fr: 'No broker. Coordinate viewing: 050-...' }
+];
+const VIEWING = [
+  { he: 'נָעִים מְאוֹד. אֲנִי דָּן', translit: 'Na\'im me\'od. Ani Dan', fr: 'Pleased to meet. I\'m Dan' },
+  { he: 'נָעִים. אֵיפֹה אַתָּה גָּר עַכְשָׁו?', translit: 'Na\'im. Eifo ata gar achshav?', fr: 'Pleased. Where do you live now?' },
+  { he: 'בְּרְחוֹב הַחָשְׁמַל. אֲנִי עוֹבֵד בַּהָיטֶק', translit: 'Bi-r\'chov ha-chashmal. Ani oved ba-hi-tek', fr: 'On Hashmal Street. I work in tech' },
+  { he: 'אֵיזֶה חֶבְרָה?', translit: 'Eize chevra?', fr: 'Which company?' },
+  { he: 'מַייקרוֹסוֹפְט. מְהַנְדֵּס תּוֹכְנָה', translit: 'Microsoft. M\'handes tochna', fr: 'Microsoft. Software engineer' },
+  { he: 'יֵשׁ לְךָ עֲרֵבִים?', translit: 'Yesh l\'cha arevim?', fr: 'Do you have co-signers?' },
+  { he: 'הוֹרַי. אַבָּא — רוֹפֵא, אִמָּא — עוֹרֶכֶת דִּין', translit: 'Horai. Aba — rofe, ima — orechet din', fr: 'My parents. Dad — doctor, Mom — lawyer' },
+  { he: 'הַדִּירָה שְׁתֵּי שָׁנִים. רוֹצֶה 2 חָדְשֵׁי פִּקְּדוֹן + 12 צֶ\'קִים', translit: 'Ha-dira shtei shanim. Rotze 2 chodshei pikdon + 12 chekim', fr: 'Two-year contract. I want 2 months deposit + 12 checks' },
+  { he: 'בְּסֵדֶר. הַשָּׂכָר הַחָדְשִׁי?', translit: 'B\'seder. Ha-sachar ha-chodshi?', fr: 'OK. The monthly rent?' },
+  { he: '7,800 ש"ח. אַרְנוֹנָה וּוַעַד עָלֶיךָ', translit: '7,800 sh"ch. Arnona va-va\'ad alecha', fr: '7,800 NIS. Arnona and building fee on you' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('types', TYPES); R('transactions', TRANSACTIONS); R('mortgage', MORTGAGE); R('renting', RENTING); R('politics', POLITICS);
+renderTextBlock('listing', LISTING);
+renderTextBlock('viewing', VIEWING);
+
+addMiniQuiz('Real Estate Quiz', [
+  { q: 'Who owns ~93% of Israeli land?', options: ['Private owners', 'The State (via ILA)', 'Foreign investors', 'Religious bodies'], answer: 1, explain: 'Minhal m\'karkei Yisrael leases land — purchases are usually 49 or 99-year leases' },
+  { q: 'Israeli first-apartment minimum down payment is...', options: ['10%', '25%', '50%', '90%'], answer: 1, explain: '25% for first home; 50%+ for second' },
+  { q: 'מַמַּ"ד is...', options: ['A safe room (in every modern apt)', 'A garden', 'A balcony', 'A loan'], answer: 0, explain: 'Mandatory in all new construction since 1992' },
+  { q: 'TAMA 38 enables...', options: ['Tax breaks', 'Adding floors to old buildings in exchange for earthquake reinforcement', 'Faster mortgages', 'Rent control'], answer: 1, explain: 'Major Israeli urban renewal mechanism' },
+  { q: 'Standard Israeli rental contract is...', options: ['1 month', '6 months', '1 year', '5 years'], answer: 2, explain: '1 year, often with 1 year option to renew' },
+  { q: 'Typical broker fee is...', options: ['1%', '2% + VAT each side', '5%', '10%'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('real-estate'); } });
+</script></body></html>

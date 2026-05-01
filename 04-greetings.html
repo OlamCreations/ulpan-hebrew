@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 — Greetings & Phrases</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Greetings & Phrases</h1>
+    <div class="subtitle">Lesson 04 · ברכות וביטויים</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="01-alefbet.html">01</a>
+    <a href="02-niqqud.html">02</a>
+    <a href="03-common-words.html">03</a>
+    <a href="04-greetings.html" class="active">04</a>
+    <a href="05-numbers.html">05</a>
+  </div>
+</header>
+
+<p class="intro">
+  Phrases you need on day one in Israel: introducing yourself, saying thanks, asking for help, understanding basic answers.
+</p>
+
+<h2>Hello & Goodbye</h2>
+<div class="word-list" id="greetings"></div>
+
+<h2>Politeness</h2>
+<div class="word-list" id="politeness"></div>
+
+<h2>Introducing Yourself</h2>
+<div class="word-list" id="introduction"></div>
+
+<h2>Useful Daily Phrases</h2>
+<div class="word-list" id="daily"></div>
+
+<div class="tip">
+  <strong>Shalom (שָׁלוֹם)</strong> — used for both hello AND goodbye. Most important word in Hebrew. Also means "peace".
+</div>
+
+<div class="tip">
+  <strong>Beseder (בְּסֵדֶר)</strong> — literally "in order". Used everywhere to mean "OK / fine / alright". You'll hear it 50 times a day.
+</div>
+
+<div class="tip">
+  <strong>Slicha / Bevakasha</strong> — Slicha = sorry / excuse me (to get attention). Bevakasha = please / you're welcome / here you go.
+</div>
+
+<hr class="section-divider">
+
+<h2>Mini Dialogue</h2>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<footer>
+  Lesson 04 · everyday phrases · <a href="05-numbers.html" style="color:var(--accent)">Next: Numbers →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const GREETINGS = [
+  { he: 'שָׁלוֹם',              translit: 'shalom',           fr: 'hello / goodbye / peace' },
+  { he: 'בּוֹקֶר טוֹב',          translit: 'boker tov',        fr: 'good morning' },
+  { he: 'צָהֳרַיִם טוֹבִים',     translit: 'tzohorayim tovim', fr: 'good noon' },
+  { he: 'עֶרֶב טוֹב',           translit: 'erev tov',         fr: 'good evening' },
+  { he: 'לַיְלָה טוֹב',         translit: 'layla tov',        fr: 'good night' },
+  { he: 'לְהִתְרָאוֹת',         translit: 'lehitra\'ot',      fr: 'goodbye (see you again)' },
+  { he: 'בְּהַצְלָחָה',          translit: 'behatzlacha',      fr: 'good luck' },
+  { he: 'שַׁבָּת שָׁלוֹם',       translit: 'shabbat shalom',   fr: 'good sabbath' }
+];
+
+const POLITENESS = [
+  { he: 'תּוֹדָה',         translit: 'toda',         fr: 'thanks' },
+  { he: 'תּוֹדָה רַבָּה',  translit: 'toda raba',    fr: 'thanks a lot' },
+  { he: 'בְּבַקָּשָׁה',     translit: 'bevakasha',    fr: 'please / you\'re welcome' },
+  { he: 'סְלִיחָה',        translit: 'slicha',       fr: 'sorry / excuse me' },
+  { he: 'בְּסֵדֶר',         translit: 'beseder',      fr: 'OK / fine / alright' },
+  { he: 'כֵּן',            translit: 'ken',          fr: 'yes' },
+  { he: 'לֹא',             translit: 'lo',           fr: 'no' }
+];
+
+const INTRODUCTION = [
+  { he: 'אֲנִי יוֹנָס',                     translit: 'ani Yonas',           fr: 'I am Jonas' },
+  { he: 'אֵיךְ קוֹרְאִים לְךָ?',           translit: "eich kor'im lecha?",   fr: 'what\'s your name? (to a man)' },
+  { he: 'אֵיךְ קוֹרְאִים לָךְ?',           translit: "eich kor'im lach?",    fr: 'what\'s your name? (to a woman)' },
+  { he: 'נָעִים מְאֹד',                    translit: "na'im me'od",          fr: 'pleased to meet you' },
+  { he: 'אֲנִי מִצָּרְפַת',                translit: 'ani mi-Tzarfat',       fr: 'I\'m from France' },
+  { he: 'אֲנִי גָּר בְּתֵל אָבִיב',        translit: 'ani gar be-Tel Aviv',  fr: 'I live in Tel Aviv' },
+  { he: 'אֲנִי לוֹמֵד עִבְרִית',           translit: 'ani lomed ivrit',      fr: 'I learn Hebrew (m.)' },
+  { he: 'אֲנִי עוֹלֶה חָדָשׁ',             translit: 'ani oleh chadash',     fr: 'I\'m a new immigrant (m.)' }
+];
+
+const DAILY = [
+  { he: 'מָה שְׁלוֹמְךָ?',         translit: 'ma shlomcha?',     fr: 'how are you? (to a m.)' },
+  { he: 'מָה שְׁלוֹמֵךְ?',         translit: 'ma shlomech?',     fr: 'how are you? (to a f.)' },
+  { he: 'מַה הַמַּצָּב?',          translit: 'ma ha-matzav?',    fr: 'what\'s up? (lit. "what\'s the situation")' },
+  { he: 'הַכֹּל בְּסֵדֶר',         translit: 'ha-kol beseder',   fr: 'everything\'s fine' },
+  { he: 'אֲנִי לֹא מֵבִין',        translit: 'ani lo mevin',     fr: 'I don\'t understand (m.)' },
+  { he: 'אֲנִי לֹא מְבִינָה',     translit: 'ani lo mevina',    fr: 'I don\'t understand (f.)' },
+  { he: 'תְּדַבֵּר לְאַט',         translit: 'tedaber le\'at',   fr: 'speak slowly (to a m.)' },
+  { he: 'כַּמָּה זֶה עוֹלֶה?',     translit: 'kama ze oleh?',    fr: 'how much does it cost?' },
+  { he: 'אֵיפֹה...?',              translit: 'eyfo...?',         fr: 'where is...?' },
+  { he: 'יֵשׁ לְךָ?',              translit: 'yesh lecha?',      fr: 'do you have? (to a m.)' },
+  { he: 'אֵין דָּבָר',             translit: 'eyn davar',        fr: 'no problem / it\'s nothing' },
+  { he: 'אֲנִי רוֹצֶה',            translit: 'ani rotze',        fr: 'I want (m.)' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn" title="Listen">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('greetings', GREETINGS);
+renderRows('politeness', POLITENESS);
+renderRows('introduction', INTRODUCTION);
+renderRows('daily', DAILY);
+
+const DIALOGUE = [
+  { speaker: 'A', he: 'שָׁלוֹם!',                                 translit: 'Shalom!',                          fr: 'Hello!' },
+  { speaker: 'B', he: 'שָׁלוֹם, מָה שְׁלוֹמְךָ?',                translit: 'Shalom, ma shlomcha?',             fr: 'Hello, how are you?' },
+  { speaker: 'A', he: 'הַכֹּל בְּסֵדֶר, תּוֹדָה. וְאַתָּה?',     translit: 'Ha-kol beseder, toda. Ve-ata?',    fr: 'Fine, thanks. And you?' },
+  { speaker: 'B', he: 'גַּם בְּסֵדֶר. אֵיךְ קוֹרְאִים לְךָ?',   translit: "Gam beseder. Eich kor'im lecha?",  fr: 'Also fine. What\'s your name?' },
+  { speaker: 'A', he: 'קוֹרְאִים לִי יוֹנָס. נָעִים מְאֹד.',    translit: "Kor'im li Yonas. Na'im me'od.",    fr: 'My name is Jonas. Pleased to meet you.' },
+  { speaker: 'B', he: 'נָעִים מְאֹד. לְהִתְרָאוֹת!',            translit: "Na'im me'od. Lehitra'ot!",         fr: 'Pleased to meet you. Goodbye!' },
+  { speaker: 'A', he: 'לְהִתְרָאוֹת!',                           translit: "Lehitra'ot!",                       fr: 'Goodbye!' }
+];
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `
+    <div style="display: flex; gap: 16px; align-items: baseline;">
+      <span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span>
+      <div style="flex: 1;">
+        <div style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div>
+        <div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div>
+        <div style="font-size: 14px; margin-top: 4px;">${line.fr}</div>
+      </div>
+    </div>
+  `;
+  dialogueEl.appendChild(el);
+});
+
+async function playDialogue() {
+  for (const line of DIALOGUE) {
+    speak(line.he, 0.8);
+    await new Promise(r => setTimeout(r, 2200));
+  }
+  markLessonDone('greetings');
+}
+
+addExtraVocab('Introductions', [
+  { he: 'אֵיךְ קוֹרְאִים לְךָ?', translit: 'eich kor\'im lecha?', fr: 'what\'s your name? (m.)' },
+  { he: 'אֵיךְ קוֹרְאִים לָךְ?', translit: 'eich kor\'im lach?', fr: 'what\'s your name? (f.)' },
+  { he: 'קוֹרְאִים לִי...', translit: 'kor\'im li...', fr: 'my name is...' },
+  { he: 'אֲנִי...', translit: 'ani...', fr: 'I am...' },
+  { he: 'מֵאַיִן אַתָּה?', translit: 'me-ayin ata?', fr: 'where are you from? (m.)' },
+  { he: 'אֲנִי מִצָּרְפַת', translit: 'ani mi-Tzarfat', fr: 'I\'m from France' },
+  { he: 'אֲנִי גָּר בְּ...', translit: 'ani gar be...', fr: 'I live in... (m.)' },
+  { he: 'בֶּן כַּמָּה אַתָּה?', translit: 'ben kama ata?', fr: 'how old are you? (m.)' },
+  { he: 'בֶּן 30', translit: 'ben 30', fr: '30 years old (m.)' },
+  { he: 'מָה אַתָּה עוֹשֶׂה?', translit: 'ma ata ose?', fr: 'what do you do? (m.)' },
+  { he: 'אֲנִי מְפַתֵּחַ', translit: 'ani mefate\'ach', fr: 'I\'m a developer (m.)' },
+  { he: 'אֲנִי לוֹמֵד עִבְרִית', translit: 'ani lomed ivrit', fr: 'I\'m studying Hebrew (m.)' }
+]);
+
+addExtraVocab('Polite Phrases You\'ll Use Daily', [
+  { he: 'בְּבַקָּשָׁה', translit: 'bevakasha', fr: 'please / you\'re welcome / here you go' },
+  { he: 'תּוֹדָה רַבָּה', translit: 'toda raba', fr: 'thank you very much' },
+  { he: 'תּוֹדָה לְךָ', translit: 'toda lecha', fr: 'thanks to you (m.)' },
+  { he: 'אֵין בְּעַד מָה', translit: 'eyn be\'ad ma', fr: 'don\'t mention it' },
+  { he: 'סְלִיחָה', translit: 'slicha', fr: 'sorry / excuse me' },
+  { he: 'מִצְטַעֵר', translit: 'mitzta\'er', fr: 'I am sorry (m.)' },
+  { he: 'מִצְטַעֶרֶת', translit: 'mitzta\'eret', fr: 'I am sorry (f.)' },
+  { he: 'אֵין דָּבָר', translit: 'eyn davar', fr: 'no problem' },
+  { he: 'בְּסֵדֶר', translit: 'beseder', fr: 'OK / fine' },
+  { he: 'בְּסֵדֶר גָּמוּר', translit: 'beseder gamur', fr: 'absolutely fine' },
+  { he: 'נָעִים מְאֹד', translit: 'na\'im me\'od', fr: 'pleased to meet you' },
+  { he: 'בָּרוּךְ הַבָּא', translit: 'baruch ha-ba', fr: 'welcome (to him)' },
+  { he: 'בְּרוּכָה הַבָּאָה', translit: 'bruchat ha-ba\'a', fr: 'welcome (to her)' },
+  { he: 'בְּרוּכִים הַבָּאִים', translit: 'bruchim ha-ba\'im', fr: 'welcome (plural)' }
+]);
+
+addExtraVocab('How Are You? — All Variations', [
+  { he: 'מָה שְׁלוֹמְךָ?', translit: 'ma shlomcha?', fr: 'how are you (m. formal)?' },
+  { he: 'מָה שְׁלוֹמֵךְ?', translit: 'ma shlomech?', fr: 'how are you (f. formal)?' },
+  { he: 'מָה נִשְׁמָע?', translit: 'ma nishma?', fr: 'what\'s up? (most casual)' },
+  { he: 'אֵיךְ הוֹלֵךְ?', translit: 'eich holech?', fr: 'how\'s it going?' },
+  { he: 'מָה הָעִנְיָנִים?', translit: 'ma ha-inyanim?', fr: 'how are things?' },
+  { he: 'הַכֹּל בְּסֵדֶר?', translit: 'ha-kol beseder?', fr: 'everything OK?' },
+  { he: 'בְּסֵדֶר גָּמוּר, תּוֹדָה', translit: 'beseder gamur, toda', fr: 'all good, thanks' },
+  { he: 'לֹא רַע', translit: 'lo ra', fr: 'not bad' },
+  { he: 'מְצֻיָּן', translit: 'metzuyan', fr: 'excellent' },
+  { he: 'יוֹתֵר אוֹ פָּחוֹת', translit: 'yoter o pachot', fr: 'more or less' },
+  { he: 'יוֹם יָפֶה', translit: 'yom yafe', fr: 'good day (response)' },
+  { he: 'בָּרוּךְ הַשֵּׁם', translit: 'baruch ha-shem', fr: 'thank God (also = "fine")' }
+]);
+
+addMiniQuiz('Greetings Quiz', [
+  { q: 'It\'s 7 PM. What do you say?', options: ['בֹּקֶר טוֹב', 'צָהֳרַיִם טוֹבִים', 'עֶרֶב טוֹב', 'לַיְלָה טוֹב'], answer: 2, explain: 'erev tov = good evening' },
+  { q: 'It\'s Friday at sunset. What do you say?', options: ['שָׁבוּעַ טוֹב', 'שַׁבָּת שָׁלוֹם', 'בְּסֵדֶר', 'יוֹם נֶהֱדָר'], answer: 1 },
+  { q: 'Saturday night, going home. What do you say?', options: ['שַׁבָּת שָׁלוֹם', 'שָׁבוּעַ טוֹב', 'בֹּקֶר טוֹב', 'יוֹם רִאשׁוֹן טוֹב'], answer: 1, explain: 'shavua tov — wishing a good week' },
+  { q: 'How do you respond to תּוֹדָה?', options: ['סְלִיחָה', 'בְּבַקָּשָׁה', 'נָעִים מְאֹד', 'בְּסֵדֶר'], answer: 1, explain: 'bevakasha = you\'re welcome' },
+  { q: 'A friend asks "מָה נִשְׁמָע?" — best response?', options: ['I\'m hungry', 'הַכֹּל טוֹב, תּוֹדָה', 'יוֹם הוּלֶדֶת שָׂמֵחַ', 'לְהִתְרָאוֹת'], answer: 1 }
+]);
+
+addCulturalText('Daily Greetings — Time of Day Matters', "Israelis use distinct greetings for each time of day. Saying 'boker tov' at 4pm is wrong — it tells everyone you're foreign.", [
+  { he: 'בֹּקֶר טוֹב — מ-6:00 עַד 12:00', translit: "Boker tov — from 6 AM to 12 PM", fr: 'Good morning' },
+  { he: 'צָהֳרַיִם טוֹבִים — מ-12:00 עַד 16:00', translit: "Tzohorayim tovim — 12 PM to 4 PM", fr: 'Good afternoon' },
+  { he: 'אַחַר הַצָּהֳרַיִם טוֹבִים — מ-16:00 עַד 18:00', translit: "Achar ha-tzohorayim tovim — 4 PM to 6 PM", fr: 'Good late-afternoon' },
+  { he: 'עֶרֶב טוֹב — מ-18:00 עַד 22:00', translit: "Erev tov — 6 PM to 10 PM", fr: 'Good evening' },
+  { he: 'לַיְלָה טוֹב — אַחֲרֵי 22:00, אוֹ לִפְנֵי שֵׁנָה', translit: "Layla tov — after 10 PM, or before sleep", fr: 'Good night' },
+  { he: 'יוֹם שִׁשִּׁי בָּעֶרֶב: שַׁבָּת שָׁלוֹם', translit: "Yom shishi ba-erev: Shabbat shalom", fr: 'Friday evening: Shabbat shalom' },
+  { he: 'שָׁבוּעַ טוֹב: מוֹצָאֵי שַׁבָּת', translit: "Shavua tov: motza\'ei shabbat", fr: 'Good week: Saturday night onward' },
+  { he: 'יוֹם נֶהֱדָר! לְכָל שָׁעָה', translit: "Yom nehedar! Le-chol sha\'a", fr: 'Great day! For any time' }
+]);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>33 — Housing & Real Estate</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Housing & Real Estate</h1><div class="subtitle">Lesson 33 · דיור ונדל"ן</div></div><div class="nav"><a href="index.html">Home</a><a href="33-housing.html" class="active">33</a></div></header>
+
+<p class="intro">Apartment hunting (chipus dira) is a national sport in Israel. Most olim rent first. Vocabulary for apartments, houses, rooms, contracts, agents, and common rental terms.</p>
+
+<div class="tip"><strong>Yad-2 (יד 2)</strong> — biggest second-hand site in Israel. Apartments, cars, jobs, everything. yad2.co.il. Olim use it daily.</div>
+
+<h2>Types of Housing</h2>
+<div class="word-list" id="types"></div>
+
+<h2>Rooms & Spaces</h2>
+<div class="word-list" id="rooms"></div>
+
+<h2>Furniture & Fixtures</h2>
+<div class="word-list" id="furniture"></div>
+
+<h2>Rental Terms</h2>
+<div class="word-list" id="rental"></div>
+
+<h2>Real Estate Agents & Listings</h2>
+<div class="word-list" id="agents"></div>
+
+<h2>Utilities & Bills</h2>
+<div class="word-list" id="utilities"></div>
+
+<hr class="section-divider">
+<h2>Phrases for Apartment Hunting</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 33 · housing · <a href="34-shopping.html" style="color:var(--accent)">Next: Shopping →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const TYPES = [
+  { he: 'דִּירָה', translit: 'dira', fr: 'apartment' },
+  { he: 'בַּיִת פְּרָטִי', translit: 'bayit prati', fr: 'private house' },
+  { he: 'בַּיִת מְשֻׁתָּף', translit: 'bayit meshutaf', fr: 'shared house / building' },
+  { he: 'דִּירַת גָּן', translit: 'dirat gan', fr: 'garden apartment' },
+  { he: 'גַּג', translit: 'gag', fr: 'roof / penthouse' },
+  { he: 'דּוּפְּלֶקְס', translit: 'duplex', fr: 'duplex' },
+  { he: 'סְטוּדִיוֹ', translit: 'studio', fr: 'studio (one-room)' },
+  { he: 'דִּירַת חָדָר', translit: 'dirat chadar', fr: '1-room apartment' },
+  { he: 'דִּירָה 3 חֲדָרִים', translit: 'dira shlosha chadarim', fr: '3-room apartment (= 2BR + LR)' },
+  { he: 'מַרְתֵּף', translit: 'martef', fr: 'basement' }
+];
+const ROOMS = [
+  { he: 'חֶדֶר', translit: 'cheder', fr: 'room' },
+  { he: 'סָלוֹן', translit: 'salon', fr: 'living room' },
+  { he: 'מִטְבָּח', translit: 'mitbach', fr: 'kitchen' },
+  { he: 'חֲדַר אַמְבַּטְיָה', translit: 'chadar ambatya', fr: 'bathroom' },
+  { he: 'שֵׁרוּתִים', translit: 'sherutim', fr: 'toilet' },
+  { he: 'חֲדַר שֵׁנָה', translit: 'chadar shena', fr: 'bedroom' },
+  { he: 'מִרְפֶּסֶת', translit: 'mirpeset', fr: 'balcony / terrace' },
+  { he: 'גִּנָּה', translit: 'gina', fr: 'garden' },
+  { he: 'חָצֵר', translit: 'chatzer', fr: 'yard' },
+  { he: 'מַחְסָן', translit: 'machsan', fr: 'storage room' },
+  { he: 'חֲנִיָּה', translit: 'chaniya', fr: 'parking spot' },
+  { he: 'מַמַ"ד', translit: 'mamad', fr: 'safe room (bomb shelter inside)' }
+];
+const FURNITURE = [
+  { he: 'מִטָּה', translit: 'mita', fr: 'bed' },
+  { he: 'אֲרוֹן', translit: 'aron', fr: 'closet / cupboard' },
+  { he: 'מְקָרֵר', translit: 'mekarer', fr: 'refrigerator' },
+  { he: 'תַּנּוּר', translit: 'tanur', fr: 'oven' },
+  { he: 'כִּירַיִם', translit: 'kirayim', fr: 'stove burners' },
+  { he: 'מְכוֹנַת כְּבִיסָה', translit: 'mechonat kvisa', fr: 'washing machine' },
+  { he: 'מַזְגָן', translit: 'mazgan', fr: 'air conditioner' },
+  { he: 'דּוּד שֶׁמֶשׁ', translit: 'dud shemesh', fr: 'solar water heater (on roof)' },
+  { he: 'תְּרִיס', translit: 'tris', fr: 'shutter / blind' }
+];
+const RENTAL = [
+  { he: 'שְׂכִירוּת', translit: 'schirut', fr: 'rent / rental' },
+  { he: 'שָׂכִיר', translit: 'sachir', fr: 'tenant' },
+  { he: 'בַּעַל הַבַּיִת', translit: 'ba\'al ha-bayit', fr: 'landlord' },
+  { he: 'חוֹזֶה', translit: 'choze', fr: 'contract' },
+  { he: 'חוֹזֶה שְׂכִירוּת', translit: 'choze schirut', fr: 'rental contract' },
+  { he: 'פִּקָּדוֹן', translit: 'pikadon', fr: 'security deposit' },
+  { he: 'עֲרֵבוּת', translit: 'arevut', fr: 'guarantee' },
+  { he: 'עֲרֵב', translit: 'arev', fr: 'guarantor' },
+  { he: 'שֶׂכֶר דִּירָה', translit: 'sechar dira', fr: 'rent (the payment)' },
+  { he: 'הַתְחָלָה', translit: 'hatchala', fr: 'start (of contract)' },
+  { he: 'תְּקוּפָה', translit: 'tkufa', fr: 'period (of contract)' },
+  { he: 'הַאֲרָכָה', translit: 'ha\'aracha', fr: 'extension' }
+];
+const AGENTS = [
+  { he: 'מְתַוֵּךְ', translit: 'metavech', fr: 'real estate agent' },
+  { he: 'דְּמֵי תִּוּוּךְ', translit: 'dmey tivuch', fr: 'agent fee' },
+  { he: 'מוֹדָעָה', translit: 'moda\'a', fr: 'ad / listing' },
+  { he: 'יָד 2', translit: 'yad shtayim', fr: 'Yad 2 (biggest classifieds site)' },
+  { he: 'אַתְּ הוֹמְלֶס.קוֹ.אִיל', translit: 'homeless.co.il', fr: 'rental site for olim' },
+  { he: 'מְפֻנֶּה', translit: 'mefune', fr: 'vacant' },
+  { he: 'תָּפוּס', translit: 'tafus', fr: 'occupied / taken' }
+];
+const UTILITIES = [
+  { he: 'חַשְׁמַל', translit: 'chashmal', fr: 'electricity' },
+  { he: 'מַיִם', translit: 'mayim', fr: 'water (utility)' },
+  { he: 'גָּז', translit: 'gaz', fr: 'gas' },
+  { he: 'אַרְנוֹנָה', translit: 'arnona', fr: 'municipal property tax' },
+  { he: 'וַעַד בַּיִת', translit: 'va\'ad bayit', fr: 'building committee fee' },
+  { he: 'אִינְטֶרְנֶט', translit: 'internet', fr: 'internet' },
+  { he: 'חֶשְׁבּוֹן חַשְׁמַל', translit: 'cheshbon chashmal', fr: 'electricity bill' }
+];
+const PHRASES = [
+  { he: 'אֲנִי מְחַפֵּשׂ דִּירָה', translit: 'ani mechapes dira', fr: "I'm looking for an apartment (m.)" },
+  { he: 'כַּמָּה הַשְּׂכִירוּת?', translit: 'kama ha-schirut?', fr: "what's the rent?" },
+  { he: 'הִיא כּוֹלֶלֶת אַרְנוֹנָה?', translit: 'hi kolelet arnona?', fr: 'does it include arnona?' },
+  { he: 'יֵשׁ מַזְגָן בַּדִּירָה?', translit: 'yesh mazgan ba-dira?', fr: 'is there AC in the apartment?' },
+  { he: 'אֲנִי רוֹצֶה לִרְאוֹת אֶת הַדִּירָה', translit: 'ani rotze lir\'ot et ha-dira', fr: 'I want to see the apartment (m.)' },
+  { he: 'מָתַי הַחוֹזֶה מַתְחִיל?', translit: 'matay ha-choze matchil?', fr: 'when does the contract start?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('types', TYPES); R('rooms', ROOMS); R('furniture', FURNITURE); R('rental', RENTAL); R('agents', AGENTS); R('utilities', UTILITIES); R('phrases', PHRASES);
+addExtraVocab('Rooms in the Home', [
+  { he: 'סָלוֹן', translit: 'salon', fr: 'living room' },
+  { he: 'מִטְבָּח', translit: 'mitbach', fr: 'kitchen' },
+  { he: 'חֲדַר אֹכֶל', translit: 'chadar ochel', fr: 'dining room' },
+  { he: 'חֲדַר שֵׁנָה', translit: 'chadar shena', fr: 'bedroom' },
+  { he: 'חֲדַר אַמְבַּטְיָה', translit: 'chadar ambatya', fr: 'bathroom' },
+  { he: 'שֵׁרוּתִים', translit: 'sherutim', fr: 'toilet' },
+  { he: 'חֲדַר עֲבוֹדָה', translit: 'chadar avoda', fr: 'office / study' },
+  { he: 'חֲדַר יְלָדִים', translit: 'chadar yeladim', fr: 'kids\' room' },
+  { he: 'מַחְסָן', translit: 'machsan', fr: 'storage room' },
+  { he: 'מִרְפֶּסֶת', translit: 'mirpeset', fr: 'balcony' },
+  { he: 'גַּג', translit: 'gag', fr: 'roof' },
+  { he: 'חַצֵר', translit: 'chatzer', fr: 'yard' },
+  { he: 'גִּנָּה', translit: 'gina', fr: 'garden' },
+  { he: 'כְּנִיסָה', translit: 'knisa', fr: 'entryway' }
+]);
+
+addExtraVocab('Common Apartment Listings Vocabulary', [
+  { he: 'דִּירָה לְהַשְׂכָּרָה', translit: 'dira le-haskara', fr: 'apartment for rent' },
+  { he: 'דִּירָה לִמְכִירָה', translit: 'dira li-mkira', fr: 'apartment for sale' },
+  { he: '3 חֲדָרִים', translit: '3 chadarim', fr: '3 rooms (= 2 BR + LR)' },
+  { he: 'מַעֲלִית', translit: 'ma\'alit', fr: 'elevator' },
+  { he: 'חֲנִיָּה', translit: 'chaniya', fr: 'parking' },
+  { he: 'מַזְגָּן', translit: 'mazgan', fr: 'air conditioner' },
+  { he: 'בּוֹילֶר', translit: 'boyler', fr: 'water heater' },
+  { he: 'דּוּד שֶׁמֶשׁ', translit: 'dud shemesh', fr: 'solar water heater' },
+  { he: 'מַמָ"ד', translit: 'mamad', fr: 'safe room' },
+  { he: 'מִקְלָט', translit: 'miklat', fr: 'shelter' },
+  { he: 'מִרְפֶּסֶת', translit: 'mirpeset', fr: 'balcony' },
+  { he: 'גִּנָּה', translit: 'gina', fr: 'garden' },
+  { he: 'גַּג', translit: 'gag', fr: 'roof' },
+  { he: 'מַחְסָן', translit: 'machsan', fr: 'storage room' },
+  { he: 'מָרֻהָט', translit: 'meruhat', fr: 'furnished' },
+  { he: 'לֹא מָרֻהָט', translit: 'lo meruhat', fr: 'unfurnished' },
+  { he: 'אַרְנוֹנָה', translit: 'arnona', fr: 'property tax' },
+  { he: 'וַעַד בַּיִת', translit: 'va\'ad bayit', fr: 'building committee fee' }
+]);
+
+addMiniQuiz('Housing Quiz', [
+  { q: 'In Israel, "3 rooms" means...', options: ['3 bedrooms', '2 bedrooms + living room', 'Studio', '3 bathrooms'], answer: 1 },
+  { q: 'מַמָ"ד is...', options: ['A washing machine', 'A safe room', 'A cleaning service', 'A water heater'], answer: 1, explain: 'Safe room — required by law in all new builds since 1992' },
+  { q: 'אַרְנוֹנָה is...', options: ['Rent', 'Property tax', 'Building fee', 'Parking fee'], answer: 1 },
+  { q: 'דּוּד שֶׁמֶשׁ heats water using...', options: ['Gas', 'Electricity', 'Solar', 'Oil'], answer: 2, explain: 'Solar — Israeli classic since the 1950s' },
+  { q: 'When buying, who pays the broker fee?', options: ['Buyer only', 'Seller only', 'Both, typically 2% each', 'Neither'], answer: 2, explain: 'Standard 2% + VAT each' }
+]);
+
+addCulturalText('Visiting an Apartment — Full Walkthrough', 'What you actually say when viewing a flat with the agent. The questions Israelis ask about light, neighbors, noise, AC.', [
+  { he: 'מְתַוֵּךְ: הַדִּירָה 3 חֲדָרִים, קוֹמָה 4, מַעֲלִית', translit: "Metavech: Ha-dira 3 chadarim, koma 4, ma\'alit", fr: 'Agent: 3-room apartment, 4th floor, elevator' },
+  { he: 'אַתָּה: כַּמָּה מֶטֶר רָבוּעַ?', translit: "Ata: Kama meter ravua?", fr: 'You: How many square meters?' },
+  { he: 'מְתַוֵּךְ: 75 בְּרוּטוֹ, 65 נֶטוֹ', translit: "Metavech: 75 bruto, 65 neto", fr: 'Agent: 75 gross, 65 net' },
+  { he: 'אַתָּה: יֵשׁ אוֹר טוֹב? מָה הַכִּוּוּן?', translit: "Ata: Yesh or tov? Ma ha-kivun?", fr: 'You: Good light? Which direction?' },
+  { he: 'מְתַוֵּךְ: צָפוֹן-מַעֲרָב, אוֹר עַד הַשֶּׁמֶשׁ הַשּׁוֹקַעַת', translit: "Metavech: Tzafon-ma\'arav, or ad ha-shemesh ha-shoka\'at", fr: 'Agent: Northwest, light until sunset' },
+  { he: 'אַתָּה: יֵשׁ מַזְגָּן? בּוֹילֶר חַשְׁמָלִי?', translit: "Ata: Yesh mazgan? Boyler chashmali?", fr: 'You: AC? Electric water heater?' },
+  { he: 'מְתַוֵּךְ: שְׁנֵי מַזְגָּנִים, בּוֹילֶר שֶׁמֶשׁ', translit: "Metavech: Shney mazganim, boyler shemesh", fr: 'Agent: Two ACs, solar heater' },
+  { he: 'אַתָּה: הַשְּׁכֵנִים שְׁקֵטִים? יְלָדִים בַּבִּנְיָן?', translit: "Ata: Ha-shchenim shketim? Yeladim ba-binyan?", fr: 'You: Quiet neighbors? Kids in the building?' },
+  { he: 'מְתַוֵּךְ: רֻבָּם זְקֵנִים, מִשְׁפָּחָה אַחַת עִם תִּינוֹק', translit: "Metavech: Rubam zkenim, mishpacha achat im tinok", fr: 'Agent: Mostly elderly, one family with a baby' },
+  { he: 'אַתָּה: כַּמָּה הַדִּירָה? אַרְנוֹנָה כְּלוּלָה?', translit: "Ata: Kama ha-dira? Arnona klula?", fr: 'You: How much? Property tax included?' },
+  { he: 'מְתַוֵּךְ: 6500 בְּחֹדֶשׁ, אַרְנוֹנָה לְחוּד', translit: "Metavech: 6500 be-chodesh, arnona le-chud", fr: 'Agent: 6500/month, arnona separate' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('housing'); } });
+</script></body></html>

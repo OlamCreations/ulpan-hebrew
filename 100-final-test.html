@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>100 — Final Test & Cumulative Review</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Final Test &amp; Cumulative Review</h1><div class="subtitle">Lesson 100 · מבחן סופי</div></div><div class="nav"><a href="index.html">Home</a><a href="100-final-test.html" class="active">100</a></div></header>
+
+<p class="intro">You made it through 100 lessons. This last one tests what you've absorbed: alphabet recognition, vocabulary recall, sentence comprehension, cultural understanding. Take your time. Then celebrate.</p>
+
+<div class="tip"><strong>Self-evaluation</strong> — There's no grade. The goal: identify what's solid, what needs review. Each section maps to a block. After this, do passe d'enrichissement on weak areas, and start ulpan with confidence.</div>
+
+<h2>Section 1 — Alphabet Recognition (Block 1)</h2>
+<div id="quiz1" class="quiz-block"></div>
+
+<h2>Section 2 — Vocabulary Recall (Blocks 1-3)</h2>
+<div id="quiz2" class="quiz-block"></div>
+
+<h2>Section 3 — Verb Conjugation (Block 3)</h2>
+<div id="quiz3" class="quiz-block"></div>
+
+<h2>Section 4 — Reading Comprehension (Block 6 — Culture)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="reading"></div>
+</div>
+
+<h2>Section 5 — Idioms (Blocks 10)</h2>
+<div id="quiz5" class="quiz-block"></div>
+
+<h2>Section 6 — Self-Assessment Checklist</h2>
+<div id="checklist" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;"></div>
+
+<hr class="section-divider">
+
+<h2>Final Score</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; text-align: center;">
+  <div style="font-size: 48px; color: var(--accent); font-weight: 600;" id="score">0 / 0</div>
+  <div style="margin-top: 12px; color: var(--text-dim);" id="scoreLabel">Answer questions to see score</div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="finish()">Mark course complete</button>
+</div>
+
+<h2>Mazal Tov!</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 32px; direction: rtl; text-align: center; color: var(--accent); margin-bottom: 12px;">מַזָּל טוֹב! סִיַּמְתָּ אֶת הַקּוּרְס!</div>
+  <div style="text-align: center; font-style: italic; color: var(--text-dim); margin-bottom: 12px;">Mazal tov! Siyamta et ha-kurs!</div>
+  <div style="text-align: center;">Congratulations! You finished the course!</div>
+  <div style="margin-top: 24px; font-size: 14px;">
+    Next steps:
+    <ol style="margin-top: 8px; padding-left: 20px;">
+      <li>Start ulpan in person — Ulpan Etzion or similar</li>
+      <li>Watch one Israeli show per week (Shtisel, Fauda, Eretz Nehederet)</li>
+      <li>Read one news article per day in Hebrew</li>
+      <li>Talk to one Israeli per day, even badly</li>
+      <li>Come back to this course for the enrichment passes</li>
+    </ol>
+  </div>
+</div>
+
+<footer>Lesson 100 · final · <a href="index.html" style="color:var(--accent)">← Back to all lessons</a></footer>
+</div>
+
+<style>
+.quiz-block { display: flex; flex-direction: column; gap: 12px; }
+.quiz-q { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 16px; }
+.quiz-q .question { font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right; margin-bottom: 8px; }
+.quiz-q .translit { font-size: 13px; color: var(--text-dim); font-style: italic; margin-bottom: 12px; }
+.quiz-q .options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-q .option { padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+.quiz-q .option:hover { background: var(--bg-hover); }
+.quiz-q .option.correct { background: rgba(52, 211, 153, 0.15); border-color: var(--accent); color: var(--accent); }
+.quiz-q .option.wrong { background: rgba(248, 113, 113, 0.15); border-color: #f87171; color: #f87171; }
+</style>
+
+<script src="app.js"></script>
+<script>
+const QUIZ1 = [
+  { q: 'אָלֶף', t: 'aleph', options: ['First letter', 'Last letter', '12th letter'], answer: 0 },
+  { q: 'תָּו', t: 'tav', options: ['Middle letter', 'Last letter', 'Vowel'], answer: 1 },
+  { q: 'מ at end of word', t: '— ', options: ['Same as middle', 'Sofit form: ם', 'Disappears'], answer: 1 },
+  { q: 'ש with dot on right', t: 'shin', options: ['"sh" sound', '"s" sound', '"ts" sound'], answer: 0 },
+  { q: 'How many letters in alefbet?', t: '—', options: ['22', '24', '26'], answer: 0 }
+];
+const QUIZ2 = [
+  { q: 'שָׁלוֹם', t: 'shalom', options: ['Goodbye', 'Hello/peace', 'Thank you'], answer: 1 },
+  { q: 'תּוֹדָה', t: 'toda', options: ['You\'re welcome', 'Sorry', 'Thank you'], answer: 2 },
+  { q: 'מַיִם', t: 'mayim', options: ['Bread', 'Water', 'Fire'], answer: 1 },
+  { q: 'בַּיִת', t: 'bayit', options: ['Street', 'Garden', 'House'], answer: 2 },
+  { q: 'יָפֶה', t: 'yafe', options: ['Ugly', 'Beautiful (m.)', 'Big'], answer: 1 },
+  { q: 'אָדֹם', t: 'adom', options: ['Red', 'Blue', 'Green'], answer: 0 }
+];
+const QUIZ3 = [
+  { q: 'אֲנִי ___ (לֶאֱכוֹל)', t: 'I ___ (to eat) — present', options: ['אוֹכֵל', 'אָכַל', 'יֹאכַל'], answer: 0 },
+  { q: 'הוּא ___ אֶתְמוֹל (לְלֶכֶת)', t: 'he ___ yesterday — past', options: ['הוֹלֵךְ', 'הָלַךְ', 'יֵלֵךְ'], answer: 1 },
+  { q: 'אֲנַחְנוּ ___ מָחָר (לִכְתוֹב)', t: 'we ___ tomorrow — future', options: ['כּוֹתְבִים', 'כָּתַבְנוּ', 'נִכְתֹּב'], answer: 2 },
+  { q: 'הִיא ___ (לְדַבֵּר)', t: 'she ___ (to speak) — present', options: ['מְדַבֶּרֶת', 'דִּבְּרָה', 'תְּדַבֵּר'], answer: 0 }
+];
+const READING_TEXT = {
+  he: 'יְרוּשָׁלַיִם הִיא בִּירַת יִשְׂרָאֵל. הָעִיר נִמְצֵאת בָּהָרִים, וְהָאַוֵּר שָׁם קַר בַּחֹרֶף וְחַם בַּקַּיִץ. בְּמֶרְכַּז הָעִיר יֵשׁ אֶת הַכֹּתֶל הַמַּעֲרָבִי, הַשּׁוּק מַחֲנֵה יְהוּדָה, וְהַכְּנֶסֶת. הַתַּחְבּוּרָה הַצִּבּוּרִית טוֹבָה, יֵשׁ קָו רַכֶּבֶת קַלָּה. רֹב הַתּוֹשָׁבִים מְדַבְּרִים עִבְרִית וְעַרְבִית, וְכַמָּה גַּם אַנְגְּלִית, צָרְפָתִית, אוֹ רוּסִית.',
+  translit: 'Yerushalayim hi birat Yisrael. Ha-ir nimtzeyt ba-harim, ve-ha-aver sham kar ba-choref ve-cham ba-kayitz. Be-merkaz ha-ir yesh et ha-kotel ha-ma\'aravi, ha-shuk machane Yehuda, ve-ha-knesset. Ha-tachbura ha-tziburit tova, yesh kav rakevet kala. Rov ha-toshavim medabrim ivrit ve-aravit, ve-kama gam anglit, tzarfatit, o rusit.',
+  english: 'Jerusalem is the capital of Israel. The city is located in the mountains, and the air there is cold in winter and hot in summer. In the city center is the Western Wall, the Mahane Yehuda market, and the Knesset. Public transportation is good, there is a light rail line. Most residents speak Hebrew and Arabic, and some also English, French, or Russian.'
+};
+const READING_QUESTIONS = [
+  { q: 'Where is Jerusalem located?', options: ['By the sea', 'In the mountains', 'In the desert'], answer: 1 },
+  { q: 'What\'s in the city center?', options: ['Beach', 'Western Wall, market, Knesset', 'Airport'], answer: 1 },
+  { q: 'What languages do residents speak?', options: ['Only Hebrew', 'Hebrew, Arabic, sometimes others', 'Only Arabic'], answer: 1 }
+];
+const QUIZ5 = [
+  { q: 'לֵב שָׁבוּר means...', t: 'lev shavur', options: ['Big heart', 'Broken heart', 'Strong heart'], answer: 1 },
+  { q: 'עֵינַיִם גְּדוֹלוֹת means...', t: 'eynayim gdolot', options: ['Smart eyes', 'Greedy eyes', 'Pretty eyes'], answer: 1 },
+  { q: 'אֶרֶץ זָבַת חָלָב וּדְבַשׁ refers to...', t: 'eretz zavat chalav u-dvash', options: ['A dairy farm', 'Land of milk and honey (Israel)', 'A bakery'], answer: 1 },
+  { q: 'גִּבּוֹר כְּמוֹ אַרְיֵה means...', t: 'gibor kmo arye', options: ['Brave as a lion', 'Hungry as a lion', 'Loud as a lion'], answer: 0 }
+];
+const CHECKLIST = [
+  'I can read the alefbet without hesitation',
+  'I know 1000+ words actively',
+  'I can conjugate present, past, and future tenses',
+  'I can hold a 5-minute conversation about daily life',
+  'I can read street signs and short menu items',
+  'I can ask for directions and understand the answer',
+  'I know 20+ idioms and use 10 of them naturally',
+  'I understand cultural references (holidays, history)',
+  'I can write a short message in Hebrew',
+  'I can survive at the bakery, doctor, and Misrad HaPnim'
+];
+
+let totalQuestions = QUIZ1.length + QUIZ2.length + QUIZ3.length + READING_QUESTIONS.length + QUIZ5.length;
+let correctAnswers = 0;
+
+function renderQuiz(id, items, prefix) {
+  const el = document.getElementById(id);
+  items.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `
+      <div class="question">${q.q}</div>
+      ${q.t ? `<div class="translit">${q.t}</div>` : ''}
+      <div class="options">
+        ${q.options.map((opt, j) => `<div class="option" data-correct="${j === q.answer}">${opt}</div>`).join('')}
+      </div>`;
+    div.querySelectorAll('.option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (div.dataset.answered) return;
+        div.dataset.answered = 'true';
+        const correct = opt.dataset.correct === 'true';
+        opt.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) {
+          div.querySelector('.option[data-correct="true"]').classList.add('correct');
+        } else {
+          correctAnswers++;
+        }
+        updateScore();
+      });
+    });
+    el.appendChild(div);
+  });
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = `${correctAnswers} / ${totalQuestions}`;
+  const pct = correctAnswers / totalQuestions * 100;
+  let label = '';
+  if (pct >= 90) label = 'מְעֻלֶּה! Excellent — fluent A2/B1 level';
+  else if (pct >= 70) label = 'טוֹב מְאוֹד — solid A2, ready for ulpan';
+  else if (pct >= 50) label = 'טוֹב — strong A1, keep going';
+  else label = 'יֵשׁ עוֹד עֲבוֹדָה — review the weak blocks';
+  document.getElementById('scoreLabel').textContent = label;
+}
+
+renderQuiz('quiz1', QUIZ1);
+renderQuiz('quiz2', QUIZ2);
+renderQuiz('quiz3', QUIZ3);
+renderQuiz('quiz5', QUIZ5);
+
+const readingEl = document.getElementById('reading');
+readingEl.innerHTML = `
+  <div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right; line-height: 1.7; margin-bottom: 12px;">${READING_TEXT.he}</div>
+  <div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-bottom: 12px;">${READING_TEXT.translit}</div>
+  <div style="font-size: 14px; margin-bottom: 24px; padding: 12px; background: rgba(52,211,153,0.05); border-left: 3px solid var(--accent);">${READING_TEXT.english}</div>
+  <div id="readingQ"></div>`;
+renderQuiz('readingQ', READING_QUESTIONS);
+
+const checklistEl = document.getElementById('checklist');
+CHECKLIST.forEach((item, i) => {
+  const div = document.createElement('label');
+  div.style.cssText = 'display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); cursor: pointer;';
+  div.innerHTML = `<input type="checkbox" style="margin-top: 4px;"> <span>${item}</span>`;
+  checklistEl.appendChild(div);
+});
+
+function finish() {
+  markLessonDone('final-test');
+  alert('Course complete! Mazal tov! 🎉\n\nSiyamta et ha-kurs.');
+}
+</script></body></html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>44 — Job Hunting</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Job Hunting</h1><div class="subtitle">Lesson 44 · חיפוש עבודה</div></div><div class="nav"><a href="index.html">Home</a><a href="44-job-hunting.html" class="active">44</a></div></header>
+
+<p class="intro">Israeli job market is direct, fast-moving, network-driven. Olim get language-specific roles (sales, support, marketing) often. Tech jobs rarely require Hebrew. Vocabulary for the resume, interview, and offer.</p>
+
+<h2>Resume Vocabulary</h2>
+<div class="word-list" id="resume"></div>
+
+<h2>Job Search Sites & Sources</h2>
+<div class="word-list" id="search"></div>
+
+<h2>Interview</h2>
+<div class="word-list" id="interview"></div>
+
+<h2>Compensation & Benefits</h2>
+<div class="word-list" id="comp"></div>
+
+<h2>Job Roles & Industries</h2>
+<div class="word-list" id="roles"></div>
+
+<h2>Workplace</h2>
+<div class="word-list" id="workplace"></div>
+
+<hr class="section-divider">
+<h2>Phrases for Interviews</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 44 · jobs · <a href="45-insurance.html" style="color:var(--accent)">Next: Insurance →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const RESUME = [
+  { he: 'קוֹרוֹת חַיִּים', translit: 'korot chayim', fr: 'CV / resume (lit. "life events")' },
+  { he: 'נִסָּיוֹן', translit: 'nisayon', fr: 'experience' },
+  { he: 'הַשְׂכָּלָה', translit: 'haskala', fr: 'education' },
+  { he: 'תַּעֲצוּמָה', translit: 'ta\'atzuma', fr: 'employment record' },
+  { he: 'מַעֲמָד', translit: 'ma\'amad', fr: 'position' },
+  { he: 'מִשְׂרָה', translit: 'misra', fr: 'job position' },
+  { he: 'מְעוּמָד', translit: 'me\'umad', fr: 'candidate' },
+  { he: 'הַמְלָצָה', translit: 'hamlatza', fr: 'recommendation' },
+  { he: 'מִכְתַּב מִכּוּן', translit: 'michtav mikun', fr: 'cover letter' },
+  { he: 'תְּעוּדָה', translit: 'teuda', fr: 'certificate / diploma' },
+  { he: 'תַּאֲרִיךְ הַתְחָלָה', translit: 'ta\'arich hatchala', fr: 'start date' }
+];
+const SEARCH = [
+  { he: 'דְּרוּשִׁים', translit: 'drushim', fr: 'job ads (lit. "needed")' },
+  { he: 'לִינְקְד אִין', translit: 'linkdin', fr: 'LinkedIn' },
+  { he: 'לוּחַ', translit: 'luach', fr: 'job board' },
+  { he: 'אוֹלְ-גוֹבְּז', translit: 'AllJobs', fr: 'AllJobs (Israeli site)' },
+  { he: 'ג\'וֹבְּמַסְטֶר', translit: 'JobMaster', fr: 'JobMaster' },
+  { he: 'מַשְׁאֲבֵי אֱנוֹשׁ', translit: 'mash\'avey enosh', fr: 'human resources (HR)' },
+  { he: 'מְגַיֵּס', translit: 'megayes', fr: 'recruiter' }
+];
+const INTERVIEW = [
+  { he: 'רֵיאַיוֹן עֲבוֹדָה', translit: 're\'ayon avoda', fr: 'job interview' },
+  { he: 'שְׁאֵלוֹת', translit: 'she\'elot', fr: 'questions' },
+  { he: 'תְּשׁוּבוֹת', translit: 'tshuvot', fr: 'answers' },
+  { he: 'דְּרִישׁוֹת', translit: 'drishot', fr: 'requirements' },
+  { he: 'יוּכָר', translit: 'yochar', fr: 'pre-screening' },
+  { he: 'רֵיאַיוֹן הַטֶלֶפוֹן', translit: 're\'ayon ha-telefon', fr: 'phone interview' },
+  { he: 'מַבְחָן מִקְצוֹעִי', translit: 'mavchan miktzo\'i', fr: 'professional test' },
+  { he: 'מַעֲבָר', translit: 'ma\'avar', fr: 'pass / through' }
+];
+const COMP = [
+  { he: 'מַשְׂכֹּרֶת', translit: 'maskoret', fr: 'salary' },
+  { he: 'בְּרוּטּוֹ', translit: 'bruto', fr: 'gross' },
+  { he: 'נֵטוֹ', translit: 'neto', fr: 'net (after tax)' },
+  { he: 'תְּלוּשׁ מַשְׂכֹּרֶת', translit: 'tlush maskoret', fr: 'pay slip' },
+  { he: 'בּוֹנוּס', translit: 'bonus', fr: 'bonus' },
+  { he: 'אוֹפְּצְיוֹת', translit: 'optziot', fr: 'options (stock)' },
+  { he: 'הֲטָבוֹת', translit: 'hatavot', fr: 'benefits' },
+  { he: 'קֶרֶן הִשְׁתַּלְּמוּת', translit: 'keren hishtalmut', fr: 'further-education fund' },
+  { he: 'פֶּנְסְיָה', translit: 'pensia', fr: 'pension' },
+  { he: 'יְמֵי חֻפְשָׁה', translit: 'yemey chufsha', fr: 'vacation days' },
+  { he: 'יְמֵי מַחֲלָה', translit: 'yemey machala', fr: 'sick days' },
+  { he: 'הַעֲבָרַת רֶכֶב', translit: 'ha\'avarat rechev', fr: 'company car / commute allowance' }
+];
+const ROLES = [
+  { he: 'הַיי-טֶק', translit: 'hi-tech', fr: 'high-tech' },
+  { he: 'מְפַתֵּחַ', translit: 'mefateach', fr: 'developer' },
+  { he: 'מְהַנְדֵּס', translit: 'mehandes', fr: 'engineer' },
+  { he: 'מְנַהֵל', translit: 'menahel', fr: 'manager' },
+  { he: 'אִישׁ מְכִירוֹת', translit: 'ish mechirot', fr: 'salesperson' },
+  { he: 'מַעֲצֵב', translit: 'me\'atzev', fr: 'designer' },
+  { he: 'מְנַתֵּחַ', translit: 'menateach', fr: 'analyst' },
+  { he: 'מְנַהֵל פְּרוֹיֶקְט', translit: 'menahel proyekt', fr: 'project manager' },
+  { he: 'נְצִיג שֵׁרוּת', translit: 'netzig sherut', fr: 'customer service rep' }
+];
+const WORKPLACE = [
+  { he: 'מִשְׂרָד', translit: 'misrad', fr: 'office' },
+  { he: 'יֶשִׁיבָה', translit: 'yeshiva', fr: 'meeting' },
+  { he: 'פְּגִישָׁה', translit: 'pgisha', fr: 'meeting' },
+  { he: 'יוֹם עֲבוֹדָה', translit: 'yom avoda', fr: 'workday' },
+  { he: 'שָׁעוֹת עֲבוֹדָה', translit: 'sha\'ot avoda', fr: 'work hours' },
+  { he: 'מִשְׂרָה מְלֵאָה', translit: 'misra mele\'a', fr: 'full-time' },
+  { he: 'חֲצִי מִשְׂרָה', translit: 'chatzi misra', fr: 'half-time' },
+  { he: 'עֲבוֹדָה מֵהַבַּיִת', translit: 'avoda me-ha-bayit', fr: 'work from home' },
+  { he: 'הַייבְּרִיד', translit: 'hybrid', fr: 'hybrid' }
+];
+const PHRASES = [
+  { he: 'אֲנִי מְחַפֵּשׂ עֲבוֹדָה', translit: 'ani mechapes avoda', fr: 'I\'m looking for a job (m.)' },
+  { he: 'יֵשׁ לִי 5 שָׁנִים נִסָּיוֹן', translit: 'yesh li chamesh shanim nisayon', fr: 'I have 5 years experience' },
+  { he: 'מָה הַמַּשְׂכֹּרֶת?', translit: 'ma ha-maskoret?', fr: 'what\'s the salary?' },
+  { he: 'אֲנִי דּוֹבֵר אַנְגְּלִית בְּרָמָה גְּבוֹהָה', translit: 'ani dover anglit be-rama gvoha', fr: 'I speak English at high level (m.)' },
+  { he: 'אֲנִי עוֹלֶה חָדָשׁ', translit: 'ani oleh chadash', fr: "I'm a new immigrant (m.)" },
+  { he: 'מָתַי הַתַּפְקִיד מַתְחִיל?', translit: 'matay ha-tafkid matchil?', fr: 'when does the role start?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('resume', RESUME); R('search', SEARCH); R('interview', INTERVIEW); R('comp', COMP); R('roles', ROLES); R('workplace', WORKPLACE); R('phrases', PHRASES);
+addExtraVocab('Common Job Titles', [
+  { he: 'מְפַתֵּחַ תּוֹכְנָה', translit: 'mefate\'ach tochna', fr: 'software developer' },
+  { he: 'מְעַצֵּב', translit: 'me\'atzev', fr: 'designer' },
+  { he: 'מְנַהֵל פְּרוֹיֶקְט', translit: 'menahel proyect', fr: 'project manager' },
+  { he: 'מְנַהֵל מוּצָר', translit: 'menahel mutzar', fr: 'product manager' },
+  { he: 'אַנְתֲּלִיסְט', translit: 'analist', fr: 'analyst' },
+  { he: 'אִישׁ מְכִירוֹת', translit: 'ish mechirot', fr: 'sales rep' },
+  { he: 'מְשַׁוֵּק', translit: 'meshavek', fr: 'marketer' },
+  { he: 'רוֹאֵה חֶשְׁבּוֹן', translit: 'ro\'e cheshbon', fr: 'accountant' },
+  { he: 'עוֹרֵךְ דִּין', translit: 'orech din', fr: 'lawyer' },
+  { he: 'רוֹפֵא', translit: 'rofe', fr: 'doctor' },
+  { he: 'מוֹרֶה', translit: 'more', fr: 'teacher' },
+  { he: 'נֶהָג', translit: 'nehag', fr: 'driver' },
+  { he: 'מַנְהִיג צֶוֶת', translit: 'manhig tzevet', fr: 'team lead' },
+  { he: 'מַנְכָּ"ל', translit: 'mankal', fr: 'CEO' },
+  { he: 'יָזָם', translit: 'yazam', fr: 'entrepreneur' },
+  { he: 'פְרִילַנְסֶר', translit: 'frilanser', fr: 'freelancer' }
+]);
+
+addExtraVocab('Job Search Vocabulary', [
+  { he: 'מִשְׂרָה', translit: 'misra', fr: 'job position' },
+  { he: 'מִשְׂרָה מְלֵאָה', translit: 'misra mele\'a', fr: 'full-time' },
+  { he: 'מִשְׂרָה חֶלְקִית', translit: 'misra chelkit', fr: 'part-time' },
+  { he: 'פְרִילַנְסֶר', translit: 'frilanser', fr: 'freelancer' },
+  { he: 'עוֹבֵד עַצְמָאִי', translit: 'oved atzma\'i', fr: 'self-employed' },
+  { he: 'עוֹבֵד שָׂכִיר', translit: 'oved sachir', fr: 'salaried employee' },
+  { he: 'קוֹרוֹת חַיִּים', translit: 'korot chayim', fr: 'CV / resume' },
+  { he: 'מִכְתַּב מַלְוֶה', translit: 'michtav malve', fr: 'cover letter' },
+  { he: 'רֵאָיוֹן עֲבוֹדָה', translit: 're\'ayon avoda', fr: 'job interview' },
+  { he: 'מַעֲסִיק', translit: 'ma\'asik', fr: 'employer' },
+  { he: 'עוֹבֵד', translit: 'oved', fr: 'employee (m.)' },
+  { he: 'תְּנָאִים', translit: 'tna\'im', fr: 'conditions / benefits' },
+  { he: 'בּוֹנוּס', translit: 'bonus', fr: 'bonus' },
+  { he: 'הֲטָבוֹת', translit: 'hatavot', fr: 'perks' },
+  { he: 'חוֹפֶשׁ שְׁנָתִי', translit: 'chofesh shnati', fr: 'annual leave' },
+  { he: 'יְמֵי מַחֲלָה', translit: 'yemey machala', fr: 'sick days' },
+  { he: 'שָׂכָר בְּרוּטוֹ', translit: 'sachar bruto', fr: 'gross salary' },
+  { he: 'שָׂכָר נֶטוֹ', translit: 'sachar neto', fr: 'net salary' },
+  { he: 'הִתְפַּטְּרוּת', translit: 'hitpatrut', fr: 'resignation' },
+  { he: 'פִּיטּוּרִין', translit: 'piturin', fr: 'firing' }
+]);
+
+addMiniQuiz('Job Quiz', [
+  { q: 'קוֹרוֹת חַיִּים means...', options: ['Course list', 'CV / resume', 'Life insurance', 'Time card'], answer: 1, explain: 'Lit. "course of life"' },
+  { q: 'Israeli "salary expectations" interview question:', options: ['כַּמָּה אַתָּה רוֹצֶה?', 'צִפִּיּוֹת שָׂכָר?', 'אֵיךְ קוֹרְאִים לְךָ?', 'בֶּן כַּמָּה אַתָּה?'], answer: 1 },
+  { q: 'Which is more in your hand?', options: ['Sachar bruto', 'Sachar neto', 'Same thing', 'Bonus'], answer: 1, explain: 'Net = after taxes' },
+  { q: 'יְמֵי מַחֲלָה are...', options: ['Holidays', 'Sick days', 'Working days', 'Bonus days'], answer: 1 },
+  { q: 'Israeli tech firms typically pay salary in...', options: ['Cash', 'Check', 'Bank transfer (mas"av)', 'Crypto'], answer: 2, explain: 'Mas"av = monthly salary deposit' }
+]);
+
+addCulturalText('Tech Job Interview — First Round', 'A real Israeli phone screen for a developer role. The Israeli style is direct, fast, and tests for chutzpah as much as skill.', [
+  { he: 'מְרָאַיֶּן: סַפֵּר עַל עַצְמְךָ בְּ-30 שְׁנִיּוֹת', translit: "Merayen: Saper al atzmecha be-30 shniyot", fr: 'Interviewer: Tell me about yourself in 30 seconds' },
+  { he: 'אַתָּה: מְפַתֵּחַ פוּל-סטֵק, 5 שָׁנִים נִסָּיוֹן, רֵאקְט וְנוֹדְ', translit: "Ata: Mefate\'ach full-stack, 5 shanim nisayon, React ve-Node", fr: 'You: Full-stack dev, 5 years exp, React and Node' },
+  { he: 'מְרָאַיֶּן: שֵׁרוּת צְבָאִי? יְחִידָה?', translit: "Merayen: Sherut tzva\'i? Yechida?", fr: 'Interviewer: Military service? Unit?' },
+  { he: 'אַתָּה: עוֹלֶה חָדָשׁ, לֹא שֵׁרַתִּי', translit: "Ata: Ole chadash, lo sheratti", fr: "You: New oleh, didn't serve" },
+  { he: 'מְרָאַיֶּן: בְּסֵדֶר. עִבְרִית בְּעֲבוֹדָה — בְּאֵיזוֹ רָמָה?', translit: "Merayen: Beseder. Ivrit ba-avoda — be-eyzo rama?", fr: 'Interviewer: OK. Hebrew at work — what level?' },
+  { he: 'אַתָּה: שִׂיחָה רָגִילָה כֵּן, מוּנָחִים מִקְצוֹעִיִּים בְּאַנְגְּלִית', translit: "Ata: Sicha regila ken, munachim miktzo\'iyim be-anglit", fr: 'You: Normal conversation yes, technical terms in English' },
+  { he: 'מְרָאַיֶּן: בְּסֵדֶר, רֹב הַצֶּוֶת מְדַבֵּר אַנְגְּלִית בִּלְבָד', translit: "Merayen: Beseder, rov ha-tzevet medaber anglit bi-lvad", fr: 'Interviewer: OK, most of the team only speaks English' },
+  { he: 'מְרָאַיֶּן: צִפִּיּוֹת שָׂכָר?', translit: "Merayen: Tzipiyot sachar?", fr: 'Interviewer: Salary expectations?' },
+  { he: 'אַתָּה: 30 אֶלֶף בְּרוּטוֹ, פָּתוּחַ לְדִיּוּן', translit: "Ata: 30 elef bruto, patuach le-diyun", fr: 'You: 30K gross, open to discussion' },
+  { he: 'מְרָאַיֶּן: יָאלָה, נִקְבַּע סִיבּוּב טֶכְנִי', translit: "Merayen: Yalla, nikba sibuv techni", fr: "Interviewer: Yalla, let's set a technical round" }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('jobs'); } });
+</script></body></html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>93 — Storytelling & Anecdotes</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Storytelling & Anecdotes</h1><div class="subtitle">Lesson 93 · סיפורים ואירועים</div></div><div class="nav"><a href="index.html">Home</a><a href="93-storytelling.html" class="active">93</a></div></header>
+
+<p class="intro">Telling a story in Hebrew means linking events in time, expressing surprise, building suspense, and landing the punchline. Israelis love a good "you won't believe what happened to me yesterday" — learn how to deliver one.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — A good Israeli story always involves : (1) a bureaucratic obstacle, (2) someone shouting, (3) an unexpected solution from a stranger, (4) ending with "אֵיזֶה אֶרֶץ" (what a country). It's the national narrative arc.</div>
+
+<h2>Story Openings</h2>
+<div class="word-list" id="openings"></div>
+
+<h2>Time Connectors</h2>
+<div class="word-list" id="time"></div>
+
+<h2>Logical Connectors</h2>
+<div class="word-list" id="logic"></div>
+
+<h2>Expressing Surprise & Reaction</h2>
+<div class="word-list" id="surprise"></div>
+
+<h2>Building Suspense</h2>
+<div class="word-list" id="suspense"></div>
+
+<h2>Story Endings</h2>
+<div class="word-list" id="endings"></div>
+
+<hr class="section-divider">
+
+<h2>Story: The Falafel Incident</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="story"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playStory()">Play story</button>
+</div>
+
+<h2>Useful Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 93 · storytelling · <a href="94-idioms-body.html" style="color:var(--accent)">Next: Idioms (Body) →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const OPENINGS = [
+  { he: 'אַתָּה לֹא תַּאֲמִין מָה שֶׁקָּרָה לִי', translit: 'ata lo ta\'amin ma she-kara li', fr: "you won't believe what happened to me (m.)" },
+  { he: 'יֵשׁ לִי סִפּוּר', translit: 'yesh li sipur', fr: 'I have a story' },
+  { he: 'פַּעַם, לִפְנֵי שָׁנִים', translit: "pa'am, lifney shanim", fr: 'once, years ago' },
+  { he: 'הָיֹה הָיָה', translit: 'hayo haya', fr: 'once upon a time (lit. there was, there was)' },
+  { he: 'אֶתְמוֹל בַּבֹּקֶר', translit: 'etmol ba-boker', fr: 'yesterday morning' },
+  { he: 'אֶתְמוֹל קָרָה לִי דָּבָר מוּזָר', translit: 'etmol kara li davar muzar', fr: 'yesterday something strange happened to me' },
+  { he: 'תַּקְשִׁיב לְזֶה', translit: 'takshiv le-ze', fr: 'listen to this (m.)' }
+];
+const TIME = [
+  { he: 'אַחַר כָּךְ', translit: 'achar kach', fr: 'afterward' },
+  { he: 'פִּתְאוֹם', translit: 'pit\'om', fr: 'suddenly' },
+  { he: 'בָּרֶגַע הַזֶּה', translit: 'ba-rega ha-ze', fr: 'at that moment' },
+  { he: 'בְּדִיּוּק אָז', translit: 'be-diyuk az', fr: 'just then' },
+  { he: 'מַמָּשׁ אַחֲרֵי', translit: 'mamash acharey', fr: 'right after' },
+  { he: 'לִפְנֵי כַּמָּה דַּקּוֹת', translit: 'lifney kama dakot', fr: 'a few minutes ago' },
+  { he: 'בַּסּוֹף', translit: 'ba-sof', fr: 'in the end' },
+  { he: 'בָּסוֹף שֶׁל הַסּוֹף', translit: 'ba-sof shel ha-sof', fr: 'at the very end (emphatic)' },
+  { he: 'תּוֹךְ כְּדֵי', translit: 'toch kdey', fr: 'while / during' }
+];
+const LOGIC = [
+  { he: 'בִּגְלַל זֶה', translit: 'biglal ze', fr: 'because of this' },
+  { he: 'לָכֵן', translit: 'lachen', fr: 'therefore' },
+  { he: 'אֲבָל', translit: 'aval', fr: 'but' },
+  { he: 'לַמְרוֹת זֶה', translit: 'lamrot ze', fr: 'despite this' },
+  { he: 'בְּכָל אוֹפֶן', translit: 'be-chol ofen', fr: 'in any case' },
+  { he: 'מִצַּד שֵׁנִי', translit: 'mi-tzad sheni', fr: 'on the other hand' },
+  { he: 'יוֹתֵר מִזֶּה', translit: 'yoter mi-ze', fr: 'more than that' },
+  { he: 'חוּץ מִזֶּה', translit: 'chutz mi-ze', fr: 'besides that' }
+];
+const SURPRISE = [
+  { he: 'מָה?!', translit: 'ma?!', fr: 'what?!' },
+  { he: 'אֵיךְ זֶה יָכוֹל לִהְיוֹת?', translit: 'eich ze yachol lihyot?', fr: 'how can that be?' },
+  { he: 'לֹא יְכוֹלְתִּי לְהַאֲמִין', translit: 'lo yachalti leha\'amin', fr: "I couldn't believe it" },
+  { he: 'נָפַל לִי הַלֶּסֶת', translit: 'nafal li ha-leset', fr: 'my jaw dropped (lit. fell)' },
+  { he: 'אֵיזֶה הֶלֶם', translit: 'eyze helem', fr: 'what a shock' },
+  { he: 'נִדְהַמְתִּי', translit: 'nidhamti', fr: 'I was stunned' },
+  { he: 'לֹא הֶאֱמַנְתִּי לְעֵינַי', translit: 'lo he\'emanti le-eynai', fr: "I didn't believe my eyes" }
+];
+const SUSPENSE = [
+  { he: 'וְאָז...', translit: 've-az...', fr: 'and then...' },
+  { he: 'נַחֵשׁ מָה קָרָה', translit: 'nachesh ma kara', fr: 'guess what happened (m.)' },
+  { he: 'לֹא תָּבִין מָה הָיָה הַסּוֹף', translit: 'lo tavin ma haya ha-sof', fr: "you won't get how it ended (m.)" },
+  { he: 'תֵּכֶף תָּבִין', translit: 'tekef tavin', fr: "you'll see in a sec (m.)" },
+  { he: 'מָה אַתָּה חוֹשֵׁב שֶׁעָשִׂיתִי?', translit: 'ma ata choshev she-asiti?', fr: 'what do you think I did? (m.)' },
+  { he: 'הַחֵלֶק הֲכִי טוֹב', translit: 'ha-chelek hachi tov', fr: 'the best part' },
+  { he: 'רֶגַע, רֶגַע', translit: 'rega, rega', fr: 'wait, wait' }
+];
+const ENDINGS = [
+  { he: 'וְזֶה הַסּוֹף', translit: 've-ze ha-sof', fr: "and that's the end" },
+  { he: 'הַסּוֹף הָיָה טוֹב', translit: 'ha-sof haya tov', fr: 'the ending was good' },
+  { he: 'מֵאָז לֹא שָׁכַחְתִּי', translit: 'me-az lo shachachti', fr: "since then I haven't forgotten" },
+  { he: 'אֵיזֶה אֶרֶץ', translit: 'eyze eretz', fr: "what a country (classic Israeli ending)" },
+  { he: 'רַק בְּיִשְׂרָאֵל', translit: 'rak be-Yisrael', fr: 'only in Israel' },
+  { he: 'הַחַיִּים מוּזָרִים', translit: 'ha-chayim muzarim', fr: 'life is strange' }
+];
+const STORY = [
+  { he: 'אַתֶּם לֹא תַּאֲמִינוּ מָה שֶׁקָּרָה לִי אֶתְמוֹל.', translit: 'Atem lo ta\'aminu ma she-kara li etmol.', fr: "You won't believe what happened to me yesterday." },
+  { he: 'הָלַכְתִּי לִקְנוֹת פָלָפֶל בָּרְחוֹב הָרָאשִׁי.', translit: 'Halachti liknot falafel ba-rechov ha-rashi.', fr: 'I went to buy falafel on the main street.' },
+  { he: 'יֵשׁ שָׁם דּוּכָן בְּשֵׁם "פָלָפֶל הַזָּקֵן".', translit: 'Yesh sham duchan be-shem "Falafel ha-zaken".', fr: 'There\'s a stand called "The Old Man\'s Falafel".' },
+  { he: 'בִּגְלַל הַתּוֹר עָמַדְתִּי שָׁם עֶשְׂרִים דַּקּוֹת.', translit: 'Biglal ha-tor amadeti sham esrim dakot.', fr: 'Because of the line I stood there 20 minutes.' },
+  { he: 'פִּתְאוֹם, הַזָּקֵן הִסְתַּכֵּל עָלַי וְצָעַק: "אַתָּה הַצָּרְפָתִי, נָכוֹן?"', translit: 'Pit\'om, ha-zaken histakel alay ve-tza\'ak: "Ata ha-tzarfati, nachon?"', fr: 'Suddenly, the old man looked at me and shouted: "You\'re the French guy, right?"' },
+  { he: 'נִדְהַמְתִּי. מֵאַיִן הוּא מַכִּיר אוֹתִי?', translit: 'Nidhamti. Me-ayin hu makir oti?', fr: "I was stunned. How does he know me?" },
+  { he: 'הוּא אָמַר: "הַסַּבָּא שֶׁלְּךָ הָיָה הַחָבֵר הֲכִי טוֹב שֶׁלִּי בַּקִּבּוּץ בִּשְׁנַת 1962."', translit: 'Hu amar: "Ha-saba shelcha haya ha-chaver hachi tov sheli ba-kibutz bi-shnat 1962."', fr: 'He said: "Your grandfather was my best friend at the kibbutz in 1962."' },
+  { he: 'לֹא הֶאֱמַנְתִּי. הוּא נָתַן לִי פָלָפֶל חִנָּם וְסִפּוּר שָׁעָה שְׁלֵמָה.', translit: 'Lo he\'emanti. Hu natan li falafel chinam ve-sipur sha\'a shlema.', fr: "I didn't believe it. He gave me a free falafel and a full hour story." },
+  { he: 'אֵיזֶה אֶרֶץ.', translit: 'Eyze eretz.', fr: 'What a country.' }
+];
+const PHRASES = [
+  { he: 'תֵּן לִי לְסַפֵּר לְךָ', translit: 'ten li lesaper lecha', fr: 'let me tell you (m.)' },
+  { he: 'תְּקַצֵּר בְּבַקָּשָׁה', translit: 'tekatzer bevakasha', fr: 'shorten it please (m.)' },
+  { he: 'הַסִּפּוּר אָרֹךְ', translit: 'ha-sipur arokh', fr: "the story's long" },
+  { he: 'בְּדִיּוּק כָּכָה?', translit: 'be-diyuk kacha?', fr: 'exactly like that?' },
+  { he: 'אַל תְּסַפֵּר לְאַף אֶחָד', translit: 'al tesaper le-af echad', fr: "don't tell anyone (m.)" },
+  { he: 'הָיִיתִי בָּהֶלֶם', translit: 'hayiti ba-helem', fr: 'I was in shock' },
+  { he: 'בְּאֱמֶת קָרָה?', translit: 'be-emet kara?', fr: 'did it really happen?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('openings', OPENINGS); R('time', TIME); R('logic', LOGIC); R('surprise', SURPRISE); R('suspense', SUSPENSE); R('endings', ENDINGS); R('phrases', PHRASES);
+
+const storyEl = document.getElementById('story');
+STORY.forEach((line, i) => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 12px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${i+1}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  storyEl.appendChild(el);
+});
+async function playStory() { for (const line of STORY) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 3000)); } markLessonDone('storytelling'); }
+
+addExtraVocab('Story Verbs (past tense)', [
+  { he: 'קָרָה', translit: 'kara', fr: 'happened' },
+  { he: 'הָיָה', translit: 'haya', fr: 'was (m.)' },
+  { he: 'הָיְתָה', translit: 'hayta', fr: 'was (f.)' },
+  { he: 'אָמַר', translit: 'amar', fr: 'said (m.)' },
+  { he: 'שָׁאַל', translit: 'sha\'al', fr: 'asked' },
+  { he: 'עָנָה', translit: 'ana', fr: 'answered' },
+  { he: 'הָלַךְ', translit: 'halach', fr: 'went' },
+  { he: 'בָּא', translit: 'ba', fr: 'came' },
+  { he: 'רָאָה', translit: 'ra\'a', fr: 'saw' },
+  { he: 'שָׁמַע', translit: 'shama', fr: 'heard' },
+  { he: 'מָצָא', translit: 'matza', fr: 'found' },
+  { he: 'אִבֵּד', translit: 'ibed', fr: 'lost' },
+  { he: 'נָסַע', translit: 'nasa', fr: 'traveled' },
+  { he: 'הִכִּיר', translit: 'hikir', fr: 'recognized' },
+  { he: 'גִּלָּה', translit: 'gila', fr: 'discovered' }
+]);
+
+addMiniQuiz('Storytelling Quiz', [
+  { q: '"Suddenly" =', options: ['פִּתְאוֹם', 'אַחַר כָּךְ', 'בָּסוֹף', 'בָּרֶגַע הַזֶּה'], answer: 0 },
+  { q: '"Then..." narrator move:', options: ['וְאָז', 'אֲבָל', 'כִּי', 'אַף עַל פִּי שֶׁ'], answer: 0 },
+  { q: 'Classic Israeli story ending =', options: ['רַק בְּיִשְׂרָאֵל', 'אֵיזֶה אֶרֶץ', 'A and B', 'הַסּוֹף'], answer: 2 },
+  { q: 'Time connector "while" =', options: ['פִּתְאוֹם', 'תּוֹךְ כְּדֵי', 'אַחַר כָּךְ', 'בְּסוֹפוֹ שֶׁל דָּבָר'], answer: 1 },
+  { q: '"Once upon a time" =', options: ['פַּעַם אַחַת', 'הָיֹה הָיָה', 'עַל יְדֵי', 'מָה?'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('storytelling'); } });
+</script></body></html>

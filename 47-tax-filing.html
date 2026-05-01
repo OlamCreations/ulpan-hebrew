@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>47 — Tax Filing</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Tax Filing (Mas Hachnasa)</h1><div class="subtitle">Lesson 47 · מס הכנסה</div></div><div class="nav"><a href="index.html">Home</a><a href="47-tax-filing.html" class="active">47</a></div></header>
+
+<p class="intro">Israeli tax system: progressive income tax (mas hachnasa), VAT (ma'am 17%), municipal property tax (arnona). New olim get a 10-year exemption on foreign income — huge benefit. Vocabulary for filing, deductions, refunds.</p>
+
+<div class="tip"><strong>10-year olim exemption</strong> — Income earned outside Israel (US salary, foreign rental, foreign pension) is tax-exempt for 10 years from your aliyah date. Major retention tool — consult a CPA before any major financial move.</div>
+
+<h2>Tax Authorities</h2>
+<div class="word-list" id="auth"></div>
+
+<h2>Tax Types</h2>
+<div class="word-list" id="types"></div>
+
+<h2>Income Tax Vocabulary</h2>
+<div class="word-list" id="income"></div>
+
+<h2>Filing & Forms</h2>
+<div class="word-list" id="filing"></div>
+
+<h2>Deductions & Credits</h2>
+<div class="word-list" id="deductions"></div>
+
+<h2>Self-Employed (Atzmai)</h2>
+<div class="word-list" id="self"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 47 · taxes · <a href="48-phone-calls.html" style="color:var(--accent)">Next: Phone Calls →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const AUTH = [
+  { he: 'מַס הַכְנָסָה', translit: 'mas hachnasa', fr: 'income tax authority' },
+  { he: 'רָשׁוּת הַמִּסִּים', translit: 'rashut ha-misim', fr: 'tax authority' },
+  { he: 'פָּקִיד שׁוּמָה', translit: 'pakid shuma', fr: 'tax assessor / clerk' },
+  { he: 'רוֹאֶה חֶשְׁבּוֹן', translit: 'ro\'e cheshbon', fr: 'CPA / accountant' },
+  { he: 'יוֹעֵץ מַס', translit: 'yo\'etz mas', fr: 'tax advisor' }
+];
+const TYPES = [
+  { he: 'מַס', translit: 'mas', fr: 'tax' },
+  { he: 'מַ"ע"מ', translit: 'ma\'am', fr: 'VAT (17%)' },
+  { he: 'אַרְנוֹנָה', translit: 'arnona', fr: 'municipal property tax' },
+  { he: 'מַס שֶׁבַח', translit: 'mas shevach', fr: 'capital gains tax (real estate)' },
+  { he: 'מַס רֶכֶב', translit: 'mas rechev', fr: 'vehicle tax' },
+  { he: 'דְּמֵי בִּטּוּחַ לְאֻמִּי', translit: 'dmey bituach le\'umi', fr: 'social security contributions' }
+];
+const INCOME = [
+  { he: 'הַכְנָסָה', translit: 'hachnasa', fr: 'income' },
+  { he: 'הַכְנָסָה גְּבוֹהָה', translit: 'hachnasa gvoha', fr: 'high income' },
+  { he: 'הַכְנָסָה נְמוּכָה', translit: 'hachnasa nemucha', fr: 'low income' },
+  { he: 'מַדְרֵגוֹת מַס', translit: 'madregot mas', fr: 'tax brackets' },
+  { he: 'שִׁעוּר מַס', translit: 'shi\'ur mas', fr: 'tax rate' },
+  { he: 'נְקֻדּוֹת זִכּוּי', translit: 'nekudot zikuy', fr: 'tax credit points' },
+  { he: 'תְּלוּשׁ מַשְׂכֹּרֶת', translit: 'tlush maskoret', fr: 'pay slip' },
+  { he: 'נִכּוּי מַס בַּמַּקוֹר', translit: 'nikui mas ba-makor', fr: 'tax withheld at source' }
+];
+const FILING = [
+  { he: 'דּוֹחַ שָׁנָתִי', translit: 'doach shnati', fr: 'annual return' },
+  { he: 'הַגָּשַׁת דּוֹחַ', translit: 'hagashat doach', fr: 'filing a return' },
+  { he: 'טֹפֶס 101', translit: 'tofes 101', fr: 'Form 101 (employee tax data)' },
+  { he: 'תֹּקֶף', translit: 'tokef', fr: 'validity (filing period)' },
+  { he: 'הַחְזָר מַס', translit: 'hechzer mas', fr: 'tax refund' },
+  { he: 'חוֹב מַס', translit: 'chov mas', fr: 'tax debt' },
+  { he: 'פִּגּוּר', translit: 'pigur', fr: 'arrears / delay' },
+  { he: 'קְנָס', translit: 'knas', fr: 'fine / penalty' }
+];
+const DEDUCTIONS = [
+  { he: 'נִיכּוּי', translit: 'nikuy', fr: 'deduction' },
+  { he: 'זִכּוּי מַס', translit: 'zikuy mas', fr: 'tax credit' },
+  { he: 'הוֹצָאוֹת מֻכָּרוֹת', translit: 'hotza\'ot mukarot', fr: 'recognized expenses' },
+  { he: 'תְּרוּמָה', translit: 'truma', fr: 'donation' },
+  { he: 'פֶּנְסְיָה', translit: 'pensia', fr: 'pension contribution' },
+  { he: 'קֶרֶן הִשְׁתַּלְּמוּת', translit: 'keren hishtalmut', fr: 'further-education fund' },
+  { he: 'פְּטוֹר עוֹלִים', translit: 'ptor olim', fr: 'olim exemption (10-year)' }
+];
+const SELF = [
+  { he: 'עַצְמָאִי', translit: 'atzmai', fr: 'self-employed' },
+  { he: 'עוֹסֵק פָּטוּר', translit: 'osek patur', fr: 'small business (no VAT)' },
+  { he: 'עוֹסֵק מֻרְשֶׁה', translit: 'osek murshe', fr: 'authorized business (with VAT)' },
+  { he: 'תֵּיק עוֹסֵק', translit: 'tik osek', fr: 'business file' },
+  { he: 'חֶשְׁבּוֹנִית מַס', translit: 'cheshbonit mas', fr: 'tax invoice' },
+  { he: 'דִּוּוּחַ דּוֹאָלִי', translit: 'divuach do\'ali', fr: 'bi-monthly report' }
+];
+const PHRASES = [
+  { he: 'אֲנִי צָרִיךְ לְהַגִּישׁ דּוֹחַ', translit: 'ani tzarich lehagish doach', fr: 'I need to file a return (m.)' },
+  { he: 'יֵשׁ לִי פְּטוֹר עוֹלִים', translit: 'yesh li ptor olim', fr: 'I have an olim exemption' },
+  { he: 'אֲנִי שָׂכִיר', translit: 'ani sachir', fr: "I'm employed (m., salaried)" },
+  { he: 'אֲנִי עַצְמָאִי', translit: 'ani atzmai', fr: "I'm self-employed (m.)" },
+  { he: 'מָתַי הַהַחְזָר?', translit: 'matay ha-hechzer?', fr: 'when is the refund?' },
+  { he: 'אֲנִי צָרִיךְ רוֹאֶה חֶשְׁבּוֹן', translit: 'ani tzarich ro\'e cheshbon', fr: 'I need a CPA (m.)' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('auth', AUTH); R('types', TYPES); R('income', INCOME); R('filing', FILING); R('deductions', DEDUCTIONS); R('self', SELF); R('phrases', PHRASES);
+addExtraVocab('Income Sources & Categories', [
+  { he: 'הַכְנָסָה', translit: 'hachnasa', fr: 'income' },
+  { he: 'מַשְׂכֹּרֶת', translit: 'maskoret', fr: 'salary' },
+  { he: 'עָצְמַאי', translit: 'atzma\'i', fr: 'self-employed' },
+  { he: 'שָׂכִיר', translit: 'sachir', fr: 'salaried employee' },
+  { he: 'הַכְנָסָה פַּסִּיבִית', translit: 'hachnasa pasivit', fr: 'passive income' },
+  { he: 'דִּיבִידֶנְד', translit: 'dividend', fr: 'dividend' },
+  { he: 'רֵבִית', translit: 'revit', fr: 'interest income' },
+  { he: 'דְּמֵי שְׂכִירוּת', translit: 'dmey schirut', fr: 'rental income' },
+  { he: 'מַעֲנָק', translit: 'ma\'anak', fr: 'grant / bonus' },
+  { he: 'פִּצּוּי פִּטּוּרִין', translit: 'pitzuy piturin', fr: 'severance pay' },
+  { he: 'פֶּנְסְיָה', translit: 'pensya', fr: 'pension' },
+  { he: 'הוֹצָאוֹת מַכִּיר', translit: 'hotza\'ot makir', fr: 'recognized expenses' },
+  { he: 'הוֹצָאוֹת מֵיצָגִיוֹת', translit: 'hotza\'ot mey\'atzgiyot', fr: 'representation expenses' },
+  { he: 'נְקוּדַת זִכּוּי', translit: 'nekudat zikuy', fr: 'tax credit point' }
+]);
+
+addExtraVocab('Tax Vocabulary', [
+  { he: 'מַס הַכְנָסָה', translit: 'mas hachnasa', fr: 'income tax' },
+  { he: 'מָע"מ', translit: 'maam', fr: 'VAT (value-added tax, 17%)' },
+  { he: 'מַס שְׁבָח', translit: 'mas shvach', fr: 'capital gains tax' },
+  { he: 'מַס יִסּוּף', translit: 'mas yisuf', fr: 'high earner tax' },
+  { he: 'דּוֹחַ שְׁנָתִי', translit: 'doch shnati', fr: 'annual report' },
+  { he: 'דּוֹחַ 1301', translit: 'doch 1301', fr: 'employee tax form' },
+  { he: 'תִּיק', translit: 'tik', fr: 'tax file' },
+  { he: 'נְקוּדּוֹת זִכּוּי', translit: 'nekudot zikuy', fr: 'tax credit points' },
+  { he: 'תוֹשָׁב חוּץ', translit: 'toshav chutz', fr: 'foreign resident' },
+  { he: 'תוֹשָׁב יִשְׂרָאֵל', translit: 'toshav Yisrael', fr: 'Israeli resident' },
+  { he: 'פָּטוּר מִמַּס', translit: 'patur mi-mas', fr: 'tax exempt' },
+  { he: 'הַחְזֵר מַס', translit: 'hechzer mas', fr: 'tax refund' },
+  { he: 'אַסְמַכְתָּא', translit: 'asmachta', fr: 'voucher / receipt' },
+  { he: 'רוֹאֵה חֶשְׁבּוֹן', translit: 'ro\'e cheshbon', fr: 'accountant' }
+]);
+
+addMiniQuiz('Tax Quiz', [
+  { q: 'VAT in Israel =', options: ['10%', '15%', '17% (current)', '20%'], answer: 2 },
+  { q: 'Olim get foreign income tax exemption for...', options: ['1 year', '5 years', '10 years', 'Lifetime'], answer: 2 },
+  { q: 'Annual tax report deadline (typical):', options: ['Jan 31', 'May 31', 'Aug 1', 'Dec 31'], answer: 1, explain: 'Late May / June for digital filers' },
+  { q: '"Tax refund" =', options: ['דּוֹחַ', 'הַחְזֵר מַס', 'מַס יִסּוּף', 'תִּיק'], answer: 1 },
+  { q: 'Most employees DON\'T file annual report because...', options: ['It\'s illegal', 'Auto-deducted via payroll', 'Optional always', 'Wait for letter'], answer: 1, explain: 'Self-employed and high-earners must; most employees don\'t' }
+]);
+
+addCulturalText('Mas Hachnasa Letter (Tax Authority Notice)', 'A typical letter from the Tax Authority. Vocabulary you must recognize. They never call — only mail.', [
+  { he: 'רָשׁוּת הַמִּסִּים בְּיִשְׂרָאֵל', translit: "Rashut ha-misim be-Yisrael", fr: 'Israel Tax Authority' },
+  { he: 'מַס הַכְנָסָה — אֲגַף הַשּׁוּמָה', translit: "Mas hachnasa — agaf ha-shuma", fr: 'Income tax — Assessment department' },
+  { he: 'הַנִּדּוֹן: דּוֹחַ שְׁנָתִי 2025', translit: "Ha-nidon: doch shnati 2025", fr: 'Subject: Annual report 2025' },
+  { he: 'מָר נֶפְתָּלִי הַנִּכְבָּד,', translit: "Mar Nephtali ha-nichbad,", fr: 'Dear Mr. Nephtali,' },
+  { he: 'הִנָּךְ נִדְרָשׁ לְהַגִּישׁ דּוֹחַ עַד 31 בְּמָאי 2026', translit: "Hinach nidrash lehagish doch ad 31 be-may 2026", fr: 'You are required to file a report by May 31, 2026' },
+  { he: 'בִּמְקוֹם אִי-הַגָּשַׁת הַדּוֹחַ', translit: "Bi-mkom i-hagashat ha-doch", fr: 'In case of non-filing' },
+  { he: 'יוּטַל קְנָס מִינִימָלִי שֶׁל 1,200 שֶׁקֶל', translit: "yutal knas minimali shel 1,200 shekel", fr: 'a minimum fine of 1,200 NIS will be imposed' },
+  { he: 'נָא לַעֲבוֹר לְאֵזוֹר הָאִישִׁי בְּאֲתַר הָרָשׁוּת', translit: "Na la\'avor le-ezor ha-ishi be-atar ha-rashut", fr: 'Please go to the personal area on the Authority website' },
+  { he: 'בִּכְבוֹד רַב, פָּקִיד שׁוּמָה', translit: "Bichvod rav, pakid shuma", fr: 'Sincerely, Tax Assessor' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('taxes'); } });
+</script></body></html>

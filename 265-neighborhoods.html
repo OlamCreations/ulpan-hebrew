@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>265 — Neighborhoods — TLV & Jerusalem Map</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Neighborhoods — TLV & Jerusalem Map</h1><div class="subtitle">Lesson 265 · שְׁכוּנוֹת</div></div><div class="nav"><a href="index.html">Home</a><a href="265-neighborhoods.html" class="active">265</a></div></header>
+
+<p class="intro">Israeli cities organize into shchunot (neighborhoods) with distinct characters. Tel Aviv: Florentin (creative/young), North TLV (luxury), Old North (cafes/professional), Center (Rothschild + Sarona), South Tel Aviv (Neve Tzedek + Jaffa), Ramat Aviv (university). Jerusalem: Rehavia (secular professional), Talpiot (mixed), Baka (Anglo + dati), German Colony (Baka adjacent), Mea Shearim (haredi), Givat Mordechai (mixed), French Hill (mixed). Each has its own character, pricing, demographics.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Knowing the shchunot decides 80% of your Israeli daily life — neighbors, restaurants, commute, schools. Tel Aviv: Florentin = young/creative renters; North TLV = wealthy families; Center = professional 25-40s. Jerusalem: Rehavia = central, Anglo-friendly; Baka/German Colony = Anglo enclave; Mea Shearim = haredi only. As an oleh, visit 2-3 neighborhoods for a weekend before signing — neighborhood character matters more than apartment specifics.</div>
+
+<h2>Tel Aviv North</h2>
+<div class="word-list" id="tlv-north"></div>
+
+<h2>Tel Aviv South</h2>
+<div class="word-list" id="tlv-south"></div>
+
+<h2>Tel Aviv Center</h2>
+<div class="word-list" id="tlv-center"></div>
+
+<h2>Jerusalem Areas</h2>
+<div class="word-list" id="jerusalem-areas"></div>
+
+<h2>Neighborhood Character Vocabulary</h2>
+<div class="word-list" id="character"></div>
+
+<hr class="section-divider">
+
+<h2>Visiting Neighborhoods</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh family visits Florentin and Baka before deciding.</div>
+  <div id="visit"></div>
+</div>
+
+<footer>Lesson 265 · Neighborhoods · <a href="266-gentrification.html" style="color:var(--accent)">Next: Gentrification →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const TLV_NORTH = [
+  { he: 'צְפוֹן תֵּל אָבִיב', translit: 'tzfon tel aviv', fr: 'North Tel Aviv (luxury, wealthy families)' },
+  { he: 'הַצָּפוֹן הַיָּשָׁן', translit: 'ha-tzafon ha-yashan', fr: 'Old North (cafes, professional)' },
+  { he: 'רָמַת אָבִיב', translit: 'ramat aviv', fr: 'Ramat Aviv (university campus)' },
+  { he: 'גִּבְעַת הַשְּׁלוֹשָׁה', translit: 'givat ha-shlosha', fr: 'Givat HaShlosha' },
+  { he: 'רָמַת אָבִיב גִּמֶ"ל', translit: 'ramat aviv gimel', fr: 'Ramat Aviv Gimel (newer)' },
+  { he: 'נָמָל תֵּל אָבִיב', translit: 'namal tel aviv', fr: 'Tel Aviv Port (Namal)' },
+  { he: 'שְׂדֵה דּוֹב', translit: 'sde dov', fr: 'Sde Dov (former airport)' },
+  { he: 'הַצָּפוֹן', translit: 'ha-tzafon', fr: 'the North' },
+  { he: 'הַתִּיכוֹן הַתֵּימָנִי', translit: 'ha-tichon ha-teimani', fr: 'Tichon HaTeimanit area' },
+  { he: 'נָהָר הַיַּרְקוֹן', translit: 'nahar ha-yarkon', fr: 'Yarkon River' }
+];
+const TLV_SOUTH = [
+  { he: 'פְלוֹרֶנְטִין', translit: 'florentin', fr: 'Florentin (creative/young)' },
+  { he: 'נְוֵה צֶדֶק', translit: 'neve tzedek', fr: 'Neve Tzedek (oldest TLV)' },
+  { he: 'יָפוֹ', translit: 'yafo', fr: 'Jaffa' },
+  { he: 'יָפוֹ הָעַתִּיקָה', translit: 'yafo ha-atika', fr: 'Old Jaffa (Yafo Atika)' },
+  { he: 'כֶּרֶם הַתֵּימָנִים', translit: 'kerem ha-teimanim', fr: 'Yemenite quarter (Kerem HaTeimanim)' },
+  { he: 'לֵב הָעִיר', translit: 'lev ha-ir', fr: 'city center (heart of city)' },
+  { he: 'שַׁפִּירָא', translit: 'shapira', fr: 'Shapira' },
+  { he: 'רָמַת יִשְׂרָאֵל', translit: 'ramat yisrael', fr: 'Ramat Yisrael' },
+  { he: 'בַּת יָם', translit: 'bat yam', fr: 'Bat Yam (south extension)' },
+  { he: 'קִרְיַת הַשְׁמוֹנָה', translit: 'kiryat ha-shemonah', fr: 'Kiryat HaShemonah' }
+];
+const TLV_CENTER = [
+  { he: 'רוֹטְשִׁילְד', translit: 'rotshild', fr: 'Rothschild Boulevard' },
+  { he: 'שָׂרוֹנָה', translit: 'sarona', fr: 'Sarona (downtown campus)' },
+  { he: 'הָעִיר הַמֶּרְכָּזִית', translit: 'ha-ir ha-merkazit', fr: 'Center (HaIr ha-Merkazit)' },
+  { he: 'לֵב הָעִיר', translit: 'lev ha-ir', fr: 'Lev HaIr (heart of city)' },
+  { he: 'בֶּן יְהוּדָה', translit: 'ben yehuda', fr: 'Ben Yehuda' },
+  { he: 'אַלֶּנְבִּי', translit: 'alenbi', fr: 'Allenby' },
+  { he: 'שׁוּק הַכַּרְמֶל', translit: 'shuk ha-karmel', fr: 'Carmel Market (Shuk HaCarmel)' },
+  { he: 'אֵזוֹר הַבָּאוּהָאוּז', translit: 'ezor ha-bauhaus', fr: 'Bauhaus area' },
+  { he: 'כִּכַּר הַבִּימָה', translit: 'kikar ha-bima', fr: 'Habima Square' },
+  { he: 'כִּכַּר רַבִּין', translit: 'kikar rabin', fr: 'Kikar Rabin (Rabin Square)' }
+];
+const JERUSALEM_AREAS = [
+  { he: 'רְחַבְיָה', translit: 'rechavya', fr: 'Rehavia (secular professional)' },
+  { he: 'תַּלְפִּיּוֹת', translit: 'talpiot', fr: 'Talpiot (mixed)' },
+  { he: 'בָּקָּעָה', translit: 'baka', fr: 'Baka (Anglo + dati)' },
+  { he: 'מִשְׁכְּנוֹת שַׁאֲנָנִים', translit: 'mishkenot sha\'ananim', fr: 'Mishkenot Sha\'ananim (German Colony adjacent)' },
+  { he: 'מֵאָה שְׁעָרִים', translit: 'mea shearim', fr: 'Mea Shearim (haredi)' },
+  { he: 'בֵּית הַכֶּרֶם', translit: 'beit ha-kerem', fr: 'Beit HaKerem' },
+  { he: 'גִּבְעַת מָרְדְּכַי', translit: 'givat mordechai', fr: 'Givat Mordechai' },
+  { he: 'גִּבְעַת הַצָּרְפָתִי', translit: 'givat ha-tzarfati', fr: 'French Hill (Givat HaTzarfati)' },
+  { he: 'גִּילֹה', translit: 'gilo', fr: 'Gilo' },
+  { he: 'פִּסְגַּת זְאֵב', translit: 'pisgat ze\'ev', fr: 'Pisgat Ze\'ev (north)' }
+];
+const CHARACTER = [
+  { he: 'שְׁכוּנָה', translit: 'shchuna', fr: 'neighborhood' },
+  { he: 'שִׁכְוָה', translit: 'shichvah', fr: 'stratum / neighborhood-stratum' },
+  { he: 'קְהִילָּה', translit: 'kehila', fr: 'community' },
+  { he: 'שִׁפּוּר', translit: 'shipur', fr: 'gentrifying / improvement' },
+  { he: 'דָתְלָ"שׁ', translit: 'datlash', fr: 'formerly religious-mixed' },
+  { he: 'מְבוּטָּח', translit: 'mevutach', fr: 'secular' },
+  { he: 'דָּתִי', translit: 'dati', fr: 'religious-Zionist' },
+  { he: 'חֲרֵדִי', translit: 'charedi', fr: 'ultra-Orthodox (haredi)' },
+  { he: 'אַנְגְּלוֹ', translit: 'anglo', fr: 'Anglo (English-speaking)' },
+  { he: 'מִזְרָחִי / סְפָרַדִּי', translit: 'mizrachi / sfaradi', fr: 'Mizrahi / Sephardi' }
+];
+
+const VISIT = [
+  { he: 'יוֹנָאס — מָחָר אֲנַחְנוּ נוֹסְעִים לִפְלוֹרֶנְטִין לִרְאוֹת אֶת הַשְּׁכוּנָה.', translit: 'yonas — machar anachnu nos\'im li-florentin lir\'ot et ha-shchuna.', fr: 'Jonas — Tomorrow we go to Florentin to see the neighborhood.' },
+  { he: 'אִשָּׁה — שָׁמַעְתִּי שֶׁזֶּה אֵזוֹר צָעִיר וְהִיפְּסְטֶרִי, הַרְבֵּה אַמָּנִים וּשְׂכִירוּת.', translit: 'isha — shamati she-ze ezor tza\'ir v\'hipsteri, harbei amanim u-schirut.', fr: 'Wife — I heard it\'s a young hipster area, lots of artists and rentals.' },
+  { he: 'יוֹנָאס — נָכוֹן. אַחֲרֵי כֵּן נֵלֵךְ לְבָקָּעָה בִּירוּשָׁלַיִם.', translit: 'yonas — nachon. acharei chen nelech l\'baka birushalayim.', fr: 'Jonas — Right. After that we\'ll go to Baka in Jerusalem.' },
+  { he: 'אִשָּׁה — בָּקָּעָה — שָׁם יֵשׁ הַרְבֵּה אַנְגְּלוֹ דָּתִיִּים, נָכוֹן?', translit: 'isha — baka — sham yesh harbei anglo dati\'im, nachon?', fr: 'Wife — Baka — there are lots of Anglo religious-Zionists there, right?' },
+  { he: 'יוֹנָאס — בְּדִיּוּק. אֵיזוֹ שְׁכוּנָה אַתְּ מַעֲדִיפָה?', translit: 'yonas — b\'diyuk. eizo shchuna at ma\'adifa?', fr: 'Jonas — Exactly. Which neighborhood do you prefer?' },
+  { he: 'אִשָּׁה — אֲנִי חוֹשֶׁבֶת בָּקָּעָה. הַקְּהִילָּה חֲשׁוּבָה לִי יוֹתֵר מֵהַוַייבּ.', translit: 'isha — ani choshevet baka. ha-kehila chashuva li yoter me-ha-vibe.', fr: 'Wife — I think Baka. Community matters to me more than vibe.' },
+  { he: 'יוֹנָאס — מְקָבֵּל. בּוֹאִי נְבַקֵּר בִּשְׁתֵּיהֶן וְנַחְלִיט אַחֲרֵי הַסּוֹף שָׁבוּעַ.', translit: 'yonas — m\'kabel. bo\'i n\'vaker bi-shteihen v\'nachlit acharei ha-sof shavua.', fr: 'Jonas — Agreed. Let\'s visit both and decide after the weekend.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('tlv-north', TLV_NORTH);
+R('tlv-south', TLV_SOUTH);
+R('tlv-center', TLV_CENTER);
+R('jerusalem-areas', JERUSALEM_AREAS);
+R('character', CHARACTER);
+
+renderTextBlock('visit', VISIT);
+
+addMiniQuiz('Block 27 · Neighborhoods Quiz', [
+  { q: 'Florentin in Tel Aviv is best characterized as...', options: ['luxury', 'creative/young/renters', 'haredi', 'commercial'], answer: 1, explain: 'Florentin = renter-heavy creative neighborhood in south TLV.' },
+  { q: 'North Tel Aviv (Tzfon Tel Aviv) is associated with...', options: ['poverty', 'luxury and wealthy families', 'haredi', 'Bedouin'], answer: 1, explain: 'Most expensive Tel Aviv real estate.' },
+  { q: 'The Anglo-friendly Jerusalem neighborhood is...', options: ['Mea Shearim', 'Baka / German Colony', 'Mahane Yehuda', 'Pisgat Ze\'ev'], answer: 1, explain: 'German Colony / Baka have substantial Anglo religious-Zionist community.' },
+  { q: 'Mea Shearim is...', options: ['a market', 'a haredi neighborhood', 'a beach', 'a hospital'], answer: 1, explain: 'Ultra-Orthodox stronghold in Jerusalem.' },
+  { q: 'The Hebrew for "neighborhood" is...', options: ['shichvah', 'shchunah', 'kehila', 'merkaz'], answer: 1, explain: 'Shchunah = neighborhood (shichvah is similar but means strata/level).' },
+  { q: 'Old Jaffa (Yafo Atika) is in...', options: ['north Israel', 'south Tel Aviv', 'haredi Jerusalem', 'the Negev'], answer: 1, explain: 'Ancient port now a Tel Aviv neighborhood.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('neighborhoods');
+  }
+});
+</script></body></html>

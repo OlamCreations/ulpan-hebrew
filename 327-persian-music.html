@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>327 — Persian Jewish Music & Synagogue Tradition</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Persian Jewish Music & Synagogue Tradition</h1><div class="subtitle">Lesson 327 · מוּזִיקָה יְהוּדִית פַּרְסִית</div></div><div class="nav"><a href="index.html">Home</a><a href="327-persian-music.html" class="active">327</a></div></header>
+
+<p class="intro">Persian Jews carry one of the oldest continuous liturgical music traditions on earth — older than Ashkenazi nusach, older than Andalusian Sephardi piyyut. The melodies sit on Persian dastgah (modal scales), the prayers blend Hebrew text with Iranian musical grammar, and a community of roughly 250,000 in Israel keeps it alive — from Tehran-style synagogues in Holon and Bat Yam to Mashhadi communities in Tel Aviv with their unique secret-Jew nusach. This lesson maps the liturgical system, the instruments, and the bridge to modern Persian-Israeli artists like Rita.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Persian Jewish liturgy is a living museum. The Mashhadi community spent ~100 years (1839-1925) as crypto-Jews after the Allahdad forced conversion, davening in secret cellars. Their nusach kept melodies that pre-date the conversion — meaning Mashhadi prayer today preserves 19th-century Iranian Jewish sound under glass. When you hear it in Bat Yam, you hear what Persian synagogues sounded like before the smartphone, before recording, before Israel existed. Treat it accordingly.</div>
+
+<h2>Liturgical Tradition</h2>
+<div class="word-list" id="liturgy"></div>
+
+<h2>Persian Musical Modes (Dastgah)</h2>
+<div class="word-list" id="dastgah"></div>
+
+<h2>Traditional Instruments</h2>
+<div class="word-list" id="instruments"></div>
+
+<h2>Modern Israeli Artists</h2>
+<div class="word-list" id="artists"></div>
+
+<h2>Wedding & Festival Music</h2>
+<div class="word-list" id="festival"></div>
+
+<hr class="section-divider">
+
+<h2>A Conversation at a Persian Synagogue in Holon</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A conversation with the chazzan (cantor) at a Tehrani-style synagogue in Holon, after Shabbat morning prayers — the kind of exchange you'll have when seeking out Persian liturgy post-aliyah.</div>
+  <div id="conversation"></div>
+</div>
+
+<footer>Lesson 327 · Persian Music & Liturgy · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const LITURGY = [
+  { he: 'פַּיְטָנוּת', translit: 'paytanut', fr: 'sacred liturgical poetry sung in service' },
+  { he: 'פַּיְטָן', translit: 'paytan', fr: 'liturgical poet-singer (composer + performer)' },
+  { he: 'נוּסָּח פַּרְסִי', translit: 'nusach parsi', fr: 'Persian prayer rite (distinct melodic system)' },
+  { he: 'נוּסָּח מַשְׁהָדִי', translit: 'nusach mashhadi', fr: 'Mashhadi rite (preserved from crypto-Jewish era)' },
+  { he: 'חַזָּן פַּרְסִי', translit: 'chazzan parsi', fr: 'Persian-style cantor' },
+  { he: 'פִּיּוּט', translit: 'piyyut', fr: 'liturgical poem (sung verse)' },
+  { he: 'בַּקָּשׁוֹת', translit: 'bakashot', fr: 'pre-dawn Shabbat song-prayers (Sephardi-Mizrahi)' },
+  { he: 'סְלִיחוֹת פַּרְסִיוֹת', translit: 'slichot parsiyot', fr: 'Persian penitential prayers (Elul-Tishrei)' },
+  { he: 'הַזְמָנָה לִתְפִילָּה', translit: 'hazmana li-tfila', fr: 'call to prayer (chanted invitation)' },
+  { he: 'מָסוֹרֶת בָּעַל-פֶּה', translit: 'masoret ba\'al-peh', fr: 'oral tradition (how Persian nusach transmits)' }
+];
+
+const DASTGAH = [
+  { he: 'דַסְטְגָּאה', translit: 'dastgah', fr: 'Persian modal system (~7 main modes, 5 derivatives)' },
+  { he: 'דַסְטְגָּאה שׁוּר', translit: 'dastgah shur', fr: 'Shur — most common, used for many piyyutim' },
+  { he: 'דַסְטְגָּאה מָאהוּר', translit: 'dastgah mahur', fr: 'Mahur — major-like, used for joyful prayers' },
+  { he: 'דַסְטְגָּאה הוֹמָאיוּן', translit: 'dastgah homayun', fr: 'Homayun — solemn, used for slichot, kinnot' },
+  { he: 'דַסְטְגָּאה סֶגָאה', translit: 'dastgah segah', fr: 'Segah — meditative, used for personal prayer' },
+  { he: 'אָוָואז', translit: 'avaz', fr: 'derivative mode (sub-system within dastgah)' },
+  { he: 'גוּשֶׁה', translit: 'gusheh', fr: 'melodic phrase / motif within a dastgah' },
+  { he: 'רָדִיף', translit: 'radif', fr: 'canonical repertoire of memorized phrases' },
+  { he: 'מִיקְרוֹ-טוֹנִים', translit: 'mikro-tonim', fr: 'microtones (¼ tones — Persian vs Western tuning)' },
+  { he: 'תַּחְרִיר', translit: 'tachrir', fr: 'tahrir — vocal ornament with throat trill' }
+];
+
+const INSTRUMENTS = [
+  { he: 'תָּאר', translit: 'tar', fr: 'tar — long-necked lute, 6 strings (the king of Persian music)' },
+  { he: 'סֶטָאר', translit: 'setar', fr: 'setar — smaller lute, 4 strings (intimate, mystical)' },
+  { he: 'דַף', translit: 'daf', fr: 'daf — large frame drum with rings (Sufi & Jewish use)' },
+  { he: 'טוֹמְבָּכּ', translit: 'tombak', fr: 'tombak — goblet drum (rhythmic backbone)' },
+  { he: 'נֵיי', translit: 'nei', fr: 'nei — reed flute (mystical, breath-driven)' },
+  { he: 'קָנוּן', translit: 'kanun', fr: 'kanun — plucked zither (shared with Arab music)' },
+  { he: 'סַנְטוּר', translit: 'santur', fr: 'santur — hammered dulcimer (~72 strings)' },
+  { he: 'כָּמַאנְצֵ׳ה', translit: 'kamancheh', fr: 'kamancheh — spike fiddle (bowed, ancestor of violin)' },
+  { he: 'אוּד', translit: 'ud', fr: 'ud — short-necked lute (shared Mizrahi instrument)' },
+  { he: 'נֵיי-אַנְבָּן', translit: 'nei-anban', fr: 'nei-anban — Persian bagpipe (south Iran, rare)' }
+];
+
+const ARTISTS = [
+  { he: 'רִיטָה יָהָאן-פָארוּז', translit: 'rita yahan-farouz', fr: 'Rita — born Tehran 1962, Israel\'s biggest Persian-Jewish star' },
+  { he: 'הָאַלְבּוּם הַפַּרְסִי שֶׁל רִיטָה', translit: 'ha-album ha-parsi shel rita', fr: 'Rita\'s Persian album (2011, classic Iranian songs in Farsi)' },
+  { he: 'אֵהוּד בָּנָאי', translit: 'ehud banai', fr: 'Ehud Banai — Persian-Jewish heritage, rock-folk legend' },
+  { he: 'מֵיר בָּנָאי', translit: 'meir banai', fr: 'Meir Banai — Ehud\'s cousin, deeper Persian-spiritual sound' },
+  { he: 'לִיאֵל קוֹלֶט', translit: 'liel kolet', fr: 'Liel Kolet — Sephardi-Mizrahi, sang for Pope at 13' },
+  { he: 'בַּרְבָּרָה סְטְרֵייסַנְד שֶׁל יִשְׂרָאֵל', translit: 'barbara streisand shel yisrael', fr: '"Israel\'s Streisand" — nickname Israelis give Rita' },
+  { he: 'הַסַּצֵנָה הַפַּרְסִית בְּתֵל-אָבִיב', translit: 'ha-scena ha-parsit b\'tel-aviv', fr: 'Persian-Israeli scene in Tel Aviv (clubs, Norouz events)' },
+  { he: 'מוֹעֲדוֹן רוּדָאקִי', translit: 'mo\'adon rudaki', fr: 'Rudaki Club — Persian-Jewish cultural venue Tel Aviv' },
+  { he: 'מוּזִיקָה אִירָאנִית-יִשְׂרְאֵלִית', translit: 'muzika iranit-yisra\'elit', fr: 'Iranian-Israeli music (genre crossover, growing)' },
+  { he: 'דּוּ-לְשׁוֹנִי עִבְרִית-פָארְסִית', translit: 'du-leshoni ivrit-farsi', fr: 'bilingual Hebrew-Farsi songs (signature of the scene)' }
+];
+
+const FESTIVAL = [
+  { he: 'נוֹרוּז', translit: 'norouz', fr: 'Norouz — Persian New Year (March 21, vernal equinox)' },
+  { he: 'שִׁירֵי נוֹרוּז', translit: 'shirei norouz', fr: 'Norouz songs (kept by Persian Jews despite secular origin)' },
+  { he: 'חֲתוּנָּה פַּרְסִית', translit: 'chatuna parsit', fr: 'Persian Jewish wedding (3-7 days, multi-stage)' },
+  { he: 'מַעֲרַעָסִי', translit: 'ma\'arasi', fr: 'pre-wedding henna ceremony (with songs)' },
+  { he: 'שִׁירֵי חֲתוּנָּה', translit: 'shirei chatuna', fr: 'wedding songs (mix of piyyut + folk)' },
+  { he: 'מִימוּנָה פַּרְסִית', translit: 'mimuna parsit', fr: 'Persian post-Pesach celebration (smaller than Moroccan)' },
+  { he: 'שַׁבָּת נוֹרוּז', translit: 'shabbat norouz', fr: 'Shabbat closest to Norouz (special melodies)' },
+  { he: 'הִילוּלָה', translit: 'hilula', fr: 'tzaddik celebration (with Persian-style singing)' },
+  { he: 'חַג הַסּוּכּוֹת פַּרְסִי', translit: 'chag ha-sukkot parsi', fr: 'Persian Sukkot (specific bakashot, fruit blessings sung)' },
+  { he: 'יוֹם הַעַצְמָאוּת בְּהוֹלוֹן', translit: 'yom ha-atzma\'ut b\'cholon', fr: 'Independence Day in Holon (large Persian community celebration)' }
+];
+
+const CONVERSATION = [
+  { he: 'יוֹנָאס — שָׁלוֹם, חַזָּן. שָׁמַעְתִּי תְּפִילָּה יָפָה הַיּוֹם. זֶה הַנּוּסָּח הַתֵּהֶרָנִי?', translit: 'yonas — shalom, chazzan. shamati tfila yafa ha-yom. ze ha-nusach ha-teherani?', fr: 'Jonas — Shalom, chazzan. I heard a beautiful service today. Is this the Tehrani rite?' },
+  { he: 'חַזָּן — בְּדִיּוּק. נוּסָּח טֶהֶרָן. לא לְבַלְבֵּל עִם הַמַּשְׁהָדִי — זֶה אַחֵר לְגַמְרֵי. אַתָּה מַעַרְבִי?', translit: 'chazzan — b\'diuk. nusach teheran. lo l\'valbel im ha-mashhadi — ze acher l\'gamrei. atah ma\'aravi?', fr: 'Chazzan — Exactly. Tehran rite. Don\'t confuse with Mashhadi — that\'s completely different. Are you Western?' },
+  { he: 'יוֹנָאס — צָרְפַתִּי, עוֹלֶה חָדָשׁ. אֲנִי מְחַפֵּשׂ לְהָבִין אֶת הַמּוּזִיקָה. הַפִּיּוּט הָאַחֲרוֹן — הַיָה דַסְטְגָּאה שׁוּר?', translit: 'yonas — tzarfati, oleh chadash. ani mechapes l\'havin et ha-muzika. ha-piyut ha-acharon — haya dastgah shur?', fr: 'Jonas — French, new immigrant. I\'m trying to understand the music. The last piyyut — was that dastgah Shur?' },
+  { he: 'חַזָּן — אַתָּה לוֹמֵד! כֵּן, שׁוּר. כֹּל סוֹף שַׁבָּת אֲנַחְנוּ עוֹשִׂים שׁוּר. מָאהוּר זֶה לַחֲגִים. הוֹמָאיוּן זֶה לִסְלִיחוֹת.', translit: 'chazzan — atah lomed! ken, shur. kol sof shabbat anachnu osim shur. mahur ze la-chagim. homayun ze li-slichot.', fr: 'Chazzan — You\'re studying! Yes, Shur. Every Shabbat ending we do Shur. Mahur is for festivals. Homayun for slichot.' },
+  { he: 'יוֹנָאס — אֵיךְ אַתָּה לָמַד אֶת הַנּוּסָּח? יֵשׁ סְפָרִים?', translit: 'yonas — eich atah lamadt et ha-nusach? yesh sfarim?', fr: 'Jonas — How did you learn the rite? Are there books?' },
+  { he: 'חַזָּן — אֵין סְפָרִים אֲמִתִּיִּים. הַכֹּל בְּעַל-פֶּה. אַבָּא שֶׁלִּי לִמֵּד אוֹתִי, סָבָא שֶׁלּוֹ לִמֵּד אוֹתוֹ. שָׁלוֹשׁ-מֵאוֹת שָׁנָה אֵיךְ זֶה.', translit: 'chazzan — ein sfarim amitiyim. ha-kol b\'al-peh. aba sheli limed oti, saba shelo limed oto. shalosh-me\'ot shana eich ze.', fr: 'Chazzan — No real books. Everything is oral. My father taught me, his grandfather taught him. Three hundred years like that.' },
+  { he: 'יוֹנָאס — יֵשׁ הַקְלָטוֹת?', translit: 'yonas — yesh haklatot?', fr: 'Jonas — Are there recordings?' },
+  { he: 'חַזָּן — מַשֶּׁהוּ. הַסִּפְרִיָּה הַלְּאֻמִּית בִּירוּשָׁלַיִם הִקְלִיטָה זְקֵנִים בִּשְׁנוֹת הַשִּׁבְעִים. תֵּלֵךְ לְשָׁם — הַאוֹסֶף הַכִּי טוֹב בָּעוֹלָם.', translit: 'chazzan — mashehu. ha-sifriya ha-le\'umit bi-yerushalayim hiklita zkenim bi-shnot ha-shiv\'im. telech l\'sham — ha-osef ha-ki tov ba-olam.', fr: 'Chazzan — Some. The National Library in Jerusalem recorded elders in the 1970s. Go there — the best collection in the world.' },
+  { he: 'יוֹנָאס — וְרִיטָה — הַזַּמֶּרֶת הַמְּפוּרְסֶמֶת — הִיא קְשׁוּרָה לַמָּסוֹרֶת הַזּוֹ?', translit: 'yonas — v\'rita — ha-zameret ha-m\'fursemet — hi k\'shura la-masoret ha-zo?', fr: 'Jonas — And Rita — the famous singer — is she connected to this tradition?' },
+  { he: 'חַזָּן — רִיטָה זֶה שִׁירֵי-עָם פַּרְסִיִּים, לא לִיטוּרְגְיָה. אֲבָל הִיא פּוֹתַחַת אֶת הַדֶּלֶת. צְעִירִים שׁוֹמְעִים אוֹתָהּ, אַחַר-כָּךְ בָּאִים לְכָאן. זֶה גֶּשֶׁר.', translit: 'chazzan — rita ze shirei-am parsiyim, lo liturgya. aval hi potachat et ha-delet. tze\'irim shom\'im otah, achar-kach ba\'im l\'chan. ze gesher.', fr: 'Chazzan — Rita is Persian folk songs, not liturgy. But she opens the door. Young people hear her, then come here. It\'s a bridge.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('liturgy', LITURGY);
+R('dastgah', DASTGAH);
+R('instruments', INSTRUMENTS);
+R('artists', ARTISTS);
+R('festival', FESTIVAL);
+
+renderTextBlock('conversation', CONVERSATION);
+
+addMiniQuiz('Persian Jewish Music Quiz', [
+  { q: 'The Persian modal system used in Jewish liturgy is called...', options: ['Maqam', 'Dastgah', 'Raga', 'Nusach'], answer: 1, explain: 'Dastgah is the Persian modal system (~7 main modes), distinct from Arab maqam.' },
+  { q: 'The Mashhadi community is unique because...', options: ['They only sing in Hebrew', 'They preserved their nusach during ~100 years as crypto-Jews', 'They invented the tar', 'They never left Iran'], answer: 1, explain: 'After the 1839 Allahdad forced conversion, Mashhadi Jews davened in secret cellars for ~100 years, preserving pre-1839 melodies.' },
+  { q: 'Rita Yahan-Farouz is famous for...', options: ['Being the chief Persian chazzan', 'Persian-Israeli pop and her 2011 Persian-language album', 'Inventing dastgah Shur', 'Translating the Talmud'], answer: 1, explain: 'Rita is Israel\'s biggest Persian-Jewish pop star; her 2011 Persian album bridged Iranian and Israeli audiences.' },
+  { q: 'The "tar" is...', options: ['A drum', 'A long-necked Persian lute, considered the king of Persian instruments', 'A flute', 'A type of song'], answer: 1, explain: 'The tar is a 6-string long-necked lute, central to Persian classical and Jewish liturgical music.' },
+  { q: 'Persian Jewish nusach is transmitted primarily through...', options: ['Written sheet music', 'Oral tradition (ba\'al-peh) — father to son', 'YouTube tutorials', 'Government archives'], answer: 1, explain: 'Like most Mizrahi liturgical traditions, Persian nusach is oral — masoret ba\'al-peh transmitted across generations.' },
+  { q: 'Where is the largest Persian-Jewish community in Israel?', options: ['Jerusalem only', 'Holon, Bat Yam, and parts of Tel Aviv', 'Eilat', 'Tzfat'], answer: 1, explain: 'Holon and Bat Yam host the largest Persian-Jewish concentrations, with active synagogues in distinctly Tehrani and Mashhadi rites.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(327);
+  }
+});
+</script></body></html>

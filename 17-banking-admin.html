@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>17 — Banking & Admin</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Banking & Admin</h1>
+    <div class="subtitle">Lesson 17 · בנק ובירוקרטיה</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="16-modal-verbs.html">16</a>
+    <a href="17-banking-admin.html" class="active">17</a>
+    <a href="18-slang-idioms.html">18</a>
+  </div>
+</header>
+
+<p class="intro">
+  Vocabulary to open a bank account, navigate Misrad HaPnim (Interior Ministry), Misrad HaKlita (Aliyah Ministry), Bituach Leumi (Social Security), and survive Israeli bureaucracy in your first 90 days.
+</p>
+
+<h2>Banking — General</h2>
+<div class="word-list" id="banking"></div>
+
+<h2>Banking Operations</h2>
+<div class="word-list" id="operations"></div>
+
+<h2>Cards & Payments</h2>
+<div class="word-list" id="cards"></div>
+
+<h2>Admin Documents</h2>
+<div class="word-list" id="docs"></div>
+
+<h2>Bituach Leumi (Social Security)</h2>
+
+<div class="tip">
+  <strong>Bituach Leumi</strong> — Register in your first weeks. Provides health insurance, unemployment benefits (if you contributed), child benefits, retirement, maternity leave.
+</div>
+
+<div class="word-list" id="bituach"></div>
+
+<h2>Tax & Work Vocabulary</h2>
+<div class="word-list" id="fiscal"></div>
+
+<hr class="section-divider">
+
+<h2>Phrases for Opening a Bank Account</h2>
+<div class="word-list" id="bank-phrases"></div>
+
+<h2>Phrases for Admin Procedures</h2>
+<div class="word-list" id="admin-phrases"></div>
+
+<footer>
+  Lesson 17 · banking + admin · <a href="18-slang-idioms.html" style="color:var(--accent)">Next: Slang & Idioms →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const BANKING = [
+  { he: 'בַּנְק',                  translit: 'bank',           fr: 'bank' },
+  { he: 'סָנִיף',                  translit: 'sanif',          fr: 'branch' },
+  { he: 'חֶשְׁבּוֹן בַּנְק',      translit: 'cheshbon bank',  fr: 'bank account' },
+  { he: 'חֶשְׁבּוֹן עוֹבֵר וָשָׁב', translit: 'cheshbon over va-shav', fr: 'checking account (lit. "comes & goes")' },
+  { he: 'חֶשְׁבּוֹן חִסָּכוֹן',   translit: 'cheshbon chisachon', fr: 'savings account' },
+  { he: 'יִתְרָה',                 translit: 'yitra',          fr: 'balance' },
+  { he: 'דַּף חֶשְׁבּוֹן',         translit: 'daf cheshbon',   fr: 'account statement' },
+  { he: 'מִינּוּס',                translit: 'minus',          fr: 'overdraft / negative' },
+  { he: 'רִבִּית',                 translit: 'ribit',          fr: 'interest rate' },
+  { he: 'הַעֲבָרָה',              translit: 'ha\'avara',      fr: 'transfer' },
+  { he: 'פָּקִיד בַּנְק',          translit: 'pakid bank',     fr: 'bank teller' }
+];
+
+const OPERATIONS = [
+  { he: 'לִפְתֹּחַ חֶשְׁבּוֹן',  translit: 'liftoach cheshbon', fr: 'open an account' },
+  { he: 'לִסְגֹּר חֶשְׁבּוֹן',   translit: 'lisgor cheshbon',   fr: 'close an account' },
+  { he: 'לְהַפְקִיד',             translit: 'lehafkid',          fr: 'deposit' },
+  { he: 'לִמְשֹׁךְ',              translit: 'limshoch',          fr: 'withdraw' },
+  { he: 'לְהַעֲבִיר',             translit: 'leha\'avir',        fr: 'transfer' },
+  { he: 'לְשַׁלֵּם',              translit: 'leshalem',          fr: 'pay' },
+  { he: 'לִחְתֹּם',               translit: 'lachtom',           fr: 'sign' },
+  { he: 'הוֹרָאַת קֶבַע',         translit: 'hora\'at keva',     fr: 'standing order / direct debit' }
+];
+
+const CARDS = [
+  { he: 'כַּרְטִיס אַשְׁרַאי', translit: 'kartis ashrai',  fr: 'credit card' },
+  { he: 'כַּרְטִיס דֶּבִּיט',   translit: 'kartis debit',   fr: 'debit card' },
+  { he: 'כַּרְטִיסִיָּה',       translit: 'kartisiya',      fr: 'transit pass' },
+  { he: 'רָב קַו',               translit: 'rav kav',        fr: 'Rav-Kav (multi-use transit card)' },
+  { he: 'כַּסְפּוֹמָט',          translit: 'kaspomat',       fr: 'ATM' },
+  { he: 'מְזוּמָן',              translit: 'mezuman',        fr: 'cash' },
+  { he: 'צֶ\'ק',                  translit: 'chek',           fr: 'check' },
+  { he: 'קוֹד',                   translit: 'kod',            fr: 'PIN code' }
+];
+
+const DOCS = [
+  { he: 'תְּעוּדַת זֶהוּת',  translit: 'teudat zehut',  fr: 'Israeli ID card (Teudat Zehut)' },
+  { he: 'תְּעוּדַת עוֹלֶה',  translit: 'teudat oleh',   fr: 'oleh card (new immigrant)' },
+  { he: 'דַּרְכּוֹן',          translit: 'darkon',        fr: 'passport' },
+  { he: 'אִשּׁוּר תּוֹשַׁב',  translit: 'ishur toshav',  fr: 'residency certificate' },
+  { he: 'חוֹזֶה שְׂכִירוּת', translit: 'choze schirut', fr: 'rental contract' },
+  { he: 'מִסְפַּר זֶהוּת',    translit: 'mispar zehut',  fr: 'ID number (9 digits)' },
+  { he: 'טֹפֶס',               translit: 'tofes',          fr: 'form' },
+  { he: 'אִשּׁוּר',            translit: 'ishur',          fr: 'authorization / certificate' }
+];
+
+const BITUACH = [
+  { he: 'בִּטּוּחַ לְאֻמִּי',  translit: 'bituach le\'umi',  fr: 'National Insurance (institution)' },
+  { he: 'בִּטּוּחַ בְּרִיאוּת', translit: 'bituach briut',    fr: 'health insurance' },
+  { he: 'דְּמֵי לֵדָה',         translit: 'dmey leyda',       fr: 'maternity benefits' },
+  { he: 'דְּמֵי אַבְטָלָה',     translit: 'dmey avtala',      fr: 'unemployment benefits' },
+  { he: 'קִצְבַּת יְלָדִים',    translit: 'kitzbat yeladim',  fr: 'child benefits' },
+  { he: 'קִצְבָּה',             translit: 'kitzba',           fr: 'allowance / pension' },
+  { he: 'דְּמֵי בִּטּוּחַ',     translit: 'dmey bituach',     fr: 'social contributions' }
+];
+
+const FISCAL = [
+  { he: 'מַס הַכְנָסָה',        translit: 'mas hachnasa',    fr: 'income tax' },
+  { he: 'מַס',                   translit: 'mas',             fr: 'tax' },
+  { he: 'מַ"ע"מ',                translit: 'ma\'am',          fr: 'VAT (17%)' },
+  { he: 'אַרְנוֹנָה',           translit: 'arnona',          fr: 'municipal property tax' },
+  { he: 'תְּלוּשׁ מַשְׂכֹּרֶת', translit: 'tlush maskoret', fr: 'pay slip' },
+  { he: 'מַשְׂכֹּרֶת',           translit: 'maskoret',        fr: 'salary' },
+  { he: 'עֲבוֹדָה',             translit: 'avoda',           fr: 'work / job' },
+  { he: 'מַעֲסִיק',              translit: 'ma\'asik',        fr: 'employer' },
+  { he: 'עוֹבֵד',                 translit: 'oved',            fr: 'employee / worker (m.)' },
+  { he: 'הַסְכֵּם עֲבוֹדָה',    translit: 'haskem avoda',    fr: 'employment contract' },
+  { he: 'פִּטּוּרִין',           translit: 'piturin',         fr: 'severance pay / dismissal' }
+];
+
+const BANK_PHRASES = [
+  { he: 'אֲנִי רוֹצֶה לִפְתֹּחַ חֶשְׁבּוֹן בַּנְק', translit: 'ani rotze liftoach cheshbon bank', fr: 'I want to open a bank account (m.)' },
+  { he: 'אֲנִי עוֹלֶה חָדָשׁ',                   translit: 'ani oleh chadash',                  fr: "I'm a new immigrant (m.)" },
+  { he: 'יֵשׁ לִי תְּעוּדַת עוֹלֶה',              translit: 'yesh li teudat oleh',               fr: 'I have an oleh card' },
+  { he: 'מָה הָעֲמָלוֹת?',                         translit: 'ma ha-amalot?',                     fr: 'what are the fees?' },
+  { he: 'אֲנִי צָרִיךְ כַּרְטִיס אַשְׁרַאי',     translit: 'ani tzarich kartis ashrai',         fr: 'I need a credit card (m.)' },
+  { he: 'אֲנִי רוֹצָה לְהַעֲבִיר כֶּסֶף לְצָרְפַת', translit: 'ani rotza leha\'avir kesef le-Tzarfat', fr: 'I want to wire money to France (f.)' },
+  { he: 'אֵיךְ אֲנִי מְקַבֵּל סִיסְמָה?',          translit: 'eich ani mekabel sisma?',           fr: 'how do I get a password? (m.)' },
+  { he: 'יֵשׁ הֶנְחָה לְעוֹלִים?',                 translit: 'yesh hanacha le-olim?',             fr: 'is there a discount for olim?' }
+];
+
+const ADMIN_PHRASES = [
+  { he: 'אֵיפֹה אֲנִי מְקַבֵּל תְּעוּדַת זֶהוּת?', translit: 'eyfo ani mekabel teudat zehut?',  fr: 'where do I get the Teudat Zehut? (m.)' },
+  { he: 'יֵשׁ לִי תּוֹר בְּמִשְׂרַד הַפְּנִים',     translit: 'yesh li tor be-misrad ha-pnim',    fr: 'I have an appointment at the Interior Ministry' },
+  { he: 'אֲנִי צָרִיךְ לְהִרָשֵׁם בְּבִטּוּחַ לְאֻמִּי', translit: 'ani tzarich leherashem be-bituach le\'umi', fr: 'I must register with National Insurance (m.)' },
+  { he: 'אֵיךְ מַגִּישִׁים אֶת הַטֹּפֶס?',           translit: 'eich magishim et ha-tofes?',       fr: 'how do you submit the form?' },
+  { he: 'מָה הַתַּהֲלִיךְ?',                          translit: 'ma ha-tahalich?',                  fr: "what's the procedure?" },
+  { he: 'כַּמָּה זְמַן זֶה לוֹקֵחַ?',              translit: 'kama zman ze loke\'ach?',          fr: 'how long does it take?' },
+  { he: 'מִי אַחְרַאי?',                              translit: 'mi achrai?',                       fr: "who's in charge?" },
+  { he: 'יֵשׁ אַנְגְּלִית?',                          translit: 'yesh anglit?',                     fr: 'is there someone who speaks English?' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('banking', BANKING);
+renderRows('operations', OPERATIONS);
+renderRows('cards', CARDS);
+renderRows('docs', DOCS);
+renderRows('bituach', BITUACH);
+renderRows('fiscal', FISCAL);
+renderRows('bank-phrases', BANK_PHRASES);
+renderRows('admin-phrases', ADMIN_PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) {
+    count++;
+    if (count >= 20) markLessonDone('banking');
+  }
+});
+
+addExtraVocab('Common Money Phrases', [
+  { he: 'יֵשׁ לִי כֶּסֶף', translit: 'yesh li kesef', fr: 'I have money' },
+  { he: 'אֵין לִי כֶּסֶף', translit: 'eyn li kesef', fr: 'I have no money' },
+  { he: 'כַּמָּה זֶה עוֹלֶה?', translit: 'kama ze ole?', fr: 'how much does it cost?' },
+  { he: 'יָקָר מִדַּי', translit: 'yakar miday', fr: 'too expensive' },
+  { he: 'זוֹל', translit: 'zol', fr: 'cheap' },
+  { he: 'בְּהַזְמָנָה', translit: 'be-hazmana', fr: 'on order / in promo' },
+  { he: 'בְּמִבְצָע', translit: 'be-mivtza', fr: 'on sale' },
+  { he: 'מְזוּמָן', translit: 'mezuman', fr: 'cash' },
+  { he: 'אַשְׁרַאי', translit: 'ashrai', fr: 'credit' },
+  { he: 'תַּשְׁלוּם', translit: 'tashlum', fr: 'payment' },
+  { he: 'תַּשְׁלוּמִים', translit: 'tashlumim', fr: 'installments' },
+  { he: 'בְּ-12 תַּשְׁלוּמִים', translit: 'be-12 tashlumim', fr: 'in 12 installments' },
+  { he: 'הַחְזָקָה', translit: 'hachzaka', fr: 'maintenance fee' }
+]);
+
+addExtraVocab('More Banking Vocabulary', [
+  { he: 'חֶשְׁבּוֹן עוֹבֵר וָשָׁב', translit: 'cheshbon over va-shav', fr: 'checking account (Oshav)' },
+  { he: 'חֶשְׁבּוֹן חִסָּכוֹן', translit: 'cheshbon chisachon', fr: 'savings account' },
+  { he: 'יִתְרָה', translit: 'yitra', fr: 'balance' },
+  { he: 'אוֹבֶרְדְרַפְט', translit: 'overdraft', fr: 'overdraft' },
+  { he: 'מִינוּס', translit: 'minus', fr: 'in the negative (overdraft)' },
+  { he: 'הֶעֱבָרָה', translit: 'he\'evara', fr: 'transfer' },
+  { he: 'הַעֲמָדַת אַשְׁרַאי', translit: 'ha\'amadat ashrai', fr: 'credit line' },
+  { he: 'מַשְׁכַּנְתָּא', translit: 'mashkanta', fr: 'mortgage' },
+  { he: 'הַלְוָאָה', translit: 'halva\'a', fr: 'loan' },
+  { he: 'רִבִּית', translit: 'ribit', fr: 'interest' },
+  { he: 'עַמְלָה', translit: 'amla', fr: 'fee / commission' },
+  { he: 'תַּלוּשׁ שָׂכָר', translit: 'talush sachar', fr: 'pay stub' },
+  { he: 'מַסְ"ב (מַשְׁכֹּרֶת)', translit: 'masav', fr: 'salary deposit' },
+  { he: 'הוֹרָאַת קֶבַע', translit: 'hora\'at keva', fr: 'standing order' },
+  { he: 'הַעֲבָרָה זְבֻדָּה', translit: 'ha\'avara zbuda', fr: 'wire transfer' }
+]);
+
+addMiniQuiz('Banking Quiz', [
+  { q: 'מַשְׁכַּנְתָּא means...', options: ['credit card', 'mortgage', 'rent', 'tax'], answer: 1, explain: 'mashkanta = home mortgage' },
+  { q: 'A new oleh gets which benefit at the bank?', options: ['Free checking forever', 'Fees waived for 1 year', 'Interest 0% for 5 years', 'Free credit card'], answer: 1 },
+  { q: 'תַּלוּשׁ שָׂכָר is...', options: ['Tax document', 'Pay stub', 'Bank statement', 'Loan paper'], answer: 1 },
+  { q: 'You\'re overdrawn — Israelis say...', options: ['בָּרוּךְ הַשֵּׁם', 'בְּמִינוּס', 'בְּפְּלוּס', 'בָּלָגַן'], answer: 1, explain: 'be-minus = in the red' },
+  { q: 'Which is NOT one of the 4 traditional banks?', options: ['Hapoalim', 'Leumi', 'Discount', 'Pepper'], answer: 3, explain: 'Pepper is a digital bank (Leumi subsidiary)' }
+]);
+
+addCulturalText('Opening a Bank Account (Hapoalim/Leumi/Discount)', 'The 4 traditional banks plus 3 digital ones (One Zero, Pepper, Bit). Olim get fee waivers for the first year.', [
+  { he: 'בַּנְקָאי: שָׁלוֹם, רוֹצֶה לִפְתֹּחַ חֶשְׁבּוֹן?', translit: "Bankai: Shalom, rotze liftoach cheshbon?", fr: 'Banker: Hello, want to open an account?' },
+  { he: 'אַתָּה: כֵּן, אֲנִי עוֹלֶה חָדָשׁ', translit: "Ata: Ken, ani ole chadash", fr: "You: Yes, I'm a new oleh" },
+  { he: 'בַּנְקָאי: יוֹפִי. מַזָּל טוֹב. מַסְמָכִים בְּבַקָּשָׁה', translit: "Bankai: Yofi. Mazal tov. Masmachim bevakasha", fr: 'Banker: Great. Mazal tov. Documents please' },
+  { he: 'אַתָּה: דַּרְכּוֹן, תְּעוּדַת זֶהוּת זְמַנִּית, אִישׁוּר אַלִיָּה', translit: "Ata: Darkon, teudat zehut zmanit, ishur aliya", fr: 'You: Passport, temporary ID, aliyah confirmation' },
+  { he: 'בַּנְקָאי: יֵשׁ עֲבוֹדָה? תַּלוּשֵׁי שָׂכָר?', translit: "Bankai: Yesh avoda? Talushey sachar?", fr: 'Banker: Have a job? Pay stubs?' },
+  { he: 'אַתָּה: עוֹד לֹא, אֲנִי בָּאוּלְפָּן', translit: "Ata: Od lo, ani ba-ulpan", fr: 'You: Not yet, I\'m in ulpan' },
+  { he: 'בַּנְקָאי: בְּסֵדֶר, נִפְתַּח חֶשְׁבּוֹן בָּסִיסִי', translit: "Bankai: Beseder, niftach cheshbon basisi", fr: 'Banker: OK, we\'ll open a basic account' },
+  { he: 'בַּנְקָאי: עוֹלִים פְּטוּרִים מֵעַמְלוֹת לְשָׁנָה', translit: "Bankai: Olim pturim me-amalot le-shana", fr: 'Banker: Olim are fee-free for a year' },
+  { he: 'בַּנְקָאי: כַּרְטִיס מִשּׁיכָה יַגִּיעַ בְּדֹאַר תּוֹךְ שָׁבוּעַ', translit: "Bankai: Kartis mshicha yagia be-do\'ar toch shavua", fr: 'Banker: Debit card will arrive by mail within a week' }
+]);
+</script>
+
+</body>
+</html>

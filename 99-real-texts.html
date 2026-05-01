@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>99 — Reading Real Texts</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Reading Real Texts</h1><div class="subtitle">Lesson 99 · קריאת טקסטים אמיתיים</div></div><div class="nav"><a href="index.html">Home</a><a href="99-real-texts.html" class="active">99</a></div></header>
+
+<p class="intro">Time to leave the textbook. Real Hebrew is in street signs, ads, news headlines, café menus, government letters. Below: real samples with full translation and the vocabulary that decodes them.</p>
+
+<div class="tip"><strong>Reading without niqqud</strong> — Real Israeli texts have NO vowel marks. You learn to recognize words by shape and context. The first month is hard, then your brain adapts. Toggle niqqud OFF (top-right) to practice.</div>
+
+<h2>Street Signs</h2>
+<div class="word-list" id="signs"></div>
+
+<h2>Café Menu Sample</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="menu"></div>
+</div>
+
+<h2>News Headline Decoder</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="headlines"></div>
+</div>
+
+<h2>Job Ad Sample</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="jobad"></div>
+</div>
+
+<h2>Government Letter (Bituach Leumi sample)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="letter"></div>
+</div>
+
+<h2>Common Abbreviations You'll See</h2>
+<div class="word-list" id="abbrev"></div>
+
+<footer>Lesson 99 · real texts · <a href="100-final-test.html" style="color:var(--accent)">Next: Final Test →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const SIGNS = [
+  { he: 'יְצִיאָה', translit: 'yetzi\'a', fr: 'exit' },
+  { he: 'כְּנִיסָה', translit: 'knisa', fr: 'entrance' },
+  { he: 'דָּחוֹף', translit: 'dachof', fr: 'push' },
+  { he: 'מָשׁוֹךְ', translit: 'mashoch', fr: 'pull' },
+  { he: 'אָסוּר לְעַשֵּׁן', translit: 'asur le\'ashen', fr: 'no smoking' },
+  { he: 'זְהִירוּת', translit: 'zehirut', fr: 'caution' },
+  { he: 'סַכָּנָה', translit: 'sakana', fr: 'danger' },
+  { he: 'עֲצוֹר', translit: 'atzor', fr: 'stop' },
+  { he: 'תֵּן זְכוּת קְדִימָה', translit: 'ten zchut kdima', fr: 'yield' },
+  { he: 'חֲנִיָּה אֲסוּרָה', translit: 'chaniya asura', fr: 'no parking' },
+  { he: 'מַעֲבָר חֲצִיָּה', translit: 'ma\'avar chatziya', fr: 'crosswalk' },
+  { he: 'שֵׁרוּתִים', translit: 'sherutim', fr: 'restrooms' }
+];
+const MENU = [
+  { he: 'תַּפְרִיט', translit: 'tafrit', fr: 'menu' },
+  { he: 'מַנּוֹת רִאשׁוֹנוֹת', translit: 'manot rishonot', fr: 'starters' },
+  { he: 'מַנּוֹת עִקָּרִיּוֹת', translit: 'manot ikariyot', fr: 'main courses' },
+  { he: 'קִנּוּחִים', translit: 'kinuchim', fr: 'desserts' },
+  { he: 'מַשְׁקָאוֹת', translit: 'mashka\'ot', fr: 'drinks' },
+  { he: 'סָלָט יְרָקוֹת — 32 ש"ח', translit: 'salat yerakot — 32 shekel', fr: 'vegetable salad — 32 NIS' },
+  { he: 'שַׁקְשׁוּקָה — 48 ש"ח', translit: 'shakshuka — 48 shekel', fr: 'shakshuka — 48 NIS' },
+  { he: 'קָפֶה הָפוּךְ — 14 ש"ח', translit: 'kafe hafuch — 14 shekel', fr: 'cappuccino — 14 NIS' },
+  { he: 'מַיִם בְּלִי גָּז — חִנָּם', translit: 'mayim bli gaz — chinam', fr: 'still water — free' },
+  { he: 'דְּמֵי שֵׁרוּת לֹא כְּלוּלִים', translit: 'dmey sherut lo klulim', fr: 'service charge not included' }
+];
+const HEADLINES = [
+  { he: 'מִשְׁרַד הָאוֹצָר: עֲלִיָּה בְּמִסִּים בְּ-2026', translit: 'misrad ha-otzar: aliya be-misim be-2026', fr: 'Treasury Ministry: tax increase in 2026' },
+  { he: 'גְּשָׁמִים כְּבֵדִים בְּצָפוֹן הַלַּיְלָה', translit: 'gshamim kvedim be-tzafon ha-laila', fr: 'Heavy rains in the north tonight' },
+  { he: 'הַתִּקְוָה: רָאשׁ הַמֶּמְשָׁלָה יִפְגֹּשׁ עִם נָשִׂיא צָרְפַת', translit: 'ha-tikva: rosh ha-memshala yifgosh im nasi tzarfat', fr: "Hatikva: PM will meet French president" },
+  { he: 'מְחִירֵי דִּירוֹת בְּתֵל אָבִיב מַמְשִׁיכִים לַעֲלוֹת', translit: 'mechirey dirot be-Tel Aviv mamshichim la\'alot', fr: 'Tel Aviv apartment prices keep rising' },
+  { he: 'סְטָאר-אַפּ יִשְׂרְאֵלִי גוּיַּס בְּ-100 מִילְיוֹן דּוֹלָר', translit: 'startup yisre\'eli guyas be-100 milion dollar', fr: 'Israeli startup raised $100M' }
+];
+const JOBAD = [
+  { he: 'דָּרוּשׁ מְפַתֵּחַ React/TypeScript', translit: 'darush mefate\'ach React/TypeScript', fr: 'React/TypeScript developer wanted' },
+  { he: 'נִסָּיוֹן מִינִימָלִי: 3 שָׁנִים', translit: 'nisayon minimali: 3 shanim', fr: 'min. experience: 3 years' },
+  { he: 'שָׂכָר: 25-35 אֶלֶף שֶׁקֶל', translit: 'sachar: 25-35 elef shekel', fr: 'salary: 25-35K NIS' },
+  { he: 'מִקּוּם: תֵּל אָבִיב, עֲבוֹדָה הִיבְּרִידִית', translit: 'mikum: Tel Aviv, avoda hibridit', fr: 'location: Tel Aviv, hybrid work' },
+  { he: 'דּוֹרֵשׁ: עִבְרִית רָהוּטָה, אַנְגְּלִית טוֹבָה', translit: 'doresh: ivrit rahuta, anglit tova', fr: 'required: fluent Hebrew, good English' },
+  { he: 'יִתְרוֹן: שֵׁרוּת צְבָאִי בִּ-8200', translit: 'yitron: sherut tzva\'i bi-8200', fr: 'advantage: military service in Unit 8200' },
+  { he: 'יִשׁ לִשְׁלוֹחַ קוֹרוֹת חַיִּים לְ-jobs@company.co.il', translit: 'yesh lishlo\'ach korot chayim le-jobs@company.co.il', fr: 'send CV to jobs@company.co.il' }
+];
+const LETTER = [
+  { he: 'הַבַּיְתוּחַ הַלְּאֻמִּי', translit: 'ha-bituach ha-le\'umi', fr: 'National Insurance' },
+  { he: 'תַּאֲרִיךְ: 15 בִּינוּאָר 2026', translit: 'ta\'arich: 15 be-yanuar 2026', fr: 'Date: January 15, 2026' },
+  { he: 'מָר נֶפְתָּלִי הַנִּכְבָּד,', translit: 'mar Nephtali ha-nichbad,', fr: 'Dear Mr. Nephtali,' },
+  { he: 'בְּהֶמְשֵׁךְ לְבַקָּשָׁתְךָ מ-3 בְּדֶצֶמְבֶּר 2025,', translit: 'be-hemshech le-bakashatcha mi-3 be-detzember 2025,', fr: 'Following your request from December 3, 2025,' },
+  { he: 'אֲנוּ מַזְמִינִים אוֹתְךָ לְהוֹפִיעַ בְּסַנִיף יְרוּשָׁלַיִם.', translit: 'anu mazminim otcha lehofia be-sanif Yerushalayim.', fr: 'we invite you to appear at the Jerusalem branch.' },
+  { he: 'תַּאֲרִיךְ: 28.1.2026, שָׁעָה 09:30.', translit: 'ta\'arich: 28.1.2026, sha\'a 09:30.', fr: 'Date: 28/1/2026, time 09:30.' },
+  { he: 'נָא לְהָבִיא: תְּעוּדַת זֶהוּת, תַּלוּשֵׁי שָׂכָר אַחֲרוֹנִים, חוֹזֶה שְׂכִירוּת.', translit: 'na lehavi: teudat zehut, talushey sachar acharonim, choze schirut.', fr: 'Please bring: ID card, recent pay stubs, rental contract.' },
+  { he: 'בִּכְבוֹד רַב, מַחְלֶקֶת זְכֻיּוֹת', translit: 'bechavod rav, machleket zchuyot', fr: 'Sincerely, Rights Department' }
+];
+const ABBREV = [
+  { he: 'ת"ז', translit: 't.z.', fr: 'תְּעוּדַת זֶהוּת — ID card' },
+  { he: 'ש"ח', translit: 'sh.ch.', fr: 'שֶׁקֶל חָדָשׁ — new shekel' },
+  { he: 'בע"מ', translit: 'be-mem', fr: 'בְּעֵרָבוֹן מֻגְבָּל — Ltd.' },
+  { he: 'ת"א', translit: 't.a.', fr: 'תֵּל אָבִיב — Tel Aviv' },
+  { he: 'יְרוּשָׁלַיִם — י-ם', translit: 'yerushalayim — ym', fr: 'Jerusalem abbreviated' },
+  { he: 'מ"ר', translit: 'm.r.', fr: 'מֶטֶר רָבוּעַ — square meter' },
+  { he: 'דר"ש', translit: 'd.r.sh.', fr: 'דְּרִישַׁת שָׁלוֹם — regards' },
+  { he: 'בס"ד', translit: 'b.s.d.', fr: 'בְּסִיעַתָא דִּשְׁמַיָּא — with God\'s help (Aramaic)' },
+  { he: 'בע"ה', translit: 'b.a.h.', fr: 'בְּעֶזְרָת הַשֵּׁם — God willing' },
+  { he: 'ה\'תשפ"ו', translit: 'ha-tashpa\'u', fr: 'Jewish year (e.g. 5786 = 2025-2026)' },
+  { he: 'תל"ש', translit: 't.l.sh.', fr: 'תַּלְמִיד לֹא שׁוֹמֵעַ — distracted student' },
+  { he: 'מס\' זהות', translit: 'mispar zehut', fr: 'ID number' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('signs', SIGNS); R('abbrev', ABBREV);
+
+function renderBlock(id, items) {
+  const el = document.getElementById(id);
+  items.forEach(w => {
+    const div = document.createElement('div');
+    div.style.cssText = 'padding: 8px 0; border-bottom: 1px solid var(--border);';
+    div.innerHTML = `<div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right;">${w.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic;">${w.translit}</div><div style="font-size: 14px;">${w.fr}</div>`;
+    el.appendChild(div);
+  });
+}
+renderBlock('menu', MENU);
+renderBlock('headlines', HEADLINES);
+renderBlock('jobad', JOBAD);
+renderBlock('letter', LETTER);
+
+addExtraVocab('Reading Real Hebrew — Common Patterns', [
+  { he: 'נוֹשֵׂא', translit: 'nose', fr: 'subject (header)' },
+  { he: 'אֶל / לִכְבוֹד', translit: 'el / lichvod', fr: 'to / to the honorable' },
+  { he: 'מֵאֵת', translit: 'me-et', fr: 'from (formal sender)' },
+  { he: 'תַּאֲרִיךְ', translit: 'ta\'arich', fr: 'date' },
+  { he: 'מַעֲרֶכֶת', translit: 'ma\'arechet', fr: 'editorial board' },
+  { he: 'הַעֲתָקָה', translit: 'ha\'ataka', fr: 'CC (copy)' },
+  { he: 'בִּדְחִיפוּת', translit: 'bi-dchifut', fr: 'urgent' },
+  { he: 'הוֹדָעָה רִשְׁמִית', translit: 'hoda\'a rishmit', fr: 'official notice' },
+  { he: 'תַּקְצִיר', translit: 'taktzir', fr: 'summary' },
+  { he: 'מָאֲמָר רָאשִׁי', translit: 'ma\'amar rashi', fr: 'editorial' },
+  { he: 'דַּף הַבַּיִת', translit: 'daf ha-bayit', fr: 'home page' },
+  { he: 'תַּפְרִיט', translit: 'tafrit', fr: 'menu' },
+  { he: 'מוֹדֵעָה', translit: 'moda\'a', fr: 'advertisement' },
+  { he: 'דְּרוּשִׁים', translit: 'drushim', fr: 'wanted (job ad)' }
+]);
+
+addMiniQuiz('Real Texts Quiz', [
+  { q: 'Real Hebrew texts (newspapers, signs) usually have...', options: ['No niqqud', 'All niqqud', 'Some niqqud', 'English transliteration'], answer: 0, explain: 'Niqqud only on children\'s books, prayer texts, and beginner materials' },
+  { q: 'בע"מ on a company name means...', options: ['Religious', 'Limited (Ltd.)', 'Big', 'Foreign'], answer: 1, explain: 'בערבון מוגבל = limited liability' },
+  { q: 'ש"ח on a price tag means...', options: ['Sale', 'Shekel chadash (NIS)', 'Discount', 'Total'], answer: 1 },
+  { q: 'בס"ד at top of business document means...', options: ['Profit', 'God\'s help (Aramaic religious)', 'Date', 'Author'], answer: 1, explain: 'בסיעתא דשמיא — religious Hebrew custom' },
+  { q: 'Reading Hebrew without niqqud is...', options: ['Easier', 'Harder at first, then natural', 'Impossible', 'Same'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('real-texts'); } });
+</script></body></html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>136 — Oligopolies & Conglomerates</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Oligopolies & The Big Families</h1><div class="subtitle">Lesson 136 · אוֹלִיגַרְכִיוֹת</div></div><div class="nav"><a href="index.html">Home</a><a href="136-oligopolies.html" class="active">136</a></div></header>
+
+<p class="intro">Israel\'s domestic economy is dominated by ~10 family-controlled conglomerates that together control banks, supermarkets, food, telecom, insurance, and energy. Tnuva (dairy, ~70%), Strauss (snacks, coffee), Osem (pasta, instant), the Wertheimer family (IMI), the Tshuva family (Delek/gas/Nobel Energy), Ofer Holdings (real estate). The 2011 Cottage Cheese protests were aimed at this structure. The 2013 "Concentration Law" tried to break it up. Slowly progressing.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Most Israelis can name the controlling families of major conglomerates the way Americans know who runs Disney. The phrase "מִשְׁפָּחוֹת בַּעֲלֵי הַהוֹן" — "the controlling-capital families" — appears in news constantly. Sharon vs. the "tycoonim" was a 2003 reform episode; Lapid vs. the food monopoly was 2014; the 2011 Cottage Cheese boycott (~600K Israelis on Facebook in 6 weeks) is the modern reference point.</div>
+
+<h2>The Big Families & Holdings</h2>
+<div class="word-list" id="families"></div>
+
+<h2>Major Domestic Brands</h2>
+<div class="word-list" id="brands"></div>
+
+<h2>Concentration Issues</h2>
+<div class="word-list" id="concentration"></div>
+
+<h2>Supermarkets & Retail</h2>
+<div class="word-list" id="retail"></div>
+
+<h2>Telecom & Cable</h2>
+<div class="word-list" id="telecom"></div>
+
+<hr class="section-divider">
+
+<h2>The Cottage Cheese Boycott — Facebook Post, June 2011</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical viral post that triggered the 2011 boycott. Cottage cheese had risen from ~5 NIS to ~8 NIS over a few years. Within 6 weeks, 600K Israelis joined the boycott. Tnuva\'s sales dropped 40%. Prices rolled back.</div>
+  <div id="cottage"></div>
+</div>
+
+<h2>Newspaper Headline — Concentration Law Coverage</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Sample of business-page Hebrew about anti-concentration efforts. The 2013 law forced major holding companies to choose: financial OR real, not both. Took 5+ years to implement.</div>
+  <div id="headlines"></div>
+</div>
+
+<footer>Lesson 136 · Oligopolies · <a href="137-tourism-cuisine.html" style="color:var(--accent)">Next: Tourism & Hospitality →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const FAMILIES = [
+  { he: 'מִשְׁפַּחַת תְּשׁוּעָה', translit: 'mishpachat T\'shu\'a', fr: 'Tshuva family (Yitzhak Tshuva — Delek group, Nobel Energy)' },
+  { he: 'מִשְׁפַּחַת אוֹפֶר', translit: 'mishpachat Ofer', fr: 'Ofer family (Eyal Ofer — real estate, shipping, banking)' },
+  { he: 'מִשְׁפַּחַת וֶרְטְהַיְמֶר', translit: 'mishpachat Vertheimer', fr: 'Wertheimer family (Stef Wertheimer — IMI Iscar, sold to Buffett $6B)' },
+  { he: 'מִשְׁפַּחַת דַּנְקְנֶר', translit: 'mishpachat Dankner', fr: 'Dankner family (former IDB conglomerate, collapsed)' },
+  { he: 'מִשְׁפַּחַת זִיסַפֶּל', translit: 'mishpachat Zisapel', fr: 'Zisapel brothers (RAD Group — networking)' },
+  { he: 'מִשְׁפַּחַת נוֹחִי דָנקְנֵר', translit: 'mishpachat Nochi Dankner', fr: 'Nochi Dankner (jailed 2017 for stock manipulation)' },
+  { he: 'מִשְׁפַּחַת אֲדֶלְסוֹן', translit: 'mishpachat Adelson', fr: 'Adelson (US, owns Israel HaYom newspaper)' },
+  { he: 'מִשְׁפַּחַת גָּלִיל', translit: 'mishpachat Galil', fr: 'Galil family (Tnuva, before sale to Apax/Bright)' },
+  { he: 'אֲרִיסוֹן', translit: 'Arison', fr: 'Arison (Shari Arison — Bank Hapoalim controlling shareholder)' },
+  { he: 'מַטְמוֹן הַגֵּז', translit: 'matmon ha-gez', fr: 'gas treasure (Leviathan, Tamar gas fields)' }
+];
+const BRANDS = [
+  { he: 'תְּנוּבָה', translit: 'T\'nuva', fr: 'Tnuva (~70% of dairy market)' },
+  { he: 'שְׁטְרָאוּס', translit: 'Strauss', fr: 'Strauss (snacks, coffee, Elite chocolate)' },
+  { he: 'אוֹסֶם', translit: 'Osem', fr: 'Osem (pasta, instant soup, Bissli, Bamba — Nestle subsidiary)' },
+  { he: 'אֱלִיט', translit: 'Elit', fr: 'Elite (Strauss chocolate brand)' },
+  { he: 'בַּמְבָּה', translit: 'Bamba', fr: 'Bamba (peanut snack, the iconic Israeli food)' },
+  { he: 'בִּיסְלִי', translit: 'Bisli', fr: 'Bisli (wheat snack, Osem)' },
+  { he: 'תֻּת', translit: 'Tut', fr: 'Tut (chocolate spread)' },
+  { he: 'מוּ', translit: 'Mo', fr: 'Mo (chocolate brand)' },
+  { he: 'תַּפּוֹזִים', translit: 'tapuzim', fr: 'oranges (Jaffa brand was iconic)' },
+  { he: 'יָפוֹ', translit: 'Yafo', fr: 'Jaffa (orange brand, mostly historical now)' },
+  { he: 'תְּנוּעַ', translit: 'T\'nu\'a', fr: 'Tnuva\'s movement / activity (also: simply movement)' }
+];
+const CONCENTRATION = [
+  { he: 'רִכּוּז', translit: 'rikuz', fr: 'concentration (economic)' },
+  { he: 'רִכּוּז כַּלְכָּלִי', translit: 'rikuz kalkali', fr: 'economic concentration' },
+  { he: 'מוֹנוֹפּוֹל', translit: 'monopol', fr: 'monopoly [modern]' },
+  { he: 'אוֹלִיגוֹפּוֹל', translit: 'oligopol', fr: 'oligopoly [modern]' },
+  { he: 'תַּחֲרוּת', translit: 'tacharut', fr: 'competition [modern]' },
+  { he: 'אִי-תַּחֲרוּתִיּוּת', translit: 'i-tacharutiyut', fr: 'lack of competition' },
+  { he: 'הַמַּקֻוָּן', translit: 'ha-makhuvan', fr: 'the regulator' },
+  { he: 'רָשׁוּת הַתַּחֲרוּת', translit: 'rashut ha-tacharut', fr: 'Competition Authority' },
+  { he: 'חֹק הָרִכּוּזִיּוּת', translit: 'chok ha-rikuziyut', fr: 'Concentration Law (2013)' },
+  { he: 'פִּצוּל פִּירָמִידוֹת', translit: 'pitzul piramidot', fr: 'breakup of pyramid holdings' },
+  { he: 'הִתְמָזְגוּת', translit: 'hitmazgut', fr: 'merger' },
+  { he: 'קוֹנְצֶרְן', translit: 'kontzern', fr: 'conglomerate / concern' }
+];
+const RETAIL = [
+  { he: 'שׁוּפֶּרְסַל', translit: 'Shufersal', fr: 'Shufersal (largest supermarket chain)' },
+  { he: 'יִינוֹת בִּיתָן', translit: 'Yeinot Bitan', fr: 'Yeinot Bitan (acquired by Shufersal)' },
+  { he: 'רָמִי לֵוי', translit: 'Rami Levi', fr: 'Rami Levi (discount supermarket — pioneer of low prices)' },
+  { he: 'מֶגָה', translit: 'Mega', fr: 'Mega (closed/restructured 2016)' },
+  { he: 'אוֹשֶׁר עַד', translit: 'Osher Ad', fr: 'Osher Ad (charedi-oriented discount)' },
+  { he: 'יוֹחָנָנוֹף', translit: 'Yochananof', fr: 'Yochananof (mid-tier chain)' },
+  { he: 'ויקטוֹריָה', translit: 'Victoriya', fr: 'Victoria (regional)' },
+  { he: 'אִיקֵּעָה', translit: 'IKEA', fr: 'IKEA Israel' },
+  { he: 'קַסְטְרוֹ', translit: 'Castro', fr: 'Castro (apparel, Israeli)' },
+  { he: 'גוֹלְף', translit: 'Golf', fr: 'Golf (apparel, Israeli)' },
+  { he: 'סוּפָּרְפַּארְם', translit: 'Superpharm', fr: 'Superpharm (drugstore — Lifestyle subsidiary)' },
+  { he: 'בֵּיט הַ-קָפֶה אַרוֹמָה', translit: 'beit ha-cafe Aroma', fr: 'Aroma Espresso Bar (Israeli chain)' }
+];
+const TELECOM = [
+  { he: 'בֶּזֶק', translit: 'Bezeq', fr: 'Bezeq (incumbent landline + ISP, ~50% market)' },
+  { he: 'הוֹט', translit: 'Hot', fr: 'Hot (cable + ISP, ~30%)' },
+  { he: 'פַּרְטְנֵר', translit: 'Partner', fr: 'Partner (mobile + ISP)' },
+  { he: 'סֶלְקוֹם', translit: 'Selkom', fr: 'Cellcom (mobile + ISP)' },
+  { he: 'פֶּלְפוֹן', translit: 'Pelefon', fr: 'Pelephone (Bezeq mobile)' },
+  { he: 'הוֹט מוֹבַּיְל', translit: 'Hot Mobile', fr: 'Hot Mobile (mobile, Hot subsidiary)' },
+  { he: 'גוֹלָן טֶלֶקוֹם', translit: 'Golan Telekom', fr: 'Golan Telecom (low-cost, disrupted market 2012)' },
+  { he: 'אֲרֵה רְחָבָה', translit: 'are r\'chava', fr: 'broadband' },
+  { he: 'סִיב אוֹפְּטִי', translit: 'siv opti', fr: 'fiber optic [modern]' },
+  { he: 'מַחְצַב הַגַּלִּים', translit: 'machtzav ha-galim', fr: 'spectrum (radio waves) — telecom-licensed' }
+];
+const COTTAGE = [
+  { he: 'הַחֵרֶם הַקּוֹטֶג\'', translit: 'ha-cherem ha-cottage', fr: 'The Cottage Cheese Boycott' },
+  { he: 'יוּנִי 2011', translit: 'Yuni 2011', fr: 'June 2011' },
+  { he: 'הַקּוֹטֶג\' עָלָה מִ-5 שֶׁקֶל לִ-8 שֶׁקֶל', translit: 'Ha-cottage ala mi-5 shekel li-8 shekel', fr: 'Cottage [cheese] rose from 5 NIS to 8 NIS' },
+  { he: 'בְּלִי שׁוּם הַסְבֵּר', translit: 'B\'li shum hasber', fr: 'With no explanation' },
+  { he: 'מִי נֶהֱנֶה?', translit: 'Mi neheneh?', fr: 'Who benefits?' },
+  { he: 'תְּנוּבָה. הַמּוֹנוֹפּוֹל', translit: 'T\'nuva. Ha-monopol', fr: 'Tnuva. The monopoly.' },
+  { he: 'אֲנִי לֹא קוֹנֶה קוֹטֶג\' עַד שֶׁהַמְּחִיר יֵרֵד', translit: 'Ani lo kone cottage ad she-ha-m\'chir yered', fr: 'I am not buying cottage [cheese] until the price drops' },
+  { he: 'מִי אִתִּי?', translit: 'Mi iti?', fr: 'Who\'s with me?' },
+  { he: 'תּוֹךְ שִׁשָּׁה שָׁבוּעוֹת — 600 אֶלֶף', translit: 'Toch shisha shavu\'ot — 600 elef', fr: 'Within six weeks — 600 thousand [people on Facebook]' },
+  { he: 'הַמְּכִירוֹת יָרְדוּ 40%', translit: 'Ha-m\'chirot yardu 40%', fr: 'Sales dropped 40%' },
+  { he: 'הַמְּחִיר חָזַר', translit: 'Ha-m\'chir chazar', fr: 'The price came back down' },
+  { he: 'הַצִּבּוּר נִצֵּחַ', translit: 'Ha-tzibur nitze\'ach', fr: 'The public won' }
+];
+const HEADLINES = [
+  { he: 'חֹק הָרִכּוּזִיּוּת — בְּדֶרֶךְ לְסִיּוּם הַיִּשּׂוּם', translit: 'Chok ha-rikuziyut — b\'derech l\'siyum ha-yisum', fr: '"Concentration Law — heading toward implementation completion"' },
+  { he: 'אוֹפֶר נֶאֱלַץ לִמְכֹּר אֶת בַּנְק הָאוֹצָר', translit: 'Ofer ne\'elatz limkor et bank ha-otzar', fr: 'Ofer forced to sell Bank ha-Otzar' },
+  { he: 'דַּנקְנֵר נִכְנַס לַכֶּלֶא', translit: 'Dankner nichnas la-kele', fr: 'Dankner went to prison' },
+  { he: 'תְּנוּבָה נִמְכְּרָה לְ-Apax', translit: 'T\'nuva nimkera l\'-Apax', fr: 'Tnuva sold to Apax' },
+  { he: 'מַחְלֶקֶת רָשׁוּת הַתַּחֲרוּת בְּדִיוּן עַל הִתְמָזְגוּת מָע"ם', translit: 'Machleket rashut ha-tacharut b\'diyun al hitmazgut ma\'am', fr: 'Competition Authority dept. discussing merger of [VAT-related companies]' },
+  { he: 'הַצִּבּוּר מַמְשִׁיךְ לְהַרְגִּישׁ אֶת הַיּוֹקֶר', translit: 'Ha-tzibur mamshich l\'hargish et ha-yoker', fr: 'The public continues to feel the high cost' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('families', FAMILIES); R('brands', BRANDS); R('concentration', CONCENTRATION); R('retail', RETAIL); R('telecom', TELECOM);
+renderTextBlock('cottage', COTTAGE);
+renderTextBlock('headlines', HEADLINES);
+
+addMiniQuiz('Oligopolies Quiz', [
+  { q: 'Tnuva controls roughly what % of Israeli dairy?', options: ['~30%', '~50%', '~70%', '~95%'], answer: 2, explain: 'Has caused decades of antitrust scrutiny' },
+  { q: 'Bamba is made by...', options: ['Tnuva', 'Strauss', 'Osem (Nestle subsidiary)', 'Elite'], answer: 2, explain: 'Iconic Israeli peanut snack since 1964' },
+  { q: 'The 2011 Cottage Cheese boycott led to...', options: ['Bankruptcy', 'Price rollback (40% sales drop in weeks)', 'Higher prices', 'Nothing'], answer: 1, explain: 'Massive Facebook-coordinated boycott — 600K participants' },
+  { q: 'The "Concentration Law" was passed in...', options: ['1948', '1985', '2013', '2024'], answer: 2, explain: 'Forced separation of financial vs. real holdings' },
+  { q: 'Largest Israeli supermarket chain is...', options: ['Mega', 'Shufersal', 'Rami Levy', 'Yenot Bitan'], answer: 1 },
+  { q: 'Bezeq is dominant in...', options: ['Banking', 'Telecom (landline + ISP)', 'Energy', 'Real estate'], answer: 1, explain: 'Incumbent telecom, ~50% market' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('oligopolies'); } });
+</script></body></html>

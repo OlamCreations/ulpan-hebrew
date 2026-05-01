@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>168 — Yiddish in Modern Israel</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Yiddish in 21st-Century Israel</h1><div class="subtitle">Lesson 168 · יִידִישׁ הַיּוֹם</div></div><div class="nav"><a href="index.html">Home</a><a href="168-yiddish-modern.html" class="active">168</a></div></header>
+
+<p class="intro">Yiddish in modern Israel lives in three places: haredi homes (still a mother tongue), academic departments (Bar-Ilan, Hebrew University, Tel Aviv), and pop culture (revival concerts, hipster Tel Aviv klezmer bands). It also lives in everyday Hebrew slang — invisibly. This lesson covers where Yiddish actually is today, including its surprising regrowth.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Yiddish died as a mass language but never disappeared as a code. Today: ~150,000 native Yiddish speakers in Israel (mostly haredi children), ~50,000 fluent secular speakers (mostly elderly), plus the entire population using Yiddish-derived slang without knowing. The 21st-century revival is led by young hipsters reconnecting with their grandparents\' language — and by haredi families never having stopped.</div>
+
+<h2>Modern Yiddish Speakers</h2>
+<div class="word-list" id="speakers"></div>
+
+<h2>Yiddish in Academia</h2>
+<div class="word-list" id="academia"></div>
+
+<h2>Yiddish in Pop Culture</h2>
+<div class="word-list" id="pop"></div>
+
+<h2>The Yiddish Revival</h2>
+<div class="word-list" id="revival"></div>
+
+<h2>Code-Switching Vocabulary</h2>
+<div class="word-list" id="code-switch"></div>
+
+<hr class="section-divider">
+
+<h2>A Hipster Tel Aviv Klezmer Bar — Code-Switching Live</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Three friends in Florentin (south Tel Aviv) at a klezmer bar. They mix Hebrew, English, and Yiddish — exactly the secular post-modern reclamation pattern.</div>
+  <div id="hipster-bar"></div>
+</div>
+
+<footer>Lesson 168 · Modern Yiddish · <a href="169-yiddish-grammar.html">Next →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const SPEAKERS = [
+  { he: 'דּוֹבְרֵי יִידִישׁ', translit: 'dovrei yiddish', fr: 'Yiddish speakers' },
+  { he: 'מִשְׁפָּחָה חֲסִידִית', translit: 'mishpacha chasidit', fr: 'Hasidic family (often Yiddish-speaking)' },
+  { he: 'יְלָדִים חֲסִידִים', translit: 'yeladim chasidim', fr: 'Hasidic children (~150K Yiddish speakers in Israel)' },
+  { he: 'דּוֹבְרֵי שָׂפָה אֵם', translit: 'dovrei safa em', fr: 'mother-tongue speakers' },
+  { he: 'דּוֹר רִאשׁוֹן', translit: 'dor rishon', fr: 'first generation (born in Yiddishland)' },
+  { he: 'דּוֹר שֵׁנִי', translit: 'dor sheni', fr: 'second generation (born in Israel/US)' },
+  { he: 'דּוֹר שְׁלִישִׁי', translit: 'dor shlishi', fr: 'third generation (rediscovering)' },
+  { he: 'בּוּקוֹבִינָאִים', translit: 'bukovinaim', fr: 'people from Bukovina (Yiddish-Romanian-Ukrainian)' },
+  { he: 'גָּלִיצְיָאנִים', translit: 'galitziya\'nim', fr: 'Galicians (specific Yiddish dialect)' },
+  { he: 'לִיטָאִים', translit: 'lita\'im', fr: 'Litvaks (Lithuanian Jews, distinct dialect)' }
+];
+const ACADEMIA = [
+  { he: 'אוּנִיבֶרְסִיטַת תֵּל אָבִיב', translit: 'universitat tel aviv', fr: 'Tel Aviv University (Yiddish department)' },
+  { he: 'הָאוּנִיבֶרְסִיטָה הָעִבְרִית', translit: 'ha-universita ha-ivrit', fr: 'Hebrew University (Jerusalem)' },
+  { he: 'בָּר אִלָן', translit: 'bar ilan', fr: 'Bar-Ilan University (religious + Yiddish studies)' },
+  { he: 'מַחְלֶקֶת יִידִישׁ', translit: 'machleket yiddish', fr: 'Yiddish Department' },
+  { he: 'הַיִיוֹ"א', translit: 'ha-YIVO', fr: 'YIVO (Yiddish Scientific Institute, Vilna 1925, NYC)' },
+  { he: 'מִילְּנַ"ק', translit: 'milnak', fr: 'modern Yiddish dictionary' },
+  { he: 'אוֹסֵף סְפָרִים', translit: 'osef sfarim', fr: 'book collection / archive' },
+  { he: 'בֵּית הַסְּפָרִים הַלְּאוּמִּי', translit: 'beit ha-sfarim ha-leumi', fr: 'National Library of Israel (Yiddish holdings)' },
+  { he: 'דִּיגִיטָלְיזַצְיָה', translit: 'digitalizatzia', fr: 'digitization (Yiddish texts online)' },
+  { he: 'מָסוֹרוֹת', translit: 'masorot', fr: 'traditions / oral history projects' }
+];
+const POP = [
+  { he: 'יִידִישׁ סְפְּיק', translit: 'yiddish speak', fr: 'Yiddish word for emphasis (English-Hebrew slang)' },
+  { he: 'הִיפְּסְטֶר תֵּל אָבִיב', translit: 'hipster tel aviv', fr: 'hipsters reviving Yiddish coolly' },
+  { he: 'נֶטְפֶלִיקְס יִידִישׁ', translit: 'netflix yiddish', fr: 'Netflix Yiddish ("Shtisel", "Unorthodox", etc.)' },
+  { he: 'שְׁטִיסֵל', translit: 'shtisel', fr: 'Shtisel (popular Israeli haredi drama)' },
+  { he: 'אוֹרְתּוֹדוֹקְסִי לֹא', translit: 'unorthodox', fr: 'Unorthodox (Netflix series, Yiddish dialogue)' },
+  { he: 'תִּזְמוֹרוֹת קְלֵיזְמֶר', translit: 'tizmorot klezmer', fr: 'klezmer ensembles (revival scene)' },
+  { he: 'שִׁעוּרֵי יִידִישׁ', translit: 'shi\'urei yiddish', fr: 'Yiddish lessons (free Tel Aviv classes)' },
+  { he: 'דַ\'גַ\'יִים פְלוֹרֶנְטִין', translit: 'dj-im florentin', fr: 'Florentin DJs (Yiddish-tinged sets)' },
+  { he: 'יוּ-טיוּב', translit: 'youtube', fr: 'YouTube (channels for old Yiddish records)' },
+  { he: 'פּוֹדְקַסְט', translit: 'podcast', fr: 'podcast (Yiddish-language podcasts)' }
+];
+const REVIVAL = [
+  { he: 'תְּחִיָּה', translit: 't\'chiya', fr: 'revival' },
+  { he: 'הַחְזָרָה לַשׁוֹרָשִׁים', translit: 'hachzara la-shorashim', fr: 'return to roots' },
+  { he: 'נוֹסְטַלְגְיָה', translit: 'nostalgia', fr: 'nostalgia' },
+  { he: 'זֵהוּת אַשְׁכְּנַזִית', translit: 'zehut ashkenazit', fr: 'Ashkenazi identity' },
+  { he: 'תַּרְבּוּת יְהוּדִית מִזְרַח-אֵירוֹפִּית', translit: 'tarbut yehudit mizrach-europit', fr: 'East European Jewish culture' },
+  { he: 'מָצָא יִידִישׁ', translit: 'matza yiddish', fr: '"Yiddish found" (recent slogan)' },
+  { he: 'שָׂפָה שֶׁלֹּא מַתָה', translit: 'safa she-lo meta', fr: 'a language that didn\'t die' },
+  { he: 'הוֹרִים שֶׁל הַסַּבְתָּא', translit: 'horim shel ha-savta', fr: 'grandmother\'s parents (curiosity)' },
+  { he: 'מוֹרָשָׁה רַבָּנִית', translit: 'morasha rabanit', fr: 'rabbinical heritage' },
+  { he: 'תַּעֲרוּכוֹת', translit: 'ta\'aruchot', fr: 'exhibitions (Yiddish heritage)' }
+];
+const CODE_SWITCH = [
+  { he: 'עִבְרִית-יִידִישׁ-אַנְגְּלִית', translit: 'ivrit-yiddish-anglit', fr: 'Hebrew-Yiddish-English (typical mix)' },
+  { he: 'תִּתְקָשֵׁר', translit: 'titkasher', fr: 'call (you, masc) — Hebrew' },
+  { he: 'שִׁמַעְנוֹ', translit: 'shima\'nu', fr: 'we heard — Hebrew' },
+  { he: 'אֵייוֵויִי', translit: 'oy vey', fr: 'oh dear — Yiddish (mid-sentence)' },
+  { he: 'דוּ נְעטשְׁ?', translit: 'du nest?', fr: '"do you really?" — Yiddish question' },
+  { he: 'מָה זֶה?', translit: 'ma ze?', fr: 'what\'s this? — Hebrew' },
+  { he: 'חוּצְפָּה', translit: 'chutzpah', fr: 'audacity — Yiddish (now English too)' },
+  { he: 'כַּמָּה זֶה?', translit: 'kama ze?', fr: 'how much? — Hebrew' },
+  { he: 'דַ\'אָסטְ פַֿאַר אֱסְט', translit: 'dast far est', fr: '"You eat?" — Yiddish question' },
+  { he: 'אוֹקְ', translit: 'ok', fr: 'ok — English (universal)' }
+];
+
+const HIPSTER_BAR = {
+  intro: 'Florentin (south Tel Aviv), Saturday night klezmer bar.',
+  lines: [
+    { speaker: 'Yael', he: 'נְשָׁמָה, אֲנִי שְׁתִיתִי יוֹתֵר מִדַּי. אוֹי וֵיי.', translit: 'neshama, ani shtitati yoter midai. oy vey.', fr: 'Soul, I drank too much. Oy vey.' },
+    { speaker: 'Daniel', he: 'בּוּבֶּלֶע, זֶה רַק שְׁתֵּי כּוֹסוֹת. תֶּפֶס תָּקוֹף — הַתִּזְמוֹרֶת מַתְחִילָה.', translit: 'bubbele, ze rak shtei kosot. tefes takof — ha-tizmoret matchila.', fr: 'Sweetie, that\'s only two glasses. Get a grip — the band\'s starting.' },
+    { speaker: 'Maya', he: 'אֵיזֶה שׁמַטְעָם, הַשִּיר הַזֶּה!', translit: 'eize shma\'tam, ha-shir ha-ze!', fr: 'What a sound, this song!' },
+    { speaker: 'Daniel', he: 'זֶה "תּוּמְבָּלָלָייקָה". סָבָה שֶׁלִּי הָיְתָה שָרָה אוֹתוֹ — הִיא בָּאָה מִוִילְנָה.', translit: 'ze "tumbalalaika". saba sheli hayta shara oto — hi ba\'ah me-vilna.', fr: 'It\'s "Tumbalalaika." My grandmother used to sing it — she came from Vilna.' },
+    { speaker: 'Yael', he: 'יִידִישׁ זֶה לֹא הָיָה רֶק לְהָלָדִים? כָּזֶה מִת?', translit: 'yiddish ze lo haya rak l\'haredim? kaze met?', fr: 'Wasn\'t Yiddish only for haredim? Like dead?' },
+    { speaker: 'Daniel', he: 'לֹא, זֶה כָּל הַסּוֹד. עָלֵינוּ לְהָחֲזִיר אוֹתוֹ. מְקַשֵּׁר אוֹתָנוּ עִם הַסַּבָּא וְהַסַּבְתָּא.', translit: 'lo, ze kol ha-sod. aleinu l\'hachazir oto. mekasher otanu im ha-saba ve-ha-savta.', fr: 'No, that\'s the whole secret. We need to bring it back. Connects us to grandfather and grandmother.' },
+    { speaker: 'Maya', he: 'יָאַחְבָּל, אֲנִי לוֹמֶדֶת יִידִישׁ עַכְשָׁו בְּאוּנִיבֶרְסִיטַת תֵּל אָבִיב. שָׁעָה בְּשָׁבוּעַ. נַחֵס.', translit: 'yachbal, ani lomedet yiddish achshav b\'universitat tel aviv. sha\'ah b\'shavua. naches.', fr: 'Yallah, I\'m studying Yiddish now at TAU. One hour a week. Joy.' }
+  ]
+};
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('speakers', SPEAKERS);
+R('academia', ACADEMIA);
+R('pop', POP);
+R('revival', REVIVAL);
+R('code-switch', CODE_SWITCH);
+
+renderTextBlock('hipster-bar', HIPSTER_BAR.lines.map(l => ({ he: l.he, translit: l.translit, fr: l.speaker ? '[' + l.speaker + '] ' + l.fr : l.fr })));
+
+addMiniQuiz('Modern Yiddish Quiz', [
+  { q: 'How many native Yiddish speakers in Israel today (roughly)?', options: ['~5,000', '~150,000 (mostly haredi children)', '~1,000,000', '~5,000,000'], answer: 1, explain: 'About 150K Yiddish-speaking children in Israel — mainly Hasidic families.' },
+  { q: '"Shtisel" is...', options: ['A Yiddish word for fool', 'Israeli TV drama about a Hasidic family', 'A type of pastry', 'A klezmer band'], answer: 1, explain: 'Popular drama showing modern haredi life — much Yiddish dialogue.' },
+  { q: 'YIVO was founded in...', options: ['Tel Aviv, 1948', 'Vilna, 1925 (now in NYC)', 'Warsaw, 1900', 'Moscow, 1917'], answer: 1, explain: 'YIVO Institute for Jewish Research — founded Vilna 1925, now NYC HQ.' },
+  { q: 'Yiddish is taught at which Israeli universities?', options: ['Only Hebrew University', 'Tel Aviv, Hebrew U, Bar-Ilan, others', 'No Israeli universities teach it', 'Only Bar-Ilan'], answer: 1, explain: 'Multiple Israeli universities have Yiddish departments.' },
+  { q: 'Who is leading the secular Yiddish revival?', options: ['Government', 'Hasidic communities', 'Young hipsters reconnecting with grandparents\' language', 'American tourists'], answer: 2, explain: 'Tel Aviv hipsters and 3rd-generation Israelis driving the secular revival.' },
+  { q: 'A "Litvak" is...', options: ['A Lithuanian Jew (specific dialect/tradition)', 'A type of soup', 'A Yiddish theatre', 'A musical instrument'], answer: 0, explain: 'Litvak = Jew of Lithuanian heritage; distinct dialect and rationalist tradition.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('yiddish-modern');
+  }
+});
+</script></body></html>

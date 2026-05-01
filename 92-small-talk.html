@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>92 — Small Talk & Conversations</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Small Talk & Conversations</h1><div class="subtitle">Lesson 92 · שיחות יומיומיות</div></div><div class="nav"><a href="index.html">Home</a><a href="92-small-talk.html" class="active">92</a></div></header>
+
+<p class="intro">Israelis don't really do "polite small talk." They skip the weather and ask you why you're not married, how much you paid for your apartment, and what you think of the government — within 90 seconds of meeting you. Learn the real rhythm of Israeli conversation.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — In most cultures, personal questions come after trust. In Israel, personal questions ARE how trust is built. "How much do you earn?" isn't rude — it's interest. If someone doesn't ask you anything personal, that's the cold version.</div>
+
+<h2>Opening a Conversation</h2>
+<div class="word-list" id="opening"></div>
+
+<h2>Personal Questions (Israeli Standard)</h2>
+<div class="word-list" id="personal"></div>
+
+<h2>Reacting & Showing Interest</h2>
+<div class="word-list" id="reacting"></div>
+
+<h2>Disagreeing (the Israeli Way)</h2>
+<div class="word-list" id="disagree"></div>
+
+<h2>Filler Words & Verbal Tics</h2>
+<div class="word-list" id="fillers"></div>
+
+<h2>Closing a Conversation</h2>
+<div class="word-list" id="closing"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Dialogue: Cab Ride from Ben Gurion</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<h2>Useful Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 92 · small talk · <a href="93-storytelling.html" style="color:var(--accent)">Next: Storytelling →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const OPENING = [
+  { he: 'מָה נִשְׁמָע?', translit: 'ma nishma?', fr: "what's up? / how are things?" },
+  { he: 'מָה הָעִנְיָנִים?', translit: 'ma ha-inyanim?', fr: "what's going on?" },
+  { he: 'אֵיךְ הַחַיִּים?', translit: 'eich ha-chayim?', fr: "how's life?" },
+  { he: 'מָה חָדָשׁ?', translit: 'ma chadash?', fr: "what's new?" },
+  { he: 'מֵאַיִן אַתָּה?', translit: 'me-ayin ata?', fr: 'where are you from? (m.)' },
+  { he: 'אַתָּה חָדָשׁ פֹּה?', translit: 'ata chadash po?', fr: 'are you new here? (m.)' },
+  { he: 'מָה אַתָּה עוֹשֶׂה בְּיִשְׂרָאֵל?', translit: "ma ata ose be-Yisrael?", fr: 'what are you doing in Israel? (m.)' }
+];
+const PERSONAL = [
+  { he: 'כַּמָּה זְמַן אַתָּה כָּאן?', translit: 'kama zman ata kan?', fr: 'how long have you been here? (m.)' },
+  { he: 'אַתָּה נָשׂוּי?', translit: 'ata nasuy?', fr: 'are you married? (m.)' },
+  { he: 'יֵשׁ לְךָ יְלָדִים?', translit: 'yesh lecha yeladim?', fr: 'do you have kids? (m.)' },
+  { he: 'בֶּן כַּמָּה אַתָּה?', translit: 'ben kama ata?', fr: 'how old are you? (m.)' },
+  { he: 'כַּמָּה שִׁלַּמְתָּ עַל הַדִּירָה?', translit: 'kama shilamta al ha-dira?', fr: 'how much did you pay for the apartment? (m.)' },
+  { he: 'כַּמָּה אַתָּה מַרְוִיחַ?', translit: 'kama ata marvi\'ach?', fr: 'how much do you earn? (m.)' },
+  { he: 'מָה אַתָּה חוֹשֵׁב עַל הַמֶּמְשָׁלָה?', translit: 'ma ata choshev al ha-memshala?', fr: 'what do you think of the government? (m.)' },
+  { he: 'לָמָּה עָלִיתָ אַרְצָה?', translit: 'lama alita artza?', fr: 'why did you make Aliyah? (m.)' }
+];
+const REACTING = [
+  { he: 'בְּאֱמֶת?', translit: 'be-emet?', fr: 'really?' },
+  { he: 'לֹא יְכוֹל לִהְיוֹת', translit: 'lo yachol lihyot', fr: "no way / can't be" },
+  { he: 'וָוּאוּ', translit: 'wow', fr: 'wow' },
+  { he: 'אֵיזֶה כֵּיף!', translit: 'eyze kef!', fr: 'how fun!' },
+  { he: 'מָה אַתָּה אוֹמֵר!', translit: 'ma ata omer!', fr: 'you don\'t say! (m.)' },
+  { he: 'מַעַנְיֵן', translit: 'ma\'anyen', fr: 'interesting' },
+  { he: 'בְּדִיּוּק', translit: 'bediyuk', fr: 'exactly' },
+  { he: 'אֲנִי מֵבִין אוֹתְךָ', translit: 'ani mevin otcha', fr: 'I get you (m.)' }
+];
+const DISAGREE = [
+  { he: 'לֹא נָכוֹן!', translit: 'lo nachon!', fr: 'not true!' },
+  { he: 'אַתָּה טוֹעֶה', translit: 'ata to\'e', fr: 'you\'re wrong (m.)' },
+  { he: 'אֲנִי לֹא מַסְכִּים', translit: 'ani lo maskim', fr: 'I disagree (m.)' },
+  { he: 'מָה פִּתְאוֹם!', translit: 'ma pit\'om!', fr: 'no way! / what suddenly!' },
+  { he: 'אַתָּה מְבַלְבֵּל', translit: 'ata mevalbel', fr: 'you\'re confused (m.)' },
+  { he: 'דַּי, נוּ', translit: 'day, nu', fr: 'come on already' },
+  { he: 'בְּחַיַּיךָ', translit: 'be-chayecha', fr: 'on your life / seriously? (m.)' }
+];
+const FILLERS = [
+  { he: 'יָאלָה', translit: 'yalla', fr: "let's go / come on" },
+  { he: 'נוּ', translit: 'nu', fr: 'so? / well?' },
+  { he: 'דַּי', translit: 'day', fr: 'enough / stop' },
+  { he: 'בְּקִצּוּר', translit: 'be-kitzur', fr: 'in short' },
+  { he: 'בֶּאֱמֶת', translit: 'be-emet', fr: 'truly / honestly' },
+  { he: 'בְּסֵדֶר גָּמוּר', translit: 'beseder gamur', fr: 'totally fine' },
+  { he: 'בְּקֶטַע', translit: 'be-keta', fr: 'in a way / sort of' },
+  { he: 'יוֹתֵר אוֹ פָּחוֹת', translit: 'yoter o pachot', fr: 'more or less' },
+  { he: 'אַתָּה מֵבִין?', translit: 'ata mevin?', fr: 'you know? / get it? (m.)' }
+];
+const CLOSING = [
+  { he: 'הָיָה כֵּיף', translit: 'haya kef', fr: 'it was fun' },
+  { he: 'נֵדַבֵּר', translit: 'nedaber', fr: "we'll talk" },
+  { he: 'נִתְרָאֶה', translit: 'nitra\'e', fr: 'see you' },
+  { he: 'תִּשְׁמֹר עַל עַצְמְךָ', translit: 'tishmor al atzmecha', fr: 'take care (m.)' },
+  { he: 'דְּרִישַׁת שָׁלוֹם לַמִּשְׁפָּחָה', translit: 'drishat shalom la-mishpacha', fr: 'regards to the family' },
+  { he: 'יוֹם נֶהֱדָר', translit: 'yom nehedar', fr: 'great day' },
+  { he: 'בְּהַצְלָחָה', translit: 'be-hatzlacha', fr: 'good luck' }
+];
+const DIALOGUE = [
+  { speaker: 'Driver', he: 'מֵאַיִן אַתָּה? אַתָּה נִשְׁמַע צָרְפָתִי.', translit: 'Me-ayin ata? Ata nishma tzarfati.', fr: 'Where are you from? You sound French.' },
+  { speaker: 'You', he: 'נָכוֹן, אֲנִי מִצָּרְפַת. עָלִיתִי אַרְצָה לִפְנֵי שָׁבוּעַ.', translit: 'Nachon, ani mi-Tzarfat. Aliti artza lifney shavua.', fr: 'Right, I\'m from France. I made Aliyah a week ago.' },
+  { speaker: 'Driver', he: 'בָּרוּךְ הַבָּא! אַתָּה נָשׂוּי? יֵשׁ לְךָ יְלָדִים?', translit: 'Baruch ha-ba! Ata nasuy? Yesh lecha yeladim?', fr: 'Welcome! Are you married? Do you have kids?' },
+  { speaker: 'You', he: 'לֹא, אֲנִי רַוָּק.', translit: 'Lo, ani ravak.', fr: 'No, I\'m single.' },
+  { speaker: 'Driver', he: 'מָה? בֶּן כַּמָּה אַתָּה?', translit: 'Ma? Ben kama ata?', fr: 'What? How old are you?' },
+  { speaker: 'You', he: 'שְׁלוֹשִׁים וְשָׁלוֹשׁ.', translit: 'Shloshim ve-shalosh.', fr: '33.' },
+  { speaker: 'Driver', he: 'אוֹי וָאֲבוֹי! יֵשׁ לִי בַּת לְךָ. רְצִינִית, יָפָה.', translit: 'Oy va-avoy! Yesh li bat lecha. Retzinit, yafa.', fr: 'Oh dear! I have a daughter for you. Serious, beautiful.' },
+  { speaker: 'You', he: 'תּוֹדָה, אֲנִי אֶחְשֹׁב עַל זֶה.', translit: 'Toda, ani echshov al ze.', fr: 'Thanks, I\'ll think about it.' }
+];
+const PHRASES = [
+  { he: 'אַתָּה שׁוֹאֵל הַרְבֵּה שְׁאֵלוֹת', translit: 'ata sho\'el harbe she\'elot', fr: 'you ask a lot of questions (m.)' },
+  { he: 'זֶה אִישִׁי מִדַּי', translit: 'ze ishi miday', fr: "that's too personal" },
+  { he: 'אֲנִי מַעֲדִיף לֹא לַעֲנוֹת', translit: 'ani ma\'adif lo la\'anot', fr: "I'd rather not answer (m.)" },
+  { he: 'מַסְכִּים אִתְּךָ לְגַמְרֵי', translit: 'maskim itcha legamrey', fr: 'totally agree with you (m.)' },
+  { he: 'אֲנִי לֹא בָּטוּחַ', translit: 'ani lo batuach', fr: "I'm not sure (m.)" },
+  { he: 'תֵּן לִי לַחְשֹׁב', translit: 'ten li lachshov', fr: 'let me think (m.)' },
+  { he: 'דַּבֵּר לְאַט יוֹתֵר בְּבַקָּשָׁה', translit: 'daber le\'at yoter bevakasha', fr: 'speak slower please (m.)' },
+  { he: 'הָעִבְרִית שֶׁלִּי עוֹד לֹא מֻשְׁלֶמֶת', translit: 'ha-ivrit sheli od lo mushlemet', fr: "my Hebrew isn't perfect yet" },
+  { he: 'נִתְרָאֶה בְּפַעַם הַבָּאָה!', translit: 'nitra\'e ba-pa\'am ha-ba\'a!', fr: 'see you next time!' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('opening', OPENING); R('personal', PERSONAL); R('reacting', REACTING); R('disagree', DISAGREE); R('fillers', FILLERS); R('closing', CLOSING); R('phrases', PHRASES);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 56px;">${line.speaker}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  dialogueEl.appendChild(el);
+});
+async function playDialogue() { for (const line of DIALOGUE) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 2600)); } markLessonDone('smalltalk'); }
+
+addExtraVocab('Small Talk Topics', [
+  { he: 'מֶזֶג הָאֲוִיר', translit: 'mezeg ha-avir', fr: 'weather' },
+  { he: 'הַתְּנוּעָה', translit: 'ha-tnu\'a', fr: 'traffic' },
+  { he: 'הַחֲדָשׁוֹת', translit: 'ha-chadashot', fr: 'the news' },
+  { he: 'מָה חָדָשׁ?', translit: 'ma chadash?', fr: 'what\'s new?' },
+  { he: 'מָה אַתָּה עוֹשֶׂה הָעֶרֶב?', translit: 'ma ata ose ha-erev?', fr: 'what are you doing tonight? (m.)' },
+  { he: 'אֵיךְ הָיְתָה הַשַּׁבָּת?', translit: 'eich hayta ha-shabat?', fr: 'how was Shabbat?' },
+  { he: 'נֶחְמָד לִפְגוֹשׁ', translit: 'nechmad lifgosh', fr: 'nice to meet you' },
+  { he: 'נָעִים מְאֹד', translit: 'na\'im me\'od', fr: 'pleased to meet you' },
+  { he: 'מֵאַיִן אַתָּה?', translit: 'me-ayin ata?', fr: 'where are you from? (m.)' },
+  { he: 'יֵשׁ לְךָ יְלָדִים?', translit: 'yesh lecha yeladim?', fr: 'do you have kids? (m.)' },
+  { he: 'אֵיךְ הָעֲבוֹדָה?', translit: 'eich ha-avoda?', fr: 'how\'s work?' },
+  { he: 'מָה תָּכְנִיּוֹת לַעֲתִיד?', translit: 'ma tochniyot la-atid?', fr: 'what are your future plans?' }
+]);
+
+addMiniQuiz('Small Talk Quiz', [
+  { q: 'Most casual "what\'s up?" =', options: ['מָה שְׁלוֹמְךָ?', 'מָה נִשְׁמָע?', 'הַאִם הַכֹּל בְּסֵדֶר?', 'אֵיךְ אַתָּה?'], answer: 1 },
+  { q: 'Israeli small talk usually opens with...', options: ['Weather', 'How much do you earn / are you married', 'Politics', 'Sports'], answer: 1, explain: 'Israelis go straight to personal questions' },
+  { q: '"Take care!" (m.) =', options: ['תִּשְׁמֹר עַל עַצְמְךָ', 'נָעִים מְאֹד', 'בָּרוּךְ הַבָּא', 'תּוֹדָה'], answer: 0 },
+  { q: '"Really?" (skeptical) =', options: ['בְּאֱמֶת?', 'מָה אַתָּה אוֹמֵר!', 'בְּחַיֶּיךָ?', 'All of these'], answer: 3 },
+  { q: 'Israeli small talk closure =', options: ['גַּם לַהוֹרִים שָׁלוֹם', 'דְּרִישַׁת שָׁלוֹם לַמִּשְׁפָּחָה', 'A and B', 'See ya'], answer: 2 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('smalltalk'); } });
+</script></body></html>

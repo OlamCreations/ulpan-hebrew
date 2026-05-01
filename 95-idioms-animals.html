@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>95 — Idioms with Animals</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Idioms with Animals</h1><div class="subtitle">Lesson 95 · ביטויים עם בעלי חיים</div></div><div class="nav"><a href="index.html">Home</a><a href="95-idioms-animals.html" class="active">95</a></div></header>
+
+<p class="intro">Animals carry rich symbolism in Hebrew. From biblical lions and donkeys to modern slang involving cats and chickens, these idioms reveal how Israelis see character, intelligence, behavior.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — Calling someone a חֲמוֹר (donkey) means "stubborn idiot" — strong insult. Calling them a חֲתוּל (cat) can mean "sly clever." Animal idioms are highly emotional. Use carefully.</div>
+
+<h2>Donkey & Horse (חֲמוֹר / סוּס)</h2>
+<div class="word-list" id="donkey"></div>
+
+<h2>Cat & Dog (חָתוּל / כֶּלֶב)</h2>
+<div class="word-list" id="catdog"></div>
+
+<h2>Lion (אַרְיֵה)</h2>
+<div class="word-list" id="lion"></div>
+
+<h2>Bird & Chicken (צִפּוֹר / תַּרְנְגוֹלֶת)</h2>
+<div class="word-list" id="bird"></div>
+
+<h2>Fish (דָּג)</h2>
+<div class="word-list" id="fish"></div>
+
+<h2>Snake & Insects (נָחָשׁ / חֶרֶק)</h2>
+<div class="word-list" id="snake"></div>
+
+<h2>Other Animals</h2>
+<div class="word-list" id="other"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Story: The Old Cat at the Café</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="story"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playStory()">Play story</button>
+</div>
+
+<h2>Idioms in Context (Sentences)</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 95 · idioms · <a href="96-idioms-food.html" style="color:var(--accent)">Next: Idioms (Food) →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const DONKEY = [
+  { he: 'חֲמוֹר', translit: 'chamor', fr: 'donkey / stubborn idiot' },
+  { he: 'עַקְשָׁן כְּמוֹ חֲמוֹר', translit: 'akshan kmo chamor', fr: 'stubborn as a donkey' },
+  { he: 'עוֹבֵד כְּמוֹ חֲמוֹר', translit: 'oved kmo chamor', fr: 'works like a donkey (m.)' },
+  { he: 'סוּס עֲבוֹדָה', translit: 'sus avoda', fr: 'workhorse' },
+  { he: 'סוּס עִיּוֵר', translit: 'sus iver', fr: 'blind horse / running blindly' },
+  { he: 'סוּס טְרוֹיָאנִי', translit: 'sus troyani', fr: 'Trojan horse' }
+];
+const CATDOG = [
+  { he: 'חָתוּל בַּשַּׂק', translit: 'chatul ba-sak', fr: 'cat in a sack / pig in a poke' },
+  { he: 'תְּשַׁע נְפָשׁוֹת', translit: 'tesha nefashot', fr: 'nine lives (cat)' },
+  { he: 'חָתוּל וְעַכְבָּר', translit: 'chatul ve-achbar', fr: 'cat and mouse' },
+  { he: 'חַיֵּי כֶּלֶב', translit: 'chayey kelev', fr: 'dog\'s life' },
+  { he: 'נֶאֱמָן כְּמוֹ כֶּלֶב', translit: 'ne\'eman kmo kelev', fr: 'loyal as a dog' },
+  { he: 'כֶּלֶב לֹא נוֹשֵׁךְ', translit: 'kelev lo noshech', fr: "barking dog doesn't bite" }
+];
+const LION = [
+  { he: 'גִּבּוֹר כְּמוֹ אַרְיֵה', translit: 'gibor kmo arye', fr: 'brave as a lion' },
+  { he: 'לֵב אַרְיֵה', translit: 'lev arye', fr: 'lion-hearted' },
+  { he: 'הָאַרְיֵה הוּא הַמֶּלֶךְ', translit: 'ha-arye hu ha-melech', fr: 'the lion is the king' },
+  { he: 'גּוּר אַרְיֵה', translit: 'gur arye', fr: 'lion cub (Judah)' },
+  { he: 'נִכְנַס לַגֹּב הָאֲרָיוֹת', translit: 'nichnas la-gov ha-arayot', fr: 'entered the lions\' den' }
+];
+const BIRD = [
+  { he: 'צִפּוֹר חָפְשִׁית', translit: 'tzipor chofshit', fr: 'free bird' },
+  { he: 'צִפּוֹר הַסַּף', translit: 'tzipor ha-saf', fr: 'a little bird told me' },
+  { he: 'עוֹף לִישׁוֹן', translit: 'of lishon', fr: 'fly off to sleep' },
+  { he: 'תַּרְנְגוֹלֶת מְפֻחֶדֶת', translit: 'tarnegolet mefuchedet', fr: 'scared chicken / coward' },
+  { he: 'בִּיצָה בְּלִי תַּרְנְגוֹלֶת', translit: 'beytza bli tarnegolet', fr: 'egg without chicken' },
+  { he: 'נִשְׁמַע מִצִּפּוֹר', translit: 'nishma mi-tzipor', fr: "heard from a bird (rumor)" }
+];
+const FISH = [
+  { he: 'דָּג קָטָן', translit: 'dag katan', fr: 'small fish (small role)' },
+  { he: 'דָּג גָּדוֹל', translit: 'dag gadol', fr: 'big fish (big shot)' },
+  { he: 'שׁוֹחֶה כְּמוֹ דָּג', translit: 'soche kmo dag', fr: 'swims like a fish' },
+  { he: 'אִלֵּם כְּמוֹ דָּג', translit: 'ilem kmo dag', fr: 'silent as a fish' },
+  { he: 'דָּג מָלוּחַ', translit: 'dag maluach', fr: 'salted fish (gullible)' }
+];
+const SNAKE = [
+  { he: 'לָשׁוֹן שֶׁל נָחָשׁ', translit: 'lashon shel nachash', fr: 'snake tongue / gossiper' },
+  { he: 'שָׁפָן', translit: 'shafan', fr: 'rabbit / coward' },
+  { he: 'שָׁפָן נִסּוּי', translit: 'shafan nisuy', fr: 'guinea pig (test subject)' },
+  { he: 'דְּבוֹרָה עֲסוּקָה', translit: 'dvora asuka', fr: 'busy bee' },
+  { he: 'נְמָלָה חָרוּצָה', translit: 'nemala charutza', fr: 'diligent ant' },
+  { he: 'יַתּוּשׁ קְטַנְטַן', translit: 'yatush ktantan', fr: 'tiny mosquito (small but annoying)' }
+];
+const OTHER = [
+  { he: 'פִּיל בַּחֲנוּת חַרְסִינָה', translit: 'pil ba-chanut charsina', fr: 'elephant in a china shop' },
+  { he: 'זִכָּרוֹן שֶׁל פִּיל', translit: 'zikaron shel pil', fr: 'memory of an elephant' },
+  { he: 'דֻּבֵּי אֱמֶת', translit: 'dubey emet', fr: 'real bears / strong rough type' },
+  { he: 'שׁוּעָל עָרוּם', translit: 'shu\'al arum', fr: 'sly fox' },
+  { he: 'עָדִין כְּמוֹ יוֹנָה', translit: 'adin kmo yona', fr: 'gentle as a dove' },
+  { he: 'כְּמוֹ פַּרָה עַל הַקֶּרַח', translit: 'kmo para al ha-kerach', fr: 'like a cow on ice / clumsy' }
+];
+const STORY = [
+  { he: 'בְּבֵית הַקָּפֶה הַקָּטָן בְּתֵל אָבִיב יֵשׁ חָתוּל זָקֵן.', translit: 'Be-veyt ha-kafe ha-katan be-Tel Aviv yesh chatul zaken.', fr: 'In the small café in Tel Aviv there\'s an old cat.' },
+  { he: 'הוּא יוֹשֵׁב שָׁם כְּבָר עֶשֶׂר שָׁנִים. תְּשַׁע נְפָשׁוֹת לְפָחוֹת.', translit: 'Hu yoshev sham kvar eser shanim. Tesha nefashot le-fachot.', fr: 'He\'s been there ten years. Nine lives at least.' },
+  { he: 'כָּל בֹּקֶר הוּא בָּא, שׁוֹתֶה חָלָב, וְעוֹזֵב כְּמוֹ מֶלֶךְ.', translit: 'Kol boker hu ba, shote chalav, ve-ozev kmo melech.', fr: 'Every morning he comes, drinks milk, and leaves like a king.' },
+  { he: 'יוֹם אֶחָד בָּא כֶּלֶב גָּדוֹל. הָרַחוֹב הָיָה כְּמוֹ חָתוּל וְעַכְבָּר.', translit: 'Yom echad ba kelev gadol. Ha-rechov haya kmo chatul ve-achbar.', fr: 'One day a big dog came. The street was like cat and mouse.' },
+  { he: 'אֲבָל הֶחָתוּל הַזָּקֵן, גִּבּוֹר כְּמוֹ אַרְיֵה, לֹא זָז.', translit: 'Aval he-chatul ha-zaken, gibor kmo arye, lo zaz.', fr: "But the old cat, brave as a lion, didn't move." },
+  { he: 'הַכֶּלֶב הִסְתַּכֵּל, בָּרַח כְּמוֹ שָׁפָן.', translit: 'Ha-kelev histakel, barach kmo shafan.', fr: 'The dog looked, ran like a rabbit.' },
+  { he: 'מֵאָז כָּל הָרְחוֹב יוֹדֵעַ: לֹא נוֹגְעִים בַּחָתוּל הַזָּקֵן.', translit: 'Me-az kol ha-rechov yode\'a: lo nog\'im ba-chatul ha-zaken.', fr: 'Since then the whole street knows: don\'t touch the old cat.' }
+];
+const PHRASES = [
+  { he: 'אַל תִּקְנֶה חָתוּל בַּשַּׂק', translit: 'al tikne chatul ba-sak', fr: "don't buy a cat in a sack (m.)" },
+  { he: 'הוּא עוֹבֵד כְּמוֹ חֲמוֹר', translit: 'hu oved kmo chamor', fr: 'he works like a donkey' },
+  { he: 'הַיֶּלֶד שׁוֹחֶה כְּמוֹ דָּג', translit: 'ha-yeled soche kmo dag', fr: 'the kid swims like a fish' },
+  { he: 'הִיא דְּבוֹרָה עֲסוּקָה', translit: 'hi dvora asuka', fr: "she's a busy bee" },
+  { he: 'הוּא נִכְנַס לַגֹּב הָאֲרָיוֹת', translit: 'hu nichnas la-gov ha-arayot', fr: "he entered the lions' den" },
+  { he: 'יֵשׁ לוֹ לֵב אַרְיֵה', translit: 'yesh lo lev arye', fr: 'he has a lion-heart' },
+  { he: 'אַל תִּהְיֶה תַּרְנְגוֹלֶת מְפֻחֶדֶת', translit: 'al tihye tarnegolet mefuchedet', fr: "don't be a scared chicken (m.)" },
+  { he: 'צִפּוֹר קְטַנָּה אָמְרָה לִי', translit: 'tzipor ktana amra li', fr: 'a little bird told me' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('donkey', DONKEY); R('catdog', CATDOG); R('lion', LION); R('bird', BIRD); R('fish', FISH); R('snake', SNAKE); R('other', OTHER); R('phrases', PHRASES);
+
+const storyEl = document.getElementById('story');
+STORY.forEach((line, i) => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 12px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${i+1}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  storyEl.appendChild(el);
+});
+async function playStory() { for (const line of STORY) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 3000)); } markLessonDone('idioms-animals'); }
+
+addExtraVocab('More Animal Idioms', [
+  { he: 'חֲמוֹר עוֹבֵד', translit: 'chamor oved', fr: 'working donkey (hard worker)' },
+  { he: 'חָתוּל בַּשַּׂק', translit: 'chatul ba-sak', fr: 'cat in a sack (unknown)' },
+  { he: 'דָּג בַּמַּיִם', translit: 'dag ba-mayim', fr: 'fish in water (in element)' },
+  { he: 'דֻּב גָּדוֹל', translit: 'dov gadol', fr: 'big bear (big strong man)' },
+  { he: 'יוֹנָה לְבָנָה', translit: 'yona levana', fr: 'white dove (peace)' },
+  { he: 'אַרְיֵה צוֹעֵק', translit: 'arye tzo\'ek', fr: 'roaring lion' },
+  { he: 'נְמָלָה חָרוּצָה', translit: 'nemala charutza', fr: 'industrious ant' },
+  { he: 'עוֹף שֶׁל לַיְלָה', translit: 'of shel laila', fr: 'night bird (insomniac)' },
+  { he: 'עוֹף הַחוֹל', translit: 'of ha-chol', fr: 'phoenix (regenerator)' },
+  { he: 'דַּג מָלוּחַ', translit: 'dag maluach', fr: 'salted fish (gullible)' },
+  { he: 'תַּרְנְגוֹלָה כּוֹשֶׁבֶת', translit: 'tarnegola koshevet', fr: 'brooding hen (worrier)' }
+]);
+
+addMiniQuiz('Animal Idioms Quiz', [
+  { q: 'חֲמוֹר as insult means...', options: ['Lazy', 'Stubborn idiot', 'Slow', 'Strong'], answer: 1 },
+  { q: '"Sly fox" =', options: ['שׁוּעָל עָרוּם', 'אַרְיֵה גָּדוֹל', 'דֻּב חָכָם', 'נָמֵר זָרִיז'], answer: 0 },
+  { q: '"Brave as a lion" =', options: ['גִּבּוֹר כְּמוֹ אַרְיֵה', 'חָכָם כְּמוֹ נָחָשׁ', 'נֶאֱמָן כְּמוֹ כֶּלֶב', 'מָהִיר כְּמוֹ סוּס'], answer: 0 },
+  { q: 'דָּג קָטָן בְּיָם גָּדוֹל =', options: ['Small player', 'Big shot', 'Drowning', 'Beach swimmer'], answer: 0 },
+  { q: 'כֶּלֶב לֹא נוֹשֵׁךְ =', options: ['Mean dog', 'Barking dog doesn\'t bite', 'Loyal dog', 'Cute dog'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('idioms-animals'); } });
+</script></body></html>

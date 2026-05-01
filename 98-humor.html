@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>98 — Israeli Humor & Jokes</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Israeli Humor & Jokes</h1><div class="subtitle">Lesson 98 · הומור ישראלי</div></div><div class="nav"><a href="index.html">Home</a><a href="98-humor.html" class="active">98</a></div></header>
+
+<p class="intro">Israeli humor is direct, self-deprecating, often dark, and built on the shared experience of bureaucracy, war, and mothers. Understanding the joke is understanding the country.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — Israelis joke about everything: army, politics, religion, death, mothers, ethnic differences (Ashkenazi vs Sephardic vs Mizrahi). Nothing is sacred. This isn't disrespect — it's the survival mechanism of a small country with too much history.</div>
+
+<h2>Joke Vocabulary</h2>
+<div class="word-list" id="vocab"></div>
+
+<h2>Setup Phrases</h2>
+<div class="word-list" id="setup"></div>
+
+<h2>Punchline Patterns</h2>
+<div class="word-list" id="punchline"></div>
+
+<h2>Sarcasm & Irony</h2>
+<div class="word-list" id="sarcasm"></div>
+
+<h2>Self-Deprecating Humor</h2>
+<div class="word-list" id="self"></div>
+
+<hr class="section-divider">
+
+<h2>Classic Israeli Jokes</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="jokes"></div>
+</div>
+
+<h2>Comedy References (Modern Israel)</h2>
+<div class="word-list" id="comedy"></div>
+
+<footer>Lesson 98 · humor · <a href="99-real-texts.html" style="color:var(--accent)">Next: Real Texts →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const VOCAB = [
+  { he: 'בְּדִיחָה', translit: 'bdicha', fr: 'joke' },
+  { he: 'הוּמוֹר', translit: 'humor', fr: 'humor' },
+  { he: 'מַצְחִיק', translit: 'matzchik', fr: 'funny (m.)' },
+  { he: 'מַצְחִיקָה', translit: 'matzchika', fr: 'funny (f.)' },
+  { he: 'לִצְחוֹק', translit: 'litzchok', fr: 'to laugh' },
+  { he: 'צוֹחֵק', translit: 'tzochek', fr: 'laughing (m.)' },
+  { he: 'הוּמוֹר שָׁחוֹר', translit: 'humor shachor', fr: 'black humor' },
+  { he: 'אִירוֹנְיָה', translit: 'ironya', fr: 'irony' },
+  { he: 'סַרְקָאסְטִי', translit: 'sarkasti', fr: 'sarcastic' }
+];
+const SETUP = [
+  { he: 'יוֹם אֶחָד...', translit: 'yom echad...', fr: 'one day...' },
+  { he: 'הָיוּ פַּעַם...', translit: 'hayu pa\'am...', fr: 'once there were...' },
+  { he: 'אִישׁ נִכְנָס לְבָּר', translit: 'ish nichnas le-bar', fr: 'a man walks into a bar' },
+  { he: 'יָדוּעַ הַסִּפּוּר?', translit: 'yadu\'a ha-sipur?', fr: 'know the story?' },
+  { he: 'שָׁמַעְתָּ אֶת זוֹ?', translit: 'shamata et zo?', fr: 'have you heard this one? (m.)' },
+  { he: 'אֲשׁכְּנַזִּי וּסְפָרַדִּי...', translit: 'ashkenazi u-sfaradi...', fr: 'an Ashkenazi and a Sephardic...' }
+];
+const PUNCHLINE = [
+  { he: 'וְאָז הוּא אָמַר...', translit: 've-az hu amar...', fr: 'and then he said...' },
+  { he: 'הַסּוֹף!', translit: 'ha-sof!', fr: 'the end!' },
+  { he: 'אַתָּה תוֹפֵס?', translit: 'ata tofes?', fr: 'do you get it? (m.)' },
+  { he: 'וְזֶה הָיָה הוּא', translit: 've-ze haya hu', fr: 'and that was him' },
+  { he: 'הִיא הַסֵּדֶר!', translit: 'hi ha-seder!', fr: 'she\'s the order! (Pesach pun)' }
+];
+const SARCASM = [
+  { he: 'בְּטַח', translit: 'betach', fr: 'sure (often sarcastic)' },
+  { he: 'מָה אַתָּה אוֹמֵר!', translit: 'ma ata omer!', fr: "you don't say! (m. sarcastic)" },
+  { he: 'אֵיזֶה הֶפְתָּעָה', translit: 'eyze haftaa', fr: 'what a surprise (sarcastic)' },
+  { he: 'תַּצְלִיחַ בְּכָל הַכְּבוֹדוֹת', translit: 'tatzliach be-chol ha-kvodot', fr: 'good luck with that (sarcastic) (m.)' },
+  { he: 'נוֹרָא חָכָם', translit: 'nora chacham', fr: 'really smart (sarcastic, m.)' },
+  { he: 'לֹא נוֹרָא', translit: 'lo nora', fr: "not terrible — Israeli for 'great'" }
+];
+const SELF = [
+  { he: 'אֲנִי לֹא יוֹדֵעַ כְּלוּם', translit: 'ani lo yode\'a klum', fr: "I know nothing (m.)" },
+  { he: 'אִמָּא שֶׁלִּי תַּהֲרוֹג אוֹתִי', translit: 'ima sheli taharog oti', fr: 'my mom will kill me' },
+  { he: 'אֵיזֶה בָּאלָגָן עָשִׂיתִי', translit: 'eyze balagan asiti', fr: 'what a mess I made' },
+  { he: 'אֲנִי הַטִּפֵּשׁ הֲכִי גָּדוֹל', translit: 'ani ha-tipesh hachi gadol', fr: 'I\'m the biggest idiot (m.)' },
+  { he: 'תֵּן לִי תְּמוּנָה אֲנִי כְּבָר רַע', translit: 'ten li tmuna ani kvar ra', fr: "give me a picture, I'm already bad" },
+  { he: 'בָּשָׂר וָדָם — לֹא יוֹתֵר', translit: 'basar va-dam — lo yoter', fr: "flesh and blood — nothing more" }
+];
+const JOKES = [
+  {
+    title: '1. The Bus Driver',
+    setup_he: 'אִישׁ עוֹלֶה לָאוֹטוֹבּוּס וְשׁוֹאֵל אֶת הַנֶּהָג: "כַּמָּה זְמַן זֶה לוֹקֵחַ עַד תֵּל אָבִיב?"',
+    setup_t: 'Ish ole la-otobus ve-sho\'el et ha-nehag: "Kama zman ze loke\'ach ad Tel Aviv?"',
+    setup_e: 'A man gets on the bus and asks the driver: "How long does it take to Tel Aviv?"',
+    punch_he: 'הַנֶּהָג: "רֶגַע, אַל תְּחַקֶּה אוֹתִי, אֲנִי אֲדַבֵּר אִתְּךָ אַחֲרֵי שֶׁאָנוּ מַגִּיעִים."',
+    punch_t: 'Ha-nehag: "Rega, al techake oti, ani adaber itcha acharey she-anu magi\'im."',
+    punch_e: 'The driver: "Wait, don\'t imitate me, I\'ll talk to you after we arrive."'
+  },
+  {
+    title: '2. Two Israelis on a Plane',
+    setup_he: 'שְׁנֵי יִשְׂרְאֵלִים עוֹלִים לְמָטוֹס. אֶחָד אוֹמֵר לַשֵּׁנִי: "אֲנִי כָּל פַּעַם שֶׁאֲנִי טָס, אֲנִי לוֹקֵחַ פְּצָצָה אִתִּי."',
+    setup_t: 'Shney yisre\'elim olim le-matos. Echad omer la-sheni: "Ani kol pa\'am she-ani tas, ani loke\'ach ptzatza iti."',
+    setup_e: 'Two Israelis board a plane. One tells the other: "Every time I fly, I bring a bomb with me."',
+    punch_he: 'הַשֵּׁנִי: "מָה?!" הָרִאשׁוֹן: "כִּי הַסִּכּוּי שֶׁשְּׁתֵּי פְּצָצוֹת יִהְיוּ בְּמָטוֹס אֶחָד הוּא נָמוּךְ מְאוֹד."',
+    punch_t: 'Ha-sheni: "Ma?!" Ha-rishon: "Ki ha-sikui she-shtey ptzatzot yihyu be-matos echad hu namuch me\'od."',
+    punch_e: 'The other: "What?!" The first: "Because the chance two bombs are on one plane is very low."'
+  },
+  {
+    title: '3. The Misrad HaPnim',
+    setup_he: 'יְהוּדִי בָּא לְמִשְׂרַד הַפְּנִים. הַפָּקִיד אוֹמֵר: "תַּחֲזוֹר מָחָר."',
+    setup_t: 'Yehudi ba le-misrad ha-pnim. Ha-pakid omer: "Tachzor machar."',
+    setup_e: 'A Jew comes to the Interior Ministry. The clerk says: "Come back tomorrow."',
+    punch_he: 'הוּא: "אֲבָל אַתָּה אָמַרְתָּ אֶתְמוֹל לַחֲזוֹר הַיּוֹם!" הַפָּקִיד: "וְעַכְשָׁו אֲנִי אוֹמֵר לַחֲזוֹר מָחָר. גַּם זֶה תַּפְקִיד שֶׁלִּי."',
+    punch_t: 'Hu: "Aval ata amarta etmol lachazor ha-yom!" Ha-pakid: "Ve-achshav ani omer lachazor machar. Gam ze tafkid sheli."',
+    punch_e: 'Him: "But you said yesterday to come back today!" Clerk: "And now I\'m saying come back tomorrow. That\'s also my job."'
+  },
+  {
+    title: '4. Jewish Mother',
+    setup_he: 'יֶלֶד יְהוּדִי חוֹזֵר הַבַּיְתָה. אִמּוֹ שׁוֹאֶלֶת: "אַתָּה רָעֵב? יָשַׁן? קַר לְךָ?"',
+    setup_t: 'Yeled yehudi chozer ha-bayta. Imo sho\'elet: "Ata ra\'ev? Yashen? Kar lecha?"',
+    setup_e: 'A Jewish kid comes home. His mom asks: "Are you hungry? Tired? Cold?"',
+    punch_he: 'הוּא: "אִמָּא, אֲנִי לֹא יוֹדֵעַ עַדְיִן." הִיא: "אָז תֵּן לִי לַחְשׁוֹב בִּשְׁבִילְךָ."',
+    punch_t: 'Hu: "Ima, ani lo yode\'a adayin." Hi: "Az ten li lachshov bishvilcha."',
+    punch_e: 'Him: "Mom, I don\'t know yet." Her: "Then let me think for you."'
+  }
+];
+const COMEDY = [
+  { he: 'אֶרֶץ נֶהֱדֶרֶת', translit: 'eretz nehederet', fr: 'famous satire show' },
+  { he: 'הַחֲמִישִׁיָּה הַקַּאמֶרִית', translit: 'ha-chamisiya ha-kamerit', fr: 'classic 90s comedy troupe' },
+  { he: 'נְשׁוֹף לוֹחָמִים', translit: 'neshuf lochamim', fr: '"Fauda" — popular drama' },
+  { he: 'שֵׁמֶשׁ', translit: 'shemesh', fr: '"Shtisel" — Haredi family drama' },
+  { he: 'יְהוּדָה לֵוִי', translit: 'yehuda levi', fr: 'famous comedian / actor' },
+  { he: 'אֵרַז טַל', translit: 'eraz tal', fr: 'TV satirist' },
+  { he: 'קוֹמֶדִי בָּר', translit: 'comedy bar', fr: 'stand-up comedy clubs' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('vocab', VOCAB); R('setup', SETUP); R('punchline', PUNCHLINE); R('sarcasm', SARCASM); R('self', SELF); R('comedy', COMEDY);
+
+const jokesEl = document.getElementById('jokes');
+JOKES.forEach(j => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 16px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `
+    <div style="color: var(--accent); font-weight: 600; margin-bottom: 12px;">${j.title}</div>
+    <div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right; margin-bottom: 4px;">${j.setup_he}</div>
+    <div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-bottom: 4px;">${j.setup_t}</div>
+    <div style="font-size: 14px; margin-bottom: 12px;">${j.setup_e}</div>
+    <div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 20px; direction: rtl; text-align: right; margin-bottom: 4px; color: var(--accent);">${j.punch_he}</div>
+    <div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-bottom: 4px;">${j.punch_t}</div>
+    <div style="font-size: 14px;">${j.punch_e}</div>`;
+  jokesEl.appendChild(el);
+});
+
+addExtraVocab('Humor Vocabulary', [
+  { he: 'בְּדִיחָה', translit: 'bdicha', fr: 'joke' },
+  { he: 'הוּמוֹר', translit: 'humor', fr: 'humor' },
+  { he: 'מְצַחֵק', translit: 'metzachek', fr: 'kidding' },
+  { he: 'מַצְחִיק', translit: 'matzchik', fr: 'funny (m.)' },
+  { he: 'מַצְחִיקָה', translit: 'matzchika', fr: 'funny (f.)' },
+  { he: 'לִצְחוֹק', translit: 'litzchok', fr: 'to laugh' },
+  { he: 'הִתְפּוֹצַצְתִּי מִצְּחוֹק', translit: 'hitpotzatzti mi-tzchok', fr: 'I cracked up' },
+  { he: 'סַרְקָסְם', translit: 'sarcasm', fr: 'sarcasm' },
+  { he: 'אִירוֹנְיָה', translit: 'ironya', fr: 'irony' },
+  { he: 'הוּמוֹר שָׁחוֹר', translit: 'humor shachor', fr: 'dark humor' },
+  { he: 'הוּמוֹר עַצְמִי', translit: 'humor atzmi', fr: 'self-deprecating humor' },
+  { he: 'פַּנְצְ\'יִ', translit: 'punchline', fr: 'punchline' },
+  { he: 'סַטִירָה', translit: 'satira', fr: 'satire' }
+]);
+
+addMiniQuiz('Humor Quiz', [
+  { q: 'Israeli humor often involves...', options: ['Politeness', 'Self-deprecation + bureaucracy + family', 'Royalty jokes', 'Quiet observation'], answer: 1 },
+  { q: 'Famous satire show =', options: ['Eretz Nehederet', 'Shtisel', 'Fauda', 'Kupa Rashit'], answer: 0, explain: 'Eretz Nehederet = "wonderful country" — political satire' },
+  { q: 'Sarcastic "great"... =', options: ['נֶהֱדָר', 'אֵיזֶה הֶפְתָּעָה', 'נוֹרָא חָכָם', 'B and C'], answer: 3 },
+  { q: '"Punchline" =', options: ['בְּדִיחָה', 'הַסּוֹף', 'תַּחְבּוּשֶׁת', 'הַפַּנְץ\'יִ'], answer: 3 },
+  { q: 'Israelis joke about... most:', options: ['Royalty', 'Bureaucracy + army + Jewish mothers', 'Weather', 'Sports only'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('humor'); } });
+</script></body></html>

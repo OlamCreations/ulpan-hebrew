@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>162 — Yiddish Emotional Register</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>The Yiddish Emotional Register</h1><div class="subtitle">Lesson 162 · רֶגֶשׁ בְּיִידִישׁ</div></div><div class="nav"><a href="index.html">Home</a><a href="162-yiddish-emotion.html" class="active">162</a></div></header>
+
+<p class="intro">Yiddish gave Hebrew its emotional register — the warmth, the irony, the catastrophizing, the love language. Modern Hebrew without Yiddish would feel like a Roman general giving a speech. With Yiddish, it becomes a Jewish grandmother kvetching with love. This lesson walks the spectrum from heartbreak to delight.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Yiddish has dozens of words for grief and worry. Hebrew has fewer. When an Israeli wants to express layered emotion — pain wrapped in irony wrapped in love — they reach for Yiddish. Comedians especially. Listen to Israeli stand-up: the punchlines are Hebrew, the soul is Yiddish.</div>
+
+<h2>Suffering & Worry Words</h2>
+<div class="word-list" id="suffering"></div>
+
+<h2>Joy & Pride Words</h2>
+<div class="word-list" id="joy"></div>
+
+<h2>Sarcasm & Irony</h2>
+<div class="word-list" id="sarcasm"></div>
+
+<h2>Love & Endearment</h2>
+<div class="word-list" id="love"></div>
+
+<h2>Yiddish Exclamations</h2>
+<div class="word-list" id="exclaim"></div>
+
+<hr class="section-divider">
+
+<h2>Mother-Daughter Phone Call (cross-generational Yiddish)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A weekly Friday call. The mother is 70, daughter 40. Both born in Israel. Yiddish is the inherited grammar of love and worry.</div>
+  <div id="phonecall"></div>
+</div>
+
+<footer>Lesson 162 · Yiddish emotion · <a href="163-haredi-register.html">Next →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const SUFFERING = [
+  { he: 'צָרוֹת', translit: 'tzarot', fr: 'troubles (Hebrew root, Yiddish energy)' },
+  { he: 'אוֹי וְאַבוֹי', translit: 'oy va\'avoy', fr: 'oh and woe (deep lament)' },
+  { he: 'גוֹט אִין הִימֶל', translit: 'got in himel', fr: '"God in heaven" (alarm)' },
+  { he: 'פֵארְלוֹרֶן', translit: 'farloren', fr: 'lost / done for' },
+  { he: 'גְבוֹחַ צָרָה', translit: 'gvocha tzara', fr: 'a calamity (Yiddish-style construction)' },
+  { he: 'תַּכְלִית', translit: 'tachlit', fr: 'point / purpose (when frustrated)' },
+  { he: 'בִּזְכוּתִי', translit: 'bizchuti', fr: '"in my merit" / "thanks to me" (often sarcastic)' },
+  { he: 'הָאֵייוֵויִי שֶׁלִּי', translit: 'ha-oyvey sheli', fr: '"my oh-vey" — the litany of complaints' },
+  { he: 'מָה יִהְיֶה הַסּוֹף?', translit: 'ma yihye ha-sof?', fr: '"what will be the end?" (catastrophizing)' },
+  { he: 'אֵיךְ נַמְשִׁיךְ?', translit: 'eich namshich?', fr: 'how shall we go on?' }
+];
+const JOY = [
+  { he: 'נַחֵס', translit: 'naches', fr: 'pride (esp. parental)' },
+  { he: 'אוֹשֶׁר', translit: 'osher', fr: 'happiness (Hebrew, but Yiddish-flavored use)' },
+  { he: 'שִׂמְחָה', translit: 'simcha', fr: 'joy / celebration (life-cycle event)' },
+  { he: 'עֵרֶב יָפֶה', translit: 'erev yafeh', fr: 'a beautiful evening (homely warmth)' },
+  { he: 'מְזַל', translit: 'mazal', fr: 'luck (with Yiddish pronunciation)' },
+  { he: 'תּוֹדָה לָאֵל', translit: 'todah la-El', fr: 'thank God (Yiddish "a dank Got")' },
+  { he: 'הַחַיִּים יָפִים', translit: 'ha-chayim yafim', fr: 'life is beautiful (Yiddish optimism)' },
+  { he: 'מָה נַחֵס לִי', translit: 'ma naches li', fr: 'what joy for me' },
+  { he: 'בָּרוּךְ הַשֵּׁם', translit: 'baruch ha-Shem', fr: 'blessed be the Name (Yiddish-pronounced "borech")' },
+  { he: 'הִתְרַגְּשׁוּת', translit: 'hitragshut', fr: 'excitement / emotion (Yiddish "hartz")' }
+];
+const SARCASM = [
+  { he: 'אֵיזֶה אֲרוֹן יָקָר', translit: 'eize aron yakar', fr: '"what an expensive closet" (sarcastic praise)' },
+  { he: 'יוֹפִי, מַמָּשׁ', translit: 'yofi, mamash', fr: '"great, really" (deeply sarcastic)' },
+  { he: 'בְּדִיּוּק מַה שֶׁחָסֵר לִי', translit: 'b\'diyuk ma she-chaser li', fr: '"exactly what I needed" (sarcastic)' },
+  { he: 'עַל הַפָּנִים', translit: 'al ha-panim', fr: '"on the face" — terrible' },
+  { he: 'תִשְׁמַע', translit: 'tishma', fr: '"listen" (mocking command)' },
+  { he: 'אַתָּה לֹא מָבִין?', translit: 'atah lo mavin?', fr: '"don\'t you understand?" (impatient)' },
+  { he: 'אִיךָ?', translit: 'eich?', fr: '"how?" (incredulous)' },
+  { he: 'בְּחַיֶּיךָ!', translit: 'b\'chayecha!', fr: '"by your life!" (incredulous)' },
+  { he: 'יָה אַחְבָּל', translit: 'yah achbal', fr: '(Arabic-Hebrew) — what an idiot' },
+  { he: 'אֲנִי בְּשׁוֹק', translit: 'ani b\'shock', fr: '"I\'m in shock" (sarcastic)' }
+];
+const LOVE = [
+  { he: 'נְשָׁמָה', translit: 'neshama', fr: 'soul / sweetheart (universal endearment)' },
+  { he: 'בּוּבּעֶלֶע', translit: 'bubbele', fr: 'darling (Yiddish)' },
+  { he: 'אַהֲבָתִי', translit: 'ahavati', fr: 'my love (formal)' },
+  { he: 'מַתְּקָה', translit: 'matka', fr: '"sweetie" (girl)' },
+  { he: 'מַתּוֹק', translit: 'matok', fr: '"sweetie" (boy/anyone)' },
+  { he: 'אַחַת שֶׁלִּי', translit: 'achat sheli', fr: '"my one"' },
+  { he: 'חַיָּי', translit: 'chayai', fr: 'my life (used for spouse, kids)' },
+  { he: 'יָקָר שֶׁלִּי', translit: 'yakar sheli', fr: 'my dear / precious one' },
+  { he: 'בּוֹאִי לְכָאן', translit: 'bo\'i l\'chan', fr: 'come here (with affection)' },
+  { he: 'תֶן לִי חִבּוּק', translit: 'ten li chibbuk', fr: 'give me a hug' }
+];
+const EXCLAIM = [
+  { he: 'אוֹיוּ!', translit: 'oyu!', fr: 'oh! (general exclamation)' },
+  { he: 'גוֹט בְּחֶסֶד', translit: 'got b\'chesed', fr: 'God of mercy (older speakers)' },
+  { he: 'אַזוֹי', translit: 'azoy', fr: 'so / like that (Yiddish)' },
+  { he: 'יִשְׁמְרֵנוּ הַשֵּׁם', translit: 'yishm\'renu ha-Shem', fr: 'May the Name protect us' },
+  { he: 'חַס וְשָׁלוֹם', translit: 'chas v\'shalom', fr: 'God forbid' },
+  { he: 'בְּעֶזְרָת הַשֵּׁם', translit: 'b\'ezrat ha-Shem', fr: 'with God\'s help' },
+  { he: 'אִם יִרְצֶה הַשֵּׁם', translit: 'im yirtze ha-Shem', fr: 'God willing' },
+  { he: 'עַד מֵאָה וְעֶשְׂרִים', translit: 'ad me\'ah v\'esrim', fr: 'until 120 (long life wish)' },
+  { he: 'בְּלִי עַיִן הָרָע', translit: 'bli ayin ha-ra', fr: 'without evil eye (after compliments)' },
+  { he: 'תַּפּוּ-תַּפּוּ-תַּפּוּ', translit: 'tapu-tapu-tapu', fr: '(spit symbolically — ward off evil eye)' }
+];
+
+const PHONECALL = {
+  intro: 'Friday afternoon. Mother lives in Petah Tikva, daughter in Tel Aviv. Yiddish slipping in.',
+  lines: [
+    { speaker: 'Mother', he: 'בּוּבּעֶלֶע, שָׁלוֹם. אֵיךְ אַתְּ?', translit: 'bubbele, shalom. eich at?', fr: 'Sweetie, hello. How are you?' },
+    { speaker: 'Daughter', he: 'אִמָּא, בְּסֵדֶר, רַק עֲיֵפָה. הַשָּׁבוּעַ הָיָה בָּלָגָן.', translit: 'ima, b\'seder, rak ayefah. ha-shavua haya balagan.', fr: 'Mom, fine, just tired. The week was a mess.' },
+    { speaker: 'Mother', he: 'אוֹי וֵיי, אַתְּ עוֹבֶדֶת יוֹתֵר מִדַּי. מָה יִהְיֶה הַסּוֹף?', translit: 'oy vey, at ovedet yoter midai. ma yihye ha-sof?', fr: 'Oy vey, you work too much. What will be the end?' },
+    { speaker: 'Daughter', he: 'אִמָּא, אַל תַּתְחִילִי. אֲנִי בְּסֵדֶר. בְּלִי עַיִן הָרָע.', translit: 'ima, al tatchili. ani b\'seder. bli ayin ha-ra.', fr: 'Mom, don\'t start. I\'m fine. Without the evil eye.' },
+    { speaker: 'Mother', he: 'נְשָׁמָה שֶׁלִּי, אֲנִי דּוֹאֶגֶת. בּוֹאִי בְּשַׁבָּת לְאוֹכֵל.', translit: 'neshama sheli, ani do\'eget. bo\'i b\'shabbat le-ochel.', fr: 'My soul, I worry. Come Shabbat for food.' },
+    { speaker: 'Daughter', he: 'אַתְּ עוֹשָׂה צִ\'וֹלֵנְט?', translit: 'at osah cholent?', fr: 'You making cholent?' },
+    { speaker: 'Mother', he: 'מָה נַחֵס לִי, הִיא שׁוֹאֶלֶת אִם אֲנִי עוֹשָׂה צִ\'וֹלֵנְט. בְּטָח שֶׁכֵּן. עַד מֵאָה וְעֶשְׂרִים.', translit: 'ma naches li, hi sho\'elet im ani osah cholent. betach she-ken. ad me\'ah v\'esrim.', fr: 'What joy, she asks if I\'m making cholent. Of course. Until 120.' }
+  ]
+};
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('suffering', SUFFERING);
+R('joy', JOY);
+R('sarcasm', SARCASM);
+R('love', LOVE);
+R('exclaim', EXCLAIM);
+
+renderTextBlock('phonecall', PHONECALL.lines.map(l => ({ he: l.he, translit: l.translit, fr: l.speaker ? '[' + l.speaker + '] ' + l.fr : l.fr })));
+
+addMiniQuiz('Yiddish Emotion Quiz', [
+  { q: 'What does "naches" express?', options: ['Anger', 'Pride/joy (esp. parental)', 'Hunger', 'Boredom'], answer: 1, explain: 'Naches = the satisfaction parents take in their children\'s success.' },
+  { q: '"Bli ayin ha-ra" is said when...', options: ['Cursing someone', 'After a compliment, to ward off evil eye', 'Greeting', 'Eating'], answer: 1, explain: 'Said after positive statements to avoid the evil eye.' },
+  { q: '"Ad me\'ah v\'esrim" means...', options: ['100 percent', 'Until 120 (long-life wish)', 'Money', 'Tomorrow'], answer: 1, explain: 'Reference to Moses living to 120 — a wish for long life.' },
+  { q: 'What\'s "cholent"?', options: ['A drink', 'A slow-cooked Shabbat stew (Ashkenazi)', 'Bread', 'Cake'], answer: 1, explain: 'Cholent (also "shulant") is the Yiddish slow-cooked Shabbat dish.' },
+  { q: 'A neshama is...', options: ['A pet', 'Soul / endearment for a beloved', 'A car', 'A meal'], answer: 1, explain: 'Hebrew "soul" — used as a tender form of address in Yiddish-tinted speech.' },
+  { q: 'Why does Israeli Hebrew lean Yiddish for emotion?', options: ['Yiddish has more emotional vocabulary', 'Government decree', 'Bible commands it', 'Random'], answer: 0, explain: 'Yiddish developed dozens of nuanced feeling words; Hebrew imported them.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('yiddish-emotion');
+  }
+});
+</script></body></html>

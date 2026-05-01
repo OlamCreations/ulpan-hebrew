@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>199 — Conversation Mastery — All Daily Situations</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Conversation Mastery — All Daily Situations</h1><div class="subtitle">Lesson 199 · שִׂיחָה אַמִּיתִּית</div></div><div class="nav"><a href="index.html">Home</a><a href="199-conversation.html" class="active">199</a></div></header>
+
+<p class="intro">The penultimate lesson focuses on real conversational Hebrew across all situations: shop interactions, doctor visits, banking, dating, professional meetings, casual chat. After 198 lessons of vocabulary, grammar, and cultural context, this lesson assembles it all into the actual rhythm of Israeli speech. Conversational Hebrew is fast, idiom-saturated, and assumes shared cultural context. This is the layer that proves you can live in Israel. Master this and the country opens up.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israelis are direct. They interrupt, they say "no" without softening, they assume you can take banter. They greet with shalom or ahalan, drop quickly into first names, and end with shalom or ciao. The cultural value of "kushiya" (asking the right question) is high. After 200 lessons, you should be able to handle any of the situations below without panic.</div>
+
+<h2>Shop Interactions</h2>
+<div class="word-list" id="shop"></div>
+
+<h2>Medical Visits</h2>
+<div class="word-list" id="medical"></div>
+
+<h2>Banking & Admin</h2>
+<div class="word-list" id="banking"></div>
+
+<h2>Casual Chat</h2>
+<div class="word-list" id="casual"></div>
+
+<h2>Professional Meetings</h2>
+<div class="word-list" id="professional"></div>
+
+<hr class="section-divider">
+
+<h2>A Day in the Life — From Morning to Evening</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A composite day with conversations across all 5 contexts: shop, doctor, bank, casual, work. The complete rhythm of Israeli daily Hebrew.</div>
+  <div id="day"></div>
+</div>
+
+<footer>Lesson 199 · Conversation Mastery · <a href="200-final-synthesis.html" style="color:var(--accent)">Next: 200 — Final Synthesis →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const SHOP = [
+  { he: 'בּוֹקֶר טוֹב', translit: 'boker tov', fr: 'good morning (formal greeting on entry)' },
+  { he: 'שָׁלוֹם', translit: 'shalom', fr: 'hi / hello (universal)' },
+  { he: 'אַתָּה מוֹכֵר עוּגִיוֹת?', translit: 'ata mocher ugiyot?', fr: 'do you sell cookies?' },
+  { he: 'כַּמָּה זֶה בַּשֶּׁקֶל?', translit: 'kama ze ba-shekel?', fr: 'how much is it in shekel?' },
+  { he: 'אֶפְשָׁר לְשַׁלֵּם בְּכַרְטִיס?', translit: 'efshar l\'shalem b\'kartis?', fr: 'can I pay by card?' },
+  { he: 'יֵשׁ מִבְצָע', translit: 'yesh mivtza', fr: 'there\'s a sale / promotion' },
+  { he: 'מְחִיר זוֹל', translit: 'mechir zol', fr: 'good price / cheap price' },
+  { he: 'הַנָחָה', translit: 'hanacha', fr: 'discount' },
+  { he: 'זֶה יַעֲלֶה לִי...', translit: 'ze ya\'aleh li...', fr: 'it\'ll cost me...' },
+  { he: 'תּוֹדָה', translit: 'todah', fr: 'thanks (always close with this)' }
+];
+const MEDICAL = [
+  { he: 'יֵשׁ לִי כְּאֵב', translit: 'yesh li ke\'ev', fr: 'I have pain' },
+  { he: 'כְּאֵב רֹאשׁ', translit: 'ke\'ev rosh', fr: 'headache' },
+  { he: 'כְּאֵב בֶּטֶן', translit: 'ke\'ev beten', fr: 'stomach pain' },
+  { he: 'אַתָּה יָכוֹל לְהַגִּיד לִי?', translit: 'ata yachol l\'hagid li?', fr: 'can you tell me?' },
+  { he: 'חֲנִיכַיִם', translit: 'chanichayim', fr: 'gums' },
+  { he: 'שָׁבוּר', translit: 'shavur', fr: 'broken' },
+  { he: 'קְצָת כּוֹאֵב', translit: 'k\'tzat ko\'ev', fr: 'it aches a little' },
+  { he: 'אֶפְשָׁר לִרְאוֹת אֶת הָרוֹפֵא?', translit: 'efshar lir\'ot et ha-rofe?', fr: 'can I see the doctor?' },
+  { he: 'הַתּוֹר הַבָּא', translit: 'ha-tor ha-ba', fr: 'my next appointment' },
+  { he: 'לְקַבֵּל מִרְשָׁם', translit: 'l\'kabel mirsham', fr: 'to get a prescription' }
+];
+const BANKING = [
+  { he: 'בַּנְק הַדֹּאַר', translit: 'bank ha-do\'ar', fr: 'post bank (general banking)' },
+  { he: 'מַקְסִימוּם בַּחֶשְׁבּוֹן', translit: 'maksimum ba-cheshbon', fr: 'account limit / overdraft cap' },
+  { he: 'אֶפְשָׁר לִמְשׁוֹךְ?', translit: 'efshar limshoch?', fr: 'can I withdraw?' },
+  { he: 'שֶׁל מִי זֶה?', translit: 'shel mi ze?', fr: 'whose is this?' },
+  { he: 'אַתָּה רוֹשֵׁם אוֹתִי', translit: 'ata roshem oti', fr: 'you\'re registering me' },
+  { he: 'אֶפְשָׁר לַעֲשׂוֹת זֶה אוֹנְלַיְין?', translit: 'efshar la\'asot ze online?', fr: 'can I do this online?' },
+  { he: 'נִמְסַר לְתוֹעֵד', translit: 'nimsar l\'to\'ed', fr: 'it was delivered / recorded' },
+  { he: 'בְּמָה זֶה עוֹסֵק?', translit: 'b\'ma ze osek?', fr: 'what\'s it about?' },
+  { he: 'אֶזְרָח', translit: 'ezrach', fr: 'citizen' },
+  { he: 'עוֹלֶה חָדָשׁ', translit: 'oleh chadash', fr: 'new immigrant (your status year 1)' }
+];
+const CASUAL = [
+  { he: 'מָה הָעִנְיָנִים?', translit: 'ma ha-inyanim?', fr: 'what\'s up? / how are things?' },
+  { he: 'שַׁבָּת שָׁלוֹם', translit: 'shabbat shalom', fr: 'have a great Shabbat' },
+  { he: 'אֵיךְ הָיָה?', translit: 'eich haya?', fr: 'how was it?' },
+  { he: 'סְלִיחָה', translit: 'slicha', fr: 'sorry / excuse me' },
+  { he: 'מָה עַכְשָׁיו?', translit: 'ma achshav?', fr: 'what now?' },
+  { he: 'כִּמְעַט', translit: 'kim\'at', fr: 'almost' },
+  { he: 'כְּבָר שְׁלוֹשִׁים שָׁנָה!', translit: 'k\'var shloshim shana!', fr: 'already 30 years!' },
+  { he: 'כָּזֶה הוּא הַחַיִּים', translit: 'kaze hu ha-chayim', fr: 'such is life' },
+  { he: 'הָרֵיחַ', translit: 'ha-rei\'ach', fr: 'the smell' },
+  { he: 'אַתֶּם אוֹמְרִים', translit: 'atem omrim', fr: 'you guys are saying' }
+];
+const PROFESSIONAL = [
+  { he: 'פְּגִישָׁה', translit: 'p\'gisha', fr: 'meeting' },
+  { he: 'אַתָּה מֵבִין אֶת זֶה?', translit: 'ata mevin et ze?', fr: 'do you understand this?' },
+  { he: 'נִפְתֹּר זֶה עַכְשָׁיו', translit: 'niftor ze achshav', fr: 'let\'s solve it now' },
+  { he: 'הַיוֹעֵץ מַמְשִׁיךְ', translit: 'ha-yo\'etz mamshich', fr: 'the consultant continues' },
+  { he: 'בִּפְרָט בָּקְבוּעַ', translit: 'biprat ba-kavu\'a', fr: 'specifically / definitively' },
+  { he: 'נִפְתֹּר', translit: 'niftor', fr: 'we\'ll solve' },
+  { he: 'פְּרָטִים עִקָּרִיִּים', translit: 'p\'ratim ikariyim', fr: 'central / main details' },
+  { he: 'נִפְתֹּר זֶה לְמָחָר', translit: 'niftor ze l\'machar', fr: 'let\'s solve it tomorrow' },
+  { he: 'אַתָּה מוּכָן?', translit: 'ata muchan?', fr: 'are you ready?' },
+  { he: 'תּוֹדָה עַל הַזְּמַן', translit: 'todah al ha-z\'man', fr: 'thanks for the time' }
+];
+
+const DAY = [
+  { he: '07:30 בְּמַכֹּלֶת — בּוֹקֶר טוֹב, אֲנִי רוֹצֶה לֶחֶם וְחָלָב. כַּמָּה זֶה בַּשֶּׁקֶל?', translit: '07:30 ba-makolet — boker tov, ani rotzeh lechem v\'chalav. kama ze ba-shekel?', fr: '07:30 at the corner shop — Good morning, I want bread and milk. How much in shekel?' },
+  { he: 'מוֹכֵר — אַחַד עֶשֶׂר וַחֲצִי. אֶפְשָׁר לְשַׁלֵּם בְּכַרְטִיס. תּוֹדָה.', translit: 'mocher — achad asar va-chetzi. efshar l\'shalem b\'kartis. todah.', fr: 'Shopkeeper — Eleven and a half. You can pay by card. Thanks.' },
+  { he: '11:00 בַּקֻּפַּת חוֹלִים — שָׁלוֹם. יֵשׁ לִי כְּאֵב גָּרוֹן וּקְצָת חוֹם. אֶפְשָׁר לִרְאוֹת אֶת הָרוֹפֵא?', translit: '11:00 ba-kupat cholim — shalom. yesh li ke\'ev garon u-k\'tzat chom. efshar lir\'ot et ha-rofe?', fr: '11:00 at the health clinic — Hi. I have a sore throat and a slight fever. Can I see the doctor?' },
+  { he: '14:00 בַּבַּנְק — אֶפְשָׁר לִמְשׁוֹךְ אַלְפַּיִם שֶׁקֶל? אֲנִי עוֹלֶה חָדָשׁ, יֵשׁ לִי תְּעוּדַת זֶהוּת.', translit: '14:00 ba-bank — efshar limshoch alpayim shekel? ani oleh chadash, yesh li teudat zehut.', fr: '14:00 at the bank — Can I withdraw 2000 shekel? I\'m a new immigrant, I have my ID card.' },
+  { he: 'פָּקִיד — בֶּטַח. תֵּן לִי שְׁתֵּי דַּקּוֹת לִרְשֹׁם אוֹתְךָ בַּמַּעֲרֶכֶת.', translit: 'pakid — betach. ten li shtei dakot lirshom otcha ba-ma\'arechet.', fr: 'Clerk — Sure. Give me two minutes to register you in the system.' },
+  { he: '16:30 פְּגִישַׁת עֲבוֹדָה — אַתָּה מֵבִין אֶת הַפְּרָטִים? נִפְתֹּר זֶה עַכְשָׁיו, אַחֲרֵי כֵּן תְּעַדְכֵּן אוֹתִי.', translit: '16:30 p\'gishat avoda — ata mevin et ha-p\'ratim? niftor ze achshav, acharei ken t\'adken oti.', fr: '16:30 work meeting — Do you understand the details? Let\'s solve it now, then update me afterward.' },
+  { he: '20:00 עִם חֲבֵרִים — מָה הָעִנְיָנִים? אֵיךְ הָיָה הַיּוֹם שֶׁלְּךָ? כָּזֶה הוּא הַחַיִּים בְּיִשְׂרָאֵל. שַׁבָּת שָׁלוֹם!', translit: '20:00 im chaverim — ma ha-inyanim? eich haya ha-yom shelcha? kaze hu ha-chayim b\'yisrael. shabbat shalom!', fr: '20:00 with friends — What\'s up? How was your day? Such is life in Israel. Shabbat shalom!' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('shop', SHOP);
+R('medical', MEDICAL);
+R('banking', BANKING);
+R('casual', CASUAL);
+R('professional', PROFESSIONAL);
+
+renderTextBlock('day', DAY);
+
+addMiniQuiz('Conversation Mastery Quiz', [
+  { q: 'In a shop, "kama ze ba-shekel?" means...', options: ['where is it?', 'how much is it in shekel?', 'who sells it?', 'is it cheap?'], answer: 1, explain: 'kama = how much, ba-shekel = in shekel. The default price question.' },
+  { q: 'At the doctor, "yesh li ke\'ev rosh" means...', options: ['I have a stomach ache', 'I have a headache', 'my back hurts', 'I feel tired'], answer: 1, explain: 'ke\'ev = pain, rosh = head. Direct construction: I-have pain head.' },
+  { q: 'At the bank, "ani oleh chadash" tells the clerk...', options: ['I want to leave', 'I am a new immigrant', 'I have an account', 'I am a citizen'], answer: 1, explain: 'oleh chadash is the official status — unlocks specific accounts, benefits, and procedures.' },
+  { q: 'In a meeting, "niftor ze achshav" means...', options: ['let\'s postpone it', 'let\'s solve it now', 'let\'s discuss tomorrow', 'let\'s ignore it'], answer: 1, explain: 'niftor = we\'ll solve, achshav = now. Israeli directness — problems get faced immediately.' },
+  { q: 'Casually, "ma ha-inyanim?" is closest to...', options: ['goodbye', 'what\'s up?', 'how much?', 'who is it?'], answer: 1, explain: 'inyanim = matters/things. The everyday opener between friends, like "what\'s up".' },
+  { q: 'Closing nearly any interaction, the universal word is...', options: ['shalom', 'todah', 'ciao', 'all of the above'], answer: 3, explain: 'Israelis use all three interchangeably. todah closes transactions, shalom closes formally, ciao closes casually.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('conversation');
+  }
+});
+</script></body></html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 — Time & Clock</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Time & Clock</h1>
+    <div class="subtitle">Lesson 10 · זמן ושעה</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="09-colors-adjectives.html">09</a>
+    <a href="10-time-clock.html" class="active">10</a>
+    <a href="11-negation-questions.html">11</a>
+  </div>
+</header>
+
+<p class="intro">
+  The Israeli week starts on Sunday (yom rishon = "first day") and ends on Shabbat (Saturday). Time is told using the feminine form of numbers (default form). Months exist in both Hebrew and Gregorian calendars.
+</p>
+
+<h2>Days of the Week</h2>
+
+<div class="tip">
+  <strong>"First day"</strong> — Days are numbered except Shabbat. Yom rishon = day 1 (Sunday), yom sheni = day 2 (Monday), and so on.
+</div>
+
+<div class="word-list" id="days"></div>
+
+<h2>Times of Day</h2>
+<div class="word-list" id="moments"></div>
+
+<h2>Yesterday, Today, Tomorrow</h2>
+<div class="word-list" id="when"></div>
+
+<h2>Gregorian Months</h2>
+<div class="word-list" id="months-greg"></div>
+
+<h2>Hebrew Months</h2>
+
+<div class="tip">
+  <strong>Hebrew calendar</strong> — 12 lunar months, starts in Tishrei (Sept-Oct). Pessach falls in Nissan (Mar-Apr), Rosh Hashana in Tishrei.
+</div>
+
+<div class="word-list" id="months-heb"></div>
+
+<h2>Seasons</h2>
+<div class="word-list" id="seasons"></div>
+
+<hr class="section-divider">
+
+<h2>Telling Time</h2>
+
+<div class="tip">
+  <strong>Question</strong> — מָה הַשָּׁעָה? (ma ha-sha'a?) = what time is it?
+</div>
+
+<div class="tip">
+  <strong>Sharp / half / quarter / quarter-to</strong> — בְּדִיּוּק (bediyuk, sharp/exactly) · וָחֵצִי (va-chetzi, and a half) · וָרֶבַע (va-reva, and a quarter) · רֶבַע לְ (reva le-, quarter to).
+</div>
+
+<div class="word-list" id="hours"></div>
+
+<hr class="section-divider">
+
+<h2>Useful Time Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 10 · days, months, time · <a href="11-negation-questions.html" style="color:var(--accent)">Next: Negation & Questions →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const DAYS = [
+  { he: 'יוֹם רִאשׁוֹן',  translit: 'yom rishon',   fr: 'Sunday (1st day)' },
+  { he: 'יוֹם שֵׁנִי',    translit: 'yom sheni',    fr: 'Monday (2nd day)' },
+  { he: 'יוֹם שְׁלִישִׁי', translit: 'yom shlishi',  fr: 'Tuesday (3rd day)' },
+  { he: 'יוֹם רְבִיעִי',  translit: "yom revi'i",   fr: 'Wednesday (4th day)' },
+  { he: 'יוֹם חֲמִישִׁי', translit: 'yom chamishi', fr: 'Thursday (5th day)' },
+  { he: 'יוֹם שִׁשִּׁי',  translit: 'yom shishi',   fr: 'Friday (6th day)' },
+  { he: 'שַׁבָּת',        translit: 'shabbat',      fr: 'Saturday / Sabbath' }
+];
+
+const MOMENTS = [
+  { he: 'בּוֹקֶר',                  translit: 'boker',                  fr: 'morning' },
+  { he: 'צָהֳרַיִם',                translit: 'tzohorayim',             fr: 'noon' },
+  { he: 'אַחַר הַצָּהֳרַיִם',       translit: 'achar ha-tzohorayim',    fr: 'afternoon' },
+  { he: 'עֶרֶב',                    translit: 'erev',                   fr: 'evening' },
+  { he: 'לַיְלָה',                  translit: 'layla',                  fr: 'night' },
+  { he: 'חֲצוֹת',                   translit: 'chatzot',                fr: 'midnight' }
+];
+
+const WHEN = [
+  { he: 'הַיּוֹם',         translit: 'ha-yom',     fr: 'today' },
+  { he: 'אֶתְמוֹל',        translit: 'etmol',      fr: 'yesterday' },
+  { he: 'מָחָר',           translit: 'machar',     fr: 'tomorrow' },
+  { he: 'שִׁלְשׁוֹם',      translit: 'shilshom',   fr: 'day before yesterday' },
+  { he: 'מָחֳרָתַיִם',     translit: 'mochratayim', fr: 'day after tomorrow' },
+  { he: 'עַכְשָׁו',        translit: 'achshav',    fr: 'now' },
+  { he: 'אַחַר כָּךְ',     translit: 'achar kach', fr: 'later / after that' },
+  { he: 'תָּמִיד',         translit: 'tamid',      fr: 'always' },
+  { he: 'אַף פַּעַם',      translit: "af pa'am",   fr: 'never' }
+];
+
+const MONTHS_GREG = [
+  { he: 'יָנוּאָר',     translit: 'yanuar',    fr: 'January' },
+  { he: 'פֶבְּרוּאָר',  translit: 'februar',   fr: 'February' },
+  { he: 'מֶרְץ',        translit: 'merts',     fr: 'March' },
+  { he: 'אַפְּרִיל',    translit: 'april',     fr: 'April' },
+  { he: 'מַאי',         translit: 'mai',       fr: 'May' },
+  { he: 'יוּנִי',       translit: 'yuni',      fr: 'June' },
+  { he: 'יוּלִי',       translit: 'yuli',      fr: 'July' },
+  { he: 'אוֹגוּסְט',    translit: 'ogust',     fr: 'August' },
+  { he: 'סֶפְּטֶמְבֶּר', translit: 'september', fr: 'September' },
+  { he: 'אוֹקְטוֹבֶּר', translit: 'oktober',   fr: 'October' },
+  { he: 'נוֹבֶמְבֶּר',  translit: 'november',  fr: 'November' },
+  { he: 'דֶּצֶמְבֶּר',  translit: 'detsember', fr: 'December' }
+];
+
+const MONTHS_HEB = [
+  { he: 'תִּשְׁרֵי',     translit: 'tishrei', fr: 'Tishrei (Sept-Oct, Rosh Hashana)' },
+  { he: 'חֶשְׁוָן',      translit: 'cheshvan', fr: 'Cheshvan (Oct-Nov)' },
+  { he: 'כִּסְלֵו',     translit: 'kislev',  fr: 'Kislev (Nov-Dec, Hanukkah)' },
+  { he: 'טֵבֵת',         translit: 'tevet',   fr: 'Tevet (Dec-Jan)' },
+  { he: 'שְׁבָט',        translit: 'shvat',   fr: 'Shvat (Jan-Feb)' },
+  { he: 'אֲדָר',         translit: 'adar',    fr: 'Adar (Feb-Mar, Purim)' },
+  { he: 'נִיסָן',        translit: 'nissan',  fr: 'Nissan (Mar-Apr, Pessach)' },
+  { he: 'אִיָּר',        translit: 'iyar',    fr: 'Iyar (Apr-May)' },
+  { he: 'סִיוָן',        translit: 'sivan',   fr: 'Sivan (May-Jun, Shavuot)' },
+  { he: 'תַּמּוּז',      translit: 'tamuz',   fr: 'Tamuz (Jun-Jul)' },
+  { he: 'אָב',           translit: 'av',      fr: 'Av (Jul-Aug, Tisha BeAv)' },
+  { he: 'אֱלוּל',        translit: 'elul',    fr: 'Elul (Aug-Sept)' }
+];
+
+const SEASONS = [
+  { he: 'אָבִיב',  translit: 'aviv',  fr: 'spring' },
+  { he: 'קַיִץ',   translit: 'kayitz', fr: 'summer' },
+  { he: 'סְתָו',   translit: 'stav',  fr: 'autumn / fall' },
+  { he: 'חוֹרֶף',  translit: 'choref', fr: 'winter' }
+];
+
+const HOURS = [
+  { he: 'מָה הַשָּׁעָה?',                   translit: "ma ha-sha'a?",                fr: 'what time is it?' },
+  { he: 'הַשָּׁעָה אַחַת',                  translit: "ha-sha'a achat",              fr: "it's 1 o'clock" },
+  { he: 'הַשָּׁעָה שָׁלוֹשׁ',               translit: "ha-sha'a shalosh",            fr: "it's 3 o'clock" },
+  { he: 'הַשָּׁעָה שֶׁבַע וָחֵצִי',         translit: "ha-sha'a sheva va-chetzi",    fr: "it's 7:30" },
+  { he: 'הַשָּׁעָה תֵּשַׁע וָרֶבַע',        translit: "ha-sha'a tesha va-reva",      fr: "it's 9:15" },
+  { he: 'רֶבַע לְעֶשֶׂר',                   translit: 'reva le-eser',                fr: 'quarter to 10' },
+  { he: 'חָמֵשׁ דַּקּוֹת לְשָׁלוֹשׁ',       translit: 'chamesh dakot le-shalosh',    fr: '5 minutes to 3' },
+  { he: 'בְּשָׁלוֹשׁ בְּדִיּוּק',           translit: 'be-shalosh bediyuk',          fr: 'at 3 sharp' }
+];
+
+const PHRASES = [
+  { he: 'הַיּוֹם יוֹם שְׁלִישִׁי',         translit: 'ha-yom yom shlishi',         fr: 'today is Tuesday' },
+  { he: 'מָחָר אֲנִי טָס',                  translit: 'machar ani tas',             fr: 'tomorrow I fly (m.)' },
+  { he: 'אֶתְמוֹל הָיִיתִי בַּשּׁוּק',     translit: 'etmol hayiti ba-shuk',       fr: 'yesterday I was at the market' },
+  { he: 'בַּקַּיִץ חַם בְּיִשְׂרָאֵל',     translit: 'ba-kayitz cham be-Yisrael',  fr: 'in summer it\'s hot in Israel' },
+  { he: 'בְּחוֹרֶף יוֹרֵד גֶּשֶׁם',         translit: 'be-choref yored geshem',     fr: 'in winter it rains' },
+  { he: 'יֵשׁ לִי תּוֹר בִּשְׁתַּיִם',      translit: 'yesh li tor be-shtayim',     fr: 'I have an appointment at 2 PM' },
+  { he: 'אֲנִי בָּא בְּשַׁבָּת',            translit: 'ani ba be-shabbat',          fr: "I'm coming on Shabbat" },
+  { he: 'יוֹם הֻלֶּדֶת שָׂמֵחַ',           translit: 'yom huledet sameach',         fr: 'happy birthday' },
+  { he: 'שָׁנָה טוֹבָה',                    translit: 'shana tova',                  fr: 'happy new year (Rosh Hashana)' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('days', DAYS);
+renderRows('moments', MOMENTS);
+renderRows('when', WHEN);
+renderRows('months-greg', MONTHS_GREG);
+renderRows('months-heb', MONTHS_HEB);
+renderRows('seasons', SEASONS);
+renderRows('hours', HOURS);
+renderRows('phrases', PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) {
+    count++;
+    if (count >= 20) markLessonDone('time');
+  }
+});
+
+addExtraVocab('Time Expressions Used Daily', [
+  { he: 'הַיּוֹם', translit: 'ha-yom', fr: 'today' },
+  { he: 'אֶתְמוֹל', translit: 'etmol', fr: 'yesterday' },
+  { he: 'מָחָר', translit: 'machar', fr: 'tomorrow' },
+  { he: 'שִׁלְשׁוֹם', translit: 'shilshom', fr: 'day before yesterday' },
+  { he: 'מָחֳרָתַיִם', translit: 'mocharatayim', fr: 'day after tomorrow' },
+  { he: 'בַּבֹּקֶר', translit: 'ba-boker', fr: 'in the morning' },
+  { he: 'בַּצָּהֳרַיִם', translit: 'ba-tzohorayim', fr: 'at noon' },
+  { he: 'אַחַר הַצָּהֳרַיִם', translit: 'achar ha-tzohorayim', fr: 'in the afternoon' },
+  { he: 'בָּעֶרֶב', translit: 'ba-erev', fr: 'in the evening' },
+  { he: 'בַּלַּיְלָה', translit: 'ba-laila', fr: 'at night' },
+  { he: 'בַּחֲצוֹת', translit: 'ba-chatzot', fr: 'at midnight' },
+  { he: 'הַשָּׁבוּעַ', translit: 'ha-shavua', fr: 'this week' },
+  { he: 'שָׁבוּעַ שֶׁעָבַר', translit: 'shavua she-avar', fr: 'last week' },
+  { he: 'הַחֹדֶשׁ', translit: 'ha-chodesh', fr: 'this month' },
+  { he: 'תָּמִיד', translit: 'tamid', fr: 'always' },
+  { he: 'אַף פַּעַם', translit: 'af pa\'am', fr: 'never' },
+  { he: 'לִפְעָמִים', translit: 'lif\'amim', fr: 'sometimes' },
+  { he: 'בְּדֶרֶךְ כְּלָל', translit: 'be-derech klal', fr: 'usually' }
+]);
+
+addExtraVocab('Days, Months, Seasons (Hebrew + Gregorian)', [
+  { he: 'יוֹם רִאשׁוֹן', translit: 'yom rishon', fr: 'Sunday (work day in Israel!)' },
+  { he: 'יוֹם שֵׁנִי', translit: 'yom sheni', fr: 'Monday' },
+  { he: 'יוֹם שְׁלִישִׁי', translit: 'yom shlishi', fr: 'Tuesday' },
+  { he: 'יוֹם רְבִיעִי', translit: 'yom revi\'i', fr: 'Wednesday' },
+  { he: 'יוֹם חֲמִישִׁי', translit: 'yom chamishi', fr: 'Thursday' },
+  { he: 'יוֹם שִׁשִּׁי', translit: 'yom shishi', fr: 'Friday' },
+  { he: 'שַׁבָּת', translit: 'shabbat', fr: 'Saturday' },
+  { he: 'יָנוּאָר', translit: 'yanuar', fr: 'January' },
+  { he: 'פֶבְּרוּאָר', translit: 'februar', fr: 'February' },
+  { he: 'מַרְץ', translit: 'martz', fr: 'March' },
+  { he: 'אַפְּרִיל', translit: 'april', fr: 'April' },
+  { he: 'תִּשְׁרֵי', translit: 'tishrei', fr: 'Tishrei (Hebrew month, Sept-Oct)' },
+  { he: 'נִיסָן', translit: 'nisan', fr: 'Nisan (Hebrew, March-April, Pessach)' },
+  { he: 'אָבִיב', translit: 'aviv', fr: 'spring' },
+  { he: 'קַיִץ', translit: 'kayitz', fr: 'summer' },
+  { he: 'סְתָו', translit: 'stav', fr: 'autumn' },
+  { he: 'חֹרֶף', translit: 'choref', fr: 'winter' }
+]);
+
+addMiniQuiz('Time Quiz', [
+  { q: 'When does the Israeli work week start?', options: ['Monday', 'Sunday', 'Saturday', 'Friday'], answer: 1, explain: 'Sunday = יוֹם רִאשׁוֹן = "first day"' },
+  { q: '"It\'s 8:30" =', options: ['שְׁמוֹנֶה וָחֵצִי', 'שָׁלוֹשׁ וְעֶשֶׂר', 'שְׁמוֹנֶה שְׁלוֹשִׁים', 'רֶבַע לְתֵשַׁע'], answer: 0, explain: 'Israelis say "eight and a half"' },
+  { q: '"Quarter past 3" =', options: ['רֶבַע לְשָׁלוֹשׁ', 'רֶבַע אַחֲרֵי שָׁלוֹשׁ', 'שָׁלוֹשׁ וְרֶבַע', 'שָׁלוֹשׁ פָּחוֹת רֶבַע'], answer: 2, explain: 'shalosh va-reva (most common form)' },
+  { q: 'Tishrei is...', options: ['Spring month', 'A Friday holiday', 'A Hebrew month with Rosh Hashana', 'A type of bread'], answer: 2 },
+  { q: 'When is Shabbat?', options: ['Friday day', 'Friday sunset → Saturday sunset', 'Saturday only', 'Sunday'], answer: 1 }
+]);
+
+addCulturalText('Asking & Telling Time — Real Conversation', 'How Israelis discuss time. Note: Israelis use "and a half" rather than "30" for half-hours.', [
+  { he: 'מָה הַשָּׁעָה?', translit: "Ma ha-sha\'a?", fr: 'What\'s the time?' },
+  { he: 'הַשָּׁעָה שְׁמוֹנֶה וָחֵצִי', translit: "Ha-sha\'a shmone va-chetzi", fr: 'It\'s eight thirty (eight and a half)' },
+  { he: 'רֶבַע לְעֶשֶׂר', translit: "Reva le-eser", fr: 'Quarter to ten' },
+  { he: 'רֶבַע אַחֲרֵי שָׁלוֹשׁ', translit: "Reva acharey shalosh", fr: 'Quarter past three' },
+  { he: 'בְּדִיּוּק שְׁתַּיִם בַּצָּהֳרַיִם', translit: "Be-diyuk shtayim ba-tzohorayim", fr: 'Exactly 2 PM' },
+  { he: 'אֲנִי מְאַחֵר ב-10 דַּקּוֹת', translit: "Ani me\'acher be-10 dakot", fr: "I'm 10 minutes late" },
+  { he: 'נִפָּגֵשׁ בְּ-7 בָּעֶרֶב', translit: "Nipagesh be-7 ba-erev", fr: 'Let\'s meet at 7 PM' },
+  { he: 'יוֹם רִאשׁוֹן בָּא לְךָ?', translit: "Yom rishon ba lecha?", fr: 'Sunday work for you (m.)?' },
+  { he: 'בְּעוֹד רֶבַע שָׁעָה', translit: "Be-od reva sha\'a", fr: 'In a quarter of an hour' }
+]);
+</script>
+
+</body>
+</html>

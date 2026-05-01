@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>51 — Israeli Geography</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Israeli Geography</h1><div class="subtitle">Lesson 51 · גאוגרפיה</div></div><div class="nav"><a href="index.html">Home</a><a href="51-geography.html" class="active">51</a></div></header>
+
+<p class="intro">Israel: 22,000 km², 9.5 million people. From Mediterranean coast to Dead Sea (lowest land on Earth, -430m), to Eilat on the Red Sea. Six geographic regions, five biomes, all in 470 km north-south.</p>
+
+<h2>Compass & Directions</h2>
+<div class="word-list" id="compass"></div>
+
+<h2>Major Cities</h2>
+<div class="word-list" id="cities"></div>
+
+<h2>Geographic Regions</h2>
+<div class="word-list" id="regions"></div>
+
+<h2>Bodies of Water</h2>
+<div class="word-list" id="water"></div>
+
+<h2>Mountains & Landmarks</h2>
+<div class="word-list" id="mountains"></div>
+
+<h2>Borders & Neighbors</h2>
+<div class="word-list" id="borders"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 51 · geography · <a href="52-jerusalem.html" style="color:var(--accent)">Next: Jerusalem →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const COMPASS = [
+  { he: 'צָפוֹן', translit: 'tzafon', fr: 'north' },
+  { he: 'דָּרוֹם', translit: 'darom', fr: 'south' },
+  { he: 'מִזְרָח', translit: 'mizrach', fr: 'east' },
+  { he: 'מַעֲרָב', translit: 'ma\'arav', fr: 'west' },
+  { he: 'מֶרְכָּז', translit: 'merkaz', fr: 'center (Gush Dan area)' }
+];
+const CITIES = [
+  { he: 'יְרוּשָׁלַיִם', translit: 'Yerushalayim', fr: 'Jerusalem (capital)' },
+  { he: 'תֵּל אָבִיב', translit: 'Tel Aviv', fr: 'Tel Aviv (cultural/economic hub)' },
+  { he: 'חֵיפָה', translit: 'Haifa', fr: 'Haifa (port, north)' },
+  { he: 'בְּאֵר שֶׁבַע', translit: 'Be\'er Sheva', fr: 'Beer Sheva (Negev capital)' },
+  { he: 'אֵילַת', translit: 'Eilat', fr: 'Eilat (Red Sea)' },
+  { he: 'נְתַנְיָה', translit: 'Netanya', fr: 'Netanya (coast, French olim hub)' },
+  { he: 'הֶרְצְלִיָּה', translit: 'Herzliya', fr: 'Herzliya (tech)' },
+  { he: 'רֵאֲשׁוֹן לְצִיּוֹן', translit: 'Rishon LeTzion', fr: 'Rishon LeTzion' },
+  { he: 'אַשְׁדּוֹד', translit: 'Ashdod', fr: 'Ashdod (port)' },
+  { he: 'אַשְׁקְלוֹן', translit: 'Ashkelon', fr: 'Ashkelon' },
+  { he: 'נָצֶרֶת', translit: 'Nazareth', fr: 'Nazareth (Christian/Arab)' },
+  { he: 'צְפַת', translit: 'Tzfat', fr: 'Safed (mystical, north)' },
+  { he: 'טְבֶרְיָה', translit: 'Tveriya', fr: 'Tiberias (Sea of Galilee)' }
+];
+const REGIONS = [
+  { he: 'הַגָּלִיל', translit: 'ha-Galil', fr: 'the Galilee (north)' },
+  { he: 'גּוּשׁ דָּן', translit: 'Gush Dan', fr: 'Gush Dan (greater Tel Aviv)' },
+  { he: 'הַשְּׁפֵלָה', translit: 'ha-Shfela', fr: 'the Shfela (lowlands)' },
+  { he: 'מִישׁוֹר הַחוֹף', translit: 'mishor ha-chof', fr: 'coastal plain' },
+  { he: 'יְהוּדָה וְשׁוֹמְרוֹן', translit: 'Yehuda ve-Shomron', fr: 'Judea & Samaria (West Bank)' },
+  { he: 'הַנֶּגֶב', translit: 'ha-Negev', fr: 'the Negev (south desert)' },
+  { he: 'עֲרָבָה', translit: 'Arava', fr: 'Arava (southern desert valley)' },
+  { he: 'רָמַת הַגּוֹלָן', translit: 'Ramat ha-Golan', fr: 'Golan Heights (NE)' },
+  { he: 'בִּקְעַת הַיַּרְדֵּן', translit: 'bik\'at ha-Yarden', fr: 'Jordan Valley' }
+];
+const WATER = [
+  { he: 'הַיָּם הַתִּיכוֹן', translit: 'ha-yam ha-tichon', fr: 'Mediterranean Sea' },
+  { he: 'יָם הַמֶּלַח', translit: 'yam ha-melach', fr: 'Dead Sea' },
+  { he: 'יָם סוּף', translit: 'yam suf', fr: 'Red Sea' },
+  { he: 'הַכִּנֶּרֶת', translit: 'ha-Kineret', fr: 'Sea of Galilee (Lake Kinneret)' },
+  { he: 'הַיַּרְדֵּן', translit: 'ha-Yarden', fr: 'Jordan River' },
+  { he: 'נַחַל', translit: 'nachal', fr: 'stream / wadi' },
+  { he: 'נְהָרָה', translit: 'nahara', fr: 'river' }
+];
+const MOUNTAINS = [
+  { he: 'הַר חֶרְמוֹן', translit: 'Har Hermon', fr: 'Mount Hermon (highest, 2236m, snow)' },
+  { he: 'הַר הַכַּרְמֶל', translit: 'Har ha-Karmel', fr: 'Mount Carmel (Haifa)' },
+  { he: 'הַר תָּבוֹר', translit: 'Har Tavor', fr: 'Mount Tabor' },
+  { he: 'מַסָּדָה', translit: 'Masada', fr: 'Masada (historic fortress)' },
+  { he: 'מִדְבַּר יְהוּדָה', translit: 'midbar Yehuda', fr: 'Judean Desert' },
+  { he: 'מַכְתֵּשׁ רָמוֹן', translit: 'Machtesh Ramon', fr: 'Ramon Crater (largest, Negev)' }
+];
+const BORDERS = [
+  { he: 'גְּבוּל', translit: 'gvul', fr: 'border' },
+  { he: 'מִצְרַיִם', translit: 'Mitzrayim', fr: 'Egypt (south)' },
+  { he: 'יַרְדֵּן', translit: 'Yarden', fr: 'Jordan (east)' },
+  { he: 'סוּרְיָה', translit: 'Surya', fr: 'Syria (NE)' },
+  { he: 'לְבָנוֹן', translit: 'Levanon', fr: 'Lebanon (north)' },
+  { he: 'הָרְשׁוּת הַפַלַסְטִינִית', translit: 'ha-rashut ha-falastinit', fr: 'Palestinian Authority' },
+  { he: 'עַזָּה', translit: 'Aza', fr: 'Gaza' }
+];
+const PHRASES = [
+  { he: 'אֲנִי גָּר בְּמֶרְכָּז הַאָרֶץ', translit: 'ani gar be-merkaz ha-aretz', fr: 'I live in central Israel (m.)' },
+  { he: 'הַצָּפוֹן יָפֶה מְאֹד', translit: 'ha-tzafon yafe me\'od', fr: 'the north is very beautiful' },
+  { he: 'הַנֶּגֶב חַם', translit: 'ha-Negev cham', fr: 'the Negev is hot' },
+  { he: 'אֲנִי טַס לְאֵילַת', translit: 'ani tas le-Eilat', fr: "I'm flying to Eilat (m.)" },
+  { he: 'הַכִּנֶּרֶת מְלֵאָה', translit: 'ha-Kineret mele\'a', fr: 'the Kinneret is full' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('compass', COMPASS); R('cities', CITIES); R('regions', REGIONS); R('water', WATER); R('mountains', MOUNTAINS); R('borders', BORDERS); R('phrases', PHRASES);
+
+addExtraVocab('Geographic Vocabulary', [
+  { he: 'יָם', translit: 'yam', fr: 'sea' },
+  { he: 'אוֹקְיָנוּס', translit: 'okyanus', fr: 'ocean' },
+  { he: 'נָהָר', translit: 'nahar', fr: 'river' },
+  { he: 'אֲגַם', translit: 'agam', fr: 'lake' },
+  { he: 'הַר', translit: 'har', fr: 'mountain' },
+  { he: 'גֶּבַע', translit: 'geva', fr: 'hill' },
+  { he: 'עֵמֶק', translit: 'emek', fr: 'valley' },
+  { he: 'מִדְבָּר', translit: 'midbar', fr: 'desert' },
+  { he: 'יַעַר', translit: 'ya\'ar', fr: 'forest' },
+  { he: 'חוֹף', translit: 'chof', fr: 'beach / coast' },
+  { he: 'אִי', translit: 'i', fr: 'island' },
+  { he: 'גְּבוּל', translit: 'gvul', fr: 'border' },
+  { he: 'מְדִינָה', translit: 'medina', fr: 'state / country' },
+  { he: 'בִּירָה', translit: 'bira', fr: 'capital' },
+  { he: 'עִיר', translit: 'ir', fr: 'city' },
+  { he: 'כְּפָר', translit: 'kfar', fr: 'village' }
+]);
+
+addMiniQuiz('Geography Quiz', [
+  { q: 'Capital of Israel?', options: ['Tel Aviv', 'Jerusalem', 'Haifa', 'Beer Sheva'], answer: 1, explain: 'Jerusalem (de jure since 1980)' },
+  { q: 'Lowest point on Earth?', options: ['Eilat', 'Dead Sea (-430m)', 'Galilee', 'Negev'], answer: 1 },
+  { q: 'Israel\'s only freshwater lake =', options: ['יָם הַמֶּלַח', 'הַכִּנֶּרֶת', 'יָם סוּף', 'הַיַּרְקוֹן'], answer: 1, explain: 'Sea of Galilee / Kinneret' },
+  { q: 'Northernmost city =', options: ['חֵיפָה', 'נְהָרִיָּה', 'מְטוּלָה', 'צְפָת'], answer: 2 },
+  { q: 'Israel borders how many countries?', options: ['3', '4', '5', '6'], answer: 1, explain: 'Egypt, Jordan, Syria, Lebanon (4)' },
+  { q: 'Total area of Israel =', options: ['~5,000 km²', '~22,000 km²', '~50,000 km²', '~200,000 km²'], answer: 1, explain: '~22,000 km² — smaller than Belgium' }
+]);
+
+addCulturalText('From Dan to Beersheba — Israel\'s 6 Regions', 'The biblical phrase "from Dan to Beersheba" defined the borders. Today these are everyday regional names.', [
+  { he: 'הַגָּלִיל הָעֶלְיוֹן', translit: "Ha-galil ha-elyon", fr: 'Upper Galilee — north, mountains, Druze villages' },
+  { he: 'הַגָּלִיל הַתַּחְתּוֹן', translit: "Ha-galil ha-tachton", fr: 'Lower Galilee — Nazareth, hills, Christian sites' },
+  { he: 'הָעֵמֶק', translit: "Ha-emek", fr: 'The Valley — Jezreel, kibbutzim, agricultural heart' },
+  { he: 'הַשְּׁפֵלָה', translit: "Ha-shfela", fr: 'Shfela — coastal plain, Tel Aviv, Ashdod' },
+  { he: 'הַשּׁוֹמְרוֹן', translit: "Ha-shomron", fr: 'Samaria — central highlands' },
+  { he: 'הַנֶּגֶב', translit: "Ha-negev", fr: 'The Negev — south desert, 60% of Israel' },
+  { he: 'מִדָּן וְעַד בְּאֵר שֶׁבַע', translit: "Mi-Dan ve-ad Be\'er Sheva", fr: 'From Dan to Beersheba (biblical span)' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('geography'); } });
+</script></body></html>

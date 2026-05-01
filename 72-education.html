@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>72 — Education System</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Education System</h1><div class="subtitle">Lesson 72 · מערכת החינוך</div></div><div class="nav"><a href="index.html">Home</a><a href="72-education.html" class="active">72</a></div></header>
+
+<p class="intro">Israeli education: gan (kindergarten) → yesodi (elementary) → chativat beynayim (middle) → tichon (high) → bagrut (matriculation) → milu'im or post-army travel → universita. Free public, but olim need to navigate placement, language support.</p>
+
+<h2>School Levels</h2>
+<div class="word-list" id="levels"></div>
+
+<h2>School Roles</h2>
+<div class="word-list" id="roles"></div>
+
+<h2>School Subjects</h2>
+<div class="word-list" id="subjects"></div>
+
+<h2>Bagrut (Matriculation)</h2>
+<div class="word-list" id="bagrut"></div>
+
+<h2>University Vocab</h2>
+<div class="word-list" id="university"></div>
+
+<h2>School Day</h2>
+<div class="word-list" id="day"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 72 · education · <a href="73-academic.html" style="color:var(--accent)">Next: Academic →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const LEVELS = [
+  { he: 'גַּן יְלָדִים', translit: 'gan yeladim', fr: 'kindergarten' },
+  { he: 'גַּן חוֹבָה', translit: 'gan chova', fr: 'mandatory pre-K (age 3-5)' },
+  { he: 'בֵּית סֵפֶר יְסוֹדִי', translit: 'beit sefer yesodi', fr: 'elementary school (1-6)' },
+  { he: 'חֲטִיבַת בֵּינַיִם', translit: 'chativat beynayim', fr: 'middle school (7-9)' },
+  { he: 'תִּיכוֹן', translit: 'tichon', fr: 'high school (10-12)' },
+  { he: 'תִּיכוֹן מָמָ"ד', translit: 'tichon mamad', fr: 'state-religious high school' },
+  { he: 'יְשִׁיבָה תִּיכוֹנִית', translit: 'yeshiva tichonit', fr: 'high school yeshiva' },
+  { he: 'אוֹלְפָּן עוֹלִים', translit: 'ulpan olim', fr: 'olim Hebrew school' },
+  { he: 'אוּנִיבֶרְסִיטָה', translit: 'universita', fr: 'university' },
+  { he: 'מִכְלָלָה', translit: 'michlala', fr: 'college' }
+];
+const ROLES = [
+  { he: 'תַּלְמִיד', translit: 'talmid', fr: 'student' },
+  { he: 'תַּלְמִידָה', translit: 'talmida', fr: 'student (f.)' },
+  { he: 'תַּלְמִידִים', translit: 'talmidim', fr: 'students' },
+  { he: 'מוֹרֶה', translit: 'more', fr: 'teacher (m.)' },
+  { he: 'מוֹרָה', translit: 'mora', fr: 'teacher (f.)' },
+  { he: 'מְחַנֵּךְ', translit: 'mechanech', fr: 'homeroom teacher' },
+  { he: 'מְנַהֵל', translit: 'menahel', fr: 'principal' },
+  { he: 'יוֹעֶצֶת', translit: 'yo\'etzet', fr: 'school counselor' },
+  { he: 'מַדְרִיךְ', translit: 'madrich', fr: 'youth movement leader' }
+];
+const SUBJECTS = [
+  { he: 'מָתֵמָטִיקָה', translit: 'matematika', fr: 'math' },
+  { he: 'הִיסְטוֹרְיָה', translit: 'historya', fr: 'history' },
+  { he: 'גֵּאוֹגְרַפְיָה', translit: 'geografya', fr: 'geography' },
+  { he: 'תַּנָ"ךְ', translit: 'Tanach', fr: 'Bible studies' },
+  { he: 'סִפְרוּת', translit: 'sifrut', fr: 'literature' },
+  { he: 'לְשׁוֹן', translit: 'lashon', fr: 'language (Hebrew grammar)' },
+  { he: 'אַנְגְּלִית', translit: 'anglit', fr: 'English' },
+  { he: 'עַרְבִית', translit: 'aravit', fr: 'Arabic' },
+  { he: 'מַדָּעִים', translit: 'mada\'im', fr: 'sciences' },
+  { he: 'בִּיוֹלוֹגְיָה', translit: 'biologya', fr: 'biology' },
+  { he: 'כִּימְיָה', translit: 'kimya', fr: 'chemistry' },
+  { he: 'פִיזִיקָה', translit: 'fizika', fr: 'physics' },
+  { he: 'הִתְעַמְּלוּת', translit: 'hit\'amlut', fr: 'PE / gymnastics' },
+  { he: 'אָמָנוּת', translit: 'amanut', fr: 'art' }
+];
+const BAGRUT = [
+  { he: 'בַּגְרוּת', translit: 'bagrut', fr: 'matriculation exams' },
+  { he: 'יְחִידוֹת לִמּוּד', translit: 'yechidot limud', fr: 'study units' },
+  { he: 'בְּחִינָה', translit: 'bechina', fr: 'exam' },
+  { he: 'מָבְחָן', translit: 'mavchan', fr: 'test' },
+  { he: 'צִיּוּן', translit: 'tziyun', fr: 'grade' },
+  { he: 'תְּעוּדַת בַּגְרוּת', translit: 'teudat bagrut', fr: 'matriculation certificate' },
+  { he: 'פְּסִיכוֹמֶטְרִי', translit: 'psychometri', fr: 'psychometric exam (SAT-equivalent)' }
+];
+const UNIVERSITY = [
+  { he: 'תֹּאַר רִאשׁוֹן', translit: 'to\'ar rishon', fr: "bachelor's degree" },
+  { he: 'תֹּאַר שֵׁנִי', translit: 'to\'ar sheni', fr: "master's degree" },
+  { he: 'דּוֹקְטוֹרָט', translit: 'doktorat', fr: 'doctorate' },
+  { he: 'פָקוּלְטָה', translit: 'fakulta', fr: 'faculty / department' },
+  { he: 'הַרְצָאָה', translit: 'hartza\'a', fr: 'lecture' },
+  { he: 'מַרְצֶה', translit: 'martze', fr: 'lecturer' },
+  { he: 'פְּרוֹפֶסּוֹר', translit: 'professor', fr: 'professor' },
+  { he: 'סֶמֶסְטֶר', translit: 'semester', fr: 'semester' },
+  { he: 'נְקֻדּוֹת זִכּוּי', translit: 'nekudot zikuy', fr: 'credits' }
+];
+const DAY = [
+  { he: 'הַפְסָקָה', translit: 'hafsaka', fr: 'recess / break' },
+  { he: 'תַּלְמוֹדוֹן', translit: 'talmudon', fr: 'class period' },
+  { he: 'שִׁעוּר', translit: 'shi\'ur', fr: 'lesson / class' },
+  { he: 'שִׁעוּרֵי בַּיִת', translit: 'shi\'urey bayit', fr: 'homework' },
+  { he: 'תְּעוּדָה', translit: 'teuda', fr: 'report card' },
+  { he: 'מַדִּים', translit: 'madim', fr: 'school uniform' },
+  { he: 'תִּיק', translit: 'tik', fr: 'school bag' }
+];
+const PHRASES = [
+  { he: 'הַיֶּלֶד שֶׁלִּי בְּכִתָּה ה', translit: 'ha-yeled sheli be-kita hey', fr: 'my child is in 5th grade' },
+  { he: 'יֵשׁ לִי בַּגְרוּת בְּמָתֵמָטִיקָה', translit: 'yesh li bagrut be-matematika', fr: 'I have a math bagrut' },
+  { he: 'אֲנִי לוֹמֵד בָּאוּנִיבֶרְסִיטָה', translit: 'ani lomed ba-universita', fr: "I study at university (m.)" },
+  { he: 'בֵּית הַסֵּפֶר מַתְחִיל בְּ-8', translit: 'beit ha-sefer matchil be-8', fr: 'school starts at 8' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('levels', LEVELS); R('roles', ROLES); R('subjects', SUBJECTS); R('bagrut', BAGRUT); R('university', UNIVERSITY); R('day', DAY); R('phrases', PHRASES);
+addExtraVocab('School Subjects in Hebrew', [
+  { he: 'מָתֵמָטִיקָה', translit: 'matematika', fr: 'mathematics' },
+  { he: 'אַנְגְּלִית', translit: 'anglit', fr: 'English' },
+  { he: 'עִבְרִית', translit: 'ivrit', fr: 'Hebrew' },
+  { he: 'עֲרָבִית', translit: 'aravit', fr: 'Arabic' },
+  { he: 'הִיסְטוֹרְיָה', translit: 'historya', fr: 'history' },
+  { he: 'גֵּאוֹגְרַפְיָה', translit: 'ge\'ografya', fr: 'geography' },
+  { he: 'תַּנַ"ךְ', translit: 'tanach', fr: 'Bible studies' },
+  { he: 'מַחְשָׁבָה יְהוּדִית', translit: 'machshava yehudit', fr: 'Jewish thought' },
+  { he: 'אֶזְרָחוּת', translit: 'ezrachut', fr: 'civics' },
+  { he: 'בִּיוֹלוֹגְיָה', translit: 'biologya', fr: 'biology' },
+  { he: 'כִּימְיָה', translit: 'kimya', fr: 'chemistry' },
+  { he: 'פִיזִיקָה', translit: 'fizika', fr: 'physics' },
+  { he: 'סִפְרוּת', translit: 'sifrut', fr: 'literature' },
+  { he: 'מַחְשְׁבִים', translit: 'machshvim', fr: 'computers' },
+  { he: 'חִנּוּךְ גּוּפָנִי', translit: 'chinuch gufani', fr: 'physical education' }
+]);
+
+addMiniQuiz('Education Quiz', [
+  { q: 'Israeli kindergarten ages =', options: ['3-5', '4-6', '6-8', '0-2'], answer: 0, explain: 'Gan: 3-6' },
+  { q: 'Elementary school =', options: ['1-4', '1-6 (yesodi)', '1-8', '1-12'], answer: 1 },
+  { q: 'Bagrut =', options: ['College entrance test', 'High school matriculation', 'Bar mitzvah', 'Final BA exam'], answer: 1 },
+  { q: 'Major Israeli universities (oldest) =', options: ['Hebrew U Jerusalem (1925)', 'Technion (1924)', 'A and B', 'Tel Aviv U (1956)'], answer: 2 },
+  { q: 'Doctoral degree =', options: ['תֹּאַר רִאשׁוֹן', 'תֹּאַר שֵׁנִי', 'תֹּאַר שְׁלִישִׁי / Ph.D.', 'תֹּאַר פוֹסְט'], answer: 2 }
+]);
+
+addCulturalText('Parent-Teacher Meeting (Yom Hagim)', 'How an Israeli parent-teacher meeting goes. The teacher is direct, the parent is direct, the kid is in trouble.', [
+  { he: 'מוֹרָה: שָׁלוֹם, יוֹם נָעִים. הַיֶּלֶד שֶׁלָּכֶם — תָּלְמִיד טוֹב', translit: "Mora: Shalom, yom na\'im. Ha-yeled shelachem — talmid tov", fr: 'Teacher: Hello, nice day. Your kid — a good student' },
+  { he: 'הוֹרֶה: יֵשׁ בְּעָיוֹת בְּהִתְנַהֲגוּת?', translit: "Hore: Yesh be\'ayot be-hitnahagut?", fr: 'Parent: Are there behavior problems?' },
+  { he: 'מוֹרָה: לִפְעָמִים מְדַבֵּר בַּשִּׁעוּר, אֲבָל לֹא חֻצְפָּן', translit: "Mora: Li-fa\'amim medaber ba-shiur, aval lo chutzpan", fr: 'Teacher: Sometimes talks in class, but not insolent' },
+  { he: 'הוֹרֶה: וּבְמָתֵמַטִיקָה? בָּגרוּת מִתְקָרְבָה', translit: "Hore: U-ve-matematika? Bagrut mitkarvet", fr: 'Parent: And in math? Bagrut is approaching' },
+  { he: 'מוֹרָה: 5 יְחִידוֹת אִם מַשְׁקִיעַ. עַכְשָׁו הוּא 4 יְחִידוֹת', translit: "Mora: 5 yechidot im mashkia. Achshav hu 4 yechidot", fr: 'Teacher: 5 units if he invests. Now he\'s 4 units' },
+  { he: 'הוֹרֶה: הַאִם צָרִיךְ מוֹרֶה פְּרָטִי?', translit: "Hore: Ha\'im tzarich more prati?", fr: 'Parent: Does he need a private tutor?' },
+  { he: 'מוֹרָה: מוֹעִיל. אֲנִי מַמְלִיצָה עַל יוֹעֵץ', translit: "Mora: Mo\'il. Ani mamlitza al yo\'etz", fr: 'Teacher: Helpful. I recommend a counselor' },
+  { he: 'הוֹרֶה: תּוֹדָה רַבָּה. נְדַבֵּר אִתּוֹ הָעֶרֶב', translit: "Hore: Toda raba. Nedaber ito ha-erev", fr: 'Parent: Thanks a lot. We\'ll talk to him tonight' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('education'); } });
+</script></body></html>

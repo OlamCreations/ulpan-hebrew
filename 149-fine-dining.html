@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>149 — Fine Dining & Modern Israeli Cuisine</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Fine Dining & The Modern Israeli Chef</h1><div class="subtitle">Lesson 149 · גַּסְטְרוֹנוֹמְיָה יִשְׂרְאֵלִית</div></div><div class="nav"><a href="index.html">Home</a><a href="149-fine-dining.html" class="active">149</a></div></header>
+
+<p class="intro">Israel\'s fine-dining scene has exploded since 2010. Eyal Shani (Miznon, Port Said), Yotam Ottolenghi (London-based, Israeli-trained), Erez Komarovsky (bread guru), Uri Buri (Akko fish), Meir Adoni (Catit). The "modern Israeli" cuisine — Mizrahi peasant food + French technique + olive-oil-and-vegetable focus — defines Tel Aviv\'s top tables. White-tablecloth Hebrew is its own register.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Eyal Shani is the most-influential Israeli chef of the 21st century. His "wholeness" obsession (whole vegetables on the plate), poetic dish naming ("the love"), and theater-of-vegetables style reshaped how Israelis eat. Miznon expanded to Paris and NYC. Port Said\'s mixed-grill is the Tel Aviv power-lunch. Reservations at top spots: 2-3 weeks ahead.</div>
+
+<h2>Top Israeli Chefs</h2>
+<div class="word-list" id="chefs"></div>
+
+<h2>Restaurant Formats</h2>
+<div class="word-list" id="formats"></div>
+
+<h2>Menu Structure</h2>
+<div class="word-list" id="menu"></div>
+
+<h2>Wine Pairing & Service</h2>
+<div class="word-list" id="service"></div>
+
+<h2>Modern Israeli Style Words</h2>
+<div class="word-list" id="style"></div>
+
+<hr class="section-divider">
+
+<h2>Booking a Reservation by Phone</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical phone call to reserve at a top Tel Aviv restaurant. Even informal-sounding restaurants now have booking systems.</div>
+  <div id="reservation"></div>
+</div>
+
+<h2>Tasting-Menu Server Conversation</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical server intro at a fine-dining restaurant — they explain the dish, the producer, the technique. Israelis are food-curious and ask questions.</div>
+  <div id="server"></div>
+</div>
+
+<footer>Lesson 149 · Fine Dining · <a href="150-cuisine-summary.html" style="color:var(--accent)">Next: Cuisine Summary →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CHEFS = [
+  { he: 'אֵיָאל שָׁנִי', translit: 'Eyal Shani', fr: 'Eyal Shani (Miznon, Port Said, North Abraxas)' },
+  { he: 'יוֹתָם אוֹטּוֹלֶנְגִ\'י', translit: 'Yotam Ottolenghi', fr: 'Yotam Ottolenghi (London, NOPI, Cookbook author)' },
+  { he: 'אֵרֵז קוֹמַרוֹבְסְקִי', translit: 'Erez Komarovsky', fr: 'Erez Komarovsky (bread guru, Galilee)' },
+  { he: 'אוּרי בוּרִי', translit: 'Uri Buri', fr: 'Uri Buri (Akko fish, Levantine seafood)' },
+  { he: 'מֵאִיר אֲדוֹנִי', translit: 'Meir Adoni', fr: 'Meir Adoni (Catit, Mizlala — modern Israeli fine dining)' },
+  { he: 'שָׁאוּל בֶּן-אֲדֶרֶת', translit: 'Shaul Ben-Aderet', fr: 'Shaul Ben-Aderet (Kimel, Blue Sky)' },
+  { he: 'יוֹנָתָן רְשֶׁף', translit: 'Yonatan Reshef', fr: 'Yonatan Roshfeld (Herbert Samuel)' },
+  { he: 'אַסַף גְּרַנִיט', translit: 'Asaf Granit', fr: 'Assaf Granit (Machneyuda Group)' },
+  { he: 'נִיר צוּק', translit: 'Nir Tzuk', fr: 'Nir Tzuk' },
+  { he: 'יוֹסִי זִיו', translit: 'Yossi Ziv', fr: 'Yossi Ziv' },
+  { he: 'מוֹשֶׁה בְּסְקִי', translit: 'Moshe Basky', fr: 'Moshe Basson (Eucalyptus — biblical-inspired)' }
+];
+const FORMATS = [
+  { he: 'מִסְעָדַת שֵׁף', translit: 'mis\'adat shef', fr: 'chef\'s restaurant' },
+  { he: 'בִּסְטרוֹ', translit: 'bistro', fr: 'bistro' },
+  { he: 'הָאוֹסוּ דָּגִים', translit: 'ha-osu dagim', fr: 'fish-focused restaurant' },
+  { he: 'מַחֲזוֹר חַי', translit: 'machzor chai', fr: 'open-kitchen restaurant' },
+  { he: 'בָּרִיסְטָה', translit: 'barista', fr: 'barista (cocktail bar)' },
+  { he: 'פּוֹפ-אַפּ', translit: 'pop-up', fr: 'pop-up restaurant' },
+  { he: 'מִסְעָדָה כָּשֵׁרָה', translit: 'mis\'ada kashera', fr: 'kosher restaurant' },
+  { he: 'מִסְעָדָה לֹא-כָּשֵׁרָה', translit: 'mis\'ada lo-kashera', fr: 'non-kosher restaurant' },
+  { he: 'תַּפְרִיט שֵׁף', translit: 'tafrit shef', fr: 'chef\'s tasting menu' },
+  { he: 'תַּפְרִיט פֹּהֵל', translit: 'tafrit po\'el', fr: '"working menu" — lunch/business set' },
+  { he: 'מִסְעָדָה אֲסוּפָתִית', translit: 'mis\'ada asufatit', fr: 'communal-table restaurant' }
+];
+const MENU = [
+  { he: 'מָנָה רִאשׁוֹנָה', translit: 'mana rishona', fr: 'starter / appetizer' },
+  { he: 'מָנָה אֶמְצָעִית', translit: 'mana emtza\'it', fr: 'middle course' },
+  { he: 'מָנָה עִקָּרִית', translit: 'mana ikarit', fr: 'main course' },
+  { he: 'תּוֹסֶפֶת', translit: 'tosefet', fr: 'side dish / supplement' },
+  { he: 'קִנּוּחַ', translit: 'kinuach', fr: 'dessert' },
+  { he: 'אֲטָר', translit: 'atar', fr: 'amuse-bouche / palate teaser' },
+  { he: 'מִנּוֹת לְכַלָּם', translit: 'manot l\'chulam', fr: 'sharing plates' },
+  { he: 'תַּפְרִיט הַטוֹעֲמִים', translit: 'tafrit ha-to\'amim', fr: 'tasting menu' },
+  { he: 'תַּפְרִיט קָבוּעַ', translit: 'tafrit kavua', fr: 'fixed menu' },
+  { he: 'תַּפְרִיט בָּרְ', translit: 'tafrit bar', fr: 'bar menu' },
+  { he: 'תַּפְרִיט יְלָדִים', translit: 'tafrit y\'ladim', fr: 'kids menu' },
+  { he: 'אֶצְבָּאוֹת', translit: 'etzba\'ot', fr: '"fingers" — finger food' },
+  { he: 'הַמְּנָה הַחֲדָשָׁה שֶׁל הַשֵּׁף', translit: 'ha-mana ha-chadasha shel ha-shef', fr: 'chef\'s new dish' }
+];
+const SERVICE = [
+  { he: 'מַלְצַר רָאשִׁי', translit: 'meltzar rashi', fr: 'head waiter / maître d\'' },
+  { he: 'סוֹמֵל\'יֵה', translit: 'somelye', fr: 'sommelier' },
+  { he: 'הַצִעַת יַיִן', translit: 'hatza\'at yayin', fr: 'wine recommendation' },
+  { he: 'הָתְאָמַת יַיִן', translit: 'hat\'amat yayin', fr: 'wine pairing' },
+  { he: 'יַיִן בּוּטִיק', translit: 'yayin butik', fr: 'boutique wine' },
+  { he: 'יַיִן הַבַּיִת', translit: 'yayin ha-bayit', fr: 'house wine' },
+  { he: 'כּוֹס יַיִן', translit: 'kos yayin', fr: 'glass of wine' },
+  { he: 'בַּקְבּוּק', translit: 'bakbuk', fr: 'bottle' },
+  { he: 'בַּקְבּוּק חָצִי', translit: 'bakbuk chatzi', fr: 'half bottle' },
+  { he: 'אֲטוֹמוֹ', translit: 'atomo', fr: 'whole bottle' },
+  { he: 'גַּז שֵׁשׁ עַל שֵׁשׁ', translit: 'gaz shesh al shesh', fr: 'sparkling water (informal)' },
+  { he: 'דְּמֵי שֵׁרוּת', translit: 'd\'mei sherut', fr: 'service charge' },
+  { he: 'תַּפְרִיט הַיַּיִן', translit: 'tafrit ha-yayin', fr: 'wine list' }
+];
+const STYLE = [
+  { he: 'מִטְבָּח שֵׁף', translit: 'mitbach shef', fr: 'chef\'s kitchen' },
+  { he: 'יְצִירָתִי', translit: 'y\'tziratu', fr: 'creative' },
+  { he: 'אֱמַנּוּתִי', translit: 'emanuti', fr: 'artistic' },
+  { he: 'מָסוֹרְתִּי', translit: 'masorti', fr: 'traditional' },
+  { he: 'פּוּזיוֹן', translit: 'fusion', fr: 'fusion' },
+  { he: 'עוֹנָתִי', translit: 'onati', fr: 'seasonal' },
+  { he: 'מָקוֹמִי', translit: 'm\'komi', fr: 'local' },
+  { he: 'אוֹרְגָנִי', translit: 'organi', fr: 'organic' },
+  { he: 'טִבְעוֹנִי', translit: 'tiv\'oni', fr: 'vegan' },
+  { he: 'צִמְחוֹנִי', translit: 'tzimchoni', fr: 'vegetarian' },
+  { he: 'דַּל-קָלוֹרְיוֹת', translit: 'dal-kaloryot', fr: 'low-calorie' },
+  { he: 'דַּל-גְּלוּטֶן', translit: 'dal-gluten', fr: 'gluten-free' },
+  { he: 'מַעֲרָב לְמִזְרָח', translit: 'ma\'arav l\'mizrach', fr: 'East-meets-West' },
+  { he: 'הַכֹּל-בְּתוֹךְ-הַמַּטְבָּח', translit: 'ha-kol-b\'toch-ha-mitbach', fr: 'open-kitchen / show kitchen' }
+];
+const RESERVATION = [
+  { he: 'שָׁלוֹם, אֲנִי רוֹצֶה לְהַזְמִין שֻׁלְחָן', translit: 'Shalom, ani rotze l\'hazmin shulchan', fr: 'Hello, I\'d like to reserve a table' },
+  { he: 'בְּשִׂמְחָה. לְכַמָּה אֲנָשִׁים?', translit: 'B\'simcha. L\'kama anashim?', fr: 'With pleasure. For how many people?' },
+  { he: 'אַרְבָּעָה. יוֹם שִׁשִּׁי בְּעֶרֶב', translit: 'Arba\'a. Yom shishi b\'erev', fr: 'Four. Friday evening' },
+  { he: 'מִתְנַצֵּל, יוֹם שִׁשִּׁי הַקָּרוֹב מָלֵא', translit: 'Mitnatzel, yom shishi ha-karov male', fr: 'Sorry, this Friday is full' },
+  { he: 'שִׁישִׁי שֶׁאַחֲרֵי?', translit: 'Shishi she-acharei?', fr: 'The Friday after?' },
+  { he: 'יֵשׁ לִי 19:30 אוֹ 22:00', translit: 'Yesh li 19:30 o 22:00', fr: 'I have 7:30 PM or 10:00 PM' },
+  { he: 'אֶת הַ-19:30, בְּבַקָּשָׁה', translit: 'Et ha-19:30, b\'vakasha', fr: 'The 7:30, please' },
+  { he: 'מַעוּלֶה. שֵׁם וּמִסְפָּר טֵלֵפוֹן?', translit: 'Me\'ule. Shem u-mispar telefon?', fr: 'Excellent. Name and phone number?' },
+  { he: 'דָּן כֹהֵן, 050-123-4567', translit: 'Dan Kohen, 050-123-4567', fr: 'Dan Kohen, 050-...' },
+  { he: 'יֵשׁ דְּרִישׁוֹת מְיוּחָדוֹת? אַלֶּרְגְּיוֹת?', translit: 'Yesh d\'rishot m\'yuchadot? Aler\'giyot?', fr: 'Special requirements? Allergies?' },
+  { he: 'בָּן הַזּוּג שֶׁלִּי טִבְעוֹנִי', translit: 'Ben ha-zug sheli tiv\'oni', fr: 'My partner is vegan' },
+  { he: 'מוּכָנִים. נְעַדֵּכֵן אֶת הַשֵּׁף', translit: 'Muchanim. N\'adken et ha-shef', fr: 'Got it. We\'ll inform the chef.' },
+  { he: 'תּוֹדָה. נִפָּגֵשׁ', translit: 'Toda. Nipagesh', fr: 'Thanks. See you' }
+];
+const SERVER = [
+  { he: 'בָּרוּכִים הַבָּאִים. אֲנִי מַיָּה, וַאֲנִי אֱלֵא לְלַוּוֹת אֶתְכֶם הָעֶרֶב', translit: 'Bruchim ha-ba\'im. Ani Maya, va-ani ela l\'lavot etchem ha-erev', fr: 'Welcome. I\'m Maya, and I\'ll be accompanying you tonight' },
+  { he: 'יֵשׁ לָנוּ הַעֶרֶב תַּפְרִיט הַטּוֹעֲמִים שֶׁל הַשֵּׁף', translit: 'Yesh lanu ha-erev tafrit ha-to\'amim shel ha-shef', fr: 'Tonight we have the chef\'s tasting menu' },
+  { he: '7 מָנוֹת, פֶּחָם וּפַסִּיוֹן עוֹנָתִי', translit: '7 manot, pecham u-pasion onati', fr: '7 courses, charcoal and seasonal passion' },
+  { he: 'הָתְאָמַת יַיִן זְמִינָה — תּוֹסֶפֶת 280 שֶׁקֶל', translit: 'Hat\'amat yayin z\'mina — tosefet 280 shekel', fr: 'Wine pairing available — supplement 280 shekels' },
+  { he: 'אַתֶּם יוֹדְעִים מַה אַתֶּם רוֹצִים?', translit: 'Atem yod\'im ma atem rotzim?', fr: 'Do you know what you want?' },
+  { he: 'הַתַּפְרִיט נִשְׁמַע מָקֵסִים. עִם הַיַּיִן בְּבַקָּשָׁה', translit: 'Ha-tafrit nishma maksim. Im ha-yayin b\'vakasha', fr: 'The menu sounds wonderful. With the wine please' },
+  { he: 'מַעוּלֶה. הַמָּנָה הַרִאשׁוֹנָה — סָלָט עַגְבָנִיוֹת מֵהַחוּפַּה שֶׁל אַנְטִיבוֹלִי', translit: 'Me\'ule. Ha-mana ha-rishona — salat agvaniyot me-ha-chupa shel Antiboli', fr: 'Excellent. The first dish — tomato salad from Antiboli\'s farm' },
+  { he: 'הָעַגְבָנִיוֹת — נֶאֶסְפוּ הַבֹּקֶר. הַשֶּׁמֶן זַיִת — מֵהַזַּיִת בַּגִּן הָעוֹלָם', translit: 'Ha-agvaniyot — ne\'esfu ha-boker. Ha-shemen zayit — me-ha-zayit ba-gan ha-olam', fr: 'The tomatoes — picked this morning. The olive oil — from the heritage olive grove' },
+  { he: 'הַיַּיִן — סוֹבִיניוֹן בְּלָנְק מִ-Tabor', translit: 'Ha-yayin — sauvignon blanc mi-Tabor', fr: 'The wine — Sauvignon Blanc from Tabor' },
+  { he: 'בְּסֵדֶר?', translit: 'B\'seder?', fr: 'OK?' },
+  { he: 'יוֹתֵר מִסֵּדֶר. בְּהַצְלָחָה', translit: 'Yoter mi-seder. B\'hatzlacha', fr: 'More than OK. Good luck' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('chefs', CHEFS); R('formats', FORMATS); R('menu', MENU); R('service', SERVICE); R('style', STYLE);
+renderTextBlock('reservation', RESERVATION);
+renderTextBlock('server', SERVER);
+
+addMiniQuiz('Fine Dining Quiz', [
+  { q: 'Eyal Shani is famous for...', options: ['French cuisine', 'Miznon (street pita) + Port Said + theatrical vegetable plating', 'Sushi', 'Italian'], answer: 1 },
+  { q: 'Yotam Ottolenghi is based in...', options: ['Tel Aviv', 'London (Israeli-trained)', 'NY', 'Paris'], answer: 1, explain: 'Best-known Israeli chef internationally' },
+  { q: 'תַּפְרִיט הַטּוֹעֲמִים is...', options: ['Kids menu', 'Tasting menu', 'Wine list', 'Set lunch'], answer: 1 },
+  { q: 'A סוֹמֵל\'יֵה is...', options: ['A waiter', 'A wine expert / sommelier', 'A bartender', 'A chef'], answer: 1 },
+  { q: 'Uri Buri is associated with...', options: ['Tel Aviv steaks', 'Akko fish', 'Jerusalem hummus', 'Eilat sushi'], answer: 1 },
+  { q: 'Modern Israeli cuisine prioritizes...', options: ['Heavy meat', 'Vegetable-focused, Mizrahi-rooted, French technique', 'Classic French', 'Ashkenazi traditional'], answer: 1, explain: 'Olive oil + vegetables + technique = the new Israeli signature' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('fine-dining'); } });
+</script></body></html>

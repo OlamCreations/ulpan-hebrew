@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>404 — Israeli TV & Streaming</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Israeli Television and Streaming</h1><div class="subtitle">Lesson 404 · טֶלֶוִיזְיָה יִשְׂרְאֵלִית וְסְטְרִימִינְג</div></div><div class="nav"><a href="index.html">Home</a><a href="404-israeli-tv.html" class="active">404</a></div></header>
+
+<p class="intro">From a single black-and-white state channel in 1968 to one of the world top format exporters per capita, Israeli television compressed sixty years of evolution into a brief, intense arc. Hatufim seeded Homeland. Fauda put Lior Raz on Netflix. Shtisel made Haredi Brooklyn cry. Tehran won the International Emmy. This lesson gives you the channels, the shows, the creators, and the industry vocabulary to hold a real conversation about Israeli TV with anyone in Tel Aviv or Jerusalem.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israeli TV punches far above its weight. With a domestic audience of ~9 million, the country produces formats that get adapted in 50+ markets. Why: small market forces low budgets and high concept density. Hatufim was made for ~$200K per episode; Homeland US version, ~$3M. Constraint creates compression, compression creates concept. When Netflix and Apple TV+ buy Israeli originals, they buy that concept density.</div>
+
+<h2>TV Channels (Kan, Channel 12, 13)</h2>
+<div class="word-list" id="channels"></div>
+
+<h2>Hatufim, Fauda, Shtisel</h2>
+<div class="word-list" id="classics"></div>
+
+<h2>Streaming Hits (Tehran, Beauty Queen)</h2>
+<div class="word-list" id="streaming"></div>
+
+<h2>Reality TV & Formats</h2>
+<div class="word-list" id="reality"></div>
+
+<h2>Israeli TV Industry</h2>
+<div class="word-list" id="industry"></div>
+
+<hr class="section-divider">
+
+<h2>Why Israeli TV Travels</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Six observations on why a country of 9 million keeps producing global formats. Read this before you go to a Tel Aviv writers room or pitch a co-production at MIPCOM.</div>
+  <div id="industry-notes"></div>
+</div>
+
+<h2>A Conversation About Last Night TV</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical Friday-morning conversation between two Tel Avivim about what they watched the night before. Useful Hebrew for the kibbutz dining hall, the office water cooler, and the post-Shabbat coffee.</div>
+  <div id="dialogue"></div>
+</div>
+
+<footer>Lesson 404 · Israeli TV & Streaming · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CHANNELS = [
+  { he: 'עָרוּץ אֶחָד', translit: 'arutz echad', fr: 'Channel 1 (1968 black/white state broadcaster)' },
+  { he: 'עָרוּץ שְׁתַּיִם', translit: 'arutz shtayim', fr: 'Channel 2 (1993 first commercial channel)' },
+  { he: 'עָרוּץ עֶשֶׂר', translit: 'arutz eser', fr: 'Channel 10 (closed 2018, merged into 13)' },
+  { he: 'רֶשֶׁת 13', translit: 'reshet 13', fr: 'Reshet 13 (commercial network)' },
+  { he: 'עָרוּץ 12 / קֶשֶׁת', translit: 'arutz 12 / keshet', fr: 'Channel 12 / Keshet (top commercial)' },
+  { he: 'כָּאן 11', translit: 'kan 11', fr: 'Kan 11 (public broadcaster, since 2017)' },
+  { he: 'יֶס', translit: 'yes', fr: 'Yes (satellite cable provider)' },
+  { he: 'הוֹט', translit: 'hot', fr: 'Hot (cable provider)' },
+  { he: 'תַּגִּית עֶרֶב', translit: 'tagit erev', fr: 'evening prime-time' },
+  { he: 'מַהְדוּרַת חֲדָשׁוֹת', translit: 'mahdurat chadashot', fr: 'news edition / newscast' }
+];
+const CLASSICS = [
+  { he: 'חֲטוּפִים', translit: 'chatufim', fr: 'Hatufim / Prisoners of War (Gideon Raff, Homeland basis)' },
+  { he: 'פָאוּדָה', translit: 'fauda', fr: 'Fauda (Lior Raz, Avi Issacharoff, 4 seasons Netflix)' },
+  { he: 'שְׁטִיסְל', translit: 'shtisel', fr: 'Shtisel (Haredi family drama, 3 seasons)' },
+  { he: 'בְּעַל מְקוֹר', translit: 'b\'al makor', fr: 'creator / showrunner' },
+  { he: 'עוֹנָה', translit: 'ona', fr: 'season' },
+  { he: 'פֶּרֶק', translit: 'perek', fr: 'episode' },
+  { he: 'דְּרָמָה', translit: 'drama', fr: 'drama' },
+  { he: 'הָעֲבוֹדָה הָעַרְבִית', translit: 'ha-avoda ha-aravit', fr: 'Arab Labor (Sayed Kashua satire)' },
+  { he: 'בִּטּוּחַ פִּיקְטִיבִי', translit: 'bituach fiktivi', fr: 'False Flag (Kfulim, Keshet)' },
+  { he: 'כְּשֶׁגִּבּוֹרִים עָפִים', translit: 'k\'sheh-giborim afim', fr: 'When Heroes Fly (Boaz Yakin)' }
+];
+const STREAMING = [
+  { he: 'טֶהֶרָאן', translit: 'teheran', fr: 'Tehran (Apple TV+, Niv Sultan, Emmy)' },
+  { he: 'מַלְכָּה הַיּוֹפִי שֶׁל יְרוּשָׁלַיִם', translit: 'malka ha-yofi shel yerushalayim', fr: 'The Beauty Queen of Jerusalem (Netflix)' },
+  { he: 'נֶטְפְלִיקְס יִשְׂרְאֵלִית', translit: 'netflix israelit', fr: 'Israeli Netflix originals' },
+  { he: 'הַחֶשְׁבּוֹן', translit: 'ha-cheshbon', fr: 'subscription account' },
+  { he: 'סְטְרִימִינְג', translit: 'streaming', fr: 'streaming' },
+  { he: 'גִּדְעוֹן רַף', translit: 'gidon raf', fr: 'Gideon Raff (Hatufim, Tehran creator)' },
+  { he: 'לִיאוֹר רָז', translit: 'lior raz', fr: 'Lior Raz (Fauda actor and co-creator)' },
+  { he: 'אֲבִי יִשְׁשָׂכָרוֹף', translit: 'avi issacharoff', fr: 'Avi Issacharoff (Fauda co-creator)' },
+  { he: 'יָעֵל הֶדַיָה', translit: 'yael hedaya', fr: 'Yael Hedaya (creator and novelist)' },
+  { he: 'נִיב סוּלְטָן', translit: 'niv sultan', fr: 'Niv Sultan (Tehran lead actress)' }
+];
+const REALITY = [
+  { he: 'הָאָח הַגָּדוֹל', translit: 'ha-ach ha-gadol', fr: 'Big Brother (Israeli adaptation, top ratings)' },
+  { he: 'מַסְטֶר שֶׁף', translit: 'master chef', fr: 'MasterChef Israel (huge success)' },
+  { he: 'הַקּוֹל הַבָּא', translit: 'ha-kol ha-ba', fr: 'The Next Voice (singing competition)' },
+  { he: 'תַּכְנִית רֵיאֲלִיטִי', translit: 'tachnit reality', fr: 'reality program' },
+  { he: 'פוֹרְמָט', translit: 'format', fr: 'format' },
+  { he: 'עִבּוּד', translit: 'ibud', fr: 'adaptation' },
+  { he: 'יִצּוּא פוֹרְמָטִים', translit: 'yitzu formatim', fr: 'format export' },
+  { he: 'הַישְׂרְדוּת', translit: 'ha-isr\'dut', fr: 'Survivor (Hisardut, local version)' },
+  { he: 'נוֹלָד לִרְקוֹד', translit: 'nolad lirkod', fr: 'Born to Dance / Dancing With the Stars adaptation' },
+  { he: 'תְּחָרוּת', translit: 'tcharut', fr: 'competition' }
+];
+const INDUSTRY = [
+  { he: 'תַּעֲשִׂיַּת הַטֶּלֶוִיזְיָה', translit: 'ta\'asiyat ha-televizia', fr: 'television industry' },
+  { he: 'תַּסְרִיט', translit: 'tasrit', fr: 'screenplay / script' },
+  { he: 'תַּסְרִיטַאי', translit: 'tasritai', fr: 'screenwriter' },
+  { he: 'בָּמָאי', translit: 'bamai', fr: 'director' },
+  { he: 'מַפִיק', translit: 'mafik', fr: 'producer' },
+  { he: 'הוֹלְלִיווּד עַל הַיַּרְקוֹן', translit: 'hollywood al ha-yarkon', fr: 'Hollywood on the Yarkon (Tel Aviv production hub)' },
+  { he: 'תַּקְצִיב נָמוּךְ', translit: 'taktziv namuch', fr: 'low budget' },
+  { he: 'דֵּחָסוּת קוֹנְצֶפְּטִית', translit: 'dechasut kontzeptit', fr: 'concept density' },
+  { he: 'קְרֶן שִׂפּוּט הַסְּרָטִים', translit: 'keren shiput ha-sratim', fr: 'Israel Film Fund' },
+  { he: 'יִצּוּא תַּרְבּוּתִי', translit: 'yitzu tarbuti', fr: 'cultural export' }
+];
+
+const INDUSTRY_NOTES = [
+  { he: '1. שׁוּק קָטָן מַכְרִיחַ דֵּחָסוּת — בְּמְקוֹם 22 פְּרָקִים, 10. בְּמְקוֹם פִּיצוּל, רִכּוּז.', translit: '1. shuk katan machri\'ach dechasut — bi-mkom 22 prakim, 10. bi-mkom pitzul, rikuz.', fr: '1. Small market forces density — instead of 22 episodes, 10. Instead of fragmentation, focus.' },
+  { he: '2. תַּקְצִיב נָמוּךְ פִּי 10 מֵאֲמֵרִיקָה — 200K לְפֶּרֶק חֲטוּפִים מוּל 3M לְהוֹמְלָנְד.', translit: '2. taktziv namuch pi 10 me-amerika — 200K l\'perek chatufim mul 3M l\'homeland.', fr: '2. Budget 10x lower than US — $200K per Hatufim episode vs $3M per Homeland episode.' },
+  { he: '3. שֵׁרוּת צָבָאִי = מָאֲגָר סִיפּוּרִים — חֲטוּפִים, פָאוּדָה, טֶהֶרָאן כֻּלָּם נוֹלְדוּ מִשֵּׁרוּת.', translit: '3. sherut tzva\'i = ma\'agar sipurim — chatufim, fauda, teheran kulam noldu mi-sherut.', fr: '3. Military service = story reservoir — Hatufim, Fauda, Tehran all born from service.' },
+  { he: '4. רֵב-תַּרְבּוּתִיוּת מוֹבְנֵית — חַרֵדִי, חִילוֹנִי, עֲרָבִי, אֶתִיוֹפִּי, רוּסִי בְּסַל אֶחָד.', translit: '4. rev-tarbutiyut muvneit — charedi, chiloni, aravi, etyopi, rusi b\'sal echad.', fr: '4. Built-in multiculturalism — Haredi, secular, Arab, Ethiopian, Russian in one basket.' },
+  { he: '5. נֶטְפְלִיקְס + Apple = שִׁכּוּב גָּלוֹבָּלִי — פָאוּדָה רָץ בְּ-190 מְדִינוֹת, טֶהֶרָאן זָכָה בְּ-Emmy.', translit: '5. netflix + apple = shichuv globali — fauda ratz b-190 m\'dinot, teheran zacha b-Emmy.', fr: '5. Netflix + Apple = global layer — Fauda runs in 190 countries, Tehran won an Emmy.' },
+  { he: '6. תֶּל-אָבִיב = שְׁכוּנַת מַפִיקִים — חֲצִי שָׁעָה בֵּין כָּל סְטוּדְיוֹ, הַחְלָטָה תּוֹךְ יוֹם.', translit: '6. tel-aviv = sh\'chunat mafikim — chatzi sha\'a ben kol studio, hachlata toch yom.', fr: '6. Tel Aviv = producer neighborhood — half hour between every studio, decision within a day.' },
+  { he: '7. כָּאן 11 = הִצּוּל הַצִּבּוּרִי — Public broadcaster reborn 2017, מַחֲזִיק תַּסְרִיטָאִים צְעִירִים.', translit: '7. kan 11 = hitzul ha-tziburi — Public broadcaster reborn 2017, machzik tasrita\'im tz\'irim.', fr: '7. Kan 11 = the public anchor — public broadcaster reborn 2017, sustains young screenwriters.' }
+];
+
+const DIALOGUE = [
+  { he: 'דָּנָא — רָאִיתָ אֶת הַפֶּרֶק שֶׁל פָאוּדָה אֶמֶשׁ?', translit: 'dana — ra\'ita et ha-perek shel fauda emesh?', fr: 'Dana — Did you see last night Fauda episode?' },
+  { he: 'אִיתַי — רָאִיתִי. סוֹף הָעוֹנָה הוּא הָכִי טוֹב שֶׁעָשׂוּ. לִיאוֹר רָז שׁוּב כּוֹתֵב מַסְפִּיק לְ-Netflix.', translit: 'itai — ra\'iti. sof ha-\'ona hu hachi tov she-asu. lior raz shuv kotev maspik l-Netflix.', fr: 'Itai — I saw it. The season finale is the best they made. Lior Raz writes again enough for Netflix.' },
+  { he: 'דָּנָא — וְטֶהֶרָאן? הָעוֹנָה הַשְּׁלִישִׁית בְּ-Apple יָצְאָה.', translit: 'dana — v\'teheran? ha-\'ona ha-shlishit b-Apple yatz\'a.', fr: 'Dana — And Tehran? Season three on Apple is out.' },
+  { he: 'אִיתַי — נִיב סוּלְטָן הִיא תּוֹפַעַת טֶבַע. גִּדְעוֹן רַף יוֹדֵעַ אֵיךְ לִכְתֹּב מָתָח שֶׁבָּמַעֲשָׂה גַּם בְּ-LA.', translit: 'itai — niv sultan hi tofa\'at teva. gidon raf yode\'a ech lichtov metach she-bama\'aseh gam b-LA.', fr: 'Itai — Niv Sultan is a force of nature. Gideon Raff knows how to write tension that works even in LA.' },
+  { he: 'דָּנָא — אַתָּה יוֹדֵעַ שֶׁ-Homeland הִיא בְּעֶצֶם חֲטוּפִים? כָּל הָעוֹלָם רוֹאֶה גִּרְסָה אֲמֵרִיקָאִית.', translit: 'dana — ata yode\'a she-Homeland hi b\'etzem chatufim? kol ha-olam ro\'e girsa amerika\'it.', fr: 'Dana — You know Homeland is actually Hatufim? The whole world watches the American version.' },
+  { he: 'אִיתַי — כֵּן, גִּדְעוֹן רַף מָכַר אֶת הַפוֹרְמָט בְּ-2010. עִבּוּד אֲמֵרִיקָאִי, רַעְיוֹן יִשְׂרְאֵלִי. זֶה הַמּוֹדֶל.', translit: 'itai — ken, gidon raf machar et ha-format b-2010. ibud amerika\'i, ra\'ayon israeli. ze ha-model.', fr: 'Itai — Yes, Gideon Raff sold the format in 2010. American adaptation, Israeli idea. That is the model.' },
+  { he: 'דָּנָא — וְשְׁטִיסְל? אִמָּא שֶׁלִּי בּוֹכָה כָּל פֶּרֶק.', translit: 'dana — v\'shtisel? ima sheli bocha kol perek.', fr: 'Dana — And Shtisel? My mom cries every episode.' },
+  { he: 'אִיתַי — שְׁטִיסְל הוּא הַסּוֹד. סָגוּר חַרֵדִי, אוּנִיבֶרְסָלִי לְגַמְרֵי. בְּרוּקְלִין בּוֹכָה כָּמוֹ מֵאָה שְׁעָרִים.', translit: 'itai — shtisel hu ha-sod. sagur charedi, universali l\'gamrei. brooklyn bocha kmo me\'a sh\'arim.', fr: 'Itai — Shtisel is the secret. Closed Haredi, completely universal. Brooklyn cries like Mea Shearim.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('channels', CHANNELS);
+R('classics', CLASSICS);
+R('streaming', STREAMING);
+R('reality', REALITY);
+R('industry', INDUSTRY);
+
+renderTextBlock('industry-notes', INDUSTRY_NOTES);
+renderTextBlock('dialogue', DIALOGUE);
+
+addMiniQuiz('Israeli TV Quiz', [
+  { q: 'Which Israeli show was the original basis for the US series Homeland?', options: ['Fauda', 'Hatufim (Prisoners of War)', 'Shtisel', 'Tehran'], answer: 1, explain: 'Gideon Raff sold the Hatufim format in 2010; Showtime developed it as Homeland.' },
+  { q: 'The creators of Fauda are...', options: ['Gideon Raff and Yael Hedaya', 'Lior Raz and Avi Issacharoff', 'Boaz Yakin and Niv Sultan', 'Sayed Kashua alone'], answer: 1, explain: 'Lior Raz (also lead actor) and Avi Issacharoff co-created Fauda based on their Mistaarvim unit experience.' },
+  { q: 'Kan 11 is best described as...', options: ['A satellite cable provider', 'A commercial channel', 'The Israeli public broadcaster (since 2017)', 'A Netflix sub-brand'], answer: 2, explain: 'Kan replaced the IBA in 2017 as the new public broadcaster, sustaining young writers and Hebrew-language drama.' },
+  { q: 'Tehran on Apple TV+ stars...', options: ['Niv Sultan', 'Lior Raz', 'Shira Haas', 'Yael Hedaya'], answer: 0, explain: 'Niv Sultan plays the Mossad agent Tamar Rabinyan; the show won the International Emmy for Best Drama.' },
+  { q: 'Why does Israeli TV punch above its weight per capita?', options: ['Huge domestic market', 'Big budgets', 'Small market forces concept density + low budgets force creativity', 'State censorship'], answer: 2, explain: 'A 9M domestic market forces tight 8-12 episode seasons and ~10x lower budgets than US TV — constraint creates concept compression.' },
+  { q: 'Shtisel is a drama about...', options: ['A Mossad cell', 'A Haredi (ultra-Orthodox) family in Jerusalem', 'A reality cooking show', 'Tel Aviv start-up founders'], answer: 1, explain: 'Shtisel follows the daily life of a Haredi family in Geula, Jerusalem — closed setting, universal themes.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(404);
+  }
+});
+</script></body></html>

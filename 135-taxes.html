@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>135 — Taxes</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Taxes — Income, VAT, & The Rest</h1><div class="subtitle">Lesson 135 · מִיסּוּי</div></div><div class="nav"><a href="index.html">Home</a><a href="135-taxes.html" class="active">135</a></div></header>
+
+<p class="intro">Israel\'s tax system is progressive, complex, and pervasive. Income tax brackets up to 50%. VAT (מַע"מ) at 18% (raised from 17% in 2025). Bituach Leumi (national insurance) ~12% combined. Property tax (אַרְנוֹנָה) varies by city. Lesson 47 covered tax filing basics; this lesson covers the structural picture — what gets taxed and at what rate.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Most Israeli salaried workers do not file annual income tax returns — the employer withholds and reports. Self-employed (עוֹסֵק מֻרְשֶׁה) must file. The Israeli tax authority is "מַס הַכְנָסָה" (Mas Hachnasa) — feared and respected. Olim hadashim get major tax breaks for ~10 years. The "אֲהֲדָה" — sympathy/benefit — for olim is real and substantial.</div>
+
+<h2>Tax Authority & Bodies</h2>
+<div class="word-list" id="authority"></div>
+
+<h2>Income Tax (Mas Hachnasa)</h2>
+<div class="word-list" id="income"></div>
+
+<h2>VAT & Indirect Taxes</h2>
+<div class="word-list" id="vat"></div>
+
+<h2>Self-Employed (Osek)</h2>
+<div class="word-list" id="self-employed"></div>
+
+<h2>Olim & Returning Residents Benefits</h2>
+<div class="word-list" id="olim"></div>
+
+<hr class="section-divider">
+
+<h2>Reading an Israeli Payslip (Tlush Sachar)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical Israeli payslip has dozens of lines. Below: the key fields you must know to verify you are being paid correctly.</div>
+  <div id="payslip"></div>
+</div>
+
+<h2>Annual Tax Settlement Conversation with Accountant</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An "תֵּאוּם מַס" (tax coordination) conversation. Salaried Israelis with multiple income sources or recent immigrants often need this annually.</div>
+  <div id="accountant"></div>
+</div>
+
+<footer>Lesson 135 · Taxes · <a href="136-oligopolies.html" style="color:var(--accent)">Next: Oligopolies →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const AUTHORITY = [
+  { he: 'רָשׁוּת הַמִּסִּים', translit: 'rashut ha-misim', fr: 'Tax Authority [modern]' },
+  { he: 'מַס הַכְנָסָה', translit: 'mas hachnasa', fr: 'Income Tax Authority [common name]' },
+  { he: 'נְצִיב מַס הַכְנָסָה', translit: 'n\'tziv mas hachnasa', fr: 'Tax Commissioner' },
+  { he: 'פְּקִיד שׁוּמָה', translit: 'p\'kid shuma', fr: 'tax assessment officer (regional)' },
+  { he: 'מִשְׂרַד הָאוֹצָר', translit: 'misrad ha-otzar', fr: 'Treasury / Finance Ministry' },
+  { he: 'בִּיטּוּחַ לְאֻמִּי', translit: 'bituach le\'umi', fr: 'National Insurance / Bituach Leumi' },
+  { he: 'מָע"מ', translit: 'ma\'am', fr: 'VAT (acronym for "mas erech musaf")' },
+  { he: 'מָכֵס', translit: 'meches', fr: 'customs' },
+  { he: 'בְּלוֹ דֶּלֶק', translit: 'blo delek', fr: 'fuel excise tax' },
+  { he: 'מַס שֶׁכֶר', translit: 'mas sechar', fr: 'salary tax (employer-paid social fund)' }
+];
+const INCOME = [
+  { he: 'מַס הַכְנָסָה', translit: 'mas hachnasa', fr: 'income tax' },
+  { he: 'מַדְרֵגוֹת הַמַּס', translit: 'madregot ha-mas', fr: 'tax brackets' },
+  { he: 'שִׁעוּר מַס', translit: 'shi\'ur mas', fr: 'tax rate' },
+  { he: 'מַס שׁוּלִי', translit: 'mas shuli', fr: 'marginal tax rate' },
+  { he: 'מַדְרֵגָה רִאשׁוֹנָה — 10%', translit: 'madrega rishona — 10%', fr: '1st bracket — 10% (~84K NIS/year)' },
+  { he: 'מַדְרֵגָה אַחֲרוֹנָה — 50%', translit: 'madrega acharona — 50%', fr: 'top bracket — 50% (>720K NIS/year approx.)' },
+  { he: 'נְקֻדּוֹת זִכּוּי', translit: 'n\'kudot zikui', fr: 'tax credit points (key Israeli concept)' },
+  { he: 'נְקֻדַּת זִכּוּי = ~232 ש"ח/חֹדֶשׁ', translit: 'n\'kudat zikui = ~232 sh"ch/chodesh', fr: 'one credit point = ~232 NIS/month off your tax' },
+  { he: 'תֵּאוּם מַס', translit: 'te\'um mas', fr: 'tax coordination (multiple-income filing)' },
+  { he: 'הַחְזֵר מַס', translit: 'hechzer mas', fr: 'tax refund' },
+  { he: 'דּוֹחַ שְׁנָתִי', translit: 'doach sh\'nati', fr: 'annual return' },
+  { he: 'טֹפֶס 101', translit: 'tofes 101', fr: 'Form 101 (filed yearly with employer)' },
+  { he: 'טֹפֶס 106', translit: 'tofes 106', fr: 'Form 106 (annual W-2 equivalent from employer)' }
+];
+const VAT = [
+  { he: 'מָע"מ — מַס עֶרֶךְ מוּסָף', translit: 'ma\'am — mas erech musaf', fr: 'VAT — value-added tax' },
+  { he: '18%', translit: 'shmone esre achuz', fr: '18% (current rate as of 2025)' },
+  { he: 'מָע"מ עִסְקוֹת', translit: 'ma\'am iskaot', fr: 'VAT on transactions (output VAT)' },
+  { he: 'מָע"מ תְּשׁוּמוֹת', translit: 'ma\'am t\'shumot', fr: 'VAT on inputs (deductible)' },
+  { he: 'חֶשְׁבּוֹנִית מָע"מ', translit: 'cheshbonit ma\'am', fr: 'VAT invoice' },
+  { he: 'חֶשְׁבּוֹנִית מָס', translit: 'cheshbonit mas', fr: 'tax invoice' },
+  { he: 'דּוֹחַ דּוּ-חָדְשִׁי', translit: 'doach du-chodshi', fr: 'bi-monthly VAT report' },
+  { he: 'בְּלִי מָע"מ', translit: 'b\'li ma\'am', fr: 'without VAT (price quoted to businesses)' },
+  { he: 'כּוֹלֵל מָע"מ', translit: 'kolel ma\'am', fr: 'including VAT (consumer prices)' },
+  { he: 'הֶחְזֵר מָע"מ', translit: 'hechzer ma\'am', fr: 'VAT refund (tourists)' },
+  { he: 'אֵילָת — בְּלִי מָע"מ', translit: 'Eilat — b\'li ma\'am', fr: 'Eilat is VAT-free (free trade zone)' }
+];
+const SELF_EMPLOYED = [
+  { he: 'עוֹסֵק', translit: 'osek', fr: 'self-employed person [generic]' },
+  { he: 'עוֹסֵק מֻרְשֶׁה', translit: 'osek murshe', fr: '"authorized" self-employed (charges + remits VAT)' },
+  { he: 'עוֹסֵק פָּטוּר', translit: 'osek patur', fr: '"exempt" self-employed (under ~120K NIS revenue)' },
+  { he: 'חֶבְרָה בָּ"מ', translit: 'chevra bem', fr: 'Ltd. company (limited liability)' },
+  { he: 'חֲשַׁבְשֶׁבֶת', translit: 'chashavshevet', fr: 'Hashavshevet (popular accounting software)' },
+  { he: 'מַזְכִּירָה אִישִׁית', translit: 'mazkira ishit', fr: 'self-employed admin assistant' },
+  { he: 'רוֹאֵה חֶשְׁבּוֹן', translit: 'roe cheshbon', fr: 'CPA / accountant' },
+  { he: 'יוֹעֵץ מַס', translit: 'yo\'etz mas', fr: 'tax advisor' },
+  { he: 'הוֹצָאוֹת מֻכָּרוֹת', translit: 'hotza\'ot mukarot', fr: 'recognized expenses (deductible)' },
+  { he: 'נִכּוּי בַּמָּקוֹר', translit: 'nikui ba-makor', fr: 'tax withheld at source' },
+  { he: 'מִקְדָּמוֹת', translit: 'mikdamot', fr: 'estimated tax payments (advance)' },
+  { he: 'מַקְצוֹעַ חוֹפְשִׁי', translit: 'miktzoa chofshi', fr: 'liberal profession' }
+];
+const OLIM = [
+  { he: 'הֲטָבוֹת מַס לְעוֹלִים', translit: 'hatavot mas l\'olim', fr: 'tax benefits for new immigrants' },
+  { he: 'תּוֹשָׁב חוֹזֵר', translit: 'toshav chozer', fr: 'returning resident' },
+  { he: 'תּוֹשָׁב חוֹזֵר וָתִיק', translit: 'toshav chozer vatik', fr: 'long-time returning resident (10+ years abroad)' },
+  { he: 'פָּטוּר מִמַּס עַל הַכְנָסָה מֵחוּ"ל', translit: 'patur mi-mas al hachnasa me-chul', fr: 'foreign-income tax exemption (10 years)' },
+  { he: 'פָּטוּר מִמַּס עַל פֶּנְסְיָה זָרָה', translit: 'patur mi-mas al pensiya zara', fr: 'foreign pension tax exemption' },
+  { he: 'הֲקָלָה בִּמְכִירַת בַּיִת', translit: 'hakala bi-m\'chirat bayit', fr: 'home-sale tax relief' },
+  { he: 'תְּעוּדַת עוֹלֶה', translit: 't\'udat ole', fr: 'oleh certificate (proof for benefits)' },
+  { he: 'סַל קְלִיטָה', translit: 'sal k\'lita', fr: 'absorption basket (initial state aid)' },
+  { he: 'מִשְׂרַד הָעֲלִיָּה וְהַקְּלִיטָה', translit: 'misrad ha-aliya ve-ha-klita', fr: 'Aliyah & Integration Ministry' },
+  { he: 'הַסּוֹכְנוּת', translit: 'ha-Sochnut', fr: 'Jewish Agency / Sokhnut' },
+  { he: 'נֶפֶשׁ בְּנֶפֶשׁ', translit: 'Nefesh b\'Nefesh', fr: 'Nefesh B\'Nefesh (NA-UK aliyah org)' }
+];
+const PAYSLIP = [
+  { he: 'תְּלוּשׁ שָׂכָר', translit: 't\'lush sachar', fr: 'payslip' },
+  { he: 'שָׂכָר בְּרוּטוֹ', translit: 'sachar bruto', fr: 'gross salary (top of slip)' },
+  { he: 'מַס הַכְנָסָה', translit: 'mas hachnasa', fr: 'income tax (deduction)' },
+  { he: 'בִּטּוּחַ לְאֻמִּי', translit: 'bituach le\'umi', fr: 'national insurance (deduction)' },
+  { he: 'מַס בְּרִיאוּת', translit: 'mas b\'ri\'ut', fr: 'health tax (~3-5%, deduction)' },
+  { he: 'הַפְקָדוֹת לְפֶנְסְיָה', translit: 'hafkadot l\'pensiya', fr: 'pension contributions (deduction)' },
+  { he: 'הַפְקָדוֹת לְקֶרֶן הִישְׁתַּלְמוּת', translit: 'hafkadot l\'keren hishtalmut', fr: 'study fund contributions' },
+  { he: 'שָׂכָר נָקִי', translit: 'sachar naki', fr: 'net salary (bottom of slip)' },
+  { he: 'נְקֻדּוֹת זִכּוּי', translit: 'n\'kudot zikui', fr: 'credit points (showing on slip)' },
+  { he: 'מַשְׂכֹּרֶת בָּסִיס', translit: 'maskoret basis', fr: 'base salary' },
+  { he: 'תּוֹסְפוֹת', translit: 'tosafot', fr: 'add-ons (overtime, bonuses)' },
+  { he: 'יְמֵי חֻפְשָׁה', translit: 'y\'mei chufsha', fr: 'vacation days (accrued/used)' },
+  { he: 'יְמֵי מַחֲלָה', translit: 'y\'mei machala', fr: 'sick days' }
+];
+const ACCOUNTANT = [
+  { he: 'יֵשׁ לְךָ דִּיּוּן הַשָּׁנָה?', translit: 'Yesh l\'cha diyun ha-shana?', fr: 'Do you have a [tax] discussion this year?' },
+  { he: 'כֵּן, בִּגְלַל שֶׁיֵּשׁ לִי שְׁתֵּי הַכְנָסוֹת', translit: 'Ken, biglal she-yesh li shtei hachnasot', fr: 'Yes, because I have two incomes' },
+  { he: 'הָעֵבוֹדָה הָרִאשׁוֹנָה — שָׂכִיר. וְעוֹד פְּרִילַנְס', translit: 'Ha-avoda ha-rishona — sachir. Ve-od freelance', fr: 'First job — salaried. And freelance on the side.' },
+  { he: 'תָּבִיא לִי טְפָסֵי 106 מֵהָעֵבוֹדָה', translit: 'Tavi li t\'fasei 106 me-ha-avoda', fr: 'Bring me Form 106 from your job' },
+  { he: 'גַּם חֶשְׁבּוֹנִיּוֹת מֵהַפְּרִילַנְס', translit: 'Gam cheshbonyot me-ha-freelance', fr: 'Also invoices from the freelance' },
+  { he: 'אֵיזֶה הוֹצָאוֹת אֲנִי יָכוֹל לְקַזֵּז?', translit: 'Eize hotza\'ot ani yachol l\'kazez?', fr: 'Which expenses can I deduct?' },
+  { he: 'מַחְשֵׁב, אִינְטֶרְנֶט, חֵלֶק מֵהַשְּׂכִירוּת — אִם אַתָּה עוֹבֵד מֵהַבַּיִת', translit: 'Machshev, internet, chelek me-ha-s\'chirut — im ata oved me-ha-bayit', fr: 'Computer, internet, part of rent — if you work from home' },
+  { he: 'כַּמָּה צָפוּי לְהַחְזֵר?', translit: 'Kama tzafui l\'hechzer?', fr: 'How much refund is expected?' },
+  { he: 'תָּלוּי בַּחִשּׁוּב. נְעַדְכֵּן תּוֹךְ שָׁבוּעַ', translit: 'Talui ba-chishuv. N\'adken toch shavua', fr: 'Depends on the calculation. We\'ll update within a week' },
+  { he: 'תּוֹדָה רַבָּה', translit: 'Toda raba', fr: 'Thanks a lot' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('authority', AUTHORITY); R('income', INCOME); R('vat', VAT); R('self-employed', SELF_EMPLOYED); R('olim', OLIM);
+renderTextBlock('payslip', PAYSLIP);
+renderTextBlock('accountant', ACCOUNTANT);
+
+addMiniQuiz('Taxes Quiz', [
+  { q: 'Israeli VAT (ma\'am) is currently...', options: ['10%', '17%', '18%', '25%'], answer: 2, explain: 'Raised from 17% to 18% in 2025' },
+  { q: 'Top income-tax bracket is...', options: ['25%', '35%', '50%', '60%'], answer: 2, explain: '50% above ~720K NIS/year' },
+  { q: 'נְקֻדּוֹת זִכּוּי are...', options: ['Tax credit points (~232 NIS each off your tax)', 'A bonus', 'Pension contributions', 'A loyalty card'], answer: 0, explain: 'Israelis get 2.25 standard, more for women, parents, etc.' },
+  { q: 'New olim get...', options: ['No tax benefits', '10-year foreign income tax exemption', '5% extra tax', 'Pension only'], answer: 1, explain: 'Plus property tax breaks, vehicle import benefits, etc.' },
+  { q: 'עוֹסֵק פָּטוּר means...', options: ['Tax-free', 'Self-employed under VAT threshold (~120K NIS revenue)', 'Government employee', 'Retired'], answer: 1, explain: '"Exempt" from VAT collection but still pays income tax' },
+  { q: 'Eilat is...', options: ['Standard VAT zone', 'VAT-free zone', 'No tax at all', 'Higher tax'], answer: 1, explain: 'Free trade zone since 1985 — popular for shopping' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('taxes'); } });
+</script></body></html>

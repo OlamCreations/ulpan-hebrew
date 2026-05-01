@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>372 — 1492 Spanish Expulsion</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>1492 Spanish Expulsion</h1><div class="subtitle">Lesson 372 · גֵּרוּשׁ סְפָרַד וְהָאֲנוּסִים</div></div><div class="nav"><a href="index.html">Home</a><a href="372-expulsion-1492.html" class="active">372</a></div></header>
+
+<p class="intro">From Sevilla 1391 to Lisbon 1497, Iberian Jewry collapses in waves. Riots first. Then forced baptism. Then an Inquisition built specifically to hunt Jews who had already converted. Then, in 1492, the Catholic Monarchs sign the Alhambra Decree and end 1500 years of Jewish life in Spain. The Sephardim disperse to the Maghreb, the Ottoman Empire, Italy, and Amsterdam. Hidden Jews — Anusim, Conversos, Marranos — carry Judaism in secret across continents for five centuries.</p>
+
+<div class="tip"><strong>Why this lesson matters</strong> — 1492 is the second great Sephardi catastrophe after Romans. Sephardi liturgy, Ladino, and entire diaspora geography (Salonika, Istanbul, Amsterdam, Mexico, Recife, Curaçao) were shaped by these four months in 1492. The deadline ran to roughly the 9th of Av. The exile and the Temple destruction collapse into the same date in Sephardi memory.</div>
+
+<h2>1391 Massacres & Forced Conversion</h2>
+<div class="word-list" id="massacres"></div>
+
+<h2>Conversos / Anusim / Marranos</h2>
+<div class="word-list" id="conversos"></div>
+
+<h2>Spanish Inquisition (Torquemada)</h2>
+<div class="word-list" id="inquisition"></div>
+
+<h2>1492 Edict of Expulsion (Alhambra)</h2>
+<div class="word-list" id="expulsion"></div>
+
+<h2>Portuguese 1497 & Crypto-Jewish Diaspora</h2>
+<div class="word-list" id="diaspora"></div>
+
+<hr class="section-divider">
+
+<h2>Sephardi Memory — A Compressed Timeline</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A century of slow collapse, then four months that ended Sephardi Spain. Read these in order — the chain is the lesson.</div>
+  <div id="timeline"></div>
+</div>
+
+<footer>Lesson 372 · 1492 Spanish Expulsion · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const MASSACRES = [
+  { he: 'פְּרָעוֹת 1391', translit: 'pra\'ot 1391', fr: 'pogroms of 1391 (started in Sevilla, June 4)' },
+  { he: 'סְפָרַד הַנּוֹצְרִית', translit: 's\'farad ha-notzrit', fr: 'Christian Spain (Castile and Aragon)' },
+  { he: 'הַמַּטִּיף פֶרָאן מַרְטִינֶס', translit: 'ha-matif Ferrán Martínez', fr: 'preacher Ferrán Martínez (incited the riots)' },
+  { he: 'שְׁמַד', translit: 'sh\'mad', fr: 'forced apostasy (the central trauma)' },
+  { he: 'הַטְבָּלָה בְּכֹחַ', translit: 'hatbala b\'koach', fr: 'baptism by force' },
+  { he: 'קְהִילַּת סְבִילְיָה נֶחֱרְבָה', translit: 'k\'hilat Sevilla necherva', fr: 'the Sevilla community was destroyed' },
+  { he: 'כ-100,000 הוּמְרוּ לְנַצְרוּת', translit: 'k-100,000 humru l\'natzrut', fr: '~100,000 forcibly converted to Christianity' },
+  { he: 'כ-50,000 נֶהֶרְגוּ', translit: 'k-50,000 nehergu', fr: '~50,000 killed (estimate)' },
+  { he: 'וִיכּוּחַ טוֹרְטוֹסָה', translit: 'vikuach Tortosa', fr: 'Tortosa Disputation (1413-14, more conversion pressure)' },
+  { he: 'קֵץ סְפָרַד הַשְּׁלֵוָה', translit: 'ketz s\'farad ha-shleva', fr: 'end of the peaceful Sefarad' }
+];
+const CONVERSOS = [
+  { he: 'אֲנוּסִים', translit: 'anusim', fr: 'Anusim (the forced ones — Hebrew term)' },
+  { he: 'קוֹנְוֶרְסוֹס', translit: 'conversos', fr: 'Conversos (Spanish term — converts)' },
+  { he: 'מָארָאנוֹס', translit: 'marranos', fr: 'Marranos (pejorative Spanish — "swine")' },
+  { he: 'נוֹצְרִים חֲדָשִׁים', translit: 'notzrim chadashim', fr: 'New Christians (official term)' },
+  { he: 'יַהֲדוּת בַּסֵּתֶר', translit: 'yahadut ba-seter', fr: 'Crypto-Judaism (Judaism in secret)' },
+  { he: 'שַׁבָּת בַּמַּרְתֵּף', translit: 'shabbat ba-martef', fr: 'Shabbat in the cellar (lit candles hidden)' },
+  { he: 'מַעֲמָד חֶבְרָתִי כָּפוּל', translit: 'ma\'amad chevrati kaful', fr: 'double social status (publicly Christian, privately Jewish)' },
+  { he: 'חֲשָׁד מַתְמִיד', translit: 'chashad matmid', fr: 'permanent suspicion (from old Christians)' },
+  { he: 'דַּם נָקִי', translit: 'dam naki', fr: '"limpieza de sangre" — purity of blood doctrine' },
+  { he: 'שׁוֹשֶׁלֶת אֲנוּסִים', translit: 'shoshelet anusim', fr: 'Anusim lineage (carried for generations)' }
+];
+const INQUISITION = [
+  { he: 'הָאִינְקְוִיזִיצְיָה הַסְּפָרַדִּית', translit: 'ha-Inkvizitziya ha-S\'faradit', fr: 'the Spanish Inquisition (founded 1478)' },
+  { he: 'תּוֹמָאס דֶה טוֹרְקְוֶמָאדָה', translit: 'Tomás de Torquemada', fr: 'Tomás de Torquemada (first Grand Inquisitor)' },
+  { he: 'בּוֹדֵק כְּפִירָה', translit: 'bodek k\'firah', fr: 'inquisitor (heresy investigator)' },
+  { he: 'מַטָּרָה: אֲנוּסִים', translit: 'matara: anusim', fr: 'target: the Conversos (NOT practicing Jews)' },
+  { he: 'יְהוּדִים בְּסֵתֶר', translit: 'yehudim b\'seter', fr: 'secret Jews (the actual prey)' },
+  { he: 'הַלְשָׁנָה', translit: 'halshana', fr: 'denunciation (neighbors reported each other)' },
+  { he: 'עִנּוּי', translit: 'inui', fr: 'torture (extracted "confessions")' },
+  { he: 'אַוּטוֹ דָה פֶה', translit: 'auto da fé', fr: 'auto-da-fé (public burning ceremony)' },
+  { he: 'שְׂרֵפָה עַל הַמּוֹקֵד', translit: 's\'refa al ha-moked', fr: 'burning at the stake' },
+  { he: 'הַחְרָמַת רְכוּשׁ', translit: 'hachramat r\'chush', fr: 'confiscation of property (financed the Crown)' }
+];
+const EXPULSION = [
+  { he: 'גֵּרוּשׁ סְפָרַד', translit: 'gerush s\'farad', fr: 'the Expulsion from Spain' },
+  { he: 'צַו אַלְהַמְבְּרָה', translit: 'tzav Alhambra', fr: 'Alhambra Decree (March 31, 1492)' },
+  { he: 'פֶרְדִינַנְד וְאִיזַבֶּלָה', translit: 'Ferdinand v\'Isabella', fr: 'Ferdinand and Isabella (the Catholic Monarchs)' },
+  { he: 'נְפִילַת גְּרָנָדָה', translit: 'n\'filat Granada', fr: 'fall of Granada (Reconquista completed, January 1492)' },
+  { he: 'אַרְבָּעָה חוֹדָשִׁים לָצֵאת', translit: 'arba\'a chodashim latzet', fr: 'four months to leave (until July 31, 1492)' },
+  { he: 'תִּשְׁעָה בְּאָב', translit: 'tish\'a b\'av', fr: '9 of Av (the deadline fell near the date of Temple destruction)' },
+  { he: 'דּוֹן יִצְחָק אַבַּרְבְּנֵאל', translit: 'Don Yitzchak Abarbanel', fr: 'Don Isaac Abravanel (royal financier, refused conversion, led the exile)' },
+  { he: 'כ-150-200 אֶלֶף יוֹצְאִים', translit: 'k-150-200 elef yotz\'im', fr: '~150-200K Jews leaving (estimates vary)' },
+  { he: 'אִסּוּר זָהָב וְכֶסֶף', translit: 'isur zahav v\'chesef', fr: 'ban on taking gold and silver (assets seized)' },
+  { he: 'סוֹף 1500 שָׁנָה בִּסְפָרַד', translit: 'sof 1500 shana bi-s\'farad', fr: 'end of 1500 years of Jewish life in Spain' }
+];
+const DIASPORA = [
+  { he: 'גֵּרוּשׁ פּוֹרְטוּגָל 1497', translit: 'gerush Portugal 1497', fr: 'Portuguese Expulsion 1497 (King Manuel I)' },
+  { he: 'הַמְרָה כְּפוּיָה בְּלִיסְבּוֹן', translit: 'hamara k\'fuya b\'Lisbon', fr: 'forced conversion in Lisbon (no exit allowed)' },
+  { he: 'הָאִימְפֶּרְיָה הָעוֹתְ\'מָאנִית', translit: 'ha-imperya ha-Othmanit', fr: 'the Ottoman Empire (welcomed the Sephardim)' },
+  { he: 'הַסּוּלְטָאן בָּיֶזִיד הַשֵּׁנִי', translit: 'ha-Sultan Bayezid ha-sheni', fr: 'Sultan Bayezid II ("the Catholic king impoverishes his country and enriches mine")' },
+  { he: 'סָלוֹנִיקִי הַיְּהוּדִית', translit: 'Saloniki ha-yehudit', fr: 'Jewish Salonika (became majority-Sephardi)' },
+  { he: 'אַמְסְטֶרְדַּם הַחֲדָשָׁה', translit: 'Amsterdam ha-chadasha', fr: 'New Amsterdam (Dutch refuge, 17th century)' },
+  { he: 'לָדִינוֹ', translit: 'ladino', fr: 'Ladino (Judeo-Spanish, carried by exiles)' },
+  { he: 'אֲנוּסֵי מֶקְסִיקוֹ וּפֶרוּ', translit: 'anusei Mexico u-Peru', fr: 'Conversos of Mexico and Peru (followed Spanish colonization)' },
+  { he: 'אֲנוּסֵי בְּרָזִיל', translit: 'anusei Brazil', fr: 'Conversos of Brazil (Recife — first synagogue in the Americas)' },
+  { he: 'גִּלּוּי מֵחָדָשׁ', translit: 'gilui me-chadash', fr: 'rediscovery (centuries later, descendants returning to Judaism)' }
+];
+
+const TIMELINE = [
+  { he: '1391 — פְּרָעוֹת. סְבִילְיָה נֶחֱרְבָה. גַּל הַמַּסּוֹת מִתְפַּשֵּׁט בְּכָל קָסְטִילְיָה וְאָרָגוֹן. הַ-shmad מַתְחִיל.', translit: '1391 — pra\'ot. Sevilla necherva. gal ha-masot mitpashet b\'chol Castilla v\'Aragon. ha-shmad matchil.', fr: '1391 — Riots. Sevilla destroyed. The wave spreads through all Castile and Aragon. Forced conversion begins.' },
+  { he: '1413-14 — וִיכּוּחַ טוֹרְטוֹסָה. רַבָּנִים נֶאֱלָצִים לְהִתְוַכֵּחַ פּוּמְבִּית. עוֹד גַּל הַמָּרוֹת.', translit: '1413-14 — vikuach Tortosa. rabanim ne\'elatzim l\'hitvake\'ach pumbi. od gal hamarot.', fr: '1413-14 — Tortosa Disputation. Rabbis forced into public debate. Another wave of conversions.' },
+  { he: '1478 — הָאִינְקְוִיזִיצְיָה מוּקֶמֶת. טוֹרְקְוֶמָאדָה רוֹדֵף אֲנוּסִים שֶׁמְקַיְּמִים יַהֲדוּת בַּסֵּתֶר.', translit: '1478 — ha-Inkvizitziya mukemet. Torquemada rodef anusim she-m\'kaymim yahadut ba-seter.', fr: '1478 — The Inquisition is founded. Torquemada hunts Conversos who keep Judaism in secret.' },
+  { he: '2 בִּינוּאַר 1492 — גְּרָנָדָה נוֹפֶלֶת. הַרֵקוֹנְקִיסְטָה הַסְּפָרַדִּית הוּשְׁלְמָה. הַמּוֹנַרְכִים פּוֹנִים לַיְּהוּדִים.', translit: '2 b\'yanuar 1492 — Granada nofelet. ha-Reconquista ha-S\'faradit hushlema. ha-monarchim ponim la-yehudim.', fr: 'January 2, 1492 — Granada falls. The Reconquista is complete. The Monarchs turn to the Jews.' },
+  { he: '31 בְּמַרְץ 1492 — צַו אַלְהַמְבְּרָה נֶחֱתָם. אַרְבָּעָה חוֹדָשִׁים לָצֵאת אוֹ לְהִתְנַצֵּר.', translit: '31 b\'martz 1492 — tzav Alhambra nechtam. arba\'a chodashim latzet o l\'hitnatzer.', fr: 'March 31, 1492 — The Alhambra Decree is signed. Four months to leave or convert.' },
+  { he: '31 בְּיוּלִי 1492 — תַּאֲרִיךְ אַחֲרוֹן. סָמוּךְ לְתִשְׁעָה בְּאָב. כ-150-200K עוֹזְבִים בְּלִי זָהָב.', translit: '31 b\'yuli 1492 — ta\'arich acharon. samuch l\'tish\'a b\'av. k-150-200K ozvim b\'li zahav.', fr: 'July 31, 1492 — Final date. Near the 9 of Av. ~150-200K leave without their gold.' },
+  { he: '1497 — מַנוּאֵל הָרִאשׁוֹן בְּפּוֹרְטוּגָל גּוֹזֵר הַמְרָה כְּפוּיָה עַל אֵלּוּ שֶׁבָּרְחוּ מִסְּפָרַד. אֵין יְצִיאָה.', translit: '1497 — Manuel ha-rishon b\'Portugal gozer hamara k\'fuya al elu she-barchu mi-s\'farad. ein yetzi\'a.', fr: '1497 — Manuel I in Portugal decrees forced conversion on those who fled Spain. No exit allowed.' },
+  { he: 'דּוֹרוֹת לָאַחַר מִכֵּן — צֶאֱצָאֵי הָאֲנוּסִים בְּמֶקְסִיקוֹ, פֶּרוּ, בְּרָזִיל, נְיוּ-מֶקְסִיקוֹ מְגַלִּים מֵחָדָשׁ אֶת זֶהוּתָם הַיְּהוּדִית.', translit: 'dorot la-achar mi-ken — tze\'etza\'ei ha-anusim b\'Mexico, Peru, Brazil, New Mexico m\'galim me-chadash et zehutam ha-yehudit.', fr: 'Generations later — descendants of the Conversos in Mexico, Peru, Brazil, New Mexico rediscover their Jewish identity.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('massacres', MASSACRES);
+R('conversos', CONVERSOS);
+R('inquisition', INQUISITION);
+R('expulsion', EXPULSION);
+R('diaspora', DIASPORA);
+
+renderTextBlock('timeline', TIMELINE);
+
+addMiniQuiz('1492 Spanish Expulsion Quiz', [
+  { q: 'The 1391 riots that destroyed the Sevilla community spread to...', options: ['Only Andalusia', 'All of Castile and Aragon', 'Portugal first', 'France'], answer: 1, explain: 'The pogroms started in Sevilla on June 4, 1391, then swept across Castile and Aragon — the entire Iberian peninsula except Portugal at first.' },
+  { q: '"Anusim" in Hebrew means...', options: ['The blessed ones', 'The forced ones (forced converts)', 'The wealthy', 'The exiled'], answer: 1, explain: 'Anusim = "the forced ones" — Hebrew term for Jews forcibly converted to Christianity. Marranos and Conversos are the Spanish equivalents (Marrano is pejorative).' },
+  { q: 'The Spanish Inquisition (founded 1478) primarily targeted...', options: ['Practicing Jews', 'Muslims', 'Conversos suspected of secret Judaism', 'Protestants'], answer: 2, explain: 'The Inquisition\'s legal authority was over baptized Christians only. Practicing Jews were OUT of its reach — that is exactly why expulsion (1492) followed: to remove the source of "Judaizing influence" on Conversos.' },
+  { q: 'The Alhambra Decree was signed on...', options: ['January 1, 1492', 'March 31, 1492', 'July 31, 1492', 'October 12, 1492'], answer: 1, explain: 'Signed March 31, 1492 by Ferdinand and Isabella, three months after the fall of Granada. The deadline to leave or convert was July 31, 1492 — close to the 9 of Av.' },
+  { q: 'After 1492, the Ottoman Sultan who welcomed the Sephardim was...', options: ['Mehmed II', 'Bayezid II', 'Suleiman the Magnificent', 'Selim I'], answer: 1, explain: 'Bayezid II (reigned 1481-1512) sent the Ottoman fleet to evacuate Sephardim and famously said the Catholic king "impoverishes his country and enriches mine".' },
+  { q: 'The 1497 Portuguese decree by Manuel I differed from 1492 Spain in that...', options: ['It was more lenient', 'It allowed exit', 'It forced conversion with no exit option', 'It applied only to children'], answer: 2, explain: 'Manuel I needed Jewish economic skills, so instead of expulsion he forced mass baptism and blocked emigration. This created the Portuguese Converso population that later seeded Amsterdam, Recife, and the Caribbean Sephardi diaspora.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(372);
+  }
+});
+</script></body></html>

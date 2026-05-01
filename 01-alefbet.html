@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 — The Hebrew Alphabet</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>The Hebrew Alphabet</h1>
+    <div class="subtitle">Lesson 01 · אלף-בית</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="01-alefbet.html" class="active">01</a>
+    <a href="02-niqqud.html">02</a>
+    <a href="03-common-words.html">03</a>
+    <a href="04-greetings.html">04</a>
+    <a href="05-numbers.html">05</a>
+  </div>
+</header>
+
+<p class="intro">
+  The Hebrew alphabet has 22 letters plus 5 final forms (used at the end of words). Every letter is a consonant — vowels are marked separately as dots (niqqud, lesson 02). Click any letter to flip it and hear the sound.
+</p>
+
+<div class="toolbar">
+  <button class="btn" onclick="flipAll(true)">Flip all</button>
+  <button class="btn" onclick="flipAll(false)">Hide all</button>
+  <button class="btn" onclick="document.getElementById('quiz').scrollIntoView()">Go to quiz ↓</button>
+</div>
+
+<h2>22 Main Letters</h2>
+<div class="grid-letters" id="letters-grid"></div>
+
+<h2>5 Final Forms (sofit)</h2>
+<div class="grid-letters" id="finals-grid"></div>
+
+<div class="tip">
+  <strong>Remember</strong> — Five letters change shape at the end of a word: Khaf, Mem, Nun, Pe, Tzade. The sound is the same, only the form changes. They're called "sofit" (final).
+</div>
+
+<div class="tip">
+  <strong>Tricky look-alikes</strong> — Bet (ב) vs. Khaf (כ). Dalet (ד) vs. Resh (ר). He (ה) vs. Chet (ח). Telling these apart is your first real challenge.
+</div>
+
+<hr class="section-divider">
+
+<div class="quiz" id="quiz">
+  <div class="score" id="score">Score: 0/0</div>
+  <h2 style="margin-top:0">Quiz — Identify the Letter</h2>
+  <div class="he-display" id="quiz-letter">?</div>
+  <div class="options" id="quiz-options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div style="margin-top:24px;">
+    <button class="btn btn-primary" onclick="newQuestion()">New question</button>
+    <button class="btn" onclick="resetQuiz()">Reset</button>
+  </div>
+</div>
+
+<footer>
+  Lesson 01 · 22 letters + 5 finals · <a href="02-niqqud.html" style="color:var(--accent)">Next: Vowels →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const ALEF_BET = [
+  { he: 'א', name: 'Alef',   translit: "'",     sound: 'silent (carries vowels)' },
+  { he: 'ב', name: 'Bet',    translit: 'B / V', sound: 'B with dagesh, V without' },
+  { he: 'ג', name: 'Gimel',  translit: 'G',     sound: 'hard G as in "go"' },
+  { he: 'ד', name: 'Dalet',  translit: 'D',     sound: 'D' },
+  { he: 'ה', name: 'Hey',    translit: 'H',     sound: 'soft H as in "hat"' },
+  { he: 'ו', name: 'Vav',    translit: 'V/O/U', sound: 'V, or vowel O / U' },
+  { he: 'ז', name: 'Zayin',  translit: 'Z',     sound: 'Z' },
+  { he: 'ח', name: 'Chet',   translit: 'Ch',    sound: 'guttural CH as in "Bach" / "Chanukah"' },
+  { he: 'ט', name: 'Tet',    translit: 'T',     sound: 'T (same as Tav in modern Hebrew)' },
+  { he: 'י', name: 'Yod',    translit: 'Y / I', sound: 'Y consonant or I vowel' },
+  { he: 'כ', name: 'Kaf',    translit: 'K / Kh', sound: 'K with dagesh, Kh (like Chet) without' },
+  { he: 'ל', name: 'Lamed',  translit: 'L',     sound: 'L' },
+  { he: 'מ', name: 'Mem',    translit: 'M',     sound: 'M' },
+  { he: 'נ', name: 'Nun',    translit: 'N',     sound: 'N' },
+  { he: 'ס', name: 'Samech', translit: 'S',     sound: 'S' },
+  { he: 'ע', name: 'Ayin',   translit: "'",     sound: 'guttural (often silent in modern Hebrew)' },
+  { he: 'פ', name: 'Pe',     translit: 'P / F', sound: 'P with dagesh, F without' },
+  { he: 'צ', name: 'Tzade',  translit: 'Tz',    sound: 'TZ as in "pizza"' },
+  { he: 'ק', name: 'Kuf',    translit: 'K',     sound: 'K (same as Kaf in modern Hebrew)' },
+  { he: 'ר', name: 'Resh',   translit: 'R',     sound: 'rolled or guttural R' },
+  { he: 'ש', name: 'Shin',   translit: 'Sh / S', sound: 'SH with dot on right, S with dot on left' },
+  { he: 'ת', name: 'Tav',    translit: 'T',     sound: 'T' }
+];
+
+const FINALS = [
+  { he: 'ך', name: 'Khaf sofit',  translit: 'Kh', sound: 'Kh at end of word' },
+  { he: 'ם', name: 'Mem sofit',   translit: 'M',  sound: 'M at end of word' },
+  { he: 'ן', name: 'Nun sofit',   translit: 'N',  sound: 'N at end of word' },
+  { he: 'ף', name: 'Pe sofit',    translit: 'F',  sound: 'F at end of word' },
+  { he: 'ץ', name: 'Tzade sofit', translit: 'Tz', sound: 'TZ at end of word' }
+];
+
+function renderGrid(elementId, letters) {
+  const grid = document.getElementById(elementId);
+  letters.forEach((l) => {
+    const card = document.createElement('div');
+    card.className = 'letter-card';
+    card.innerHTML = `
+      <div class="he">${l.he}</div>
+      <div class="name">${l.name}</div>
+      <div class="translit">${l.translit}</div>
+      <div class="sound">${l.sound}</div>
+    `;
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      if (card.classList.contains('flipped')) speak(l.he, 0.7);
+    });
+    grid.appendChild(card);
+  });
+}
+
+renderGrid('letters-grid', ALEF_BET);
+renderGrid('finals-grid', FINALS);
+
+function flipAll(state) {
+  document.querySelectorAll('.letter-card').forEach(c => {
+    if (state) c.classList.add('flipped');
+    else c.classList.remove('flipped');
+  });
+}
+
+let quizScore = { correct: 0, total: 0 };
+let currentQuestion = null;
+
+function newQuestion() {
+  const all = [...ALEF_BET, ...FINALS];
+  const target = all[Math.floor(Math.random() * all.length)];
+  currentQuestion = target;
+
+  let options = [target];
+  while (options.length < 4) {
+    const cand = all[Math.floor(Math.random() * all.length)];
+    if (!options.find(o => o.name === cand.name)) options.push(cand);
+  }
+  options = shuffle(options);
+
+  document.getElementById('quiz-letter').textContent = target.he;
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = o.name;
+    btn.onclick = () => answer(o, btn);
+    opts.appendChild(btn);
+  });
+  document.getElementById('feedback').textContent = '';
+  speak(target.he, 0.7);
+}
+
+function answer(option, btn) {
+  quizScore.total++;
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  if (option.name === currentQuestion.name) {
+    quizScore.correct++;
+    btn.classList.add('correct');
+    document.getElementById('feedback').textContent =
+      `Correct! ${currentQuestion.he} = ${currentQuestion.name} (${currentQuestion.translit}) — ${currentQuestion.sound}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-option').forEach(b => {
+      if (b.textContent === currentQuestion.name) b.classList.add('correct');
+    });
+    document.getElementById('feedback').textContent =
+      `Not quite — it was ${currentQuestion.name} (${currentQuestion.translit})`;
+  }
+  document.getElementById('score').textContent = `Score: ${quizScore.correct}/${quizScore.total}`;
+  if (quizScore.total >= 10 && quizScore.correct / quizScore.total >= 0.7) {
+    markLessonDone('alefbet');
+  }
+}
+
+function resetQuiz() {
+  quizScore = { correct: 0, total: 0 };
+  document.getElementById('score').textContent = 'Score: 0/0';
+  newQuestion();
+}
+
+newQuestion();
+
+addExtraVocab('Letter Names — All 22 Hebrew Letters', [
+  { he: 'אָלֶף', translit: 'aleph', fr: 'aleph (silent / glottal)' },
+  { he: 'בֵּית', translit: 'bet', fr: 'bet (b/v)' },
+  { he: 'גִּימֶל', translit: 'gimel', fr: 'gimel (g)' },
+  { he: 'דָּלֶת', translit: 'dalet', fr: 'dalet (d)' },
+  { he: 'הֵא', translit: 'he', fr: 'he (h)' },
+  { he: 'וָו', translit: 'vav', fr: 'vav (v / o / u)' },
+  { he: 'זַיִן', translit: 'zayin', fr: 'zayin (z)' },
+  { he: 'חֵית', translit: 'chet', fr: 'chet (ch as in Bach)' },
+  { he: 'טֵית', translit: 'tet', fr: 'tet (t)' },
+  { he: 'יוֹד', translit: 'yod', fr: 'yod (y / i)' },
+  { he: 'כָּף', translit: 'kaf', fr: 'kaf (k/ch)' },
+  { he: 'לָמֶד', translit: 'lamed', fr: 'lamed (l)' },
+  { he: 'מֵם', translit: 'mem', fr: 'mem (m)' },
+  { he: 'נוּן', translit: 'nun', fr: 'nun (n)' },
+  { he: 'סָמֶך', translit: 'samech', fr: 'samech (s)' },
+  { he: 'עַיִן', translit: 'ayin', fr: 'ayin (silent / glottal)' },
+  { he: 'פֵּא', translit: 'pe', fr: 'pe (p/f)' },
+  { he: 'צָדִי', translit: 'tzadi', fr: 'tzadi (ts)' },
+  { he: 'קוֹף', translit: 'kuf', fr: 'kuf (k)' },
+  { he: 'רֵישׁ', translit: 'resh', fr: 'resh (r)' },
+  { he: 'שִׁין', translit: 'shin', fr: 'shin (sh / s)' },
+  { he: 'תָּו', translit: 'tav', fr: 'tav (t)' }
+]);
+
+addMiniQuiz('Alef-Bet Quiz', [
+  { q: 'How many letters in the Hebrew alphabet?', options: ['20', '22', '26', '28'], answer: 1 },
+  { q: 'How many letters have "final" forms (sofit)?', options: ['3', '5', '7', '10'], answer: 1, explain: 'מ ם, נ ן, פ ף, צ ץ, כ ך' },
+  { q: 'Which is the FIRST letter?', options: ['ב', 'א', 'ת', 'ש'], answer: 1, explain: 'א = aleph' },
+  { q: 'Which is the LAST letter?', options: ['ת', 'ש', 'ר', 'ק'], answer: 0, explain: 'ת = tav' },
+  { q: 'Hebrew is written from...', options: ['Left to right', 'Right to left', 'Top to bottom', 'Bottom to top'], answer: 1 },
+  { q: 'Which letter has BOTH "sh" and "s" sounds (depending on dot)?', options: ['ב', 'ש', 'כ', 'פ'], answer: 1, explain: 'shin (dot right) vs sin (dot left)' }
+]);
+</script>
+
+</body>
+</html>

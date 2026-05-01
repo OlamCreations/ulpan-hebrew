@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14 — Restaurant & Food</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Restaurant & Food</h1>
+    <div class="subtitle">Lesson 14 · מסעדה ואוכל</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="13-body-family.html">13</a>
+    <a href="14-restaurant-food.html" class="active">14</a>
+    <a href="15-medical-emergencies.html">15</a>
+  </div>
+</header>
+
+<p class="intro">
+  Vocabulary for ordering, reading an Israeli menu, navigating markets and bakeries. Includes local specialties (hummus, falafel, sabich, shakshuka) and kosher terms (kasher, parve, chalavi, basari).
+</p>
+
+<h2>At the Restaurant</h2>
+<div class="word-list" id="restaurant"></div>
+
+<h2>Meals</h2>
+<div class="word-list" id="meals"></div>
+
+<h2>Drinks</h2>
+<div class="word-list" id="drinks"></div>
+
+<h2>Bread & Grains</h2>
+<div class="word-list" id="bread"></div>
+
+<h2>Vegetables</h2>
+<div class="word-list" id="vegetables"></div>
+
+<h2>Fruits</h2>
+<div class="word-list" id="fruits"></div>
+
+<h2>Meat & Fish</h2>
+<div class="word-list" id="meat"></div>
+
+<h2>Dairy</h2>
+<div class="word-list" id="dairy"></div>
+
+<h2>Israeli Specialties</h2>
+<div class="word-list" id="specialties"></div>
+
+<h2>Kosher Vocabulary</h2>
+
+<div class="tip">
+  <strong>3 categories</strong> — בָּשָׂרִי (basari, meat) · חָלָבִי (chalavi, dairy) · פַּרְוֶה (parve, neutral — vegetables, fish, eggs). Never mix meat and dairy in the same meal.
+</div>
+
+<div class="word-list" id="kosher"></div>
+
+<hr class="section-divider">
+
+<h2>Phrases for the Restaurant</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 14 · restaurant + food · <a href="15-medical-emergencies.html" style="color:var(--accent)">Next: Medical & Emergencies →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const RESTAURANT = [
+  { he: 'מִסְעָדָה',  translit: "mis'ada",  fr: 'restaurant' },
+  { he: 'תַּפְרִיט',  translit: 'tafrit',   fr: 'menu' },
+  { he: 'מֶלְצַר',    translit: 'meltzar',  fr: 'waiter' },
+  { he: 'מֶלְצָרִית', translit: 'meltzarit', fr: 'waitress' },
+  { he: 'שֻׁלְחָן',   translit: 'shulchan', fr: 'table' },
+  { he: 'כִּסֵּא',    translit: 'kise',     fr: 'chair' },
+  { he: 'מַזְלֵג',    translit: 'mazleg',   fr: 'fork' },
+  { he: 'סַכִּין',    translit: 'sakin',    fr: 'knife' },
+  { he: 'כַּפִּית',   translit: 'kapit',    fr: 'spoon' },
+  { he: 'צַלַּחַת',   translit: 'tzalachat', fr: 'plate' },
+  { he: 'כּוֹס',      translit: 'kos',      fr: 'glass' },
+  { he: 'מַפִּית',    translit: 'mapit',    fr: 'napkin' },
+  { he: 'חֶשְׁבּוֹן', translit: 'cheshbon', fr: 'bill / check' },
+  { he: 'טִיפ',       translit: 'tip',      fr: 'tip' }
+];
+
+const MEALS = [
+  { he: 'אֲרוּחָה',                translit: 'arucha',                fr: 'meal' },
+  { he: 'אֲרוּחַת בּוֹקֶר',         translit: 'aruchat boker',         fr: 'breakfast' },
+  { he: 'אֲרוּחַת צָהֳרַיִם',       translit: 'aruchat tzohorayim',    fr: 'lunch' },
+  { he: 'אֲרוּחַת עֶרֶב',          translit: 'aruchat erev',          fr: 'dinner' },
+  { he: 'מָנָה',                    translit: 'mana',                  fr: 'dish / portion' },
+  { he: 'מָנָה רִאשׁוֹנָה',         translit: 'mana rishona',          fr: 'starter' },
+  { he: 'מָנָה עִקָּרִית',          translit: 'mana ikarit',           fr: 'main course' },
+  { he: 'קִנּוּחַ',                 translit: 'kinuach',               fr: 'dessert' }
+];
+
+const DRINKS = [
+  { he: 'מַיִם',                  translit: 'mayim',           fr: 'water' },
+  { he: 'מַיִם מִינֶרָלִיִּים',  translit: 'mayim mineralim', fr: 'mineral water' },
+  { he: 'תֵּה',                   translit: 'te',              fr: 'tea' },
+  { he: 'קָפֶה',                  translit: 'kafe',            fr: 'coffee' },
+  { he: 'קָפֶה הָפוּךְ',          translit: 'kafe hafuch',     fr: 'cappuccino (lit. "upside-down")' },
+  { he: 'מִיץ',                   translit: 'mitz',            fr: 'juice' },
+  { he: 'יַיִן',                  translit: 'yayin',           fr: 'wine' },
+  { he: 'בִּירָה',                translit: 'bira',            fr: 'beer' },
+  { he: 'חָלָב',                  translit: 'chalav',          fr: 'milk' },
+  { he: 'שׁוֹקוֹ',                translit: 'shoko',           fr: 'chocolate milk' }
+];
+
+const BREAD = [
+  { he: 'לֶחֶם',     translit: 'lechem',    fr: 'bread' },
+  { he: 'פִּיתָה',   translit: 'pita',      fr: 'pita' },
+  { he: 'חַלָּה',    translit: 'chala',     fr: 'challah (Shabbat braided bread)' },
+  { he: 'בֵּיגֶל',   translit: 'beigel',    fr: 'bagel' },
+  { he: 'אֹרֶז',     translit: 'orez',      fr: 'rice' },
+  { he: 'פָּסְטָה',  translit: 'pasta',     fr: 'pasta' },
+  { he: 'בּוֹרֶקַס', translit: 'borekas',   fr: 'borekas (savory pastry)' },
+  { he: 'מְלַוַּח',  translit: 'melawach',  fr: 'malawach (Yemeni flatbread)' }
+];
+
+const VEGETABLES = [
+  { he: 'יְרָקוֹת',          translit: 'yerakot',     fr: 'vegetables' },
+  { he: 'עַגְבָנִיָּה',     translit: 'agvaniya',    fr: 'tomato' },
+  { he: 'מְלָפְפוֹן',       translit: 'melafefon',   fr: 'cucumber' },
+  { he: 'בָּצָל',           translit: 'batzal',      fr: 'onion' },
+  { he: 'שׁוּם',            translit: 'shum',        fr: 'garlic' },
+  { he: 'גֶּזֶר',           translit: 'gezer',       fr: 'carrot' },
+  { he: 'תַּפּוּחַ אֲדָמָה',translit: 'tapuach adama', fr: 'potato' },
+  { he: 'פִּלְפֵּל',         translit: 'pilpel',      fr: 'pepper' },
+  { he: 'חָסָה',             translit: 'chasa',       fr: 'lettuce' },
+  { he: 'חֲצִיל',            translit: 'chatzil',     fr: 'eggplant' }
+];
+
+const FRUITS = [
+  { he: 'פֵּרוֹת',     translit: 'perot',     fr: 'fruits' },
+  { he: 'תַּפּוּחַ',  translit: 'tapuach',   fr: 'apple' },
+  { he: 'בָּנָנָה',   translit: 'banana',    fr: 'banana' },
+  { he: 'תַּפּוּז',   translit: 'tapuz',     fr: 'orange' },
+  { he: 'לִימוֹן',    translit: 'limon',     fr: 'lemon' },
+  { he: 'עֲנָבִים',   translit: 'anavim',    fr: 'grapes' },
+  { he: 'תּוּתִים',   translit: 'tutim',     fr: 'strawberries' },
+  { he: 'אֲבַטִּיחַ', translit: 'avatiach',  fr: 'watermelon' },
+  { he: 'תְּמָרִים',  translit: 'tmarim',    fr: 'dates' }
+];
+
+const MEAT = [
+  { he: 'בָּשָׂר',         translit: 'basar',         fr: 'meat' },
+  { he: 'עוֹף',           translit: 'of',            fr: 'chicken / poultry' },
+  { he: 'בָּשָׂר בָּקָר', translit: 'basar bakar',   fr: 'beef' },
+  { he: 'כֶּבֶשׂ',         translit: 'keves',         fr: 'lamb' },
+  { he: 'הוֹדוּ',         translit: 'hodu',          fr: 'turkey' },
+  { he: 'דָּג',            translit: 'dag',           fr: 'fish' },
+  { he: 'סַלְמוֹן',        translit: 'salmon',        fr: 'salmon' },
+  { he: 'טוּנָה',          translit: 'tuna',          fr: 'tuna' },
+  { he: 'בֵּיצָה',         translit: 'beytza',        fr: 'egg' }
+];
+
+const DAIRY = [
+  { he: 'גְּבִינָה',         translit: 'gvina',         fr: 'cheese' },
+  { he: 'גְּבִינָה לְבָנָה', translit: 'gvina levana',  fr: 'white cheese (cottage-style)' },
+  { he: 'יוֹגוּרְט',         translit: 'yogurt',        fr: 'yogurt' },
+  { he: 'חֶמְאָה',           translit: 'chem\'a',        fr: 'butter' },
+  { he: 'שַׁמֶּנֶת',         translit: 'shamenet',      fr: 'cream' },
+  { he: 'גְּלִידָה',         translit: 'glida',         fr: 'ice cream' }
+];
+
+const SPECIALTIES = [
+  { he: 'חוּמוּס',     translit: 'hummus',     fr: 'hummus' },
+  { he: 'פָלָאפֶל',    translit: 'falafel',    fr: 'falafel' },
+  { he: 'שָׁוַארְמָה', translit: 'shawarma',   fr: 'shawarma' },
+  { he: 'סָבִיחְ',     translit: 'sabich',     fr: 'sabich (pita with eggplant + egg)' },
+  { he: 'שַׁקְשׁוּקָה', translit: 'shakshuka',  fr: 'shakshuka (eggs in tomato sauce)' },
+  { he: 'טְחִינָה',    translit: 'tchina',     fr: 'tahini (sesame sauce)' },
+  { he: 'מַלָּוַח',    translit: 'malawach',   fr: 'malawach (Yemeni pastry)' },
+  { he: 'בּוּרֶקָס',   translit: 'borekas',    fr: 'borekas (savory pastries)' },
+  { he: 'שׁוּג',       translit: 'schug',      fr: 'schug (Yemeni hot sauce)' },
+  { he: 'בַּקְלָוָה',  translit: 'baklava',    fr: 'baklava' },
+  { he: 'מַלַבִּי',    translit: 'malabi',     fr: 'malabi (rosewater milk pudding)' }
+];
+
+const KOSHER = [
+  { he: 'כָּשֵׁר',           translit: 'kasher',         fr: 'kosher' },
+  { he: 'בָּשָׂרִי',         translit: 'basari',         fr: 'meat-based (category)' },
+  { he: 'חָלָבִי',           translit: 'chalavi',        fr: 'dairy-based (category)' },
+  { he: 'פַּרְוֶה',          translit: 'parve',          fr: 'neutral (neither meat nor dairy)' },
+  { he: 'תְּעוּדַת כַּשְׁרוּת', translit: 'teudat kashrut', fr: 'kashrut certificate' },
+  { he: 'מַשְׁגִּיחַ',       translit: 'mashgiach',      fr: 'kashrut supervisor' },
+  { he: 'טְרֵפָה',           translit: 'treyfa',         fr: 'non-kosher' }
+];
+
+const PHRASES = [
+  { he: 'שֻׁלְחָן לִשְׁנַיִם, בְּבַקָּשָׁה', translit: 'shulchan lishnayim, bevakasha', fr: 'a table for two, please' },
+  { he: 'אֶפְשָׁר אֶת הַתַּפְרִיט?',         translit: 'efshar et ha-tafrit?',           fr: 'may I have the menu?' },
+  { he: 'אֲנִי רוֹצֶה לְהַזְמִין',            translit: 'ani rotze lehazmin',             fr: 'I want to order (m.)' },
+  { he: 'מָה הַמָּנָה שֶׁל הַיּוֹם?',         translit: 'ma ha-mana shel ha-yom?',         fr: "what's today's special?" },
+  { he: 'זֶה כָּשֵׁר?',                       translit: 'ze kasher?',                      fr: 'is this kosher?' },
+  { he: 'אֲנִי צִמְחוֹנִי',                   translit: 'ani tzimchoni',                   fr: 'I am vegetarian (m.)' },
+  { he: 'בְּלִי בָּשָׂר, בְּבַקָּשָׁה',     translit: 'bli basar, bevakasha',            fr: 'no meat, please' },
+  { he: 'יֵשׁ לִי אַלֶרְגְּיָה לְ...',         translit: 'yesh li alergya le-...',          fr: "I'm allergic to..." },
+  { he: 'הַחֶשְׁבּוֹן, בְּבַקָּשָׁה',        translit: 'ha-cheshbon, bevakasha',          fr: 'the bill, please' },
+  { he: 'הָיָה טָעִים מְאֹד',                 translit: "haya ta'im me'od",                fr: 'it was very tasty' },
+  { he: 'בְּתֵאָבוֹן',                         translit: 'beteavon',                        fr: 'bon appétit' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('restaurant', RESTAURANT);
+renderRows('meals', MEALS);
+renderRows('drinks', DRINKS);
+renderRows('bread', BREAD);
+renderRows('vegetables', VEGETABLES);
+renderRows('fruits', FRUITS);
+renderRows('meat', MEAT);
+renderRows('dairy', DAIRY);
+renderRows('specialties', SPECIALTIES);
+renderRows('kosher', KOSHER);
+renderRows('phrases', PHRASES);
+
+addExtraVocab('Restaurant Verbs', [
+  { he: 'לְהַזְמִין', translit: 'lehazmin', fr: 'to order / reserve' },
+  { he: 'לְהַזְמִין שֻׁלְחָן', translit: 'lehazmin shulchan', fr: 'to reserve a table' },
+  { he: 'לְשָׁלֵם', translit: 'leshalem', fr: 'to pay' },
+  { he: 'לִתֵּן טִיפ', translit: 'litet tip', fr: 'to tip' },
+  { he: 'לְבַקֵּשׁ', translit: 'levakesh', fr: 'to ask for / request' },
+  { he: 'לֶאֱכוֹל בָּחוּץ', translit: 'le\'echol bachutz', fr: 'to eat out' },
+  { he: 'לָקַחַת הַבַּיְתָה', translit: 'lakachat ha-bayta', fr: 'to take home (takeout)' },
+  { he: 'לְהַגִּישׁ', translit: 'lehagish', fr: 'to serve' },
+  { he: 'לְהַמְלִיץ', translit: 'lehamlitz', fr: 'to recommend' },
+  { he: 'לְהַחְלִיף', translit: 'lehachlif', fr: 'to swap / change order' }
+]);
+
+addExtraVocab('Beyond the Basics — More Restaurant Words', [
+  { he: 'מָנָה רִאשׁוֹנָה', translit: 'mana rishona', fr: 'first course / appetizer' },
+  { he: 'מָנָה עִקָּרִית', translit: 'mana ikarit', fr: 'main course' },
+  { he: 'קִנּוּחַ', translit: 'kinuach', fr: 'dessert' },
+  { he: 'מְלַצֵר', translit: 'meletzer', fr: 'waiter (m.)' },
+  { he: 'מֶלְצָרִית', translit: 'meltzarit', fr: 'waitress' },
+  { he: 'הַמְלָצָה שֶׁל הַשֶּׁף', translit: 'hamlatza shel ha-shef', fr: 'chef\'s recommendation' },
+  { he: 'אֲנִי צִמְחוֹנִי', translit: 'ani tzimchoni', fr: 'I am vegetarian (m.)' },
+  { he: 'אֲנִי טִבְעוֹנִי', translit: 'ani tiv\'oni', fr: 'I am vegan (m.)' },
+  { he: 'יֵשׁ אֲלֶרְגְּיָה לַבֹּטֶן', translit: 'yesh allergya la-boten', fr: 'allergic to peanuts' },
+  { he: 'בְּלִי גְּלוּטֶן', translit: 'bli gluten', fr: 'gluten-free' },
+  { he: 'חֲרִיף', translit: 'charif', fr: 'spicy' },
+  { he: 'בְּלִי חָרִיף בְּבַקָּשָׁה', translit: 'bli charif bevakasha', fr: 'no spice please' },
+  { he: 'בָּשָׂר אָדֹם', translit: 'basar adom', fr: 'red meat' },
+  { he: 'בָּשָׂר לָבָן', translit: 'basar lavan', fr: 'white meat (chicken/turkey)' },
+  { he: 'דָּג טָרִי', translit: 'dag tari', fr: 'fresh fish' }
+]);
+
+addExtraVocab('Israeli Specialties', [
+  { he: 'חוּמּוּס מְשַׁבֵּחַ', translit: 'chumus meshabe\'ach', fr: 'amazing hummus' },
+  { he: 'פָלָאפֶל בְּפִתָּה', translit: 'falafel be-pita', fr: 'falafel in pita' },
+  { he: 'שָׁוארְמָה תַּרְנְגוֹלֶת', translit: 'shawarma tarnegolet', fr: 'chicken shawarma' },
+  { he: 'סָבִיחַ', translit: 'sabich', fr: 'sabich (egg + eggplant pita)' },
+  { he: 'שַׁקְשׁוּקָה אֲדֻמָּה', translit: 'shakshuka aduma', fr: 'red shakshuka' },
+  { he: 'שַׁקְשׁוּקָה יְרֻקָּה', translit: 'shakshuka yeruka', fr: 'green shakshuka' },
+  { he: 'מַלָּאוַח', translit: 'malawach', fr: 'Yemenite flaky bread' },
+  { he: 'גְּ\'חְנוּן', translit: 'jachnun', fr: 'Yemenite slow-cooked roll' },
+  { he: 'בּוּרֶקָס גְּבִינָה', translit: 'burekas gvina', fr: 'cheese bourekas' },
+  { he: 'קוּבֶּה', translit: 'kube', fr: 'meat-stuffed dumpling' },
+  { he: 'מַצָּה בְּרוּרָה', translit: 'matza brura', fr: 'matzah brei (Pessach)' },
+  { he: 'חַלָּה מְתוּקָה', translit: 'chala metuka', fr: 'sweet challah' }
+]);
+
+addMiniQuiz('Restaurant Quiz', [
+  { q: 'How do you say "the bill, please"?', options: ['הַמַּיִם בְּבַקָּשָׁה', 'הַחֶשְׁבּוֹן בְּבַקָּשָׁה', 'הַסַּכִּין בְּבַקָּשָׁה', 'הַמְלַצֵר בְּבַקָּשָׁה'], answer: 1, explain: 'ha-cheshbon bevakasha' },
+  { q: 'You\'re vegetarian — what to say?', he: 'אֲנִי צִמְחוֹנִי', translit: 'ani tzimchoni', options: ['I\'m hungry', 'I\'m vegetarian', 'I\'m allergic', 'I\'m full'], answer: 1 },
+  { q: 'מָנָה עִקָּרִית means...', options: ['Appetizer', 'Drink', 'Main course', 'Dessert'], answer: 2 },
+  { q: 'A waiter asks "מָה תַּזְמִין?" — what to answer?', options: ['Where\'s the bathroom', 'Order what you want', 'Ask for the bill', 'Greet them back'], answer: 1, explain: 'ma tazmin = what will you order' },
+  { q: 'הַמְלָצָה שֶׁל הַשֶּׁף is...', options: ['Chef\'s special', 'Kids menu', 'Daily soup', 'Vegan option'], answer: 0 }
+]);
+
+addCulturalText('At an Israeli Restaurant — Full Dialogue', "From the moment you sit down to paying. The classic Israeli waiter doesn't smile but ensures you eat too much.", [
+  { he: 'מְלַצֵר: בָּרוּךְ הַבָּא! כַּמָּה אַתֶּם?', translit: "Meletzer: Baruch ha-ba! Kama atem?", fr: 'Waiter: Welcome! How many are you?' },
+  { he: 'אַתָּה: שְׁנַיִם בְּבַקָּשָׁה', translit: "Ata: Shnayim bevakasha", fr: 'You: Two please' },
+  { he: 'מְלַצֵר: יֵשׁ לָכֶם הַזְמָנָה?', translit: "Meletzer: Yesh lachem hazmana?", fr: 'Waiter: Do you have a reservation?' },
+  { he: 'אַתָּה: לֹא, יֵשׁ מָקוֹם פָּנוּי?', translit: "Ata: Lo, yesh makom panuy?", fr: 'You: No, is there a free spot?' },
+  { he: 'מְלַצֵר: בְּדַקָּה. מַיִם בְּגָז אוֹ בְּלִי?', translit: "Meletzer: Be-daka. Mayim be-gaz o bli?", fr: 'Waiter: One minute. Sparkling or still water?' },
+  { he: 'אַתָּה: בְּלִי גָּז, וְקָרָפֵה גַּם', translit: "Ata: Bli gaz, ve-karafe gam", fr: 'You: Still, and a carafe too' },
+  { he: 'מְלַצֵר: מָה תַּזְמִינוּ?', translit: "Meletzer: Ma tazminu?", fr: 'Waiter: What will you order?' },
+  { he: 'אַתָּה: שַׁקְשׁוּקָה לִשְׁנַיִם, סָלָט יְרָקוֹת, וּפִיתָּה', translit: "Ata: Shakshuka li-shnayim, salat yerakot, u-pita", fr: 'You: Shakshuka for two, vegetable salad, and pita' },
+  { he: 'מְלַצֵר: מַשֶּׁהוּ לִשְׁתִּיָּה?', translit: "Meletzer: Mashehu li-shtiya?", fr: 'Waiter: Anything to drink?' },
+  { he: 'אַתָּה: שְׁנֵי קָפֶה הָפוּךְ אַחַר כָּךְ', translit: "Ata: Shney kafe hafuch achar kach", fr: 'You: Two cappuccinos afterward' },
+  { he: 'מְלַצֵר: בִּתֵּאָבוֹן! [10 דַּקּוֹת אַחַר כָּךְ] הַחֶשְׁבּוֹן בְּבַקָּשָׁה', translit: "Meletzer: Bi-te\'avon! [10 dakot achar kach] Ha-cheshbon bevakasha", fr: 'Waiter: Bon appetit! [10 min later] The bill please' },
+  { he: 'אַתָּה: דְּמֵי שֵׁרוּת כְּלוּלִים?', translit: "Ata: Dmey sherut klulim?", fr: 'You: Is service charge included?' },
+  { he: 'מְלַצֵר: לֹא, טִיפ עַל פִּי הָרְצוֹן שֶׁלְּךָ', translit: "Meletzer: Lo, tip al pi ha-ratzon shelcha", fr: 'Waiter: No, tip is up to you' }
+]);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) {
+    count++;
+    if (count >= 25) markLessonDone('restaurant');
+  }
+});
+</script>
+
+</body>
+</html>

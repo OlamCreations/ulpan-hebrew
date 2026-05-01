@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>84 — Cybersecurity</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Cybersecurity & Privacy</h1><div class="subtitle">Lesson 84 · סייבר ופרטיות</div></div><div class="nav"><a href="index.html">Home</a><a href="84-cybersec.html" class="active">84</a></div></header>
+
+<p class="intro">Israel = world cyber capital. Unit 8200 alumni run half the global cyber industry. Vocabulary for hacking, defense, privacy, GDPR.</p>
+
+<div class="tip"><strong>Cultural note</strong> — "Cyber" in Hebrew (סָייבֶּר) is a job title, identity, and lifestyle. After Tsahal Unit 8200, many founders go straight to startups. Cyber-related Hebrew vocabulary is direct from English, just adapted phonetically.</div>
+
+<h2>Threats</h2>
+<div class="word-list" id="threats"></div>
+
+<h2>Defense</h2>
+<div class="word-list" id="defense"></div>
+
+<h2>Authentication</h2>
+<div class="word-list" id="auth"></div>
+
+<h2>Israeli Cyber Companies</h2>
+<div class="word-list" id="companies"></div>
+
+<h2>Hacking Verbs</h2>
+<div class="word-list" id="verbs"></div>
+
+<h2>Privacy & Data Protection</h2>
+<div class="word-list" id="privacy"></div>
+
+<hr class="section-divider">
+<h2>Real Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 84 · cyber · <a href="85-fintech.html" style="color:var(--accent)">Next: Fintech →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const THREATS = [
+  { he: 'סָייבֶּר', translit: 'cyber', fr: 'cyber' },
+  { he: 'הַתְקָפַת סָייבֶּר', translit: 'hatkafat cyber', fr: 'cyber attack' },
+  { he: 'תְּקִיפָה', translit: 'tkifa', fr: 'attack' },
+  { he: 'פְּרִיצָה', translit: 'pritza', fr: 'breach / hack' },
+  { he: 'תּוֹכְנָה זְדוֹנִית', translit: 'tochna zedonit', fr: 'malware' },
+  { he: 'וִירוּס', translit: 'virus', fr: 'virus' },
+  { he: 'תּוֹלַעַת', translit: 'tola\'at', fr: 'worm' },
+  { he: 'תּוֹכְנַת כֹּפֶר', translit: 'tochnat kofer', fr: 'ransomware' },
+  { he: 'פִישִׁינְג', translit: 'phishing', fr: 'phishing' },
+  { he: 'הוֹנָאָה', translit: 'hona\'a', fr: 'fraud' },
+  { he: 'דְּלִיפַת מֵידָע', translit: 'dlifat meyda', fr: 'data leak' },
+  { he: 'דֶּלֶת אֲחוֹרִית', translit: 'delet achorit', fr: 'backdoor' }
+];
+const DEFENSE = [
+  { he: 'הֲגָנָה', translit: 'hagana', fr: 'defense' },
+  { he: 'אַנְטִי-וִירוּס', translit: 'antivirus', fr: 'antivirus' },
+  { he: 'חוֹמַת אֵשׁ', translit: 'chomat esh', fr: 'firewall' },
+  { he: 'הַצְפָּנָה', translit: 'hatzpana', fr: 'encryption' },
+  { he: 'גִּבּוּי', translit: 'gibuy', fr: 'backup' },
+  { he: 'נִטּוּר', translit: 'nitur', fr: 'monitoring' },
+  { he: 'מְבַחַן חֲדִירָה', translit: 'mevchan chadira', fr: 'penetration test' },
+  { he: 'תֵּשׁוּבָה', translit: 'teshuva', fr: 'response' }
+];
+const AUTH = [
+  { he: 'סִיסְמָה', translit: 'sisma', fr: 'password' },
+  { he: 'אִימוּת', translit: 'imut', fr: 'authentication' },
+  { he: 'אִימוּת דּוּ-שְׁלָבִי', translit: 'imut du-shlavi', fr: '2FA' },
+  { he: 'הַזְדַּהוּת', translit: 'hazdhaut', fr: 'identification' },
+  { he: 'הַרְשָׁאָה', translit: 'harshaa', fr: 'authorization' },
+  { he: 'מַפְתֵּחַ', translit: 'mafte\'ach', fr: 'key' },
+  { he: 'אַסִימוֹן', translit: 'asimon', fr: 'token' },
+  { he: 'מַנְהֵל סִיסְמָאוֹת', translit: 'menahel sismaot', fr: 'password manager' },
+  { he: 'בִּיוֹמֶטְרִי', translit: 'biometri', fr: 'biometric' }
+];
+const COMPANIES = [
+  { he: 'צֶ\'ק פּוֹיְנְט', translit: 'Check Point', fr: 'Check Point (oldest, firewall)' },
+  { he: 'CyberArk', translit: 'CyberArk', fr: 'CyberArk (privileged access)' },
+  { he: 'וויז', translit: 'Wiz', fr: 'Wiz (cloud security)' },
+  { he: 'פָאלוֹ אַלְטוֹ', translit: 'Palo Alto', fr: 'Palo Alto (founded by Israelis)' },
+  { he: 'NSO', translit: 'NSO', fr: 'NSO Group (controversial)' },
+  { he: 'יְחִידָה 8200', translit: 'yechida 8200', fr: 'Unit 8200 (military intel)' },
+  { he: 'מַטָּה הַסָּייבֶּר הַלְּאֻמִּי', translit: 'mate ha-cyber ha-leumi', fr: 'Israel National Cyber Directorate' }
+];
+const VERBS = [
+  { he: 'לִפְרֹץ', translit: 'lifrotz', fr: 'to hack / breach' },
+  { he: 'לְהַצְפִּין', translit: 'lehatzpin', fr: 'to encrypt' },
+  { he: 'לְפַעֲנֵחַ', translit: 'lefaneach', fr: 'to decrypt' },
+  { he: 'לִתְקֹף', translit: 'litkof', fr: 'to attack' },
+  { he: 'לְהָגֵן', translit: 'lehagen', fr: 'to defend' },
+  { he: 'לְזַהוֹת', translit: 'lezahot', fr: 'to identify' },
+  { he: 'לְבַטֵּל', translit: 'levatel', fr: 'to revoke' },
+  { he: 'לְגַבּוֹת', translit: 'legabot', fr: 'to backup' }
+];
+const PRIVACY = [
+  { he: 'פְּרָטִיּוּת', translit: 'pratiyut', fr: 'privacy' },
+  { he: 'הֲגָנַת מֵידָע', translit: 'haganat meyda', fr: 'data protection' },
+  { he: 'GDPR', translit: 'GDPR', fr: 'GDPR' },
+  { he: 'הַסְכָּמָה', translit: 'haskama', fr: 'consent' },
+  { he: 'אֲנוֹנִימִי', translit: 'anonymi', fr: 'anonymous' },
+  { he: 'מַעֲקָב', translit: 'ma\'akav', fr: 'tracking' },
+  { he: 'עוּגִיּוֹת', translit: 'ugiyot', fr: 'cookies (web)' },
+  { he: 'VPN', translit: 'VPN', fr: 'VPN' }
+];
+const PHRASES = [
+  { he: 'הַחֶשְׁבּוֹן שֶׁלִּי נִפְרַץ', translit: 'ha-cheshbon sheli nifratz', fr: 'my account was hacked' },
+  { he: 'תַּחֲלִיף סִיסְמָה מִיָּד', translit: 'tachlif sisma miyad', fr: 'change password immediately (m.)' },
+  { he: 'הַפְעֵל אִימוּת דּוּ-שְׁלָבִי', translit: 'hafel imut du-shlavi', fr: 'enable 2FA (m.)' },
+  { he: 'אַל תִּלְחַץ עַל הַקִּשּׁוּר הַזֶּה', translit: 'al tilchatz al ha-kishur ha-ze', fr: "don't click this link (m.)" },
+  { he: 'יֵשׁ פִּישִׁינְג בַּמֵיְל', translit: 'yesh phishing ba-mail', fr: 'there\'s phishing in email' },
+  { he: 'הַחֶבְרָה דָּלְפָה אֶת הַנְּתוּנִים שֶׁלִּי', translit: 'ha-chevra dalfa et ha-netunim sheli', fr: 'the company leaked my data' },
+  { he: 'אֲנִי מֵשַׁמֵּשׁ ב-VPN', translit: 'ani meshamesh be-VPN', fr: 'I use a VPN (m.)' },
+  { he: 'אֲנִי לֹא נוֹתֵן אֶת הַסִּיסְמָה שֶׁלִּי', translit: 'ani lo noten et ha-sisma sheli', fr: "I don\'t share my password (m.)" },
+  { he: 'הוּא בּוֹדֵק חֲדִירוֹת', translit: 'hu bodek chadirot', fr: 'he does pen testing' },
+  { he: 'הָיִיתִי בִּיחִידַת 8200', translit: 'hayiti bi-yechidat 8200', fr: 'I was in Unit 8200' },
+  { he: 'הַחֶבְרָה גָּיְּסָה 100 מִילְיוֹן', translit: 'ha-chevra giysa 100 milyon', fr: 'the company raised 100M' },
+  { he: 'יוּנִיט 8200 מַייצֶרֶת מַיֶיסַדִים', translit: 'unit 8200 meytzeret meyasdim', fr: 'Unit 8200 produces founders' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('threats', THREATS); R('defense', DEFENSE); R('auth', AUTH); R('companies', COMPANIES); R('verbs', VERBS); R('privacy', PRIVACY); R('phrases', PHRASES);
+addExtraVocab('Cyber Threats Vocabulary', [
+  { he: 'הָאקֵר', translit: 'hacker', fr: 'hacker' },
+  { he: 'נוֹזְקָה', translit: 'nozka', fr: 'malware' },
+  { he: 'וִירוּס מַחְשֵׁב', translit: 'virus machshev', fr: 'computer virus' },
+  { he: 'תוֹלָע', translit: 'tola', fr: 'worm' },
+  { he: 'סוּס טְרוֹיָאנִי', translit: 'sus troyani', fr: 'Trojan horse' },
+  { he: 'תְּקִיפָה', translit: 'tkifa', fr: 'attack' },
+  { he: 'דִּיוּג', translit: 'diyug', fr: 'phishing' },
+  { he: 'כּוֹפֶר', translit: 'kofer', fr: 'ransomware' },
+  { he: 'גִּבּוּי', translit: 'gibuy', fr: 'backup' },
+  { he: 'הִצְפָּנָה', translit: 'hitzpana', fr: 'encryption' },
+  { he: 'אֵשׁ-חוֹמָה', translit: 'esh-choma', fr: 'firewall' },
+  { he: 'דוּ-שִׁלְבֵי אִמּוּת', translit: 'du-shilbey imut', fr: '2FA / two-factor auth' },
+  { he: 'דְּלִיפַת מֵידָע', translit: 'dlifat meda', fr: 'data leak' },
+  { he: 'פְּגִיעוּת', translit: 'pgi\'ut', fr: 'vulnerability' }
+]);
+
+addMiniQuiz('Cybersecurity Quiz', [
+  { q: 'Famous Israeli cyber unit =', options: ['8000', '8100', '8200', '9900'], answer: 2 },
+  { q: 'Check Point invented...', options: ['Firewall', 'Antivirus', 'Both', 'Cloud storage'], answer: 0, explain: 'World\'s first commercial firewall' },
+  { q: 'Israeli "founded by 8200 alumni" famous companies =', options: ['Wiz', 'Palo Alto Networks', 'CyberArk', 'All A B C'], answer: 3 },
+  { q: '"Phishing" attack =', options: ['Network flood', 'Email/text trick to steal info', 'Physical break-in', 'Hardware bug'], answer: 1 },
+  { q: 'Israel ranks #... in cyber exports?', options: ['#1', '#2 globally (after USA)', '#5', '#10'], answer: 1 }
+]);
+
+addCulturalText('Unit 8200 — The Real Cyber Story', 'IDF\'s Unit 8200 is the most famous cyber/SIGINT unit in the world. Israeli cyber unicorns are mostly founded by alumni.', [
+  { he: 'יְחִידָה 8200 — חֵיל הַמּוֹדִיעִין', translit: "Yechida 8200 — Chel ha-modi\'in", fr: 'Unit 8200 — Intelligence Corps' },
+  { he: 'אַסּוֹפַת אוֹתוֹת — SIGINT', translit: "Asefat otot — SIGINT", fr: 'Signal collection — SIGINT' },
+  { he: 'בּוֹגְרֵי 8200 הִקִּימוּ צֵ\'ק פּוֹינְט, פָּלוֹ אַלְטוֹ, וְגַם NSO', translit: "Bogrey 8200 hekimu Check Point, Palo Alto, ve-gam NSO", fr: '8200 alumni founded Check Point, Palo Alto, and NSO' },
+  { he: 'הַסּוֹדוֹת מוּגָנִים — אַתָּה לֹא מְדַבֵּר עַל מָה שֶׁעָשִׂיתָ', translit: "Ha-sodot muganim — ata lo medaber al ma she-asita", fr: 'Secrets are protected — you don\'t talk about what you did' },
+  { he: 'הַחֲבֵרִים מַ-8200 הֵם הַקְּשָׁרִים שֶׁלְּךָ לְכָל הַחַיִּים', translit: "Ha-chaverim mi-8200 hem ha-ksharim shelcha le-chol ha-chayim", fr: 'Friends from 8200 are your network for life' },
+  { he: 'יִשְׂרָאֵל הִיא הָאוֹמָה הַסַּיְבֶּר הַשְּׁנִיָּה אַחֲרֵי אֲרצוֹת הַבְּרִית', translit: "Yisrael hi ha-uma ha-cyber ha-shniya acharey artzot ha-brit", fr: 'Israel is the #2 cyber nation after the US' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('cybersec'); } });
+</script></body></html>

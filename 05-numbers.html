@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 — Numbers</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Numbers</h1>
+    <div class="subtitle">Lesson 05 · מספרים</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="01-alefbet.html">01</a>
+    <a href="02-niqqud.html">02</a>
+    <a href="03-common-words.html">03</a>
+    <a href="04-greetings.html">04</a>
+    <a href="05-numbers.html" class="active">05</a>
+  </div>
+</header>
+
+<p class="intro">
+  Hebrew numbers come in two forms: masculine and feminine. The form depends on the gender of the noun being counted. The feminine form is the default for abstract counting (phone numbers, time, prices). The masculine form is used for masculine objects (books, men, days...).
+</p>
+
+<div class="tip">
+  <strong>Default counting</strong> — When counting without a specific object (1, 2, 3, 4...), use the <em>feminine</em> form: achat, shtayim, shalosh, arba...
+</div>
+
+<h2>1 to 10 (feminine — default form)</h2>
+<div class="word-list" id="num-fem"></div>
+
+<h2>1 to 10 (masculine — for masculine nouns)</h2>
+<div class="word-list" id="num-masc"></div>
+
+<h2>11 to 20 (feminine)</h2>
+<div class="word-list" id="num-teens"></div>
+
+<h2>Tens & 100</h2>
+<div class="word-list" id="num-tens"></div>
+
+<hr class="section-divider">
+
+<div class="quiz" id="quiz">
+  <div class="score" id="score">Score: 0/0</div>
+  <h2 style="margin-top:0">Quiz — Which Number?</h2>
+  <div class="he-display" id="quiz-he">?</div>
+  <div class="options" id="quiz-options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div style="margin-top:24px;">
+    <button class="btn btn-primary" onclick="newQuestion()">New question</button>
+    <button class="btn" onclick="resetQuiz()">Reset</button>
+  </div>
+</div>
+
+<footer>
+  Lesson 05 · 1 to 100 · <a href="06-verbs-present.html" style="color:var(--accent)">Next: Present-tense verbs →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const NUM_FEM = [
+  { he: 'אַחַת',     translit: 'achat',   fr: '1' },
+  { he: 'שְׁתַּיִם', translit: 'shtayim', fr: '2' },
+  { he: 'שָׁלוֹשׁ', translit: 'shalosh', fr: '3' },
+  { he: 'אַרְבַּע',  translit: 'arba',    fr: '4' },
+  { he: 'חָמֵשׁ',    translit: 'chamesh', fr: '5' },
+  { he: 'שֵׁשׁ',     translit: 'shesh',   fr: '6' },
+  { he: 'שֶׁבַע',    translit: 'sheva',   fr: '7' },
+  { he: 'שְׁמוֹנֶה', translit: 'shmone',  fr: '8' },
+  { he: 'תֵּשַׁע',   translit: 'tesha',   fr: '9' },
+  { he: 'עֶשֶׂר',    translit: 'eser',    fr: '10' }
+];
+
+const NUM_MASC = [
+  { he: 'אֶחָד',      translit: 'echad',    fr: '1' },
+  { he: 'שְׁנַיִם',   translit: 'shnayim',  fr: '2' },
+  { he: 'שְׁלוֹשָׁה', translit: 'shlosha',  fr: '3' },
+  { he: 'אַרְבָּעָה', translit: 'arba\'a',  fr: '4' },
+  { he: 'חֲמִשָּׁה',  translit: 'chamisha', fr: '5' },
+  { he: 'שִׁשָּׁה',   translit: 'shisha',   fr: '6' },
+  { he: 'שִׁבְעָה',   translit: 'shiv\'a',  fr: '7' },
+  { he: 'שְׁמוֹנָה',  translit: 'shmona',   fr: '8' },
+  { he: 'תִּשְׁעָה',  translit: 'tish\'a',  fr: '9' },
+  { he: 'עֲשָׂרָה',   translit: 'asara',    fr: '10' }
+];
+
+const NUM_TEENS = [
+  { he: 'אַחַת עֶשְׂרֵה',   translit: 'achat esre',   fr: '11' },
+  { he: 'שְׁתֵּים עֶשְׂרֵה', translit: 'shteim esre',  fr: '12' },
+  { he: 'שְׁלוֹשׁ עֶשְׂרֵה', translit: 'shlosh esre',  fr: '13' },
+  { he: 'אַרְבַּע עֶשְׂרֵה', translit: 'arba esre',    fr: '14' },
+  { he: 'חֲמֵשׁ עֶשְׂרֵה',   translit: 'chamesh esre', fr: '15' },
+  { he: 'שֵׁשׁ עֶשְׂרֵה',    translit: 'shesh esre',   fr: '16' },
+  { he: 'שְׁבַע עֶשְׂרֵה',   translit: 'shva esre',    fr: '17' },
+  { he: 'שְׁמוֹנֶה עֶשְׂרֵה', translit: 'shmone esre', fr: '18' },
+  { he: 'תְּשַׁע עֶשְׂרֵה',  translit: 'tsha esre',    fr: '19' },
+  { he: 'עֶשְׂרִים',         translit: 'esrim',         fr: '20' }
+];
+
+const NUM_TENS = [
+  { he: 'עֶשְׂרִים',     translit: 'esrim',     fr: '20' },
+  { he: 'שְׁלוֹשִׁים',  translit: 'shloshim',  fr: '30' },
+  { he: 'אַרְבָּעִים',  translit: 'arba\'im',  fr: '40' },
+  { he: 'חֲמִשִּׁים',   translit: 'chamishim', fr: '50' },
+  { he: 'שִׁשִּׁים',    translit: 'shishim',   fr: '60' },
+  { he: 'שִׁבְעִים',    translit: 'shiv\'im',  fr: '70' },
+  { he: 'שְׁמוֹנִים',   translit: 'shmonim',   fr: '80' },
+  { he: 'תִּשְׁעִים',   translit: 'tish\'im',  fr: '90' },
+  { he: 'מֵאָה',        translit: 'me\'a',     fr: '100' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn" title="Listen">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('num-fem', NUM_FEM);
+renderRows('num-masc', NUM_MASC);
+renderRows('num-teens', NUM_TEENS);
+renderRows('num-tens', NUM_TENS);
+
+const ALL_NUMBERS = [...NUM_FEM, ...NUM_TEENS, ...NUM_TENS];
+
+let quizScore = { correct: 0, total: 0 };
+let currentQuestion = null;
+
+function newQuestion() {
+  const target = ALL_NUMBERS[Math.floor(Math.random() * ALL_NUMBERS.length)];
+  currentQuestion = target;
+
+  let options = [target];
+  while (options.length < 4) {
+    const cand = ALL_NUMBERS[Math.floor(Math.random() * ALL_NUMBERS.length)];
+    if (!options.find(o => o.fr === cand.fr)) options.push(cand);
+  }
+  options = shuffle(options);
+
+  document.getElementById('quiz-he').textContent = target.he;
+  speak(target.he, 0.8);
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = o.fr;
+    btn.onclick = () => answer(o, btn);
+    opts.appendChild(btn);
+  });
+  document.getElementById('feedback').textContent = '';
+}
+
+function answer(option, btn) {
+  quizScore.total++;
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  if (option.fr === currentQuestion.fr) {
+    quizScore.correct++;
+    btn.classList.add('correct');
+    document.getElementById('feedback').textContent =
+      `${currentQuestion.he} = ${currentQuestion.translit} = ${currentQuestion.fr}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-option').forEach(b => {
+      if (b.textContent === currentQuestion.fr) b.classList.add('correct');
+    });
+    document.getElementById('feedback').textContent =
+      `Answer: ${currentQuestion.fr} (${currentQuestion.translit})`;
+  }
+  document.getElementById('score').textContent = `Score: ${quizScore.correct}/${quizScore.total}`;
+  if (quizScore.total >= 8 && quizScore.correct / quizScore.total >= 0.7) {
+    markLessonDone('numbers');
+  }
+}
+
+function resetQuiz() {
+  quizScore = { correct: 0, total: 0 };
+  document.getElementById('score').textContent = 'Score: 0/0';
+  newQuestion();
+}
+
+newQuestion();
+
+addExtraVocab('Numbers 1-20 — Both Genders', [
+  { he: 'אֶחָד / אַחַת', translit: 'echad / achat', fr: '1 (m./f.)' },
+  { he: 'שְׁנַיִם / שְׁתַּיִם', translit: 'shnayim / shtayim', fr: '2 (m./f.)' },
+  { he: 'שְׁלוֹשָׁה / שָׁלוֹשׁ', translit: 'shlosha / shalosh', fr: '3 (m./f.)' },
+  { he: 'אַרְבָּעָה / אַרְבַּע', translit: 'arba\'a / arba', fr: '4' },
+  { he: 'חֲמִשָּׁה / חָמֵשׁ', translit: 'chamisha / chamesh', fr: '5' },
+  { he: 'שִׁשָּׁה / שֵׁשׁ', translit: 'shisha / shesh', fr: '6' },
+  { he: 'שִׁבְעָה / שֶׁבַע', translit: 'shiv\'a / sheva', fr: '7' },
+  { he: 'שְׁמוֹנָה / שְׁמוֹנֶה', translit: 'shmona / shmone', fr: '8' },
+  { he: 'תִּשְׁעָה / תֵּשַׁע', translit: 'tish\'a / tesha', fr: '9' },
+  { he: 'עֲשָׂרָה / עֶשֶׂר', translit: 'asara / eser', fr: '10' },
+  { he: 'אַחַד עָשָׂר', translit: 'achad asar', fr: '11 (m.)' },
+  { he: 'שְׁתֵּים עֶשְׂרֵה', translit: 'shtem-esre', fr: '12 (f.)' },
+  { he: 'עֶשְׂרִים', translit: 'esrim', fr: '20' }
+]);
+
+addExtraVocab('Ordinal Numbers (1st, 2nd, 3rd...)', [
+  { he: 'רִאשׁוֹן', translit: 'rishon', fr: '1st (m.) — also Sunday' },
+  { he: 'רִאשׁוֹנָה', translit: 'rishona', fr: '1st (f.)' },
+  { he: 'שֵׁנִי', translit: 'sheni', fr: '2nd (m.) — also Monday' },
+  { he: 'שְׁלִישִׁי', translit: 'shlishi', fr: '3rd (m.) — also Tuesday' },
+  { he: 'רְבִיעִי', translit: 'revi\'i', fr: '4th — Wed' },
+  { he: 'חֲמִישִׁי', translit: 'chamishi', fr: '5th — Thu' },
+  { he: 'שִׁשִּׁי', translit: 'shishi', fr: '6th — Fri' },
+  { he: 'שְׁבִיעִי', translit: 'shvi\'i', fr: '7th — Sat (Shabbat)' },
+  { he: 'שְׁמִינִי', translit: 'shmini', fr: '8th' },
+  { he: 'תְּשִׁיעִי', translit: 'tshi\'i', fr: '9th' },
+  { he: 'עֲשִׂירִי', translit: 'asiri', fr: '10th' },
+  { he: 'הַסּוֹף', translit: 'ha-sof', fr: 'last' }
+]);
+
+addExtraVocab('Hundreds, Thousands, Big Numbers', [
+  { he: 'מֵאָה', translit: 'me\'a', fr: '100' },
+  { he: 'מָאתַיִם', translit: 'matayim', fr: '200' },
+  { he: 'שְׁלוֹשׁ מֵאוֹת', translit: 'shlosh me\'ot', fr: '300' },
+  { he: 'אֶלֶף', translit: 'elef', fr: '1,000' },
+  { he: 'אַלְפַּיִם', translit: 'alpayim', fr: '2,000' },
+  { he: 'עֲשֶׂרֶת אֲלָפִים', translit: 'aseret alafim', fr: '10,000' },
+  { he: 'מִילְיוֹן', translit: 'milyon', fr: 'million' },
+  { he: 'מִילְיַארְד', translit: 'milyard', fr: 'billion (= US billion)' },
+  { he: 'חֲצִי', translit: 'chatzi', fr: 'half' },
+  { he: 'רֶבַע', translit: 'reva', fr: 'quarter' },
+  { he: 'שְׁלִישׁ', translit: 'shlish', fr: 'third' },
+  { he: 'אָחוּז', translit: 'achuz', fr: 'percent' }
+]);
+
+addMiniQuiz('Numbers Quiz', [
+  { q: 'How do you say "32"?', options: ['שְׁלוֹשִׁים שְׁתַּיִם', 'שְׁלוֹשִׁים וּשְׁתַּיִם', 'שְׁתַּיִם שְׁלוֹשִׁים', 'שְׁתַּיִם וּשְׁלוֹשִׁים'], answer: 1, explain: 'shloshim u-shtayim — note the prefix u-' },
+  { q: 'יוֹם רִאשׁוֹן is...', options: ['Friday', 'Saturday', 'Sunday', 'First day at work'], answer: 2, explain: 'Sunday is "first day" in the Hebrew week' },
+  { q: 'How is 1948 read?', options: ['אֶלֶף תְּשַׁע מֵאוֹת אַרְבָּעִים שְׁמוֹנֶה', 'תְּשַׁע מֵאוֹת אַרְבָּעִים שְׁמוֹנֶה', 'אֶלֶף וְ-948', 'תַּשַׁ"ח'], answer: 0, explain: 'Both forms exist: full Hebrew or Hebrew year (תַּשַׁ"ח)' },
+  { q: 'חֲצִי means...', options: ['Quarter', 'Half', 'Third', 'Whole'], answer: 1 },
+  { q: '"50%" in Hebrew is...', options: ['חֲמִשִּׁים אָחוּז', 'חֲצִי אָחוּז', 'חֲמֵשׁ אֲחוּזִים', 'חֲצִי דֶּרֶךְ'], answer: 0 }
+]);
+
+addCulturalText('Numbers in Real Life — Prices, Phones, Ages', "How numbers actually appear in Hebrew speech. Phone numbers are read differently than years, ages, or prices.", [
+  { he: 'הַמְּחִיר: 49.90 שֶׁקֶל', translit: "Ha-mechir: arba\'im va-tesha tesha\'im shekel", fr: 'Price: 49.90 shekel (forty-nine ninety)' },
+  { he: 'הַטֶּלֶפוֹן: 050-1234567', translit: "Ha-telefon: efes chamishim — echad shtayim shalosh arba — chamesh shesh sheva", fr: 'Phone: 050 (oh five oh) — 1234 — 567' },
+  { he: 'בַּת כַּמָּה אַתְּ? בַּת 28', translit: "Bat kama at? Bat esrim u-shmone", fr: 'How old are you (f.)? 28' },
+  { he: 'בְּאֵיזוֹ קוֹמָה? קוֹמָה 4, דִּירָה 7', translit: "Be-eyzo koma? Koma arba, dira sheva", fr: 'Which floor? 4th, apartment 7' },
+  { he: 'הַתַּאֲרִיךְ: 14 בְּמָאי 1948', translit: "Ha-ta\'arich: arba\'a-asar be-may elef tesha me\'ot arba\'im u-shmone", fr: 'Date: May 14, 1948 (Independence Day)' },
+  { he: 'הַשָּׁעָה: 8:30', translit: "Ha-sha\'a: shmone va-chetzi", fr: 'The time: 8:30 (eight and a half)' },
+  { he: 'הַטֶּמְפֶּרָטוּרָה: 32 מַעֲלוֹת', translit: "Ha-temperatura: shloshim u-shtayim ma\'alot", fr: 'Temperature: 32 degrees' }
+]);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>90 — News & Geopolitics</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>News & Geopolitics</h1><div class="subtitle">Lesson 90 · חדשות וגיאופוליטיקה</div></div><div class="nav"><a href="index.html">Home</a><a href="90-news.html" class="active">90</a></div></header>
+
+<p class="intro">Israelis are news junkies. Three news cycles per day on radio: 6 AM, noon, evening. Vocabulary for current events, conflict, diplomacy, breaking news.</p>
+
+<h2>News Sources</h2>
+<div class="word-list" id="sources"></div>
+
+<h2>Breaking News</h2>
+<div class="word-list" id="breaking"></div>
+
+<h2>Conflict & Security</h2>
+<div class="word-list" id="conflict"></div>
+
+<h2>Diplomacy</h2>
+<div class="word-list" id="diplomacy"></div>
+
+<h2>Reporters & Journalism</h2>
+<div class="word-list" id="reporters"></div>
+
+<h2>International Affairs</h2>
+<div class="word-list" id="intl"></div>
+
+<hr class="section-divider">
+<h2>Real Sentences (news-style)</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 90 · news · Block 9 done · <a href="index.html" style="color:var(--accent)">Home</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const SOURCES = [
+  { he: 'חֲדָשׁוֹת', translit: 'chadashot', fr: 'news' },
+  { he: 'יְדִיעוֹת אַחֲרוֹנוֹת', translit: 'Yediot Achronot', fr: 'Yediot Achronot (newspaper)' },
+  { he: 'מַעֲרִיב', translit: 'Maariv', fr: 'Maariv' },
+  { he: 'הָאָרֶץ', translit: 'Ha-Aretz', fr: 'Haaretz (left-leaning)' },
+  { he: 'יִשְׂרָאֵל הַיּוֹם', translit: 'Yisrael Ha-yom', fr: 'Yisrael Hayom (right-leaning)' },
+  { he: 'גַּלגַלָ"צ', translit: 'galgalatz', fr: 'army radio' },
+  { he: 'גַּלֵי צַהַ"ל', translit: 'galey Tsahal', fr: 'IDF Radio' },
+  { he: 'כָּאן', translit: 'Kan', fr: 'Kan (public broadcaster)' },
+  { he: 'יְנֶט', translit: 'Ynet', fr: 'Ynet (online)' },
+  { he: 'וָואלָּה', translit: 'Walla', fr: 'Walla (online)' }
+];
+const BREAKING = [
+  { he: 'מִבְזָק', translit: 'mivzak', fr: 'breaking news' },
+  { he: 'דִּיוּחַ', translit: 'diyuach', fr: 'report' },
+  { he: 'מְקוֹר', translit: 'makor', fr: 'source' },
+  { he: 'גִּלּוּי', translit: 'gilui', fr: 'revelation' },
+  { he: 'דְּלִיפָה', translit: 'dlifa', fr: 'leak' },
+  { he: 'אִישׁוּר', translit: 'ishur', fr: 'confirmation' },
+  { he: 'הַכְחָשָׁה', translit: 'hachhasha', fr: 'denial' },
+  { he: 'הָגְבָּלַת פִּרְסוּם', translit: 'hagbalat pirsum', fr: 'gag order' }
+];
+const CONFLICT = [
+  { he: 'מִלְחָמָה', translit: 'milchama', fr: 'war' },
+  { he: 'סִכְסוּךְ', translit: 'sichsuch', fr: 'conflict' },
+  { he: 'מִבְצָע', translit: 'mivtza', fr: 'operation (military)' },
+  { he: 'תְּקִיפָה', translit: 'tkifa', fr: 'attack' },
+  { he: 'פִּגוּעַ', translit: 'pigua', fr: 'terror attack' },
+  { he: 'טֶרוֹר', translit: 'teror', fr: 'terror' },
+  { he: 'יָרִי', translit: 'yari', fr: 'shooting' },
+  { he: 'חָטוּף', translit: 'chatuf', fr: 'kidnapped / hostage' },
+  { he: 'חֲטוּפִים', translit: 'chatufim', fr: 'hostages' },
+  { he: 'אֲזעָקָה', translit: 'aza\'aka', fr: 'siren / alarm' },
+  { he: 'מָמַ"ד', translit: 'mamad', fr: 'safe room' },
+  { he: 'גָּז יָם', translit: 'gaz yam', fr: 'sea gas' }
+];
+const DIPLOMACY = [
+  { he: 'דִּיפְּלוֹמַטְיָה', translit: 'diplomatya', fr: 'diplomacy' },
+  { he: 'יַחֲסֵי חוּץ', translit: 'yachasey chutz', fr: 'foreign relations' },
+  { he: 'שָׁגְרִיר', translit: 'shagrir', fr: 'ambassador' },
+  { he: 'שָׁגְרִירוּת', translit: 'shagrirut', fr: 'embassy' },
+  { he: 'הַסְכֵּם', translit: 'heskem', fr: 'agreement / treaty' },
+  { he: 'הַסְכְּמֵי אַבְרָהָם', translit: 'heskmey Avraham', fr: 'Abraham Accords (2020)' },
+  { he: 'מַשָּׂא וּמַתָּן', translit: 'masa u-matan', fr: 'negotiations' },
+  { he: 'הַפְסָקַת אֵשׁ', translit: 'hafsakat esh', fr: 'ceasefire' },
+  { he: 'שָׁלוֹם', translit: 'shalom', fr: 'peace' },
+  { he: 'הַכָּרָה', translit: 'hakara', fr: 'recognition (diplomatic)' }
+];
+const REPORTERS = [
+  { he: 'עִתּוֹנַאי', translit: 'itonai', fr: 'journalist' },
+  { he: 'כַּתָּב', translit: 'katav', fr: 'correspondent / reporter' },
+  { he: 'צַלָם', translit: 'tzalam', fr: 'photographer' },
+  { he: 'מַגִּיש', translit: 'magish', fr: 'news anchor (m.)' },
+  { he: 'מַגִּישָׁה', translit: 'magisha', fr: 'news anchor (f.)' },
+  { he: 'רָאַיוֹן', translit: 'ra\'ayon', fr: 'interview' },
+  { he: 'צֶנְזוּרָה צְבָאִית', translit: 'tzenzura tzva\'it', fr: 'military censorship' }
+];
+const INTL = [
+  { he: 'יָהֲדוּת אֲמֵרִיקָה', translit: 'yahadut America', fr: 'American Jewry' },
+  { he: 'אִירָן', translit: 'Iran', fr: 'Iran' },
+  { he: 'תְּכוּנִית גַּרְעִינִית', translit: 'tochnit gar\'init', fr: 'nuclear program' },
+  { he: 'חַמַאס', translit: 'Hamas', fr: 'Hamas' },
+  { he: 'חִזְבָּאלָה', translit: 'Hezbollah', fr: 'Hezbollah' },
+  { he: 'הָרְשׁוּת הַפַּלַסְטִינִית', translit: 'ha-rashut ha-falastinit', fr: 'Palestinian Authority' },
+  { he: 'אוּ"ם', translit: 'UN', fr: 'UN' },
+  { he: 'אִיחוּד הָאֵירוֹפִּי', translit: 'ichud ha-eyropi', fr: 'EU' },
+  { he: 'נַאט"וֹ', translit: 'NATO', fr: 'NATO' }
+];
+const PHRASES = [
+  { he: 'מִבְזָק: יָרִי בִּצְפוֹן הָעִיר', translit: 'mivzak: yari bi-tzfon ha-ir', fr: 'Breaking: shooting in north of city' },
+  { he: 'הַשְׁמָשׁ הִכְרִיז עַל הַפְסָקַת אֵשׁ', translit: 'ha-shamash hichriz al hafsakat esh', fr: 'the spokesman declared a ceasefire' },
+  { he: 'הוֹדִיעַ הַשַּׂר הַחוּץ', translit: 'hodi\'a ha-sar ha-chutz', fr: 'the Foreign Minister announced' },
+  { he: 'יָצָא נִיר רַעַשׁ עַל הַחֶבְרָה', translit: 'yatza nir ra\'ash al ha-chevra', fr: 'a paper trail emerged on the company' },
+  { he: 'נֶחְתַּם הֶסְכֵּם הִיסְטוֹרִי', translit: 'nechtam heskem histori', fr: 'a historic agreement was signed' },
+  { he: 'הַחֲטוּפִים יוֹשְׁבִים בְּעַזָּה', translit: 'ha-chatufim yoshvim be-Aza', fr: 'the hostages are being held in Gaza' },
+  { he: 'הָאוּ"ם פִּרְסֵם דּוֹחַ', translit: 'ha-UN pirsem doach', fr: 'the UN published a report' },
+  { he: 'הַתַּחֲזִית הַכַּלְכָּלִית קְשָׁה', translit: 'ha-tachazit ha-kalkalit kasha', fr: 'the economic forecast is grim' },
+  { he: 'אֲ"זעָקָה בְּצְלֵל בִּדְרוֹם', translit: 'aza\'aka be-tzlil bidrom', fr: 'siren rang in the south' },
+  { he: 'מִשָּׁאָה הַסְכָּמָה', translit: 'misha\'a haskama', fr: 'agreement was reached' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('sources', SOURCES); R('breaking', BREAKING); R('conflict', CONFLICT); R('diplomacy', DIPLOMACY); R('reporters', REPORTERS); R('intl', INTL); R('phrases', PHRASES);
+addExtraVocab('News Headlines Vocabulary', [
+  { he: 'חֲדָשׁוֹת', translit: 'chadashot', fr: 'news' },
+  { he: 'מַבְזָק', translit: 'mavzak', fr: 'breaking news' },
+  { he: 'כּוֹתֶרֶת', translit: 'koteret', fr: 'headline' },
+  { he: 'כַּתָּב', translit: 'katav', fr: 'reporter (m.)' },
+  { he: 'כַּתֶּבֶת', translit: 'katevet', fr: 'reporter (f.)' },
+  { he: 'מַגִּישׁ', translit: 'magish', fr: 'anchor (m.)' },
+  { he: 'דּוֹבֵר', translit: 'dover', fr: 'spokesperson' },
+  { he: 'הַצְהָרָה', translit: 'hatzhara', fr: 'statement' },
+  { he: 'תְּגוּבָה', translit: 'tguva', fr: 'reaction / response' },
+  { he: 'מָקוֹר', translit: 'makor', fr: 'source' },
+  { he: 'אִמּוּת', translit: 'imut', fr: 'verification' },
+  { he: 'פֵייק נְיוּז', translit: 'fake news', fr: 'fake news' },
+  { he: 'תִּקְשֹׁרֶת', translit: 'tikshoret', fr: 'media' },
+  { he: 'דֵּעָה רוֹוֶחֶת', translit: 'de\'a rovachat', fr: 'public opinion' },
+  { he: 'הַסְכָּמָה', translit: 'haskama', fr: 'agreement / consensus' }
+]);
+
+addMiniQuiz('News & Geopolitics Quiz', [
+  { q: 'Major Israeli news channels:', options: ['Channel 12 + 13 + Kan', 'Just one', 'BBC + CNN', 'No news'], answer: 0, explain: 'Keshet (12), Reshet (13), Kan (public)' },
+  { q: 'Most-read newspaper =', options: ['Jerusalem Post', 'Haaretz', 'Yediot Aharonot', 'Israel Hayom'], answer: 3, explain: 'Free distribution makes it #1 by reach' },
+  { q: '"Breaking news" =', options: ['חֲדָשׁוֹת בּוֹעֵרוֹת', 'מַבְזָק', 'A and B', 'הַכּוֹתָרוֹת'], answer: 2 },
+  { q: '"Daily news bulletin" =', options: ['מַהֲדוּרָה', 'יוֹמַן', 'דּוֹחַ', 'A and B'], answer: 0 },
+  { q: 'Israeli news watching peaks at...', options: ['8am', '8pm prime time (mahadura)', 'midnight', 'doesn\'t happen'], answer: 1 }
+]);
+
+addCulturalText('Mahadurat Hechadashot — TV News Opening', 'How a primetime news bulletin opens (Channel 12 / 13 / Kan). The phrases are formulaic — once you know them, you understand 50% of the show.', [
+  { he: 'עֶרֶב טוֹב, הִגַּעְתֶּם לַחֲדָשׁוֹת הַמֶּרְכָּזִיּוֹת', translit: "Erev tov, higatem la-chadashot ha-merkaziyot", fr: "Good evening, you've reached the central news" },
+  { he: 'הַכּוֹתָרוֹת הָרָאשִׁיּוֹת לְהָעֵרֶב', translit: "Ha-kotarot ha-rashiyot le-ha-erev", fr: 'The main headlines for tonight' },
+  { he: 'יָדִיעָה רִאשׁוֹנָה, חֲדָשָׁה: רֹאשׁ הַמֶּמְשָׁלָה הִשְׁמִיעַ אֶמֶשׁ הוֹדָעָה דְּרָמָטִית', translit: "Yedi\'a rishona, chadasha: rosh ha-memshala hishmia emesh hoda\'a dramatit", fr: 'First news, breaking: PM made a dramatic statement last night' },
+  { he: 'בְּחַבֵּרָה הַסְּעוּדִית — פִּתּוּחַ דְּרָמָטִי', translit: "Be-chevra ha-Saudit — pituach dramati", fr: 'In Saudi Arabia — dramatic development' },
+  { he: 'בָּעֲבָר הַעַתִּיק — חֲרִיגוּת בִּמְלַאי הַחָלָב', translit: "Ba-avar ha-atik — chariga bi-mlay ha-chalav", fr: 'In domestic news — milk supply anomaly' },
+  { he: 'בְּסוֹף הַמַּהֲדוּרָה: סִפּוּרָהּ הַמַּדְהִים שֶׁל אִמָּא חַיֶּלֶת', translit: "Be-sof ha-mahadura: sipura ha-madhim shel ima chayelet", fr: 'At the end of the bulletin: the amazing story of a soldier mom' },
+  { he: 'אֲנִי תּוֹמָר אַבְרָהָם, וְאַתֶּם בּוֹחֲרִים בָּעֲרוּצֵנוּ', translit: "Ani Tomar Avraham, ve-atem bocharim be-arutzeinu", fr: 'I\'m Tomer Avraham, and you choose our channel' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('news'); } });
+</script></body></html>

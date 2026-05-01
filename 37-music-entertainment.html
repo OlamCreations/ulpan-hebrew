@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>37 — Music & Entertainment</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Music & Entertainment</h1><div class="subtitle">Lesson 37 · מוזיקה ובידור</div></div><div class="nav"><a href="index.html">Home</a><a href="37-music-entertainment.html" class="active">37</a></div></header>
+
+<p class="intro">Israeli music blends Mediterranean, Mizrahi, Western pop, and electronic. Concerts, theater, festivals, cinema — Tel Aviv is the cultural hub. Vocabulary for buying tickets, going out, talking culture.</p>
+
+<h2>Music Genres</h2>
+<div class="word-list" id="genres"></div>
+
+<h2>Instruments</h2>
+<div class="word-list" id="instruments"></div>
+
+<h2>Performers</h2>
+<div class="word-list" id="performers"></div>
+
+<h2>Concert / Show</h2>
+<div class="word-list" id="concert"></div>
+
+<h2>Cinema & TV</h2>
+<div class="word-list" id="cinema"></div>
+
+<h2>Theater & Festivals</h2>
+<div class="word-list" id="theater"></div>
+
+<h2>Famous Israeli Artists</h2>
+<div class="word-list" id="artists"></div>
+
+<hr class="section-divider">
+<h2>Going Out Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 37 · entertainment · <a href="38-hobbies.html" style="color:var(--accent)">Next: Hobbies →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const GENRES = [
+  { he: 'מוּזִיקָה', translit: 'muzika', fr: 'music' },
+  { he: 'פּוֹפּ', translit: 'pop', fr: 'pop' },
+  { he: 'רוֹק', translit: 'rok', fr: 'rock' },
+  { he: 'הִיפ הוֹפּ', translit: 'hip hop', fr: 'hip hop' },
+  { he: 'מִזְרָחִית', translit: 'mizrachit', fr: 'Mizrahi (Eastern Jewish)' },
+  { he: 'מוּזִיקָה אֶלֶקְטְרוֹנִית', translit: 'muzika elektronit', fr: 'electronic / dance' },
+  { he: 'גַ\'אז', translit: 'jaz', fr: 'jazz' },
+  { he: 'קְלָאסִי', translit: 'klassi', fr: 'classical' },
+  { he: 'מוּזִיקָה יִשְׂרְאֵלִית', translit: 'muzika yisraelit', fr: 'Israeli music' },
+  { he: 'שִׁיר', translit: 'shir', fr: 'song' },
+  { he: 'אַלְבּוֹם', translit: 'album', fr: 'album' }
+];
+const INSTRUMENTS = [
+  { he: 'גִּיטָרָה', translit: 'gitara', fr: 'guitar' },
+  { he: 'פְּסַנְתֵּר', translit: 'psanter', fr: 'piano' },
+  { he: 'תֻּפִּים', translit: 'tupim', fr: 'drums' },
+  { he: 'כִּנּוֹר', translit: 'kinor', fr: 'violin' },
+  { he: 'חָלִיל', translit: 'chalil', fr: 'flute' },
+  { he: 'קוֹל', translit: 'kol', fr: 'voice' },
+  { he: 'עוֹד', translit: 'ud', fr: 'oud (Middle Eastern lute)' },
+  { he: 'דַּרְבּוּקָה', translit: 'darbuka', fr: 'darbuka (Middle Eastern drum)' }
+];
+const PERFORMERS = [
+  { he: 'זַמָּר', translit: 'zamar', fr: 'singer (m.)' },
+  { he: 'זַמֶּרֶת', translit: 'zameret', fr: 'singer (f.)' },
+  { he: 'נַגָּן', translit: 'nagan', fr: 'instrumentalist' },
+  { he: 'לַהֲקָה', translit: 'lahaka', fr: 'band / group' },
+  { he: 'תִּזְמֹרֶת', translit: 'tizmoret', fr: 'orchestra' },
+  { he: 'מַנְצֵחַ', translit: 'menatzeach', fr: 'conductor' },
+  { he: 'יוֹצֵר', translit: 'yotzer', fr: 'creator / composer' }
+];
+const CONCERT = [
+  { he: 'הוֹפָעָה', translit: 'hofa\'a', fr: 'show / concert' },
+  { he: 'בָּמָה', translit: 'bama', fr: 'stage' },
+  { he: 'קָהָל', translit: 'kahal', fr: 'audience' },
+  { he: 'כַּרְטִיס', translit: 'kartis', fr: 'ticket' },
+  { he: 'הַזְמָנָה', translit: 'hazmana', fr: 'reservation' },
+  { he: 'מָקוֹם', translit: 'makom', fr: 'seat / place' },
+  { he: 'הוֹפָעָה חַיָּה', translit: 'hofa\'a chaya', fr: 'live performance' },
+  { he: 'הַקְלָטָה', translit: 'haklata', fr: 'recording' }
+];
+const CINEMA = [
+  { he: 'קוֹלְנוֹעַ', translit: 'kolno\'a', fr: 'cinema' },
+  { he: 'סֶרֶט', translit: 'seret', fr: 'film / movie' },
+  { he: 'בַּמַּאי', translit: 'bama\'i', fr: 'director' },
+  { he: 'שַׂחְקָן', translit: 'sachkan', fr: 'actor (m.)' },
+  { he: 'שַׂחְקָנִית', translit: 'sachkanit', fr: 'actress (f.)' },
+  { he: 'תַּסְרִיט', translit: 'tasrit', fr: 'screenplay' },
+  { he: 'תֻּכְנִית', translit: 'tochnit', fr: 'show / program' },
+  { he: 'סִדְרָה', translit: 'sidra', fr: 'TV series' },
+  { he: 'נֶטְפְלִיקְס', translit: 'netflix', fr: 'Netflix' },
+  { he: 'יוּטְיוּב', translit: 'youtube', fr: 'YouTube' }
+];
+const THEATER = [
+  { he: 'תֵּאַטְרוֹן', translit: 'te\'atron', fr: 'theater' },
+  { he: 'הַצָּגָה', translit: 'hatzaga', fr: 'play / theater show' },
+  { he: 'מַחֲזֶה', translit: 'machaze', fr: 'play (script)' },
+  { he: 'פֶסְטִיבָל', translit: 'festival', fr: 'festival' },
+  { he: 'תַּעֲרוּכָה', translit: 'ta\'aruka', fr: 'exhibition' },
+  { he: 'מוּזֵיאוֹן', translit: 'muzeon', fr: 'museum' },
+  { he: 'גַּלֶרְיָה', translit: 'galerya', fr: 'gallery' }
+];
+const ARTISTS = [
+  { he: 'אֲרִיק אַיְנְשְׁטֵיין', translit: 'Arik Einstein', fr: 'Arik Einstein (legend, deceased)' },
+  { he: 'שְׁלֹמֹה אַרְצִי', translit: 'Shlomo Artzi', fr: 'Shlomo Artzi (folk-pop)' },
+  { he: 'עִידָן רַייכֵל', translit: 'Idan Raichel', fr: 'Idan Raichel (world music)' },
+  { he: 'דָּוִד בְּרוֹזָה', translit: 'David Broza', fr: 'David Broza' },
+  { he: 'רַבִּית מְצַחֵק', translit: 'Rabbit (Hadag Nahash)', fr: 'Hadag Nachash (hip hop)' },
+  { he: 'אִיר עֲחֵר', translit: 'Eyal Golan', fr: 'Eyal Golan (Mizrahi)' },
+  { he: 'הָעֻגָּב', translit: 'Ha-Ugav', fr: 'Ha-Ugav (band)' },
+  { he: 'נַעֲמָה הַנִּדְצֵר', translit: 'Noa Kirel', fr: 'Noa Kirel (modern pop)' }
+];
+const PHRASES = [
+  { he: 'בּוֹא לְהוֹפָעָה', translit: 'bo le-hofa\'a', fr: 'come to a concert (m.)' },
+  { he: 'יֵשׁ כַּרְטִיסִים?', translit: 'yesh kartisim?', fr: 'are tickets available?' },
+  { he: 'אֲנִי אוֹהֵב מוּזִיקָה יִשְׂרְאֵלִית', translit: 'ani ohev muzika yisraelit', fr: 'I love Israeli music (m.)' },
+  { he: 'בּוֹאוּ נֵלֵךְ לַסֶּרֶט', translit: 'bo\'u nelech la-seret', fr: "let's go to the movies" },
+  { he: 'מָה הַסֶּרֶט?', translit: 'ma ha-seret?', fr: "what's the movie?" },
+  { he: 'בְּאֵיזוֹ שָׁעָה הַהוֹפָעָה?', translit: 'be-eyzo sha\'a ha-hofa\'a?', fr: 'what time is the show?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('genres', GENRES); R('instruments', INSTRUMENTS); R('performers', PERFORMERS); R('concert', CONCERT); R('cinema', CINEMA); R('theater', THEATER); R('artists', ARTISTS); R('phrases', PHRASES);
+addExtraVocab('Musical Instruments', [
+  { he: 'גִּיטָרָה', translit: 'gitara', fr: 'guitar' },
+  { he: 'פְּסַנְתֵּר', translit: 'psanter', fr: 'piano' },
+  { he: 'כִּנּוֹר', translit: 'kinor', fr: 'violin' },
+  { he: 'תּוֹף', translit: 'tof', fr: 'drum' },
+  { he: 'תֻּפִּים', translit: 'tupim', fr: 'drums (set)' },
+  { he: 'חָלִיל', translit: 'chalil', fr: 'flute' },
+  { he: 'סַקְסוֹפוֹן', translit: 'saxophone', fr: 'saxophone' },
+  { he: 'חֲצוֹצְרָה', translit: 'chatzotzra', fr: 'trumpet' },
+  { he: 'בָּס', translit: 'bass', fr: 'bass' },
+  { he: 'מַקְהֵלָה', translit: 'makhela', fr: 'choir' },
+  { he: 'תִּזְמֹרֶת', translit: 'tizmoret', fr: 'orchestra' },
+  { he: 'דִּי-גֵּ\'יי', translit: 'DJ', fr: 'DJ' }
+]);
+
+addExtraVocab('Music & Entertainment Vocabulary', [
+  { he: 'מוּזִיקָה יִשְׂרְאֵלִית', translit: 'muzika yisre\'elit', fr: 'Israeli music' },
+  { he: 'מוּזִיקָה מִזְרָחִית', translit: 'muzika mizrachit', fr: 'Mizrahi music (Middle Eastern)' },
+  { he: 'הוֹפָעָה', translit: 'hofa\'a', fr: 'concert / show' },
+  { he: 'אֻלָם', translit: 'ulam', fr: 'venue / hall' },
+  { he: 'תֵּיאַטְרוֹן הַבִּימָה', translit: 'teyatron ha-bima', fr: 'Habima Theater (national)' },
+  { he: 'הָאֳפֶּרָה הַיִּשְׂרְאֵלִית', translit: 'ha-opera ha-yisre\'elit', fr: 'Israeli Opera' },
+  { he: 'פֶסְטִיבָל', translit: 'festival', fr: 'festival' },
+  { he: 'הַסִּינֶמַטֵק', translit: 'ha-sinematek', fr: 'cinematheque' },
+  { he: 'קוֹלְנוֹעַ', translit: 'kolnoa', fr: 'cinema' },
+  { he: 'סֶרֶט', translit: 'seret', fr: 'movie' },
+  { he: 'סְדְרָה', translit: 'sidra', fr: 'TV series' },
+  { he: 'כַּרְטִיס מוּקְדָּם', translit: 'kartis mukdam', fr: 'early-bird ticket' },
+  { he: 'הַזְמָנָה מוּקְדֶּמֶת', translit: 'hazmana mukdemet', fr: 'pre-order' },
+  { he: 'אַחֲרֵי הַהוֹפָעָה', translit: 'acharey ha-hofa\'a', fr: 'after the show' }
+]);
+
+addMiniQuiz('Music & Entertainment Quiz', [
+  { q: 'הוֹפָעָה is...', options: ['Painting', 'Concert/show', 'Movie', 'Book'], answer: 1 },
+  { q: 'תֵּיאַטְרוֹן הַבִּימָה is...', options: ['A movie theater', 'National Israeli theater', 'A nightclub', 'An opera'], answer: 1 },
+  { q: 'Most popular Israeli music genre today:', options: ['Klezmer', 'Mizrahi pop', 'Classical', 'Jazz'], answer: 1, explain: 'Mizrahi rules charts since 2010s' },
+  { q: 'Eurovision: Israel won how many times?', options: ['Never', '2', '4', '7'], answer: 2, explain: '4 times: 1978, 1979, 1998, 2018' },
+  { q: 'The Hatikva is sung at...', options: ['Movie endings', 'Sports events / official ceremonies', 'Birthday parties', 'Bar mitzvahs'], answer: 1 }
+]);
+
+addCulturalText('Buying Tickets to a Concert', 'How to grab tickets at the box office. Hayarkon Park concerts sell out fast.', [
+  { he: 'אַתָּה: שָׁלוֹם, אֲנִי רוֹצֶה כַּרְטִיסִים לְהוֹפָעַת אִידָן רֵיכֶל', translit: "Ata: Shalom, ani rotze kartisim le-hofa\'at Idan Raichel", fr: 'You: Hello, I want tickets to the Idan Raichel concert' },
+  { he: 'מוֹכֶרֶת: לְאֵיזוֹ הוֹפָעָה?', translit: "Mocheret: Le-eyzo hofa\'a?", fr: 'Salesperson: Which show?' },
+  { he: 'אַתָּה: 15 בְּמַאי, פַּארְק הַיַּרְקוֹן', translit: "Ata: 15 be-may, park ha-yarkon", fr: 'You: May 15, Hayarkon Park' },
+  { he: 'מוֹכֶרֶת: כַּמָּה כַּרְטִיסִים?', translit: "Mocheret: Kama kartisim?", fr: 'Salesperson: How many tickets?' },
+  { he: 'אַתָּה: שְׁנַיִם, בָּאֵיזוֹר הַזּוֹל בְּבַקָּשָׁה', translit: "Ata: Shnayim, ba-ezor ha-zol bevakasha", fr: 'You: Two, in the cheap area please' },
+  { he: 'מוֹכֶרֶת: 240 שֶׁקֶל לְשְׁנֵיהֶם, יֵשׁ הַנָּחָה לְסְטוּדֶנְט?', translit: "Mocheret: 240 shekel li-shneyhem, yesh hanacha le-student?", fr: 'Salesperson: 240 shekel for both, student discount?' },
+  { he: 'אַתָּה: כֵּן, יֵשׁ לִי תְּעוּדָה', translit: "Ata: Ken, yesh li teuda", fr: 'You: Yes, I have an ID' },
+  { he: 'מוֹכֶרֶת: אָז 200. אִשּׁוּר יִשְׁלַח לָאִימֵיל', translit: "Mocheret: Az 200. Ishur yishlach la-email", fr: "Salesperson: Then 200. Confirmation will be sent to email" }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('music'); } });
+</script></body></html>

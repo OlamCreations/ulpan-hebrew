@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>118 — Life Cycle Halacha</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Life Cycle Halacha — Birth to Burial</h1><div class="subtitle">Lesson 118 · מַעֲגַל הַחַיִּים</div></div><div class="nav"><a href="index.html">Home</a><a href="118-life-cycle-halacha.html" class="active">118</a></div></header>
+
+<p class="intro">Lesson 61 introduced the life cycle vocabulary; this one goes deeper into the actual halacha governing each stage. Birth, brit milah, pidyon ha-ben, naming, bar/bat mitzvah, marriage (chuppa, ketuba), divorce (get), illness, death, shiva, sheloshim, yahrzeit. Knowing the laws — even as a non-observant person — lets you participate respectfully in any Israeli family event.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Most Israelis attend several life-cycle events per year — bar/bat mitzvahs, weddings, brises, shivas. Even non-observant Jews follow most of the laws automatically. The 7-day shiva is sacred — Israelis stop everything to "make a shiva visit" (לִקְרֹא שִׁבְעָה). Saying "הַמָּקוֹם יְנַחֵם אֶתְכֶם" — "May the Place [God] comfort you" — is the standard condolence phrase.</div>
+
+<h2>Birth & Naming</h2>
+<div class="word-list" id="birth"></div>
+
+<h2>Bar/Bat Mitzvah</h2>
+<div class="word-list" id="bm"></div>
+
+<h2>Marriage (Kidushin & Nisuin)</h2>
+<div class="word-list" id="marriage"></div>
+
+<h2>Divorce (Gerushin)</h2>
+<div class="word-list" id="divorce"></div>
+
+<h2>Death & Mourning</h2>
+<div class="word-list" id="death"></div>
+
+<hr class="section-divider">
+
+<h2>Sheva Berachot — The 7 Wedding Blessings (excerpt)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Said under the chuppa and at every meal during the 7-day "sheva berachot" celebration after the wedding. The 6th blessing on joy is the most-quoted.</div>
+  <div id="sheva"></div>
+</div>
+
+<h2>El Malei Rachamim — Memorial Prayer</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">The memorial prayer said at funerals, on yahrzeit, and on Yom HaZikaron (national memorial day). Spoken by a cantor over the deceased\'s name.</div>
+  <div id="elmalei"></div>
+</div>
+
+<footer>Lesson 118 · Life Cycle · <a href="119-festivals-halacha.html" style="color:var(--accent)">Next: Festivals Halacha →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BIRTH = [
+  { he: 'לֵדָה', translit: 'leda', fr: 'birth [modern]' },
+  { he: 'תִּינוֹק / תִּינֹקֶת', translit: 'tinok / tinoket', fr: 'baby boy / baby girl [modern]' },
+  { he: 'בְּרִית מִילָה', translit: 'b\'rit mila', fr: 'circumcision (boys, day 8)' },
+  { he: 'מוֹהֵל', translit: 'mohel', fr: 'mohel (the one performing brit) [modern]' },
+  { he: 'סַנְדָּק', translit: 'sandak', fr: 'sandak (holds baby during brit, place of honor)' },
+  { he: 'פִּדְיוֹן הַבֵּן', translit: 'pidyon ha-ben', fr: 'redemption of firstborn son (day 31)' },
+  { he: 'זֶבֶד הַבַּת', translit: 'zeved ha-bat', fr: 'naming ceremony for girls (Sephardi)' },
+  { he: 'שָׁלוֹם זָכָר', translit: 'shalom zachar', fr: 'shalom zachar (Friday night gathering for newborn boy)' },
+  { he: 'שֵׁם עִבְרִי', translit: 'shem ivri', fr: 'Hebrew name [modern]' },
+  { he: 'בֶּן \\__ בֶּן \\__', translit: 'ben __ ben __', fr: 'X son of Y (used in religious contexts)' }
+];
+const BM = [
+  { he: 'בַּ"ר מִצְוָה', translit: 'bar mitzva', fr: 'bar mitzvah (boy at 13)' },
+  { he: 'בַּ"ת מִצְוָה', translit: 'bat mitzva', fr: 'bat mitzvah (girl at 12)' },
+  { he: 'גָּדוֹל / גְּדוֹלָה', translit: 'gadol / g\'dola', fr: 'adult — religiously responsible [modern]' },
+  { he: 'הַפְטָרָה', translit: 'haftara', fr: 'haftarah (prophets reading after Torah)' },
+  { he: 'דְּרָשָׁה', translit: 'd\'rasha', fr: 'speech / sermon (the bar mitzvah\'s speech)' },
+  { he: 'תְּפִלִּין שֶׁל יָד', translit: 't\'filin shel yad', fr: 'arm tefillin (first worn at bar mitzvah)' },
+  { he: 'תְּפִלִּין שֶׁל רֹאשׁ', translit: 't\'filin shel rosh', fr: 'head tefillin' },
+  { he: 'מִתְעַטֵּף', translit: 'mit\'atef', fr: 'wraps oneself (in tallit)' }
+];
+const MARRIAGE = [
+  { he: 'חֲתֻנָּה', translit: 'chatuna', fr: 'wedding [modern]' },
+  { he: 'חָתָן וְכַלָּה', translit: 'chatan v\'kala', fr: 'groom and bride [modern]' },
+  { he: 'חֻפָּה', translit: 'chupa', fr: 'wedding canopy [modern]' },
+  { he: 'אֵרוּסִין', translit: 'erusin', fr: 'betrothal (1st part of ceremony)' },
+  { he: 'נִשּׂוּאִין', translit: 'nisu\'in', fr: 'marriage proper (2nd part)' },
+  { he: 'קִדּוּשִׁין', translit: 'kidushin', fr: 'kidushin (the ring + declaration)' },
+  { he: 'הֲרֵי אַתְּ מְקֻדֶּשֶׁת לִי', translit: 'Harei at m\'kudeshet li', fr: '"Behold, you are betrothed to me" (declaration)' },
+  { he: 'בְּטַבַּעַת זוֹ', translit: 'b\'taba\'at zo', fr: 'with this ring' },
+  { he: 'כְּדַת מֹשֶׁה וְיִשְׂרָאֵל', translit: 'k\'dat Moshe v\'Yisrael', fr: 'according to the law of Moshe and Israel' },
+  { he: 'כְּתֻבָּה', translit: 'k\'tuba', fr: 'ketubah (marriage contract, read aloud)' },
+  { he: 'שִׁבְעַת בְּרָכוֹת', translit: 'shiv\'at b\'rachot', fr: 'seven blessings' },
+  { he: 'שְׁבִירַת הַכּוֹס', translit: 'sh\'virat ha-kos', fr: 'breaking the glass (memory of Temple)' },
+  { he: 'יִחוּד', translit: 'yichud', fr: 'yichud (couple\'s alone time after ceremony)' },
+  { he: 'מְזֵיכָה לִכְתֻבָּתָהּ', translit: 'm\'zeicha li-ktubata', fr: 'her ketubah amount' }
+];
+const DIVORCE = [
+  { he: 'גֵּרוּשִׁין', translit: 'gerushin', fr: 'divorce [modern]' },
+  { he: 'גֵּט', translit: 'get', fr: 'get (divorce document) [modern]' },
+  { he: 'בֵּית דִּין רַבָּנִי', translit: 'beit din rabani', fr: 'rabbinic court [modern]' },
+  { he: 'מְסָרֵב לָתֵת גֵּט', translit: 'm\'sarev la-tet get', fr: 'refuses to give a get [modern, social issue]' },
+  { he: 'עֲגוּנָה', translit: 'aguna', fr: 'aguna (chained woman, husband refusing get)' },
+  { he: 'גַּרְשָׁן', translit: 'garshan', fr: 'one who divorces (groom side)' },
+  { he: 'מְגֹרֶשֶׁת', translit: 'm\'goreshet', fr: 'divorced woman [modern]' },
+  { he: 'מְגֹרָשׁ', translit: 'm\'gorash', fr: 'divorced man [modern]' }
+];
+const DEATH = [
+  { he: 'לְוָיָה', translit: 'l\'vaya', fr: 'funeral [modern]' },
+  { he: 'נִפְטָר / נִפְטְרָה', translit: 'niftar / niftra', fr: 'passed away (he/she) [modern]' },
+  { he: 'הַקְבָּרָה', translit: 'hakbara', fr: 'burial [modern]' },
+  { he: 'בֵּית הַחַיִּים', translit: 'beit ha-chayim', fr: 'cemetery (lit. "house of life") [modern, euphemism]' },
+  { he: 'בֵּית קְבָרוֹת', translit: 'beit k\'varot', fr: 'cemetery (formal)' },
+  { he: 'מַצֵּבָה', translit: 'matzeva', fr: 'tombstone [modern]' },
+  { he: 'הַקָּמַת מַצֵּבָה', translit: 'hakamat matzeva', fr: 'tombstone unveiling (~30 days or 1 year after)' },
+  { he: 'קְרִיעָה', translit: 'k\'ria', fr: 'tearing of garment (mourners)' },
+  { he: 'שִׁבְעָה', translit: 'shiva', fr: 'shiva (7 days of intense mourning)' },
+  { he: 'יוֹשֵׁב שִׁבְעָה', translit: 'yoshev shiva', fr: 'sitting shiva' },
+  { he: 'מְנַחֵם / מְנַחֶמֶת', translit: 'm\'nachem / m\'nachemet', fr: 'comforter (visiting shiva)' },
+  { he: 'הַמָּקוֹם יְנַחֵם אֶתְכֶם', translit: 'ha-Makom y\'nachem etchem', fr: '"May the Place comfort you" (standard phrase to mourners)' },
+  { he: 'שְׁלוֹשִׁים', translit: 'shloshim', fr: 'sheloshim (30 days of mourning)' },
+  { he: 'שָׁנָה', translit: 'shana', fr: 'a year (mourning a parent — 12 months)' },
+  { he: 'יָאהְרְצַייט', translit: 'yahrzeit', fr: 'yahrzeit (anniversary of death) [Yiddish]' },
+  { he: 'יִזְכֹּר', translit: 'Yizkor', fr: 'Yizkor (memorial prayer, 4x a year)' },
+  { he: 'אֲבֵל', translit: 'avel', fr: 'mourner [modern]' }
+];
+const SHEVA = [
+  { he: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הַגָּפֶן', translit: 'Baruch... bore p\'ri ha-gafen', fr: '1. Blessing on wine' },
+  { he: 'שֶׁהַכֹּל בָּרָא לִכְבוֹדוֹ', translit: 'she-ha-kol bara li-chvodo', fr: '2. "who created all for His glory"' },
+  { he: 'יוֹצֵר הָאָדָם', translit: 'yotzer ha-adam', fr: '3. "Creator of mankind"' },
+  { he: 'אֲשֶׁר יָצַר אֶת הָאָדָם בְּצַלְמוֹ', translit: 'asher yatzar et ha-adam b\'tzalmo', fr: '4. "who formed man in His image"' },
+  { he: 'שׂוֹשׂ תָּשִׂישׂ וְתָגֵל הָעֲקָרָה', translit: 'sos tasis ve-tagel ha-akara', fr: '5. "May the barren one rejoice greatly" (Zion)' },
+  { he: 'שַׂמֵּחַ תְּשַׂמַּח רֵעִים הָאֲהוּבִים', translit: 'same\'ach t\'samach re\'im ha-ahuvim', fr: '6. "Make the beloved companions rejoice greatly"' },
+  { he: 'אֲשֶׁר בָּרָא שָׂשׂוֹן וְשִׂמְחָה, חָתָן וְכַלָּה', translit: 'asher bara sason ve-simcha, chatan v\'kala', fr: '7. "who created joy and gladness, groom and bride"' },
+  { he: 'גִּילָה רִנָּה דִּיצָה וְחֶדְוָה', translit: 'gila, rina, ditza, ve-chedva', fr: '"joy, song, gladness, mirth" (4 synonyms for joy)' },
+  { he: 'אַהֲבָה וְאַחֲוָה וְשָׁלוֹם וְרֵעוּת', translit: 'ahava ve-achva ve-shalom ve-re\'ut', fr: '"love, brotherhood, peace, friendship"' },
+  { he: 'בָּרוּךְ אַתָּה ה\', מְשַׂמֵּחַ חָתָן עִם הַכַּלָּה', translit: 'Baruch ata Adonai, m\'same\'ach chatan im ha-kala', fr: 'Blessed are You, Lord, who makes the groom rejoice with the bride' }
+];
+const ELMALEI = [
+  { he: 'אֵל מָלֵא רַחֲמִים, שׁוֹכֵן בַּמְּרוֹמִים', translit: 'El male rachamim, shochen ba-m\'romim', fr: 'O God full of compassion, dwelling on high' },
+  { he: 'הַמְצֵא מְנוּחָה נְכוֹנָה עַל כַּנְפֵי הַשְּׁכִינָה', translit: 'Ha-m\'tze m\'nucha n\'chona al kanfei ha-shchina', fr: 'Grant proper rest under the wings of the Divine Presence' },
+  { he: 'בְּמַעֲלוֹת קְדוֹשִׁים וּטְהוֹרִים, כְּזֹהַר הָרָקִיעַ מַזְהִירִים', translit: 'b\'ma\'alot k\'doshim u-t\'horim, k\'zohar ha-rakia mazhirim', fr: 'in the heights of the holy and pure, who shine like the firmament' },
+  { he: 'אֶת נִשְׁמַת [פלוני בן פלוני] שֶׁהָלַךְ לְעוֹלָמוֹ', translit: 'et nishmat [ploni ben ploni] she-halach l\'olamo', fr: 'the soul of [name son of name] who has gone to his world' },
+  { he: 'בַּעֲבוּר שֶׁאֲנִי מִתְפַּלֵּל בְּעַד הַזְכָּרַת נִשְׁמָתוֹ', translit: 'ba\'avur she-ani mitpalel b\'ad hazkarat nishmato', fr: 'because I pray on behalf of remembering his soul' },
+  { he: 'לָכֵן בַּעַל הָרַחֲמִים יַסְתִּירֵהוּ בְּסֵתֶר כְּנָפָיו לְעוֹלָמִים', translit: 'Lachen ba\'al ha-rachamim yastirehu b\'seter k\'nafav l\'olamim', fr: 'Therefore the Master of compassion shall hide him in the shelter of His wings forever' },
+  { he: 'וְיִצְרֹר בִּצְרוֹר הַחַיִּים אֶת נִשְׁמָתוֹ', translit: 've-yitzror bi-tzror ha-chayim et nishmato', fr: 'and bind his soul in the bond of life' },
+  { he: 'ה\' הוּא נַחֲלָתוֹ, וְיָנוּחַ בְּשָׁלוֹם עַל מִשְׁכָּבוֹ', translit: 'Adonai hu nachalato, v\'yanu\'ach b\'shalom al mishkavo', fr: 'The Lord is his portion; may he rest in peace upon his resting-place' },
+  { he: 'וְנֹאמַר אָמֵן', translit: 've-nomar amen', fr: 'And let us say: Amen' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('birth', BIRTH); R('bm', BM); R('marriage', MARRIAGE); R('divorce', DIVORCE); R('death', DEATH);
+renderTextBlock('sheva', SHEVA);
+renderTextBlock('elmalei', ELMALEI);
+
+addMiniQuiz('Life Cycle Halacha Quiz', [
+  { q: 'When is brit mila performed?', options: ['Day 1', 'Day 8', 'Day 30', 'Year 1'], answer: 1, explain: 'On the 8th day, even if it falls on Shabbat (overrides)' },
+  { q: 'Bar mitzvah age is...', options: ['12', '13', '15', '18'], answer: 1, explain: 'Boys 13, girls bat mitzvah at 12' },
+  { q: 'Sheva berachot are said...', options: ['At brit', 'Under the chuppa & at meals for 7 days after wedding', 'At a funeral', 'On Pesach'], answer: 1 },
+  { q: 'A get is...', options: ['A wedding ring', 'A divorce document', 'A naming certificate', 'A burial shroud'], answer: 1, explain: 'Without it, a Jewish woman cannot remarry' },
+  { q: 'Shiva lasts...', options: ['1 day', '3 days', '7 days', '30 days'], answer: 2, explain: 'Then sheloshim (30 days), then full year for parents' },
+  { q: 'Standard condolence phrase to mourners is...', options: ['Mazal tov', 'Shalom aleichem', 'Ha-Makom y\'nachem etchem', 'L\'chayim'], answer: 2, explain: '"May the Place [God] comfort you"' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('life-cycle-halacha'); } });
+</script></body></html>

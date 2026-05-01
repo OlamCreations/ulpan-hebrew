@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>219 — Tel Aviv Tech Corridor</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Tel Aviv Tech Corridor — Where the Startups Are</h1><div class="subtitle">Lesson 219 · מִסְדְּרוֹן הַהַייטֶק</div></div><div class="nav"><a href="index.html">Home</a><a href="219-tlv-corridor.html" class="active">219</a></div></header>
+
+<p class="intro">Israel\'s tech industry concentrates in a corridor stretching ~50km from Tel Aviv north through Herzliya, Ra\'anana, Petach Tikva, and Yehud, with secondary clusters in Yokneam (chips), Be\'er Sheva (cyber), and Caesarea (biotech). Around 70% of Israeli startups sit within 30km of central Tel Aviv. Sarona (Tel Aviv center), Park HaYarkon, and the Atidim park (Tel Aviv University area) are the densest urban clusters. Herzliya Pituach hosts the Israeli offices of Google, Meta, Microsoft, and Apple.</p>
+
+<div class="tip"><strong>Cultural note</strong> — The "tech corridor" reshapes commute patterns. Many engineers live in Tel Aviv proper but work in Herzliya — a 20-minute drive at 8am, 50 minutes at 9am. Office locations follow employee preferences: post-2020, many companies opened "satellite" offices in Tel Aviv center (Florentin, Rothschild, Park HaYarkon) to compete for senior engineers who refused to commute to Herzliya. This decentralization is one of the few permanent COVID-era changes in Israeli tech geography.</div>
+
+<h2>Tech Cities</h2>
+<div class="word-list" id="cities"></div>
+
+<h2>Tel Aviv Tech Neighborhoods</h2>
+<div class="word-list" id="tlv-areas"></div>
+
+<h2>Big Tech Israeli Offices</h2>
+<div class="word-list" id="big-tech"></div>
+
+<h2>Herzliya Pituach</h2>
+<div class="word-list" id="herzliya"></div>
+
+<h2>Ecosystem Vocabulary</h2>
+<div class="word-list" id="ecosystem"></div>
+
+<hr class="section-divider">
+
+<h2>An Engineer Compares Commutes</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An engineer weighs Tel Aviv center vs. Herzliya office for her next job.</div>
+  <div id="commute"></div>
+</div>
+
+<footer>Lesson 219 · TLV Tech Corridor · <a href="220-startup-nation-summary.html" style="color:var(--accent)">Next: Block 22 Summary →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CITIES = [
+  { he: 'תֵּל אָבִיב', translit: 'tel aviv', fr: 'Tel Aviv (heart of the corridor)' },
+  { he: 'הֶרְצְלִיָּה', translit: 'hertzliya', fr: 'Herzliya (Pituach business park)' },
+  { he: 'רַעֲנָנָה', translit: 'ra\'anana', fr: 'Ra\'anana (R&D centers)' },
+  { he: 'פֶּתַח תִּקְוָה', translit: 'petach tikva', fr: 'Petach Tikva (industrial-tech mix)' },
+  { he: 'יְהוּד', translit: 'yehud', fr: 'Yehud (large companies)' },
+  { he: 'יָקְנְעָם עִילִּית', translit: 'yokne\'am ilit', fr: 'Yokneam Illit (chips hub)' },
+  { he: 'בְּאֵר שֶׁבַע', translit: 'be\'er sheva', fr: 'Be\'er Sheva (cyber cluster)' },
+  { he: 'חֵיפָה', translit: 'cheifa', fr: 'Haifa (Technion, Intel chip plant)' },
+  { he: 'קֵיסָרְיָה', translit: 'keisarya', fr: 'Caesarea (biotech)' },
+  { he: 'כַּרְמִיאֵל', translit: 'karmiel', fr: 'Karmiel (industrial)' }
+];
+const TLV_AREAS = [
+  { he: 'שָׂרוֹנָה', translit: 'sarona', fr: 'Sarona (downtown tech and dining campus)' },
+  { he: 'שְׂדֵרוֹת רוֹטְשִׁילְד', translit: 's\'derot rotshild', fr: 'Rothschild Boulevard (startup founders)' },
+  { he: 'פַּארְק הַיַּרְקוֹן', translit: 'park ha-yarkon', fr: 'Park HaYarkon (river-side offices)' },
+  { he: 'עֲתִידִים', translit: 'atidim', fr: 'Atidim (Tel Aviv University tech park)' },
+  { he: 'פְלוֹרֶנְטִין', translit: 'florentin', fr: 'Florentin (creative startups)' },
+  { he: 'אוּנִיבֶרְסִיטַת תֵּל אָבִיב', translit: 'universitat tel aviv', fr: 'Tel Aviv University (academic anchor)' },
+  { he: 'נְמַל תֵּל אָבִיב', translit: 'n\'mal tel aviv', fr: 'Tel Aviv Port (Wix and others)' },
+  { he: 'בַּת יָם', translit: 'bat yam', fr: 'Bat Yam (south extension)' },
+  { he: 'קִרְיַת הַמֶּמְשָׁלָה', translit: 'kiryat ha-memshala', fr: 'Kiryat HaMemshala (gov\'t complex)' },
+  { he: 'דִיזֶנְגוֹף', translit: 'dizengoff', fr: 'Dizengoff (central artery)' }
+];
+const BIG_TECH = [
+  { he: 'גוּגְל יִשְׂרָאֵל', translit: 'google yisrael', fr: 'Google Israel (Tel Aviv + Herzliya)' },
+  { he: 'מַייקְרוֹסוֹפְט יִשְׂרָאֵל', translit: 'microsoft yisrael', fr: 'Microsoft Israel (Herzliya)' },
+  { he: 'מֶטָה / פֵייסְבּוּק', translit: 'meta / facebook', fr: 'Meta/Facebook (Tel Aviv)' },
+  { he: 'אֶפֶּל', translit: 'apple', fr: 'Apple (Herzliya)' },
+  { he: 'אָמָזוֹן', translit: 'amazon', fr: 'Amazon (Tel Aviv)' },
+  { he: 'אִינְטֶל', translit: 'intel', fr: 'Intel (Petach Tikva, Yakum, Yokneam, Haifa)' },
+  { he: 'אֶנְוִידְיָה', translit: 'envidya', fr: 'NVIDIA (Yokneam, Tel Aviv)' },
+  { he: 'סֵיילְספוֹרְס', translit: 'salesforce', fr: 'Salesforce (Tel Aviv)' },
+  { he: 'אוֹרָקֵל', translit: 'orakel', fr: 'Oracle (Petach Tikva)' },
+  { he: 'אַי בִּי אֵם', translit: 'ai bi em', fr: 'IBM (Petach Tikva)' }
+];
+const HERZLIYA = [
+  { he: 'הֶרְצְלִיָּה פִּיתוּחַ', translit: 'hertzliya pituach', fr: 'Herzliya Pituach (tech business park)' },
+  { he: 'מִגְדַּל הַייטֶק', translit: 'migdal high-tech', fr: 'high-tech tower' },
+  { he: 'חֲנָיָה', translit: 'chanaya', fr: 'parking lot' },
+  { he: 'קַמְפּוּס אֶפֶּל', translit: 'campus apple', fr: 'Apple campus' },
+  { he: 'קַמְפּוּס מַייקְרוֹסוֹפְט', translit: 'campus microsoft', fr: 'Microsoft campus' },
+  { he: 'פַּארְק עֲסָקִים', translit: 'park asakim', fr: 'business park' },
+  { he: 'רְצוּעַת מִסְעָדוֹת', translit: 'r\'tzu\'at mis\'adot', fr: 'restaurant strip' },
+  { he: 'חוֹפֵי הֶרְצְלִיָּה', translit: 'chofei hertzliya', fr: 'Herzliya beach' },
+  { he: 'מַסָּע אֶל הָעֲבוֹדָה', translit: 'masa el ha-avoda', fr: 'commute (to work)' },
+  { he: 'פְּקָק תְּנוּעָה', translit: 'p\'kak t\'nu\'a', fr: 'traffic jam' }
+];
+const ECOSYSTEM = [
+  { he: 'חָלָל עֲבוֹדָה מְשֻׁתָּף', translit: 'chalal avoda meshutaf', fr: 'co-working space' },
+  { he: 'מְאִיץ', translit: 'm\'aitz', fr: 'accelerator' },
+  { he: 'מַחְפַּיִם', translit: 'machpaim', fr: 'incubator' },
+  { he: 'אוּנִיבֶרְסִיטָה', translit: 'universita', fr: 'university' },
+  { he: 'אָקָדֵמְיָה', translit: 'akademia', fr: 'academia' },
+  { he: 'תָּכְנִית מַחְפַּיִם', translit: 'tochnit machpaim', fr: 'incubator program' },
+  { he: 'מִשְׁכְּנוֹת הַטֶּכְנוֹלוֹגִים', translit: 'mishkenot ha-technologim', fr: 'Mishkenot HaTechnologim (tech residences)' },
+  { he: 'קְבוּצַת יוֹזְמָה', translit: 'k\'vutzat yozma', fr: 'Yozma Group (early VC)' },
+  { he: 'רְשׁוּת הַחֲדָשָׁנוּת', translit: 'rashut ha-chadshanut', fr: 'Innovation Authority' },
+  { he: 'סַייבֶּרְסְפַּארְק בְּאֵר שֶׁבַע', translit: 'cyberspark be\'er sheva', fr: 'Be\'er Sheva CyberSpark' }
+];
+
+const COMMUTE = [
+  { he: 'מְהַנְדֶסֶת — אֲנִי גָּרָה בְּפְלוֹרֶנְטִין, בְּלֵב תֵּל אָבִיב.', translit: 'mehandeset — ani gara b\'florentin, b\'lev tel aviv.', fr: 'Engineer — I live in Florentin, in central Tel Aviv.' },
+  { he: 'חָבֵר — וְאֵיךְ הוֹלֵךְ עִם חִיפּוּשׂ הָעֲבוֹדָה?', translit: 'chaver — v\'eich holech im chipus ha-avoda?', fr: 'Friend — And how\'s the job search going?' },
+  { he: 'מְהַנְדֶסֶת — יֵשׁ לִי שְׁתֵּי הַצָּעוֹת. אַחַת בְּהֶרְצְלִיָּה פִּיתוּחַ, אַחַת בְּשָׂרוֹנָה.', translit: 'mehandeset — yesh li sh\'tei hatza\'ot. achat b\'hertzliya pituach, achat b\'sarona.', fr: 'Engineer — I have two offers. One in Herzliya Pituach, one in Sarona.' },
+  { he: 'חָבֵר — וְהַמַּשְׂכֹּרֶת? הֶבְדֵּל גָּדוֹל?', translit: 'chaver — v\'ha-maskoret? hevdel gadol?', fr: 'Friend — And the salary? Big difference?' },
+  { he: 'מְהַנְדֶסֶת — לֹא, הַמַּשְׂכֹּרֶת זֵהָה. הַהֶבְדֵּל הוּא הַמַּסָּע — 50 דַּקּוֹת בְּפְּקָק לְהֶרְצְלִיָּה, 10 דַּקּוֹת בְּאוֹפַנַּיִם לְשָׂרוֹנָה.', translit: 'mehandeset — lo, ha-maskoret zeha. ha-hevdel hu ha-masa — 50 dakot b\'p\'kak l\'hertzliya, 10 dakot b\'ofanaim l\'sarona.', fr: 'Engineer — No, the salary is identical. The difference is the commute — 50 minutes in traffic to Herzliya, 10 minutes by bike to Sarona.' },
+  { he: 'חָבֵר — וְהָאִיכוּת חַיִּים? אֵיפֹה תַּרְגִּישִׁי טוֹב יוֹתֵר?', translit: 'chaver — v\'ha-eichut chayim? eifo targishi tov yoter?', fr: 'Friend — And lifestyle? Where will you feel better?' },
+  { he: 'מְהַנְדֶסֶת — בְּתֵל אָבִיב, בְּלִי סָפֵק. גֵּאוֹגְרַפְיָה מְנַצַּחַת.', translit: 'mehandeset — b\'tel aviv, b\'li safek. ge\'ografya m\'natzachat.', fr: 'Engineer — Tel Aviv, no doubt. Geography wins.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('cities', CITIES);
+R('tlv-areas', TLV_AREAS);
+R('big-tech', BIG_TECH);
+R('herzliya', HERZLIYA);
+R('ecosystem', ECOSYSTEM);
+
+renderTextBlock('commute', COMMUTE);
+
+addMiniQuiz('Block 22 · TLV Corridor Quiz', [
+  { q: 'Most Israeli startups are within ~30km of...', options: ['Jerusalem', 'Tel Aviv', 'Haifa', 'Eilat'], answer: 1, explain: '~70%+ of startups concentrate near Tel Aviv.' },
+  { q: 'Israel\'s chip industry hub is in...', options: ['Tel Aviv', 'Yokneam Illit', 'Eilat', 'Be\'er Sheva'], answer: 1, explain: 'Yokneam Illit hosts Mellanox, Marvell, and others.' },
+  { q: 'Big Tech offices like Apple, Microsoft, Google cluster in...', options: ['Bat Yam', 'Herzliya Pituach', 'Beit Shemesh', 'Karmiel'], answer: 1, explain: 'Herzliya Pituach is the office park for major US tech.' },
+  { q: 'Be\'er Sheva is known for...', options: ['cyber/tech ecosystem (CyberSpark)', 'agriculture', 'oil', 'fashion'], answer: 0, explain: 'Government and university built CyberSpark in the Negev for cyber.' },
+  { q: 'Sarona is a Tel Aviv...', options: ['beach', 'tech and dining hub', 'cemetery', 'mountain'], answer: 1, explain: 'Sarona is a former farming village turned downtown tech and food hub.' },
+  { q: 'Post-2020 tech geography trend was...', options: ['consolidation in Herzliya', 'decentralization to Tel Aviv center', 'move to Eilat', 'overseas'], answer: 1, explain: 'Many companies opened TLV satellites to retain talent.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('tlv-corridor');
+  }
+});
+</script></body></html>

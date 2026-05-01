@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>78 — Wine & Drinks</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Wine & Drinks</h1><div class="subtitle">Lesson 78 · יין ומשקאות</div></div><div class="nav"><a href="index.html">Home</a><a href="78-wine.html" class="active">78</a></div></header>
+
+<p class="intro">Israel has 350+ wineries. Major regions: Galilee, Golan, Judean Hills, Negev. Vocabulary for ordering, tasting, regions, and Israeli specialties (arak, sabra liqueur).</p>
+
+<h2>Wine Types</h2>
+<div class="word-list" id="types"></div>
+
+<h2>Major Israeli Wineries</h2>
+<div class="word-list" id="wineries"></div>
+
+<h2>Regions</h2>
+<div class="word-list" id="regions"></div>
+
+<h2>Wine Tasting</h2>
+<div class="word-list" id="tasting"></div>
+
+<h2>Hard Liquor & Cocktails</h2>
+<div class="word-list" id="liquor"></div>
+
+<h2>Beer & Soft Drinks</h2>
+<div class="word-list" id="beer"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 78 · wine · <a href="79-coffee.html" style="color:var(--accent)">Next: Coffee →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const TYPES = [
+  { he: 'יַיִן', translit: 'yayin', fr: 'wine' },
+  { he: 'יַיִן אָדוֹם', translit: 'yayin adom', fr: 'red wine' },
+  { he: 'יַיִן לָבָן', translit: 'yayin lavan', fr: 'white wine' },
+  { he: 'יַיִן רוֹזֶה', translit: 'yayin rose', fr: 'rosé' },
+  { he: 'יַיִן יָבֵשׁ', translit: 'yayin yavesh', fr: 'dry wine' },
+  { he: 'יַיִן מָתוֹק', translit: 'yayin matok', fr: 'sweet wine' },
+  { he: 'יַיִן מְבַעֲבָּעַ', translit: 'yayin meva\'ave\'a', fr: 'sparkling wine' },
+  { he: 'יַיִן כָּשֵׁר', translit: 'yayin kasher', fr: 'kosher wine' },
+  { he: 'יַיִן קַבֶּרְנֶה', translit: 'yayin cabernet', fr: 'Cabernet' },
+  { he: 'מֶרְלוֹ', translit: 'merlot', fr: 'Merlot' },
+  { he: 'שַׁרְדוֹנֵה', translit: 'chardonnay', fr: 'Chardonnay' },
+  { he: 'סוֹבִינְיוֹן בּלָאן', translit: 'sauvignon blanc', fr: 'Sauvignon Blanc' }
+];
+const WINERIES = [
+  { he: 'יִקְבֵי הַגּוֹלָן', translit: 'yikvey ha-Golan', fr: 'Golan Heights Winery' },
+  { he: 'בָּרוֹן', translit: 'Baron', fr: 'Carmel (oldest, 1882)' },
+  { he: 'בְּנַיָמִינָה', translit: 'Binyamina', fr: 'Binyamina Winery' },
+  { he: 'יֶקֶב גּוּשׁ עֶצְיוֹן', translit: 'yekev Gush Etzion', fr: 'Gush Etzion winery' },
+  { he: 'דָּלָתוֹן', translit: 'Dalton', fr: 'Dalton (Galilee)' },
+  { he: 'תֵּפֶּרְבֶּרְג', translit: 'Teperberg', fr: 'Teperberg' },
+  { he: 'קַסְטֵל', translit: 'Castel', fr: 'Castel (Judean Hills)' }
+];
+const REGIONS = [
+  { he: 'גָּלִיל עֶלְיוֹן', translit: 'Galil elyon', fr: 'Upper Galilee (best terroir)' },
+  { he: 'רָמַת הַגּוֹלָן', translit: 'Ramat ha-Golan', fr: 'Golan Heights' },
+  { he: 'הָרֵי יְהוּדָה', translit: 'harey Yehuda', fr: 'Judean Hills' },
+  { he: 'שִׁמְשׁוֹן', translit: 'Shimshon', fr: 'Shimshon (Samson, lowlands)' },
+  { he: 'הַנֶּגֶב', translit: 'ha-Negev', fr: 'Negev (desert wineries)' },
+  { he: 'הַשּׁוֹמְרוֹן', translit: 'ha-Shomron', fr: 'Samaria' }
+];
+const TASTING = [
+  { he: 'טִעֲמָה', translit: 'tia\'ma', fr: 'tasting' },
+  { he: 'טָעִים', translit: 'ta\'im', fr: 'tasty' },
+  { he: 'מוֹרָך', translit: 'morach', fr: 'tannic / harsh' },
+  { he: 'פְּרִי', translit: 'pri', fr: 'fruit / fruity' },
+  { he: 'מְעֻרְבָּל', translit: 'me\'urbal', fr: 'complex' },
+  { he: 'אָרוֹמָה', translit: 'aroma', fr: 'aroma' },
+  { he: 'גוּף', translit: 'guf', fr: 'body' },
+  { he: 'אַחֲרִית', translit: 'acharit', fr: 'finish' },
+  { he: 'בַּקְבּוּק', translit: 'bakbuk', fr: 'bottle' },
+  { he: 'שַׁבְלוֹל', translit: 'shavlul', fr: 'corkscrew (lit. "snail")' },
+  { he: 'פְּקָק', translit: 'pkak', fr: 'cork' }
+];
+const LIQUOR = [
+  { he: 'אַרָק', translit: 'arak', fr: 'arak (anise spirit, Israeli/Levantine)' },
+  { he: 'סָבְרָה', translit: 'sabra', fr: 'Sabra liqueur (orange-chocolate)' },
+  { he: 'וִיסְקִי', translit: 'whisky', fr: 'whisky' },
+  { he: 'וֹדְקָה', translit: 'vodka', fr: 'vodka' },
+  { he: 'גִּ\'ין', translit: 'gin', fr: 'gin' },
+  { he: 'רוּם', translit: 'rum', fr: 'rum' },
+  { he: 'קוֹקְטֵיל', translit: 'cocktail', fr: 'cocktail' },
+  { he: 'שׁוֹט', translit: 'shot', fr: 'shot' },
+  { he: 'גִּימְלָה', translit: 'gimla', fr: 'l\'chayim toast' }
+];
+const BEER = [
+  { he: 'בִּירָה', translit: 'bira', fr: 'beer' },
+  { he: 'גּוֹלְדְ-סְטָאר', translit: 'goldstar', fr: 'Goldstar (Israeli classic)' },
+  { he: 'מַכַּבִּי', translit: 'Maccabee', fr: 'Maccabee (Israeli)' },
+  { he: 'מִיץ', translit: 'mitz', fr: 'juice' },
+  { he: 'קוֹלָה', translit: 'kola', fr: 'cola' },
+  { he: 'גָּזוֹז', translit: 'gazoz', fr: 'soda water' },
+  { he: 'קְרֵם פְּרֵשֶׁר', translit: 'krem fresher', fr: 'sparkling cream soda' }
+];
+const PHRASES = [
+  { he: 'בַּקְבּוּק יַיִן אָדוֹם, בְּבַקָּשָׁה', translit: 'bakbuk yayin adom, bevakasha', fr: 'a bottle of red wine, please' },
+  { he: 'הַיַּיִן הַזֶּה מַגִּיעַ מֵהַגּוֹלָן', translit: 'ha-yayin ha-ze magia me-ha-Golan', fr: 'this wine comes from the Golan' },
+  { he: 'לְחַיִּים!', translit: 'le-chayim!', fr: 'cheers!' },
+  { he: 'אֲנִי אוֹהֵב יַיִן יָבֵשׁ', translit: 'ani ohev yayin yavesh', fr: 'I love dry wine (m.)' },
+  { he: 'אֶפְשָׁר לִטְעֹם?', translit: 'efshar lit\'om?', fr: 'may I taste?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('types', TYPES); R('wineries', WINERIES); R('regions', REGIONS); R('tasting', TASTING); R('liquor', LIQUOR); R('beer', BEER); R('phrases', PHRASES);
+addExtraVocab('Wine Vocabulary', [
+  { he: 'יַיִן אָדֹם', translit: 'yayin adom', fr: 'red wine' },
+  { he: 'יַיִן לָבָן', translit: 'yayin lavan', fr: 'white wine' },
+  { he: 'יַיִן רוֹזֵה', translit: 'yayin roze', fr: 'rosé wine' },
+  { he: 'יַיִן נָתָז', translit: 'yayin nataz', fr: 'sparkling wine' },
+  { he: 'יַיִן יָבֵשׁ', translit: 'yayin yavesh', fr: 'dry wine' },
+  { he: 'יַיִן מָתוֹק', translit: 'yayin matok', fr: 'sweet wine' },
+  { he: 'יֶקֶב', translit: 'yekev', fr: 'winery' },
+  { he: 'בָּצִיר', translit: 'batzir', fr: 'vintage / harvest' },
+  { he: 'כּוֹס יַיִן', translit: 'kos yayin', fr: 'glass of wine' },
+  { he: 'בַּקְבּוּק', translit: 'bakbuk', fr: 'bottle' },
+  { he: 'פּוֹתְחָן', translit: 'potchan', fr: 'corkscrew' },
+  { he: 'טִעוּם יְינוֹת', translit: 'ti\'um yeynot', fr: 'wine tasting' }
+]);
+
+addExtraVocab('Israeli Beer & Spirits', [
+  { he: 'בִּירָה גוֹלְדְּסְטָאר', translit: 'bira goldstar', fr: 'Goldstar (lager)' },
+  { he: 'בִּירָה מַכַּבִּי', translit: 'bira Maccabi', fr: 'Maccabi (lager)' },
+  { he: 'בִּירָה מִבָּשַׁל', translit: 'bira mi-vashel', fr: 'craft beer' },
+  { he: 'אַרָק', translit: 'arak', fr: 'arak (anise spirit)' },
+  { he: 'וִיסְקִי', translit: 'whisky', fr: 'whisky' },
+  { he: 'וֹדְקָה', translit: 'vodka', fr: 'vodka' },
+  { he: 'גִּ\'ין', translit: 'gin', fr: 'gin' },
+  { he: 'קוֹקְטֵיל', translit: 'kokteyl', fr: 'cocktail' },
+  { he: 'לְחַיִּים!', translit: 'le-chayim!', fr: 'cheers! (lit. to life)' }
+]);
+
+addMiniQuiz('Wine & Drinks Quiz', [
+  { q: 'Famous Israeli wine region =', options: ['Galilee + Golan', 'Negev only', 'Tel Aviv', 'Eilat'], answer: 0, explain: 'Galilee + Golan = top wine regions' },
+  { q: 'Israeli national spirit (anise) =', options: ['Tequila', 'Arak', 'Vodka', 'Whisky'], answer: 1 },
+  { q: 'Goldstar and Maccabee are...', options: ['Wines', 'Israeli beers', 'Chocolates', 'Sodas'], answer: 1 },
+  { q: 'Kosher wine = produced...', options: ['By any winery', 'By observant Jews under supervision', 'Only sweet wines', 'In Israel only'], answer: 1 },
+  { q: 'A "shtinker" is...', options: ['A wine type', 'Slang for cheap arak', 'A dessert wine', 'Not a real word'], answer: 1, explain: 'Slang for low-grade arak' }
+]);
+
+addCulturalText('Kiddush — The Friday Night Wine Blessing', 'Said over wine at Friday dinner before bread. The most familiar Hebrew text in Jewish homes globally.', [
+  { he: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם', translit: "Baruch ata Adonai Eloheinu melech ha-olam", fr: 'Blessed are You, Lord our God, King of the universe' },
+  { he: 'בּוֹרֵא פְּרִי הַגָּפֶן', translit: "bore pri ha-gafen", fr: 'who creates the fruit of the vine' },
+  { he: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם', translit: "Baruch ata Adonai Eloheinu melech ha-olam", fr: '(continues) Blessed are You, our God, King of the universe' },
+  { he: 'אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֺתָיו וְרָצָה בָנוּ', translit: "asher kidshanu be-mitzvotav ve-ratza vanu", fr: 'who sanctified us with His commandments and was pleased with us' },
+  { he: 'וְשַׁבַּת קָדְשׁוֹ בְּאַהֲבָה וּבְרָצוֹן הִנְחִילָנוּ', translit: "ve-shabbat kodsho be-ahava u-vratzon hinchilanu", fr: 'and gave us His holy Shabbat in love and favor' },
+  { he: 'זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית', translit: "zikaron le-ma\'aseh vereshit", fr: 'a remembrance of the work of creation' },
+  { he: 'בָּרוּךְ אַתָּה ה\', מְקַדֵּשׁ הַשַּׁבָּת', translit: "Baruch ata Adonai, mekadesh ha-shabbat", fr: 'Blessed are You, Lord, who sanctifies Shabbat' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('wine'); } });
+</script></body></html>

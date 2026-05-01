@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>267 — Arnona — Municipal Property Tax</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Arnona — Municipal Property Tax</h1><div class="subtitle">Lesson 267 · אַרְנוֹנָה</div></div><div class="nav"><a href="index.html">Home</a><a href="267-arnona.html" class="active">267</a></div></header>
+
+<p class="intro">Arnona is Israel's municipal property tax, paid bimonthly to the iriya (municipality). Calculated by apartment size and zone (mehoz) within the city, rates range roughly 30-100 NIS per square meter per year. Tel Aviv runs ~80-100 NIS/sqm, Jerusalem ~60-80, periphery cities ~30-50. Arnona pays for schools, parks, garbage, libraries, parking enforcement, and the fire department. Discounts exist for olim chadashim (90% reduction first year, scaling), seniors (gimla), military reservists (miluim), single parents, and low-income households.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Arnona is everyone\'s annoyance. The tashlum (payment) arrives bimonthly via mail or app. As an oleh chadash, applying for the immigrant discount via your iriya is essential — it saves 80-90% in the first year. The gimla discount for seniors over 65 is automatic in some iriyot, others require application. If you sublet your apartment, the tenant typically pays arnona (per contract). Disputes over arnona apartment classification go to the iriya appeals committee. Major iriya websites: Tel Aviv (tel-aviv.gov.il), Jerusalem (jerusalem.gov.il).</div>
+
+<h2>Arnona Basics</h2>
+<div class="word-list" id="basics"></div>
+
+<h2>Discounts</h2>
+<div class="word-list" id="discounts"></div>
+
+<h2>City Zone Vocabulary</h2>
+<div class="word-list" id="zones"></div>
+
+<h2>Logistics & Process</h2>
+<div class="word-list" id="logistics"></div>
+
+<h2>Conversation Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>Applying for Oleh Discount</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh applies for the arnona oleh discount at the Tel Aviv iriya.</div>
+  <div id="arnona-discount"></div>
+</div>
+
+<footer>Lesson 267 · Arnona · <a href="268-vaad-bayit.html" style="color:var(--accent)">Next: Vaad Bayit →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BASICS = [
+  { he: 'אַרְנוֹנָה', translit: 'arnona', fr: 'municipal property tax' },
+  { he: 'עִירִיָּה', translit: 'iriya', fr: 'municipality' },
+  { he: 'מָחוֹז אַרְנוֹנָה', translit: 'mehoz arnona', fr: 'arnona zone' },
+  { he: '30-100 שֶׁ"ח לְמ"ר', translit: '30-100 shach l\'m"r', fr: '30-100 NIS per sqm (rate range)' },
+  { he: 'תַּשְׁלוּם בַּחֲצִי שָׁנָה', translit: 'tashlum ba-chatzi shana', fr: 'bimonthly payment' },
+  { he: '6 תַּשְׁלוּמִים', translit: '6 tashlumim', fr: '6 payments per year' },
+  { he: 'בְּמַעֲבָר', translit: 'b\'maavar', fr: 'online (transfer)' },
+  { he: 'עִירִיָּה אוֹנְלַיְין', translit: 'iriya online', fr: 'online portal' },
+  { he: 'תַּשְׁלוּם בְּ-Bit', translit: 'tashlum b-Bit', fr: 'Bit pay' },
+  { he: 'מַגִּישׁ', translit: 'magish', fr: 'filer (one who submits)' }
+];
+const DISCOUNTS = [
+  { he: 'הֲנָחָה', translit: 'hanachah', fr: 'discount' },
+  { he: 'עוֹלֶה חָדָשׁ — 90% שָׁנָה רִאשׁוֹנָה', translit: 'oleh chadash — 90% shana rishona', fr: 'new immigrant — 90% first year, scaling' },
+  { he: 'גִּמְלָה', translit: 'gimla', fr: 'senior discount (65+)' },
+  { he: 'מִילוּאִים', translit: 'miluim', fr: 'reserve duty discount' },
+  { he: 'אֵם חַד-הוֹרִית', translit: 'em chad-horit', fr: 'single parent' },
+  { he: 'הַכְנָסָה נְמוּכָה', translit: 'hachnasah nemucha', fr: 'low income' },
+  { he: 'נְכוּת', translit: 'nechut', fr: 'disability' },
+  { he: 'הֲנָחַת סָבְתָּא/סָבָּא', translit: 'hanachat savta/saba', fr: 'grandparent discount' },
+  { he: 'תַּלְמִיד יְשִׁיבָה', translit: 'talmid yeshiva', fr: 'yeshiva student' },
+  { he: 'רַוָּק', translit: 'rovak', fr: 'single (unmarried)' }
+];
+const ZONES = [
+  { he: 'מָחוֹז א\'', translit: 'mehoz aleph', fr: 'zone A (usually highest rate)' },
+  { he: 'מָחוֹז ב\'', translit: 'mehoz bet', fr: 'zone B' },
+  { he: 'מָחוֹז ג\'', translit: 'mehoz gimel', fr: 'zone C' },
+  { he: 'תֵּל אָבִיב צָפוֹן', translit: 'tel aviv tzafon', fr: 'Tel Aviv North zone' },
+  { he: 'תֵּל אָבִיב מֶרְכָּז', translit: 'tel aviv merkaz', fr: 'Tel Aviv Center zone' },
+  { he: 'תֵּל אָבִיב דָּרוֹם', translit: 'tel aviv darom', fr: 'Tel Aviv South zone' },
+  { he: 'מְחוֹזוֹת יְרוּשָׁלַיִם', translit: 'mechozot yerushalayim', fr: 'Jerusalem zones' },
+  { he: 'מְחוֹז תֵּל אָבִיב', translit: 'mehoz tel aviv', fr: 'Tel Aviv district' },
+  { he: 'מְחוֹז יְרוּשָׁלַיִם', translit: 'mehoz yerushalayim', fr: 'Jerusalem district' },
+  { he: 'מְחוֹז חֵיפָה', translit: 'mehoz haifa', fr: 'Haifa district' }
+];
+const LOGISTICS = [
+  { he: 'לְהַגִּישׁ בַּקָּשָׁה', translit: 'l\'hagish bakasha', fr: 'to apply (submit a request)' },
+  { he: 'טוֹפֶס', translit: 'tofes', fr: 'form' },
+  { he: 'קַבָּלָה', translit: 'kabala', fr: 'receipt' },
+  { he: 'קֶרֶן הַתַּשְׁלוּם', translit: 'keren ha-tashlum', fr: 'payment account' },
+  { he: 'בִּיטוּחַ', translit: 'bituach', fr: 'insurance' },
+  { he: 'בִּיטוּחַ מַשְׂכִּיר', translit: 'bituach maskir', fr: 'landlord insurance' },
+  { he: 'חֲנִיָּה', translit: 'chaniya', fr: 'parking' },
+  { he: 'זְעָקָה', translit: 'z\'akah', fr: 'street parking' },
+  { he: 'פִּתְעוֹן', translit: 'pit\'on', fr: 'resident parking' },
+  { he: 'תַּכְוִיל', translit: 'takhvil', fr: 'penalty' }
+];
+const VOCABULARY = [
+  { he: 'אֵיךְ מְשַׁלְּמִים?', translit: 'eich m\'shalmim?', fr: 'how to pay?' },
+  { he: 'אֶפְשָׁר עַל הַנֶּט', translit: 'efshar al ha-net', fr: 'possible online' },
+  { he: 'אֶפְשָׁר לִתּוֹר', translit: 'efshar le-tor', fr: 'possible to book appointment' },
+  { he: 'אֶפְשָׁר לַעֲזֹר?', translit: 'efshar la\'azor?', fr: 'can you help / need help?' },
+  { he: 'כַּמָּה זֶה יוֹצֵא?', translit: 'kama ze yotze?', fr: 'how much does it come to?' },
+  { he: 'זֶה חִיוּב', translit: 'ze chivut', fr: 'that\'s a charge' },
+  { he: 'תַּכְשִׁיב', translit: 'takhshiv', fr: 'pay invoice' },
+  { he: 'חֶשְׁבּוֹנִית', translit: 'heshbonit', fr: 'invoice' },
+  { he: 'תַּשְׁלוּם מוּסָף', translit: 'tashlum musaf', fr: 'additional charges' },
+  { he: 'קֶרֶן עֵזֶר', translit: 'keren ezer', fr: 'assistance fund' }
+];
+
+const ARNONA_DISCOUNT = [
+  { he: 'פְּקִידָה: שָׁלוֹם, אֵיךְ אֲנִי יְכוֹלָה לַעֲזֹר?', translit: 'p\'kidah: shalom, eich ani yechola la\'azor?', fr: 'Clerk: Hello, how can I help you?' },
+  { he: 'יוֹנָאס: שָׁלוֹם, אֲנִי עוֹלֶה חָדָשׁ. הִנֵּה תְּעוּדַת עוֹלֶה.', translit: 'yonas: shalom, ani oleh chadash. hineh teudat oleh.', fr: 'Jonas: Hello, I am a new immigrant. Here is my immigrant certificate.' },
+  { he: 'פְּקִידָה: מְצוּיָּן. אַתָּה זַכַּאי לְ-90% הֲנָחָה בְּשָׁנָה הָרִאשׁוֹנָה.', translit: 'p\'kidah: m\'tzuyan. atah zakai l\'-90% hanachah ba-shana ha-rishona.', fr: 'Clerk: Excellent. You\'re entitled to a 90% discount in the first year.' },
+  { he: 'יוֹנָאס: כַּמָּה זְמַן הַהֲנָחָה נִמְשֶׁכֶת?', translit: 'yonas: kama z\'man ha-hanachah nimshechet?', fr: 'Jonas: How long does the discount last?' },
+  { he: 'פְּקִידָה: אַרְבַּע שָׁנִים, יוֹרֶדֶת בְּהַדְרָגָה.', translit: 'p\'kidah: arba shanim, yoredet b\'hadragah.', fr: 'Clerk: Four years, scaling down gradually.' },
+  { he: 'יוֹנָאס: יֵשׁ טוֹפֶס לְמַלֵּא?', translit: 'yonas: yesh tofes l\'male?', fr: 'Jonas: Is there a form to fill out?' },
+  { he: 'פְּקִידָה: כֵּן, הִנֵּה. תַּחְתֹּם פֹּה וּבָזֶה הַכֹּל מְסוּדָּר.', translit: 'p\'kidah: ken, hineh. tachtom po u-vazeh ha-kol m\'sudar.', fr: 'Clerk: Yes, here it is. Sign here and everything\'s settled.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('basics', BASICS);
+R('discounts', DISCOUNTS);
+R('zones', ZONES);
+R('logistics', LOGISTICS);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('arnona-discount', ARNONA_DISCOUNT);
+
+addMiniQuiz('Block 27 · Arnona Quiz', [
+  { q: 'Arnona is paid...', options: ['yearly', 'bimonthly (every 2 months)', 'monthly', 'weekly'], answer: 1, explain: '6 tashlumim per year, every 2 months.' },
+  { q: 'Olim chadashim arnona discount in first year is...', options: ['10%', '90%', '50%', '100%'], answer: 1, explain: '90% first year, scaling down over 4 years.' },
+  { q: 'The Hebrew for "municipality" is...', options: ['iriya', 'arnona', 'm\'doina', 'saiat'], answer: 0, explain: 'Iriya = municipality (city government).' },
+  { q: 'Tel Aviv arnona rate is approximately...', options: ['10 NIS/sqm', '80-100 NIS/sqm', '1000 NIS/sqm', 'free'], answer: 1, explain: '80-100 NIS/sqm/year in central TLV.' },
+  { q: 'The senior arnona discount applies to ages...', options: ['over 30', 'over 65', 'under 18', 'military'], answer: 1, explain: 'Gimla discount for ages 65+.' },
+  { q: 'The Hebrew for "arnona zone" is...', options: ['mehoz arnona', 'shichvah', 'kehila', 'pinkas'], answer: 0, explain: 'The city is divided into mehozim (zones) with different rates.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('arnona');
+  }
+});
+</script></body></html>

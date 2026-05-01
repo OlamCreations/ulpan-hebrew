@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>254 — Tichon — High School</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Tichon — High School</h1><div class="subtitle">Lesson 254 · תִּיכוֹן</div></div><div class="nav"><a href="index.html">Home</a><a href="254-tichon.html" class="active">254</a></div></header>
+
+<p class="intro">Tichon covers grades 10-12 (kita yud, yud-aleph, yud-bet), ages 15-18. It centers on the Bagrut matriculation cycle, sometimes structured as a 4-year program from grade 9. Students choose academic streams: mada\'im (sciences), humanitiyim (humanities), omanut (arts), mada hach. hev. (social sciences), or special tracks (talmidim mehunim, IDF prep). Major schools by reputation include Reali Haifa, the Herzliya Hebrew Gymnasium in Tel Aviv, and the Israel Arts and Sciences Academy. Olim need Bagrut equivalency for Israeli university admission.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Tichon is the pressure cooker of Israeli adolescence. Bagrut exams loom over every grade, and IDF service starts the day after graduation. Honor schools (tichon mehuyiv) like Reali, the Hebrew Gymnasium, and IASA carry legendary status. The common stress combo: 5-unit math + 5-unit English + Bagrut bonuses + university psychometric prep. Religious students attend Bnei Akiva-affiliated yeshivot tichon (combined yeshiva + tichon, like Yeshivat Or Etzion). Most students sit ~12-15 Bagrut exams over 3 years.</div>
+
+<h2>High School Grades</h2>
+<div class="word-list" id="grades"></div>
+
+<h2>Famous High Schools</h2>
+<div class="word-list" id="famous-schools"></div>
+
+<h2>Tichon Subjects</h2>
+<div class="word-list" id="subjects"></div>
+
+<h2>Academic Streams</h2>
+<div class="word-list" id="streams"></div>
+
+<h2>Tichon Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>10th Grader Picks His Tichon Track</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A 10th grader and his father discuss whether to pick mada\'im or humanitiyim track.</div>
+  <div id="track-decision"></div>
+</div>
+
+<footer>Lesson 254 · Tichon · <a href="255-bagrut.html" style="color:var(--accent)">Next: Bagrut →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const GRADES = [
+  { he: 'תִּיכוֹן', translit: 'tichon', fr: 'high school' },
+  { he: 'כִּתָּה י', translit: 'kita yud', fr: '10th grade' },
+  { he: 'כִּתָּה י"א', translit: 'kita yud-aleph', fr: '11th grade' },
+  { he: 'כִּתָּה י"ב', translit: 'kita yud-bet', fr: '12th grade' },
+  { he: 'מַסְלוּל', translit: 'maslul', fr: 'track' },
+  { he: 'מַסְלוּל מַדָּעִים', translit: 'maslul mada\'im', fr: 'sciences track' },
+  { he: 'מַסְלוּל הוּמָנִיטִיִּים', translit: 'maslul humanitiyim', fr: 'humanities track' },
+  { he: 'מַסְלוּל אָמָּנוּת', translit: 'maslul omanut', fr: 'arts track' },
+  { he: 'מַסְלוּל טֶכְנוֹלוֹגְיָה', translit: 'maslul technology', fr: 'technology track' },
+  { he: 'מַסְלוּל מְשָׁרֵת', translit: 'maslul m\'sharet', fr: 'service-prep track (IDF prep)' }
+];
+const FAMOUS_SCHOOLS = [
+  { he: 'רֵאָלִי חֵיפָה', translit: 'Reali Haifa', fr: 'Reali Haifa (iconic boarding school)' },
+  { he: 'גִּמְנַסְיָה הֶרְצְלִיָּה', translit: 'Gimnasia Herzliya', fr: 'Hebrew Gymnasium Tel Aviv (Herzliya)' },
+  { he: 'הָאָקָדֶמְיָה הַיִּשְׂרְאֵלִית לְאָמָּנֻיוֹת וּמַדָּעִים', translit: 'ha-Akademia ha-Yisr\'elit l\'Amanuyot u-Mada\'im', fr: 'Israel Arts and Sciences Academy (IASA)' },
+  { he: 'הַרְטְמָן בָּנִים', translit: 'Hartman Banim', fr: 'Hartman Boys (Jerusalem)' },
+  { he: 'הַרְטְמָן בָּנוֹת', translit: 'Hartman Banot', fr: 'Hartman Girls (Jerusalem)' },
+  { he: 'יְשִׁיבַת אוֹר עֶצְיוֹן', translit: 'Yeshivat Or Etzion', fr: 'combined yeshiva-tichon (religious-Zionist)' },
+  { he: 'כְּפַר הַיָּרוֹק', translit: 'Kfar HaYarok', fr: 'Kfar HaYarok (kibbutz boarding school)' },
+  { he: 'פֶּלֶךְ', translit: 'Pelech', fr: 'Pelech (girls religious-Zionist)' },
+  { he: 'בּוֹיֶר', translit: 'Boyer', fr: 'Boyer (Tel Aviv)' },
+  { he: 'תִּיכוֹן אֶלְתַּהֲרִי', translit: 'Tichon Eltahari', fr: 'Tichon Eltahari (Petach Tikva)' }
+];
+const SUBJECTS = [
+  { he: 'מָתֵמָטִיקָה 5 יְחִידוֹת', translit: 'matematika 5 yechidot', fr: '5-unit math' },
+  { he: 'אַנְגְּלִית 5 יְחִידוֹת', translit: 'anglit 5 yechidot', fr: '5-unit English' },
+  { he: 'עִבְרִית 5 יְחִידוֹת', translit: 'ivrit 5 yechidot', fr: '5-unit Hebrew' },
+  { he: 'תַּנַ"ךְ 5 יְחִידוֹת', translit: 'Tanach 5 yechidot', fr: '5-unit Tanach (Bible)' },
+  { he: 'הִיסְטוֹרְיָה 5 יְחִידוֹת', translit: 'historia 5 yechidot', fr: '5-unit history' },
+  { he: 'כִימְיָה', translit: 'kimia', fr: 'chemistry' },
+  { he: 'בִּיוֹלוֹגְיָה', translit: 'bio', fr: 'biology' },
+  { he: 'פִיסִיקָה', translit: 'fisika', fr: 'physics' },
+  { he: 'מַדָּעֵי הַחֶבְרָה', translit: 'mada hev', fr: 'social sciences' },
+  { he: 'אֶזְרָחוּת', translit: 'ezrachut', fr: 'civics' }
+];
+const STREAMS = [
+  { he: 'מַדָּעִים', translit: 'mada\'im', fr: 'sciences' },
+  { he: 'הוּמָנִיטִיִּים', translit: 'humanitiyim', fr: 'humanities' },
+  { he: 'אָמָּנוּת', translit: 'omanut', fr: 'arts' },
+  { he: 'מַדָּעֵי הַחֶבְרָה', translit: 'mada hach. hev.', fr: 'social sciences' },
+  { he: 'טֶכְנוֹלוֹגְיָה', translit: 'technology', fr: 'technology' },
+  { he: 'שִׁכְבָה מְיוּחֶדֶת', translit: 'shichvah miuhedet', fr: 'advanced cohort' },
+  { he: 'שִׁכְבָה רְגִילָה', translit: 'shichvah ragila', fr: 'regular cohort' },
+  { he: 'מַסְלוּל קְבוּצָתִי', translit: 'maslul kvutzati', fr: 'group track' },
+  { he: 'מְגַמּוֹת', translit: 'm\'gamot', fr: 'specializations' },
+  { he: 'תּוֹכְנִית', translit: 'tochnit', fr: 'program' }
+];
+const VOCABULARY = [
+  { he: 'בְּחִינָה', translit: 'bicheen', fr: 'exam' },
+  { he: 'צִיּוּן', translit: 'tziyun', fr: 'grade' },
+  { he: '100', translit: '100', fr: 'perfect score' },
+  { he: 'עֲבוֹדָה', translit: 'avoda', fr: 'assignment' },
+  { he: 'פְּעוּלָה', translit: 'pe\'ulah', fr: 'project' },
+  { he: 'בַּגְרוּת', translit: 'bagrut', fr: 'matriculation' },
+  { he: 'תּוֹכְנִית לִמּוּדִים', translit: 'tochnit limudim', fr: 'curriculum' },
+  { he: 'מִשְׁפָּחָה', translit: 'mishpacha', fr: 'family' },
+  { he: 'בֵּית סֵפֶר', translit: 'beit sefer', fr: 'school' },
+  { he: 'מְנַצֵּחַ', translit: 'm\'natze\'ach', fr: 'principal' }
+];
+
+const TRACK_DECISION = [
+  { he: 'אַבָּא: אִיתַי, אֵיזֶה מַסְלוּל אַתָּה רוֹצֶה לִבְחֹר בַּתִּיכוֹן?', translit: 'aba: itai, eize maslul atah rotzeh livchor ba-tichon?', fr: 'Dad: Itai, which track do you want to choose in tichon?' },
+  { he: 'אִיתַי: אֲנִי אוֹהֵב הִיסְטוֹרְיָה מְאוֹד. גַּם תַּנַ"ךְ וְסִפְרוּת.', translit: 'itai: ani ohev historia me\'od. gam Tanach v\'sifrut.', fr: 'Itai: I love history a lot. Also Tanach and literature.' },
+  { he: 'אַבָּא: וּמָה עִם מָתֵמָטִיקָה? אַתָּה נוֹחַ עִם הַמִּסְפָּרִים?', translit: 'aba: u-ma im matematika? atah noach im ha-misparim?', fr: 'Dad: And what about math? Are you comfortable with numbers?' },
+  { he: 'אִיתַי: לֹא חָזָק. אֲנִי מַצְלִיחַ אֲבָל זֶה לֹא הַכֹּחַ שֶׁלִּי.', translit: 'itai: lo chazak. ani matzli\'ach aval ze lo ha-koach sheli.', fr: 'Itai: Not strong. I manage but it\'s not my strength.' },
+  { he: 'אַבָּא: אָז אוּלַי הוּמָנִיטִיִּים? 5 יְחִידוֹת תַּנַ"ךְ, הִיסְטוֹרְיָה, סִפְרוּת — זֶה מַתְאִים לְךָ.', translit: 'aba: az ulai humanitiyim? 5 yechidot Tanach, historia, sifrut — ze matim lecha.', fr: 'Dad: So maybe humanities? 5-unit Tanach, history, literature — that fits you.' },
+  { he: 'אִיתַי: אֲבָל זֶה לֹא יַזִּיק לִי בָּאוּנִיבֶרְסִיטָה? כֻּלָּם רוֹצִים מַדָּעִים.', translit: 'itai: aval ze lo yazik li ba-universita? kulam rotzim mada\'im.', fr: 'Itai: But won\'t it hurt me at university? Everyone wants sciences.' },
+  { he: 'אַבָּא: לֹא. בַּגְרוּת חֲזָקָה בָּהוּמָנִיטִיִּים + פְּסִיכוֹמֶטְרִי טוֹב = הַכֹּל פָּתוּחַ. הֶחְלַטְנוּ — הוּמָנִיטִיִּים.', translit: 'aba: lo. bagrut chazaka ba-humanitiyim + psychometri tov = ha-kol patuach. hechlatnu — humanitiyim.', fr: 'Dad: No. A strong humanities Bagrut + good psychometric = everything stays open. Decided — humanities.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('grades', GRADES);
+R('famous-schools', FAMOUS_SCHOOLS);
+R('subjects', SUBJECTS);
+R('streams', STREAMS);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('track-decision', TRACK_DECISION);
+
+addMiniQuiz('Block 26 · Tichon Quiz', [
+  { q: 'Tichon covers grades...', options: ['1-6', '7-9', '10-12', 'K-12'], answer: 2, explain: 'kita yud (10) through yud-bet (12).' },
+  { q: 'The famous Tel Aviv elite school is...', options: ['Reali', 'Hebrew Gymnasium', 'IASA', 'Hartman'], answer: 1, explain: 'Hebrew Gymnasium Herzliya, the original Tel Aviv elite tichon.' },
+  { q: 'The most prestigious Haifa high school is...', options: ['Reali', 'IASA', 'Boyer', 'Hartman'], answer: 0, explain: 'Reali Haifa is the iconic Haifa boarding school.' },
+  { q: 'The full unit count for the highest math Bagrut is...', options: ['3', '5', '8', '12'], answer: 1, explain: '5 yechidot is the full advanced unit count.' },
+  { q: 'The Israeli combined yeshiva-tichon is...', options: ['Hesder', 'Yeshivat Or Etzion', 'Mercaz HaRav', 'IDF'], answer: 1, explain: 'Yeshivat Or Etzion combines yeshiva + tichon for religious-Zionist boys.' },
+  { q: 'Tichon ends typically when student is...', options: ['15', '18', '21', '25'], answer: 1, explain: 'Graduation at age 18, then IDF service.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('tichon');
+  }
+});
+</script></body></html>

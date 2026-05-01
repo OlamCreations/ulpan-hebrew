@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>32 — Transportation</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Transportation</h1><div class="subtitle">Lesson 32 · תחבורה</div></div><div class="nav"><a href="index.html">Home</a><a href="32-transportation.html" class="active">32</a></div></header>
+
+<p class="intro">Israel's main transit options: bus (Egged, Dan), train (Israel Railways), light rail (Jerusalem, Tel Aviv coming), shared taxis (sherut), regular taxis (monit), and cars. The Rav-Kav card pays for everything. Buses don't run on Shabbat in most places.</p>
+
+<div class="tip"><strong>Rav-Kav (רַב קַו)</strong> — Israel's universal transit card. Load credit at machines or via app. Works on bus, train, light rail nationwide. Get one at any train station or central bus station with your Teudat Zehut.</div>
+
+<h2>Vehicles</h2>
+<div class="word-list" id="vehicles"></div>
+
+<h2>Bus & Train</h2>
+<div class="word-list" id="bus"></div>
+
+<h2>Driving & Roads</h2>
+<div class="word-list" id="driving"></div>
+
+<h2>Buying Tickets</h2>
+<div class="word-list" id="tickets"></div>
+
+<h2>Asking for Directions</h2>
+<div class="word-list" id="directions"></div>
+
+<h2>Common Issues</h2>
+<div class="word-list" id="issues"></div>
+
+<hr class="section-divider">
+<h2>Example Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 32 · transportation · <a href="33-housing.html" style="color:var(--accent)">Next: Housing →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const VEHICLES = [
+  { he: 'אוֹטוֹבּוּס', translit: 'otobus', fr: 'bus' },
+  { he: 'רַכֶּבֶת', translit: 'rakevet', fr: 'train' },
+  { he: 'רַכֶּבֶת קַלָּה', translit: 'rakevet kala', fr: 'light rail / tram' },
+  { he: 'מוֹנִית', translit: 'monit', fr: 'taxi' },
+  { he: 'מוֹנִית שֵׁרוּת', translit: 'monit sherut', fr: 'shared taxi (fixed route)' },
+  { he: 'מְכוֹנִית', translit: 'mechonit', fr: 'car' },
+  { he: 'אוֹפַנּוֹעַ', translit: 'ofano\'a', fr: 'motorcycle' },
+  { he: 'אוֹפַנַּיִם', translit: 'ofanayim', fr: 'bicycle' },
+  { he: 'קוֹרְקִינֵט', translit: 'korkinet', fr: 'scooter' },
+  { he: 'אֳנִיָּה', translit: 'oniya', fr: 'ship' },
+  { he: 'מָטוֹס', translit: 'matos', fr: 'airplane' },
+  { he: 'מַשָּׂאִית', translit: 'masa\'it', fr: 'truck' }
+];
+const BUS = [
+  { he: 'תַּחֲנָה', translit: 'tachana', fr: 'station / stop' },
+  { he: 'תַּחֲנָה מֶרְכָּזִית', translit: 'tachana merkazit', fr: 'central station' },
+  { he: 'קַוֵּי אוֹטוֹבּוּס', translit: 'kavey otobus', fr: 'bus lines' },
+  { he: 'נָהָג', translit: 'nahag', fr: 'driver' },
+  { he: 'נוֹסֵעַ', translit: 'nose\'a', fr: 'passenger' },
+  { he: 'יְצִיאָה', translit: 'yetzi\'a', fr: 'departure' },
+  { he: 'הַגָּעָה', translit: 'haga\'a', fr: 'arrival' },
+  { he: 'עִכּוּב', translit: 'ikuv', fr: 'delay' },
+  { he: 'בִּטּוּל', translit: 'bitul', fr: 'cancellation' },
+  { he: 'אֶגֶד', translit: 'Egged', fr: 'Egged (largest bus company)' },
+  { he: 'דָּן', translit: 'Dan', fr: 'Dan (Tel Aviv area buses)' },
+  { he: 'רַכֶּבֶת יִשְׂרָאֵל', translit: 'rakevet Yisrael', fr: 'Israel Railways' }
+];
+const DRIVING = [
+  { he: 'כְּבִישׁ', translit: 'kvish', fr: 'highway / road' },
+  { he: 'רַמְזוֹר', translit: 'ramzor', fr: 'traffic light' },
+  { he: 'צֹמֶת', translit: 'tzomet', fr: 'intersection' },
+  { he: 'כִּכָּר', translit: 'kikar', fr: 'roundabout / square' },
+  { he: 'גֶּשֶׁר', translit: 'gesher', fr: 'bridge' },
+  { he: 'מִנְהָרָה', translit: 'minhara', fr: 'tunnel' },
+  { he: 'דֶּלֶק', translit: 'delek', fr: 'fuel / gas' },
+  { he: 'תַּחֲנַת דֶּלֶק', translit: 'tachanat delek', fr: 'gas station' },
+  { he: 'תַּעֲבוֹרָה', translit: 'ta\'avora', fr: 'traffic' },
+  { he: 'פְּקָק', translit: 'pkak', fr: 'traffic jam' },
+  { he: 'חֲנִיָּה', translit: 'chaniya', fr: 'parking' },
+  { he: 'רִישְׁיוֹן נְהִיגָה', translit: 'rishyon nehiga', fr: 'driver\'s license' }
+];
+const TICKETS = [
+  { he: 'כַּרְטִיס', translit: 'kartis', fr: 'ticket' },
+  { he: 'כַּרְטִיס נְסִיעָה', translit: 'kartis nesi\'a', fr: 'travel ticket' },
+  { he: 'רַב קַו', translit: 'Rav-Kav', fr: 'Rav-Kav (transit card)' },
+  { he: 'לְטָעֵן', translit: 'lit\'on', fr: 'to load (credit)' },
+  { he: 'לְהַחְתִּים', translit: 'lehachtim', fr: 'to validate / stamp' },
+  { he: 'הַנָּחָה לְסְטוּדֶנְט', translit: 'hanacha le-student', fr: 'student discount' },
+  { he: 'הַנָּחָה לְקָשִׁישׁ', translit: 'hanacha le-kashish', fr: 'senior discount' },
+  { he: 'מָסַע', translit: 'masa', fr: 'journey' }
+];
+const DIRECTIONS = [
+  { he: 'יָמִינָה', translit: 'yamina', fr: 'right (direction)' },
+  { he: 'שְׂמֹאלָה', translit: 'smola', fr: 'left' },
+  { he: 'יָשָׁר', translit: 'yashar', fr: 'straight' },
+  { he: 'אָחוֹרָה', translit: 'achora', fr: 'backward' },
+  { he: 'קָדִימָה', translit: 'kadima', fr: 'forward' },
+  { he: 'לְמַעְלָה', translit: 'lema\'ala', fr: 'up' },
+  { he: 'לְמַטָּה', translit: 'lemata', fr: 'down' },
+  { he: 'צָפוֹן', translit: 'tzafon', fr: 'north' },
+  { he: 'דָּרוֹם', translit: 'darom', fr: 'south' },
+  { he: 'מִזְרָח', translit: 'mizrach', fr: 'east' },
+  { he: 'מַעֲרָב', translit: 'ma\'arav', fr: 'west' }
+];
+const ISSUES = [
+  { he: 'אִחוּר', translit: 'ichur', fr: 'late / lateness' },
+  { he: 'דִּינוֹחַ', translit: 'dinoach', fr: 'breakdown' },
+  { he: 'תְּאוּנָה', translit: 'te\'una', fr: 'accident' },
+  { he: 'לֹא נוֹסֵעַ בְּשַׁבָּת', translit: 'lo nose\'a be-shabbat', fr: "doesn't run on Shabbat" }
+];
+const PHRASES = [
+  { he: 'אֵיךְ מַגִּיעִים לְתַחֲנָה?', translit: 'eich magi\'im le-tachana?', fr: 'how do you get to the station?' },
+  { he: 'מָתַי בָּא הָאוֹטוֹבּוּס הַבָּא?', translit: 'matay ba ha-otobus ha-ba?', fr: 'when does the next bus come?' },
+  { he: 'אֲנִי רוֹצֶה כַּרְטִיס לְחֵיפָה', translit: 'ani rotze kartis le-Chaifa', fr: 'I want a ticket to Haifa (m.)' },
+  { he: 'תֵּעֲצֹר בַּתַּחֲנָה הַבָּאָה', translit: 'te\'atzor ba-tachana ha-ba\'a', fr: 'stop at the next station (m.)' },
+  { he: 'יֵשׁ פְּקָק עַל הַכְּבִישׁ', translit: 'yesh pkak al ha-kvish', fr: 'there\'s traffic on the road' },
+  { he: 'אֲנִי בְּמוֹנִית', translit: 'ani be-monit', fr: "I'm in a taxi" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('vehicles', VEHICLES); R('bus', BUS); R('driving', DRIVING); R('tickets', TICKETS); R('directions', DIRECTIONS); R('issues', ISSUES); R('phrases', PHRASES);
+addExtraVocab('Driving in Israel', [
+  { he: 'רִשְׁיוֹן נְהִיגָה', translit: 'rishyon nehiga', fr: 'driver\'s license' },
+  { he: 'מִבְחָן נְהִיגָה', translit: 'mivchan nehiga', fr: 'driving test' },
+  { he: 'דֶּלֶק', translit: 'delek', fr: 'fuel / gas' },
+  { he: 'תַּחֲנַת דֶּלֶק', translit: 'tachanat delek', fr: 'gas station' },
+  { he: 'סִינְכְּרוּן', translit: 'sinkrun', fr: 'sync (gas pump)' },
+  { he: 'רֶכֶב חַשְׁמַלִּי', translit: 'rechev chashmali', fr: 'electric vehicle' },
+  { he: 'תֶּקֶר', translit: 'teker', fr: 'flat tire' },
+  { he: 'גְּרָר', translit: 'grar', fr: 'tow truck' },
+  { he: 'תְּאוּנָה', translit: 'te\'una', fr: 'accident' },
+  { he: 'דּוּחַ', translit: 'duach', fr: 'fine ticket' },
+  { he: 'פַּקָעָה', translit: 'paka\'a', fr: 'traffic jam (slang: pkak)' },
+  { he: 'פְּקָק', translit: 'pkak', fr: 'traffic jam' },
+  { he: 'עוֹקֵף', translit: 'okef', fr: 'overtaking' },
+  { he: 'גַּלְגַל רֶזֶרְבִי', translit: 'galgal rezervi', fr: 'spare tire' }
+]);
+
+addExtraVocab('Buses, Trains, Taxis — Specific Words', [
+  { he: 'אוֹטוֹבּוּס מְהִיר', translit: 'otobus mahir', fr: 'express bus' },
+  { he: 'תַּחֲנָה מֶרְכָּזִית', translit: 'tachana merkazit', fr: 'central station' },
+  { he: 'רַכֶּבֶת קַלָּה', translit: 'rakevet kala', fr: 'light rail' },
+  { he: 'רַכֶּבֶת יִשְׂרָאֵל', translit: 'rakevet Yisrael', fr: 'Israel Railways (intercity)' },
+  { he: 'רַכֶּבֶת תַּחְתִּית', translit: 'rakevet tachtit', fr: 'subway/metro' },
+  { he: 'מוֹנִית', translit: 'monit', fr: 'taxi' },
+  { he: 'מוֹנִית שֵׁרוּת', translit: 'monit sherut', fr: 'shared taxi (set route)' },
+  { he: 'מוֹנִית מְיֻחֶדֶת', translit: 'monit meyuchedet', fr: 'private taxi' },
+  { he: 'גֶּט', translit: 'Gett', fr: 'Gett (Israeli Uber)' },
+  { he: 'נֶהָג', translit: 'nehag', fr: 'driver' },
+  { he: 'מוֹנֶה', translit: 'mone', fr: 'meter (taxi)' },
+  { he: 'תַּעֲרִיף', translit: 'ta\'arif', fr: 'fare / rate' },
+  { he: 'רַב-קַו', translit: 'Rav-Kav', fr: 'Israeli transport card' },
+  { he: 'הַטְעָנָה', translit: 'hat\'ana', fr: 'top-up (Rav-Kav)' },
+  { he: 'כַּרְטִיס יוֹמִי', translit: 'kartis yomi', fr: 'day pass' },
+  { he: 'כַּרְטִיס חֹדְשִׁי', translit: 'kartis chodshi', fr: 'monthly pass' }
+]);
+
+addMiniQuiz('Transportation Quiz', [
+  { q: 'How do you say "where is the bus stop?"', options: ['אֵיפֹה הַתַּחֲנָה?', 'אֵיפֹה הַמּוֹנִית?', 'אֵיפֹה הַשּׁוּק?', 'אֵיפֹה הָרֹאשׁ?'], answer: 0 },
+  { q: 'רַב-קַו is...', options: ['A bus driver', 'A transport pass card', 'A train station', 'A taxi service'], answer: 1 },
+  { q: 'On Shabbat, public transport...', options: ['Runs as normal', 'Stops in most cities', 'Costs double', 'Only runs at night'], answer: 1 },
+  { q: 'A "מוֹנִית שֵׁרוּת" is...', options: ['Limousine', 'Shared taxi with set route', 'Airport taxi', 'Metered cab'], answer: 1 },
+  { q: 'Light rail in Hebrew is...', options: ['רַכֶּבֶת תַּחְתִּית', 'רַכֶּבֶת קַלָּה', 'רַכֶּבֶת אֲוִיר', 'רַכֶּבֶת לַיְלָה'], answer: 1 }
+]);
+
+addCulturalText('At the Bus Station — Real Dialogue', "How buying a Rav-Kav and asking about a route sounds in actual Hebrew. The famous Israeli bus driver attitude is always present.", [
+  { he: 'אַתָּה: סְלִיחָה, הָאוֹטוֹבּוּס לִירוּשָׁלַיִם?', translit: "Ata: Slicha, ha-otobus li-Yerushalayim?", fr: 'You: Excuse me, the bus to Jerusalem?' },
+  { he: 'נֶהָג: מָה אַתָּה רוֹאֶה? קַו 480, רֵצִיף 8', translit: "Nehag: Ma ata ro\'e? Kav 480, retzif 8", fr: 'Driver: What do you see? Line 480, platform 8' },
+  { he: 'אַתָּה: כַּמָּה זְמָן הַנְּסִיעָה?', translit: "Ata: Kama zman ha-nesi\'a?", fr: 'You: How long is the trip?' },
+  { he: 'נֶהָג: שָׁעָה, אִם אֵין פְּקָקִים', translit: "Nehag: Sha\'a, im eyn pkakim", fr: "Driver: An hour, if there's no traffic" },
+  { he: 'אַתָּה: יֵשׁ לִי רַב-קַו, מָה אֲנִי צָרִיךְ לַעֲשׂוֹת?', translit: "Ata: Yesh li Rav-Kav, ma ani tzarich la\'asot?", fr: 'You: I have a Rav-Kav, what should I do?' },
+  { he: 'נֶהָג: לְהַעֲבִיר אוֹתוֹ עַל הַמַּכְשִׁיר בַּכְּנִיסָה', translit: "Nehag: Lehavir oto al ha-machshir ba-knisa", fr: 'Driver: Tap it on the device at the entrance' },
+  { he: 'אַתָּה: תּוֹדָה רַבָּה!', translit: "Ata: Toda raba!", fr: 'You: Thanks a lot!' },
+  { he: 'נֶהָג: יָאלָה, תַּעֲלֶה כְּבָר', translit: "Nehag: Yalla, ta\'ale kvar", fr: 'Driver: Yalla, get on already' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('transport-deep'); } });
+</script></body></html>

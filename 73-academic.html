@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>73 — Academic & Research</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Academic & Research</h1><div class="subtitle">Lesson 73 · אקדמיה ומחקר</div></div><div class="nav"><a href="index.html">Home</a><a href="73-academic.html" class="active">73</a></div></header>
+
+<p class="intro">Israel punches above its weight in research — Nobel laureates, top universities (Hebrew U, Technion, Weizmann, Tel Aviv U). Vocabulary for thesis writing, grants, conferences, peer review.</p>
+
+<h2>Universities & Research</h2>
+<div class="word-list" id="institutions"></div>
+
+<h2>Degrees & Titles</h2>
+<div class="word-list" id="degrees"></div>
+
+<h2>Research Process</h2>
+<div class="word-list" id="research"></div>
+
+<h2>Publications</h2>
+<div class="word-list" id="pub"></div>
+
+<h2>Conferences & Events</h2>
+<div class="word-list" id="conf"></div>
+
+<h2>Funding & Grants</h2>
+<div class="word-list" id="funding"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 73 · academic · <a href="74-science.html" style="color:var(--accent)">Next: Science →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const INSTITUTIONS = [
+  { he: 'הָאוּנִיבֶרְסִיטָה הָעִבְרִית', translit: 'ha-universita ha-ivrit', fr: 'Hebrew University (Jerusalem)' },
+  { he: 'הַטֶכְנְיוֹן', translit: 'ha-Technion', fr: 'Technion (Haifa)' },
+  { he: 'מָכוֹן וַייצְמָן', translit: 'machon Weizmann', fr: 'Weizmann Institute' },
+  { he: 'אוּנִיבֶרְסִיטַת תֵּל אָבִיב', translit: 'universitat Tel Aviv', fr: 'Tel Aviv University (TAU)' },
+  { he: 'אוּנִיבֶרְסִיטָה בֶּן גּוּרְיוֹן', translit: 'universita Ben Gurion', fr: 'BGU (Negev)' },
+  { he: 'אוּנִיבֶרְסִיטָה בָּר אִילָן', translit: 'universita Bar Ilan', fr: 'Bar Ilan' },
+  { he: 'מָכוֹן מֶחְקָר', translit: 'machon mechkar', fr: 'research institute' },
+  { he: 'מַעְבָּדָה', translit: 'ma\'abada', fr: 'lab' },
+  { he: 'סִפְרִיָּה', translit: 'sifriya', fr: 'library' }
+];
+const DEGREES = [
+  { he: 'תֹּאַר רִאשׁוֹן', translit: 'to\'ar rishon', fr: "bachelor's (B.A./B.Sc.)" },
+  { he: 'תֹּאַר שֵׁנִי', translit: 'to\'ar sheni', fr: "master's (M.A./M.Sc.)" },
+  { he: 'דּוֹקְטוֹרָט', translit: 'doktorat', fr: 'PhD' },
+  { he: 'פּוֹסְט-דּוֹקְטוֹרַט', translit: 'post-doktorat', fr: 'postdoc' },
+  { he: 'פְּרוֹפֶסּוֹר', translit: 'professor', fr: 'professor' },
+  { he: 'מַרְצֶה', translit: 'martze', fr: 'lecturer' },
+  { he: 'דּוֹקְטוֹר', translit: 'doktor', fr: 'doctor (academic)' },
+  { he: 'מַסְטֵרְנְט', translit: 'masternt', fr: "master's student" }
+];
+const RESEARCH = [
+  { he: 'מֶחְקָר', translit: 'mechkar', fr: 'research' },
+  { he: 'נוֹשֵׂא מֶחְקָר', translit: 'nose mechkar', fr: 'research topic' },
+  { he: 'הִיפּוֹתֵזָה', translit: 'hipoteza', fr: 'hypothesis' },
+  { he: 'תֵּזָה', translit: 'teza', fr: 'thesis' },
+  { he: 'תַּזָּה', translit: 'taza', fr: 'thesis (alt.)' },
+  { he: 'נְתוּנִים', translit: 'netunim', fr: 'data' },
+  { he: 'מֶתוֹדוֹלוֹגְיָה', translit: 'metodologya', fr: 'methodology' },
+  { he: 'מַסְקָנוֹת', translit: 'maskanot', fr: 'conclusions' },
+  { he: 'נִסּוּי', translit: 'nisuy', fr: 'experiment' },
+  { he: 'נִסּוּיִים', translit: 'nisuyim', fr: 'experiments' }
+];
+const PUB = [
+  { he: 'פִּרְסוּם', translit: 'pirsum', fr: 'publication' },
+  { he: 'מַאֲמָר', translit: 'ma\'amar', fr: 'paper / article' },
+  { he: 'סֵפֶר', translit: 'sefer', fr: 'book' },
+  { he: 'כִּתְבֵי-עֵת', translit: 'kitvey-et', fr: 'journals' },
+  { he: 'שִׁפּוּט עָמִיתִים', translit: 'shipuy amitim', fr: 'peer review' },
+  { he: 'הִתְכַּתְּבוּת', translit: 'hitkatvut', fr: 'correspondence' },
+  { he: 'מְאַשֵּׁר', translit: 'me\'asher', fr: 'reviewer (m.)' },
+  { he: 'דָּחָה', translit: 'dacha', fr: 'rejected' },
+  { he: 'הִתְקַבֵּל', translit: 'hitkabel', fr: 'accepted' }
+];
+const CONF = [
+  { he: 'כֶּנֶס', translit: 'kenes', fr: 'conference' },
+  { he: 'סֶמִינָר', translit: 'seminar', fr: 'seminar' },
+  { he: 'הַרְצָאָה', translit: 'hartza\'a', fr: 'lecture' },
+  { he: 'דִּיּוּן', translit: 'diyun', fr: 'discussion' },
+  { he: 'פּוֹסְטֶר', translit: 'poster', fr: 'poster' },
+  { he: 'הַצָּגָה', translit: 'hatzaga', fr: 'presentation' },
+  { he: 'מוֹשֵׁב', translit: 'moshev', fr: 'session' },
+  { he: 'יֵרִיד מַדָּעִי', translit: 'yarid mada\'i', fr: 'science fair' }
+];
+const FUNDING = [
+  { he: 'מַעֲנָק', translit: 'ma\'anak', fr: 'grant' },
+  { he: 'מִלְגָּה', translit: 'milga', fr: 'scholarship / fellowship' },
+  { he: 'בַּקָּשָׁה לְמַעֲנָק', translit: 'bakasha le-ma\'anak', fr: 'grant application' },
+  { he: 'הַקֶּרֶן הַלְּאֻמִּית לְמַדָּע', translit: 'ha-keren ha-leumit le-mada', fr: 'ISF (Israel Science Foundation)' },
+  { he: 'הַתָּקְצִיב', translit: 'ha-taktziv', fr: 'budget' },
+  { he: 'הַקֶּרֶן', translit: 'ha-keren', fr: 'foundation / fund' }
+];
+const PHRASES = [
+  { he: 'אֲנִי כּוֹתֵב תֵּזָה', translit: 'ani kotev teza', fr: 'I\'m writing a thesis (m.)' },
+  { he: 'הַמַּאֲמָר הִתְקַבֵּל לְפִרְסוּם', translit: 'ha-ma\'amar hitkabel le-pirsum', fr: 'the paper was accepted for publication' },
+  { he: 'אֲנִי מָגִישָׁה בַּקָּשַׁת מַעֲנָק', translit: 'ani magisha bakashat ma\'anak', fr: "I'm submitting a grant application (f.)" },
+  { he: 'יֵשׁ כֶּנֶס בִּירוּשָׁלַיִם בְּמַאי', translit: 'yesh kenes bi-Yerushalayim be-mai', fr: "there's a conference in Jerusalem in May" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('institutions', INSTITUTIONS); R('degrees', DEGREES); R('research', RESEARCH); R('pub', PUB); R('conf', CONF); R('funding', FUNDING); R('phrases', PHRASES);
+addExtraVocab('Academic Vocabulary', [
+  { he: 'אוּנִיבֶרְסִיטָה', translit: 'universita', fr: 'university' },
+  { he: 'מִכְלָלָה', translit: 'michlala', fr: 'college' },
+  { he: 'פָקוּלְטָה', translit: 'fakulta', fr: 'faculty' },
+  { he: 'חוּג', translit: 'chug', fr: 'department' },
+  { he: 'הַרְצָאָה', translit: 'hartza\'a', fr: 'lecture' },
+  { he: 'תַּרְגִּיל', translit: 'targil', fr: 'tutorial' },
+  { he: 'מִבְחָן', translit: 'mivchan', fr: 'exam' },
+  { he: 'בְּחִינָה', translit: 'bchina', fr: 'exam (formal)' },
+  { he: 'עֲבוֹדָה סֶמֶסְטְרִיָּלִית', translit: 'avoda semestriyalit', fr: 'term paper' },
+  { he: 'תֵּזָה', translit: 'teza', fr: 'thesis' },
+  { he: 'מַחְקָר', translit: 'mechkar', fr: 'research' },
+  { he: 'מַאֲמָר', translit: 'ma\'amar', fr: 'paper / article' },
+  { he: 'סְטוּדֶנְט', translit: 'student', fr: 'student' },
+  { he: 'מַרְצֶה', translit: 'martze', fr: 'lecturer' },
+  { he: 'פְּרוֹפֶסּוֹר', translit: 'professor', fr: 'professor' },
+  { he: 'דֵּיקָן', translit: 'dekan', fr: 'dean' },
+  { he: 'שְׂכַר לִמּוּד', translit: 'schar limud', fr: 'tuition' }
+]);
+
+addMiniQuiz('Academic Quiz', [
+  { q: 'BA in Hebrew =', options: ['תֹּאַר רִאשׁוֹן', 'תֹּאַר שֵׁנִי', 'תֹּאַר שְׁלִישִׁי', 'בָּגְרוּת'], answer: 0 },
+  { q: 'MA =', options: ['תֹּאַר רִאשׁוֹן', 'תֹּאַר שֵׁנִי', 'תֹּאַר שְׁלִישִׁי', 'דּוֹקְטוֹר'], answer: 1 },
+  { q: 'Top Israeli university (sciences) =', options: ['Hebrew U', 'Technion', 'Weizmann (research only)', 'Both A & B + Weizmann'], answer: 3 },
+  { q: 'Israeli academic year =', options: ['Sept-June', 'Oct-July (after Sukkot)', 'Year-round', 'Jan-Dec'], answer: 1 },
+  { q: 'Academic Hebrew register =', options: ['Same as street', 'Formal/biblical-tinted', 'Yiddish-heavy', 'English'], answer: 1 }
+]);
+
+addCulturalText('Academic Email — To a Professor', 'How to email an Israeli professor properly. Israeli academia is more informal than European but still hierarchical.', [
+  { he: 'נוֹשֵׂא: שְׁאֵלָה לְהַרְצָאָה — סְטוּדֶנְט תֹּאַר רִאשׁוֹן', translit: "Nose: She\'ela le-hartza\'a — student to\'ar rishon", fr: 'Subject: Question on lecture — undergraduate student' },
+  { he: 'שָׁלוֹם פְּרוֹפֶסּוֹר כֹּהֵן,', translit: "Shalom Professor Cohen,", fr: 'Hello Professor Cohen,' },
+  { he: 'אֲנִי תָּלְמִיד בְּקוּרְס "מָבוֹא לְבִינָה מְלָאכוּתִית"', translit: "Ani talmid be-kurs \"Mavo le-bina melachutit\"", fr: 'I am a student in the course "Introduction to AI"' },
+  { he: 'הָיְתָה לִי שְׁאֵלָה לְגַבֵּי הַהַרְצָאָה הָאַחֲרוֹנָה', translit: "Hayta li she\'ela legabey ha-hartza\'a ha-acharona", fr: 'I had a question regarding the last lecture' },
+  { he: 'בְּפָּרָק 3 דִּיבַּרְתָּ עַל גרָאדִיֶנְט דֶּסְצֶנְט', translit: "Be-perek 3 dibarta al gradient descent", fr: 'In chapter 3 you spoke about gradient descent' },
+  { he: 'לֹא הֵבַנְתִּי אֶת הַחֵלֶק עַל לֶמְדָה רֵאגוּלָרִיזַצְיָה', translit: "Lo hevanti et ha-chelek al lambda regularization", fr: 'I didn\'t understand the part on lambda regularization' },
+  { he: 'הַאִם אֶפְשָׁר לְקַבֵּל פְּגִישָׁה בִּשְׁעוֹת קַבָּלָה?', translit: "Ha\'im efshar lekabel pgisha bi-she\'ot kabala?", fr: 'May I have a meeting during office hours?' },
+  { he: 'תּוֹדָה רַבָּה,', translit: "Toda raba,", fr: 'Many thanks,' },
+  { he: 'יוֹנַס נֶפְתָּלִי, ת.ז 567890123', translit: "Yonas Nephtali, t.z. 567890123", fr: 'Yonas Nephtali, ID 567890123' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('academic'); } });
+</script></body></html>

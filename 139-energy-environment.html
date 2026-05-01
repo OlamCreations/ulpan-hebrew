@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>139 — Energy & Environment</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Energy & Environment</h1><div class="subtitle">Lesson 139 · אֵנֵרְגְיָה וְסְבִיבָה</div></div><div class="nav"><a href="index.html">Home</a><a href="139-energy-environment.html" class="active">139</a></div></header>
+
+<p class="intro">Israel was energy-poor for decades — coal and imported oil. The 2009 discovery of the Tamar gas field (off Haifa) and 2010 Leviathan changed everything. Israel now exports gas to Egypt and Jordan. Solar penetration is high (~17% of electricity). The Israel Electric Corporation (חַח"י) is the historic monopoly. Water — desalination, reuse — Israel pioneered the modern toolkit.</p>
+
+<div class="tip"><strong>Cultural note</strong> — "מַתְמוֹן הַגַּז" (the gas treasure) is a politically charged phrase. Royalty rates for gas have been hotly debated since 2010. Sovereign wealth fund (קֶרֶן הַמַּטְמוֹן הַלְּאֻמִּי) — Israel\'s small fund holding gas revenues — was created in 2014 but disbursements are politically contentious. The Mediterranean is the energy frontier.</div>
+
+<h2>Electricity & The Grid</h2>
+<div class="word-list" id="grid"></div>
+
+<h2>Natural Gas (The Game-Changer)</h2>
+<div class="word-list" id="gas"></div>
+
+<h2>Renewables</h2>
+<div class="word-list" id="renew"></div>
+
+<h2>Water — Desalination & Reuse</h2>
+<div class="word-list" id="water"></div>
+
+<h2>Environment & Climate</h2>
+<div class="word-list" id="env"></div>
+
+<hr class="section-divider">
+
+<h2>Tamar Gas Field — News-Style Hebrew</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Background-style Hebrew on the Tamar field. Discovery in 2009 and operations since 2013 transformed Israeli energy economics.</div>
+  <div id="tamar"></div>
+</div>
+
+<h2>Climate Activism in Tel Aviv — Protest Sign Vocabulary</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Climate protests are growing. Vocabulary you\'ll see on signs at Friday afternoon climate strikes outside the Knesset.</div>
+  <div id="climate"></div>
+</div>
+
+<footer>Lesson 139 · Energy & Environment · <a href="140-economy-summary.html" style="color:var(--accent)">Next: Economy Summary →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const GRID = [
+  { he: 'חַשְׁמַל', translit: 'chashmal', fr: 'electricity [modern]' },
+  { he: 'חֶבְרַת הַחַשְׁמַל', translit: 'chevrat ha-chashmal', fr: 'Israel Electric Corporation [Chach"i]' },
+  { he: 'חַ"חִי', translit: 'cha-cha-i', fr: 'IEC (acronym)' },
+  { he: 'תַּחֲנַת כֹּחַ', translit: 'tachanat ko\'ach', fr: 'power station' },
+  { he: 'רֶשֶׁת הָאַסְפָּקָה', translit: 'reshet ha-aspaka', fr: 'supply grid' },
+  { he: 'תַּעֲרִיף', translit: 'ta\'arif', fr: 'tariff / rate [modern]' },
+  { he: 'קוּ"וֹאָט שָׁעָה', translit: 'ku-vat sha\'a', fr: 'kWh (kilowatt-hour)' },
+  { he: 'מְנַעֲצֵר', translit: 'm\'na\'atzer', fr: 'meter (electricity)' },
+  { he: 'הַנָּחָה', translit: 'hanacha', fr: 'discount / reduction (utility benefit)' },
+  { he: 'גִּילֵי הַזָּהָב', translit: 'gilei ha-zahav', fr: 'golden age (seniors get utility discounts)' },
+  { he: 'הִתְיַעֲלוּת אֵנֵרְגֵטִית', translit: 'hityalut energetit', fr: 'energy efficiency' },
+  { he: 'הִתְכַּלוּת', translit: 'hitkalut', fr: 'depletion / consumption' }
+];
+const GAS = [
+  { he: 'גַּז טִבְעִי', translit: 'gaz tiv\'i', fr: 'natural gas [modern]' },
+  { he: 'מַתְמוֹן הַגַּז', translit: 'matmon ha-gaz', fr: 'the gas treasure (politically charged term)' },
+  { he: 'תַּמָר', translit: 'Tamar', fr: 'Tamar field (discovered 2009, ops 2013)' },
+  { he: 'לִוְיָתָן', translit: 'Livyatan', fr: 'Leviathan field (discovered 2010, ops 2019, larger)' },
+  { he: 'כָּרִישׁ', translit: 'Karish', fr: 'Karish field (smaller)' },
+  { he: 'אֲסָדָה', translit: 'asada', fr: 'platform (offshore drilling rig)' },
+  { he: 'יִיצוּא גַּז', translit: 'yitzu gaz', fr: 'gas exports' },
+  { he: 'מִצְרַיִם', translit: 'Mitzrayim', fr: 'Egypt (gas customer since 2020)' },
+  { he: 'יַרְדֵּן', translit: 'Yarden', fr: 'Jordan (gas customer since 2017)' },
+  { he: 'דֶּלֶק קְבוּצָה', translit: 'Delek K\'vutza', fr: 'Delek Group (Tshuva, owns Tamar/Leviathan stakes)' },
+  { he: 'נֵוובְּל אֵנֵרְגְ\'י', translit: 'Noble Energy', fr: 'Noble Energy / Chevron (US partner)' },
+  { he: 'תַּמְלוּגִים', translit: 'tamlugim', fr: 'royalties (the political fight)' },
+  { he: 'וַעֲדַת שָׁשִׁינְסְקִי', translit: 'va\'adat Sheshinski', fr: 'Sheshinski Committee (set royalty regime, 2010)' },
+  { he: 'קֶרֶן הַמַּטְמוֹן הַלְּאֻמִּי', translit: 'keren ha-matmon ha-le\'umi', fr: 'Sovereign Wealth Fund (gas royalties, est. 2014)' }
+];
+const RENEW = [
+  { he: 'אֵנֵרְגְיָה מִתְחַדֶּשֶׁת', translit: 'energiya mitchadeshet', fr: 'renewable energy' },
+  { he: 'שֶׁמֶשׁ', translit: 'shemesh', fr: 'sun (solar)' },
+  { he: 'אֵנֵרְגְיָה סוֹלָרִית', translit: 'energiya solarit', fr: 'solar energy' },
+  { he: 'דּוּד שֶׁמֶשׁ', translit: 'dud shemesh', fr: 'solar water heater (on every Israeli roof, 1980s onward)' },
+  { he: 'פָּאנֶל סוֹלָרִי', translit: 'panel solari', fr: 'solar panel [modern]' },
+  { he: 'מַעֲרֶכֶת PV', translit: 'ma\'arechet PV', fr: 'photovoltaic system' },
+  { he: 'הִיט פִּי-וִי', translit: 'hi-pi-vi', fr: 'PV market segment [modern]' },
+  { he: 'גְּבּוּל הַחֶשְׁמַל הַסּוֹלָרִי', translit: 'g\'vul ha-chashmal ha-solari', fr: 'solar electricity ceiling (~17% of mix in 2023)' },
+  { he: 'יַעַד 30% עַד 2030', translit: 'ya\'ad 30% ad 2030', fr: 'target 30% [renewables] by 2030' },
+  { he: 'רוּחַ', translit: 'ru\'ach', fr: 'wind (energy)' },
+  { he: 'טוּרְבִּינַת רוּחַ', translit: 'turbinat ru\'ach', fr: 'wind turbine' },
+  { he: 'אֲגִירָה', translit: 'agira', fr: 'storage [modern, batteries]' },
+  { he: 'בָּטֶרְיָה גְּדוֹלָה', translit: 'baterya g\'dola', fr: 'large battery / grid storage' }
+];
+const WATER = [
+  { he: 'מַיִם', translit: 'mayim', fr: 'water [modern]' },
+  { he: 'הַתְפָּלָה', translit: 'hatpala', fr: 'desalination' },
+  { he: 'מָתְקַן הַתְפָּלָה', translit: 'mit\'kan hatpala', fr: 'desalination plant' },
+  { he: 'אַשְׁקְלוֹן (מָתְקַן)', translit: 'Ashk\'lon (mit\'kan)', fr: 'Ashkelon plant (one of largest in world)' },
+  { he: 'חֲדֵרָה (מָתְקַן)', translit: 'Chadera (mit\'kan)', fr: 'Hadera plant' },
+  { he: 'שׁוֹרֵק (מָתְקַן)', translit: 'Sorek (mit\'kan)', fr: 'Sorek plant' },
+  { he: 'הַשָּׁבַת מַיִם מְשֻׁלְּחִים', translit: 'ha-shavat mayim m\'shulachim', fr: 'reuse of treated wastewater (Israel = world leader, ~85%)' },
+  { he: 'הַשְׁקָיָה', translit: 'hashkaya', fr: 'irrigation [modern]' },
+  { he: 'טִפְטוּף', translit: 'tiftuf', fr: 'drip [irrigation, Israeli invention]' },
+  { he: 'נְטָפִים', translit: 'N\'tafim', fr: 'Netafim (drip irrigation company, 1965)' },
+  { he: 'מַ"לָ"חִ', translit: 'malach', fr: 'Mekorot — national water company' },
+  { he: 'רָשׁוּת הַמַּיִם', translit: 'rashut ha-mayim', fr: 'Water Authority' },
+  { he: 'בְּצֹרֶת', translit: 'b\'tzoret', fr: 'drought' },
+  { he: 'מַעְצַר מַיִם', translit: 'ma\'atzar mayim', fr: 'water restriction (rare today thanks to desal)' }
+];
+const ENV = [
+  { he: 'סְבִיבָה', translit: 'sviva', fr: 'environment [modern]' },
+  { he: 'מִשְׂרַד הָגַנַּת הַסְּבִיבָה', translit: 'misrad haganat ha-sviva', fr: 'Environmental Protection Ministry' },
+  { he: 'זִהוּם אֲוִיר', translit: 'zihum avir', fr: 'air pollution' },
+  { he: 'זִהוּם מַיִם', translit: 'zihum mayim', fr: 'water pollution' },
+  { he: 'הָתְחַמְּמוּת גְּלוֹבָּלִית', translit: 'hitchammut globalit', fr: 'global warming' },
+  { he: 'מַשְׁבֵּר אַקְלִים', translit: 'mashber aklim', fr: 'climate crisis [modern, activist]' },
+  { he: 'גַּזֵּי חַמָּמָה', translit: 'gazei chamama', fr: 'greenhouse gases' },
+  { he: 'דּוֹ-תַּחְמֹצֶת הַפְּחָמָן', translit: 'do-tachmotzet ha-pacham', fr: 'CO2' },
+  { he: 'מַחְזוּר', translit: 'machzur', fr: 'recycling [modern]' },
+  { he: 'בַּקְבּוּקֵי פִּקָּדוֹן', translit: 'bakbukei pikadon', fr: 'deposit bottles (NIS 0.30 each)' },
+  { he: 'הַשְׁקָעָה יְרֻקָּה', translit: 'hashka\'a y\'ruka', fr: 'green investment' },
+  { he: 'אֲדָמַת הַחֵל', translit: 'admat ha-chol', fr: 'sand land (ecological reserves)' },
+  { he: 'יָם הַתִּיכוֹן', translit: 'yam ha-tichon', fr: 'Mediterranean (the front line of climate change)' }
+];
+const TAMAR = [
+  { he: 'בְּשָׁנַת 2009 הִתְגַּלָּה שָׂדֵה הַגַּז תַּמָר', translit: 'B\'shnat 2009 hitgalah sade ha-gaz Tamar', fr: 'In 2009 the Tamar gas field was discovered' },
+  { he: '90 ק"מ מַעַרְבָה לְחֵיפָה', translit: '90 km ma\'arava l\'Cheifa', fr: '90 km west of Haifa' },
+  { he: 'בְּעֹמֶק שֶׁל 1700 מ\'', translit: 'B\'omek shel 1700 m', fr: 'At a depth of 1700 m' },
+  { he: 'מַאֲגָר שֶׁל כְּ-300 מִילְיַארְד מ"ק', translit: 'Ma\'agar shel k\'-300 milyard m"k', fr: 'A reservoir of about 300 billion m³' },
+  { he: 'בְּשָׁנַת 2013 הוֹחֵל בְּהַזְרָמָה', translit: 'B\'shnat 2013 hu\'chal b\'hazramah', fr: 'In 2013 supply began' },
+  { he: 'הַשִּׁנּוּי הָיָה דְּרָמָטִי', translit: 'Ha-shinui haya dramati', fr: 'The change was dramatic' },
+  { he: 'יִשְׂרָאֵל הָפְכָה מִלָּקוֹחַ אֵנֵרְגְיָה לִיצּוֹאָנִית', translit: 'Yisrael hafcha mi-lakoach energiya li-y\'tzo\'anit', fr: 'Israel transformed from energy importer to exporter' },
+  { he: 'הַחַשְׁמַל בְּיִשְׂרָאֵל מְיוֹצָר עַכְשָׁו רֻבּוֹ מִגַּז טִבְעִי', translit: 'Ha-chashmal b\'Yisrael m\'yutzar achshav rubo mi-gaz tiv\'i', fr: 'Most Israeli electricity is now produced from natural gas' },
+  { he: 'הָאַוִיר נָקִי יוֹתֵר. הַחַשְׁמַל זוֹל יוֹתֵר', translit: 'Ha-avir naki yoter. Ha-chashmal zol yoter', fr: 'The air is cleaner. Electricity is cheaper.' },
+  { he: 'אַךְ — מָה עִם הַסְּבִיבָה לַטְוָח הָאָרוֹךְ?', translit: 'Ach — ma im ha-sviva la-t\'vach ha-aroch?', fr: 'But — what about the environment in the long run?' }
+];
+const CLIMATE = [
+  { he: 'אֵין כּוֹכָב גַּב', translit: 'Ein kochav gav', fr: 'There is no Planet B' },
+  { he: 'הַזְּמַן אוֹזֵל', translit: 'Ha-z\'man ozel', fr: 'Time is running out' },
+  { he: 'הַנֹּעַר נֶגֶד הַזִּהוּם', translit: 'Ha-no\'ar neged ha-zihum', fr: 'Youth against pollution' },
+  { he: 'מַשְׁבֵּר אַקְלִים = מַשְׁבֵּר חַיִּים', translit: 'Mashber aklim = mashber chayim', fr: 'Climate crisis = life crisis' },
+  { he: 'אִם לֹא עַכְשָׁו — אֵימָתָי?', translit: 'Im lo achshav — eimatai?', fr: 'If not now — when? (Hillel reused for climate)' },
+  { he: 'הַיַּם עוֹלֶה. הָעִיר תֵּל אָבִיב בִּסְכָּנָה', translit: 'Ha-yam oleh. Ha-ir Tel Aviv bi-skana', fr: 'The sea is rising. Tel Aviv is in danger.' },
+  { he: 'מְקוֹמוֹת עֲבוֹדָה יְרֻקִּים', translit: 'm\'komot avoda y\'rukim', fr: 'Green jobs' },
+  { he: 'אֵין מַסְפִּיק יָרֹק בְּתֵל אָבִיב', translit: 'Ein maspik yarok b\'Tel Aviv', fr: 'There is not enough green in Tel Aviv' },
+  { he: 'פַּחְמָן 0 עַד 2050', translit: 'Pachman 0 ad 2050', fr: 'Net zero by 2050 (govt target)' },
+  { he: 'אֲנַחְנוּ לֹא נִשְׁתֹּק', translit: 'Anachnu lo nishtok', fr: 'We will not be silent' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('grid', GRID); R('gas', GAS); R('renew', RENEW); R('water', WATER); R('env', ENV);
+renderTextBlock('tamar', TAMAR);
+renderTextBlock('climate', CLIMATE);
+
+addMiniQuiz('Energy & Environment Quiz', [
+  { q: 'Tamar field was discovered in...', options: ['1993', '2009', '2017', '2023'], answer: 1, explain: 'Off-shore from Haifa. Operations began 2013.' },
+  { q: 'Israel\'s drip irrigation pioneer is...', options: ['Mekorot', 'Netafim', 'Dead Sea Works', 'Bezeq'], answer: 1, explain: 'Founded 1965 — exports drip irrigation worldwide' },
+  { q: 'Israel reuses approximately what % of treated wastewater?', options: ['~10%', '~50%', '~85%', '0%'], answer: 2, explain: 'World leader; Spain is second at ~20%' },
+  { q: 'IEC stands for...', options: ['Israel Electric Corporation (חַח"י)', 'Israel Energy Corp', 'Israel Engineering Co', 'Independent Eco Council'], answer: 0 },
+  { q: 'Solar (PV) share of Israeli electricity in 2023 is roughly...', options: ['~2%', '~17%', '~50%', '~80%'], answer: 1, explain: 'Target 30% by 2030' },
+  { q: 'Israeli rooftops have had solar water heaters since...', options: ['1990s', '1980s (mandatory in new construction)', '2010s', 'Pilot only'], answer: 1, explain: 'A defining Israeli green-tech adoption story' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('energy-environment'); } });
+</script></body></html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>48 — Phone Calls</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Phone Calls</h1><div class="subtitle">Lesson 48 · שיחות טלפון</div></div><div class="nav"><a href="index.html">Home</a><a href="48-phone-calls.html" class="active">48</a></div></header>
+
+<p class="intro">Phone calls are still the main way to deal with banks, insurance, government in Israel. Call menus, hold times, transfers between departments. Vocabulary to navigate them confidently.</p>
+
+<h2>Answering & Greeting</h2>
+<div class="word-list" id="answer"></div>
+
+<h2>Identifying Yourself</h2>
+<div class="word-list" id="identify"></div>
+
+<h2>Asking & Asking-To-Speak</h2>
+<div class="word-list" id="ask"></div>
+
+<h2>Hold, Transfer, Disconnect</h2>
+<div class="word-list" id="hold"></div>
+
+<h2>Misunderstanding & Clarification</h2>
+<div class="word-list" id="clarify"></div>
+
+<h2>Ending the Call</h2>
+<div class="word-list" id="end"></div>
+
+<h2>Customer Service Specific</h2>
+<div class="word-list" id="service"></div>
+
+<hr class="section-divider">
+<h2>Phone Dialogues</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 48 · phone · <a href="49-email-letters.html" style="color:var(--accent)">Next: Email & Letters →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const ANSWER = [
+  { he: 'הָלוֹ', translit: 'halo', fr: 'hello (on phone)' },
+  { he: 'שָׁלוֹם', translit: 'shalom', fr: 'hello' },
+  { he: 'עִם מִי אֲנִי מְדַבֵּר?', translit: 'im mi ani medaber?', fr: 'who am I speaking with? (m.)' },
+  { he: 'עִם מִי אֲנִי מְדַבֶּרֶת?', translit: 'im mi ani medaberet?', fr: 'who am I speaking with? (f.)' },
+  { he: 'מָה הַמַּצָּב?', translit: 'ma ha-matzav?', fr: 'how are you? (informal)' },
+  { he: 'בּוֹקֶר טוֹב', translit: 'boker tov', fr: 'good morning' },
+  { he: 'עֶרֶב טוֹב', translit: 'erev tov', fr: 'good evening' }
+];
+const IDENTIFY = [
+  { he: 'מְדַבֵּר/מְדַבֶּרֶת', translit: 'medaber/medaberet', fr: 'this is... (lit. "speaks")' },
+  { he: 'שְׁמִי', translit: 'shmi', fr: 'my name is' },
+  { he: 'קוֹרְאִים לִי', translit: 'kor\'im li', fr: 'my name is (everyday)' },
+  { he: 'אֲנִי מ-', translit: 'ani mi-', fr: "I'm from..." },
+  { he: 'מַסְפֵּר זֶהוּת', translit: 'mispar zehut', fr: 'ID number' },
+  { he: 'מַסְפֵּר חֶשְׁבּוֹן', translit: 'mispar cheshbon', fr: 'account number' }
+];
+const ASK = [
+  { he: 'אֶפְשָׁר לְדַבֵּר עִם...?', translit: 'efshar ledaber im...?', fr: 'may I speak with...?' },
+  { he: 'הוּא נִמְצָא?', translit: 'hu nimtza?', fr: 'is he there?' },
+  { he: 'הִיא נִמְצֵאת?', translit: 'hi nimtzet?', fr: 'is she there?' },
+  { he: 'אֲנִי רוֹצֶה לְדַבֵּר עִם נְצִיג', translit: 'ani rotze ledaber im netzig', fr: 'I want to speak with a representative (m.)' },
+  { he: 'יֵשׁ לִי שְׁאֵלָה', translit: 'yesh li she\'ela', fr: 'I have a question' },
+  { he: 'אֲנִי מִתְקַשֵּׁר בְּקֶשֶׁר ל-', translit: 'ani mitkasher be-kesher le-', fr: "I'm calling about..." }
+];
+const HOLD = [
+  { he: 'תַּמְתִּין', translit: 'tamtin', fr: 'please wait (m.)' },
+  { he: 'הַמְתָּנָה', translit: 'hamtana', fr: 'hold / waiting' },
+  { he: 'אַעֲבִיר אוֹתְךָ', translit: 'a\'avir otcha', fr: "I'll transfer you (m.)" },
+  { he: 'מַעֲבִיר', translit: 'ma\'avir', fr: 'transferring' },
+  { he: 'תְּחַכֶּה רֶגַע', translit: 'techake rega', fr: 'wait a moment (m.)' },
+  { he: 'הַקַּו תָּפוּס', translit: 'ha-kav tafus', fr: 'the line is busy' },
+  { he: 'הִתְנַתֵּק', translit: 'hitnatek', fr: 'disconnected' },
+  { he: 'נִתַּק לִי', translit: 'nitak li', fr: "I got disconnected" }
+];
+const CLARIFY = [
+  { he: 'לֹא שָׁמַעְתִּי', translit: 'lo shamati', fr: "I didn't hear" },
+  { he: 'אֶפְשָׁר לַחְזוֹר?', translit: 'efshar lachzor?', fr: 'can you repeat?' },
+  { he: 'תֹּאמַר עוֹד פַּעַם', translit: 'tomar od pa\'am', fr: 'say again (m.)' },
+  { he: 'אֲנִי לֹא מֵבִין', translit: 'ani lo mevin', fr: "I don't understand (m.)" },
+  { he: 'תְּדַבֵּר לְאַט', translit: 'tedaber le\'at', fr: 'speak slowly (m.)' },
+  { he: 'אֵיךְ הַשֵּׁם שֶׁלְּךָ?', translit: 'eich ha-shem shelcha?', fr: 'what\'s your name? (m.)' }
+];
+const END = [
+  { he: 'תּוֹדָה רַבָּה', translit: 'toda raba', fr: 'thank you very much' },
+  { he: 'יוֹם טוֹב', translit: 'yom tov', fr: 'have a good day' },
+  { he: 'בְּהַצְלָחָה', translit: 'behatzlacha', fr: 'good luck' },
+  { he: 'לְהִתְרָאוֹת', translit: 'lehitra\'ot', fr: 'goodbye' },
+  { he: 'נִתְרָאֶה', translit: 'nitra\'e', fr: "we\'ll see each other" },
+  { he: 'נְדַבֵּר', translit: 'nedaber', fr: "we\'ll talk" }
+];
+const SERVICE = [
+  { he: 'נְצִיג שֵׁרוּת', translit: 'netzig sherut', fr: 'service rep' },
+  { he: 'תַּפְרִיט', translit: 'tafrit', fr: 'menu' },
+  { he: 'תַּקַשֵּׁר חֲזָרָה', translit: 'takasher chazara', fr: 'call back (m.)' },
+  { he: 'מָסַר הוֹדָעָה', translit: 'masar hoda\'a', fr: 'leave a message' },
+  { he: 'תָּא קוֹלִי', translit: 'ta koli', fr: 'voicemail' },
+  { he: 'שְׁעוֹת קַבָּלָה', translit: 'sha\'ot kabala', fr: 'reception hours' }
+];
+const PHRASES = [
+  { he: 'הָלוֹ, יוֹנָס מְדַבֵּר', translit: 'halo, Yonas medaber', fr: 'Hello, Jonas speaking (m.)' },
+  { he: 'אֲנִי מִתְקַשֵּׁר בְּקֶשֶׁר לַחֶשְׁבּוֹן', translit: 'ani mitkasher be-kesher la-cheshbon', fr: "I'm calling about the bill (m.)" },
+  { he: 'תַּמְתִּין רֶגַע', translit: 'tamtin rega', fr: 'hold a moment (m.)' },
+  { he: 'אַעֲבִיר אוֹתָךְ לְ-', translit: 'a\'avir otach le-', fr: "I'll transfer you (to a f.)" },
+  { he: 'אֵין תְּשׁוּבָה', translit: 'eyn tshuva', fr: 'no answer' },
+  { he: 'אֵין לִי תַּחֲזִיק יוֹתֵר', translit: 'eyn li tachazik yoter', fr: "I can't hold any longer" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('answer', ANSWER); R('identify', IDENTIFY); R('ask', ASK); R('hold', HOLD); R('clarify', CLARIFY); R('end', END); R('service', SERVICE); R('phrases', PHRASES);
+addExtraVocab('Telecom Vocabulary', [
+  { he: 'חֶבְרַת סֶלוּלָר', translit: 'chevrat selular', fr: 'mobile carrier' },
+  { he: 'תֻּכְנִית סֶלוּלָר', translit: 'tochnit selular', fr: 'mobile plan' },
+  { he: 'סִים', translit: 'sim', fr: 'SIM card' },
+  { he: 'מִסְפַּר נָיָּד', translit: 'mispar nayad', fr: 'mobile number' },
+  { he: 'בְּלִי הַתְחַיְּבוּת', translit: 'bli hitchayvut', fr: 'no commitment' },
+  { he: 'גִּיגָה', translit: 'giga', fr: 'GB (data)' },
+  { he: 'שִׂיחוֹת חִינָּם', translit: 'sichot chinam', fr: 'free calls' },
+  { he: 'גְּלִישָׁה', translit: 'glisha', fr: 'browsing / data' },
+  { he: 'הוֹדָעָה', translit: 'hoda\'a', fr: 'message' },
+  { he: 'SMS', translit: 'es-em-es', fr: 'SMS' },
+  { he: 'תַּעֲרִיף', translit: 'ta\'arif', fr: 'rate / tariff' },
+  { he: 'פָּקַע', translit: 'paka', fr: 'expired' },
+  { he: 'חִדּוּשׁ', translit: 'chidush', fr: 'renewal' }
+]);
+
+addExtraVocab('Phone Vocabulary You Need', [
+  { he: 'הַלוֹ?', translit: 'halo?', fr: 'hello? (answering)' },
+  { he: 'אֶפְשָׁר לְדַבֵּר עִם...?', translit: 'efshar ledaber im...?', fr: 'may I speak with...?' },
+  { he: 'מִי מְדַבֵּר?', translit: 'mi medaber?', fr: 'who is calling?' },
+  { he: 'מָה הַשֵּׁם בְּבַקָּשָׁה?', translit: 'ma ha-shem bevakasha?', fr: 'name please?' },
+  { he: 'תַּמְתִּין רֶגַע בְּבַקָּשָׁה', translit: 'tamtin rega bevakasha', fr: 'please hold a moment (m.)' },
+  { he: 'הוּא לֹא בָּמָּקוֹם', translit: 'hu lo ba-makom', fr: 'he\'s not here' },
+  { he: 'אֲנִי אַעֲבִיר אוֹתְךָ', translit: 'ani a\'avir otcha', fr: 'I\'ll transfer you (m.)' },
+  { he: 'נִקְטַע הַקַּו', translit: 'niktaa ha-kav', fr: 'the line was cut' },
+  { he: 'אֲנִי לֹא שׁוֹמֵעַ אוֹתְךָ', translit: 'ani lo shome\'a otcha', fr: 'I can\'t hear you' },
+  { he: 'תְּדַבֵּר יוֹתֵר חָזָק בְּבַקָּשָׁה', translit: 'tedaber yoter chazak bevakasha', fr: 'speak louder please' },
+  { he: 'תְּקַשֵּׁר אוֹתִי בָּחֲזָרָה', translit: 'tekasher oti ba-chazara', fr: 'call me back' },
+  { he: 'אֵיפֹה אֲנִי יָכוֹל לְהַשִּׂיג אוֹתוֹ?', translit: 'eyfo ani yachol lehasig oto?', fr: 'where can I reach him?' },
+  { he: 'הוֹדָעָה קוֹלִית', translit: 'hoda\'a kolit', fr: 'voicemail' },
+  { he: 'תָּא קוֹלִי', translit: 'ta koli', fr: 'voicemail box' },
+  { he: 'מִסְפַּר חָסוּם', translit: 'mispar chasum', fr: 'blocked number' }
+]);
+
+addMiniQuiz('Phone Quiz', [
+  { q: 'How do Israelis answer the phone?', options: ['שָׁלוֹם', 'הַלוֹ', 'בּוֹקֶר טוֹב', 'מָה?'], answer: 1, explain: '"Halo?" universal phone greeting' },
+  { q: '"Please hold" =', options: ['תְּדַבֵּר עַכְשָׁו', 'תַּמְתִּין רֶגַע', 'תֶּן לִי לְדַבֵּר', 'תִּשְׁלַח SMS'], answer: 1 },
+  { q: 'נִקְטַע הַקַּו means...', options: ['Speaking too fast', 'Line was cut', 'Call rejected', 'Voicemail full'], answer: 1 },
+  { q: 'Israeli mobile prefix usually:', options: ['02', '03', '050-058', '+33'], answer: 2, explain: 'Mobile = 050-058. Land lines: 02 (Jerusalem), 03 (Tel Aviv), 04 (Haifa)' },
+  { q: '101 / 100 / 102 are...', options: ['Train numbers', 'Phone bill rates', 'Emergency: ambulance/police/fire', 'Internet codes'], answer: 2 }
+]);
+
+addCulturalText('Calling the Kupat Holim (Health Fund)', "Booking a doctor's appointment. The IVR menu, then the human conversation.", [
+  { he: 'מַעֲרֶכֶת: שָׁלוֹם, הִגַּעְתָּ לִכְלָלִית. הַקֵּשׁ 1 לְזִמּוּן רוֹפֵא', translit: "Ma\'arechet: Shalom, higata le-Klalit. Hakesh 1 le-zimun rofe", fr: "System: Hello, you've reached Klalit. Press 1 for doctor appointment" },
+  { he: 'מַעֲרֶכֶת: לַהֲעֲבָרָה לְנֶצִיג, הַקֵּשׁ 9', translit: "Ma\'arechet: La-ha\'avara le-netzig, hakesh 9", fr: 'System: To transfer to a representative, press 9' },
+  { he: 'נְצִיג: שָׁלוֹם, אֵיךְ אֶפְשָׁר לַעֲזוֹר?', translit: "Netzig: Shalom, eich efshar la\'azor?", fr: 'Rep: Hello, how can I help?' },
+  { he: 'אַתָּה: אֲנִי רוֹצֶה תּוֹר לְרוֹפֵא מִשְׁפָּחָה', translit: "Ata: Ani rotze tor le-rofe mishpacha", fr: 'You: I want an appointment with a family doctor' },
+  { he: 'נְצִיג: מִסְפַּר תְּעוּדַת זֶהוּת, בְּבַקָּשָׁה', translit: "Netzig: Mispar teudat zehut, bevakasha", fr: 'Rep: ID number please' },
+  { he: 'אַתָּה: 567890123', translit: "Ata: Chamesh shesh sheva shmone tesha echad shtayim shalosh", fr: 'You: 567890123' },
+  { he: 'נְצִיג: יֵשׁ תּוֹר מָחָר ב-10:30 אֵצֶל ד"ר כֹּהֵן', translit: "Netzig: Yesh tor machar be-10:30 etzel Dr. Cohen", fr: 'Rep: There is an appointment tomorrow at 10:30 with Dr. Cohen' },
+  { he: 'אַתָּה: מֻשְׁלָם, אֲנִי לוֹקֵחַ', translit: "Ata: Mushlam, ani loke\'ach", fr: "You: Perfect, I'll take it" },
+  { he: 'נְצִיג: תְּקַבֵּל אִשּׁוּר בְּ-SMS. יוֹם נֶהֱדָר', translit: "Netzig: Tekabel ishur be-SMS. Yom nehedar", fr: "Rep: You'll get an SMS confirmation. Great day" }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('phone'); } });
+</script></body></html>

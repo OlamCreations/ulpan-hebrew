@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>25 — Smichut (Construct State)</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Smichut (Construct State)</h1>
+    <div class="subtitle">Lesson 25 · סמיכות</div>
+  </div>
+  <div class="nav"><a href="index.html">Home</a><a href="25-smichut.html" class="active">25</a></div>
+</header>
+
+<p class="intro">
+  Smichut (סְמִיכוּת) is one of Hebrew's most distinctive features — a way to combine two nouns into a single concept by linking them. Like English compounds: "house door" = "front door" without "of". בֵּית סֵפֶר (beit sefer) literally "house [of] book" = school.
+</p>
+
+<div class="tip">
+  <strong>How it works</strong> — The first noun (nismach) often shortens. The second noun (somech) keeps its form. בַּיִת + סֵפֶר → בֵּית סֵפֶר. The whole pair is treated as one compound word.
+</div>
+
+<div class="tip">
+  <strong>Definite article rule</strong> — In smichut, only the SECOND word takes ה (the article). בֵּית הַסֵּפֶר (beit ha-sefer) "the school" — not "ha-beit ha-sefer".
+</div>
+
+<h2>Common Compounds with בַּיִת (house)</h2>
+<div class="word-list" id="bayit"></div>
+
+<h2>Common Compounds with עוֹרֵךְ (editor / arranger)</h2>
+<div class="word-list" id="orech"></div>
+
+<h2>Food & Drink Smichuts</h2>
+<div class="word-list" id="food"></div>
+
+<h2>Person + Role / Profession Smichuts</h2>
+<div class="word-list" id="people"></div>
+
+<h2>Time-based Smichuts</h2>
+<div class="word-list" id="time"></div>
+
+<h2>Place Smichuts (Israeli geography)</h2>
+<div class="word-list" id="places"></div>
+
+<hr class="section-divider">
+
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 25 · smichut · <a href="26-relative-clauses.html" style="color:var(--accent)">Next: Relative Clauses →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const BAYIT = [
+  { he: 'בֵּית סֵפֶר',     translit: 'beit sefer',     fr: 'school (lit. "house of book")' },
+  { he: 'בֵּית חוֹלִים',  translit: 'beit cholim',    fr: 'hospital (lit. "house of the sick")' },
+  { he: 'בֵּית קָפֶה',    translit: 'beit kafe',      fr: 'café (lit. "house of coffee")' },
+  { he: 'בֵּית כְּנֶסֶת', translit: 'beit knesset',   fr: 'synagogue (lit. "house of assembly")' },
+  { he: 'בֵּית הַמִּקְדָּשׁ', translit: 'beit ha-mikdash', fr: 'the Holy Temple' },
+  { he: 'בֵּית מִשְׁפָּט', translit: 'beit mishpat',   fr: 'court of law (lit. "house of judgment")' },
+  { he: 'בֵּית מִרְקַחַת', translit: 'beit mirkachat', fr: 'pharmacy' },
+  { he: 'בֵּית סוֹהַר',   translit: 'beit sohar',     fr: 'prison' }
+];
+
+const ORECH = [
+  { he: 'עוֹרֵךְ דִּין',   translit: 'orech din',     fr: 'lawyer (lit. "arranger of law")' },
+  { he: 'עוֹרֵךְ עִתּוֹן', translit: 'orech iton',    fr: 'newspaper editor' }
+];
+
+const FOOD = [
+  { he: 'עֻגַּת שׁוֹקוֹלָד', translit: 'ugat shokolad', fr: 'chocolate cake' },
+  { he: 'מִיץ תַּפּוּזִים',  translit: 'mitz tapuzim',  fr: 'orange juice' },
+  { he: 'גְּבִינַת קוֹטֶג\'', translit: 'gvinat cottage', fr: 'cottage cheese' },
+  { he: 'אֲרוּחַת בּוֹקֶר', translit: 'aruchat boker',  fr: 'breakfast' },
+  { he: 'תִּיק סְפָרִים',  translit: 'tik sfarim',    fr: 'school bag (lit. "bag of books")' },
+  { he: 'בַּקְבּוּק יַיִן',  translit: 'bakbuk yayin',  fr: 'bottle of wine' },
+  { he: 'כּוֹס תֵּה',       translit: 'kos te',         fr: 'cup of tea' }
+];
+
+const PEOPLE = [
+  { he: 'רוֹפֵא יְלָדִים',     translit: 'rofe yeladim',     fr: 'pediatrician (lit. "doctor of children")' },
+  { he: 'רוֹפֵא שִׁנַּיִם',   translit: 'rofe shinayim',     fr: 'dentist' },
+  { he: 'מוֹרָה לְעִבְרִית',   translit: 'mora le-ivrit',     fr: 'Hebrew teacher (f.)' },
+  { he: 'נַהָג מוֹנִית',       translit: 'nahag monit',       fr: 'taxi driver' },
+  { he: 'בֵּן זוּג',            translit: 'ben zug',           fr: 'partner / spouse' },
+  { he: 'אִישׁ עֲסָקִים',      translit: 'ish asakim',        fr: 'businessman' },
+  { he: 'יְלִיד הָאָרֶץ',      translit: 'yelid ha-aretz',    fr: 'Israeli-born (lit. "child of the land")' }
+];
+
+const TIME = [
+  { he: 'יוֹם שִׁשִּׁי',         translit: 'yom shishi',         fr: 'Friday (lit. "day [the] sixth")' },
+  { he: 'סוֹף שָׁבוּעַ',        translit: 'sof shavua',         fr: 'weekend (lit. "end of week")' },
+  { he: 'יוֹם הֻלֶּדֶת',         translit: 'yom huledet',        fr: 'birthday (lit. "day of birth")' },
+  { he: 'רֹאשׁ הַשָּׁנָה',      translit: 'rosh ha-shana',      fr: 'New Year (lit. "head of the year")' },
+  { he: 'אַחַר הַצָּהֳרַיִם',   translit: 'achar ha-tzohorayim', fr: 'afternoon' }
+];
+
+const PLACES = [
+  { he: 'תֵּל אָבִיב',         translit: 'Tel Aviv',           fr: 'Tel Aviv (lit. "Hill of Spring")' },
+  { he: 'בְּאֵר שֶׁבַע',       translit: 'Be\'er Sheva',        fr: 'Beer Sheva (lit. "Well of [the] Seven")' },
+  { he: 'מִדְבַּר נֶגֶב',      translit: 'midbar Negev',        fr: 'Negev Desert' },
+  { he: 'יָם הַמֶּלַח',         translit: 'yam ha-melach',       fr: 'Dead Sea (lit. "sea of salt")' },
+  { he: 'הַר הַזֵּיתִים',      translit: 'har ha-zeitim',       fr: 'Mount of Olives' },
+  { he: 'נְמַל תְּעוּפָה',     translit: 'nemal te\'ufa',       fr: 'airport (lit. "harbor of flying")' }
+];
+
+const PHRASES = [
+  { he: 'אֲנִי לוֹמֵד בְּבֵית סֵפֶר',    translit: 'ani lomed be-beit sefer',   fr: 'I study at school (m.)' },
+  { he: 'הוּא רוֹפֵא שִׁנַּיִם',          translit: 'hu rofe shinayim',          fr: "he's a dentist" },
+  { he: 'יֵשׁ לִי יוֹם הֻלֶּדֶת מָחָר',  translit: 'yesh li yom huledet machar', fr: "I have a birthday tomorrow" },
+  { he: 'נִפְגַּשׁ בְּבֵית קָפֶה',       translit: 'nipagesh be-beit kafe',     fr: "let's meet at a café" },
+  { he: 'אֲרוּחַת בּוֹקֶר יִשְׂרְאֵלִית', translit: 'aruchat boker yisraelit',  fr: 'Israeli breakfast' },
+  { he: 'נְמַל תְּעוּפָה בֶּן גּוּרְיוֹן', translit: 'nemal te\'ufa Ben Gurion',  fr: 'Ben Gurion Airport' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('bayit', BAYIT);
+renderRows('orech', ORECH);
+renderRows('food', FOOD);
+renderRows('people', PEOPLE);
+renderRows('time', TIME);
+renderRows('places', PLACES);
+renderRows('phrases', PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) { count++; if (count >= 15) markLessonDone('smichut'); }
+});
+
+addMiniQuiz('Smichut Quiz', [
+  { q: 'בֵּית סֵפֶר means...', options: ['Library', 'School (lit. house of book)', 'Bookstore', 'University'], answer: 1 },
+  { q: 'Where does "ha-" go in smichut?', options: ['First word only', 'Second word only', 'Both words', 'Neither word'], answer: 1, explain: 'Only on the SECOND noun: בֵּית הַסֵּפֶר' },
+  { q: 'Plural smichut: "houses of school"', options: ['בָּתִּים הַסְּפָרִים', 'בָּתֵּי סְפָרִים', 'בָּתֵּי הַסְּפָרִים', 'בַּיִת סְפָרִים'], answer: 2, explain: 'batei ha-sfarim' },
+  { q: 'A "תְּעוּדַת זֶהוּת" is...', options: ['Birth certificate', 'ID card', 'Driver\'s license', 'Passport'], answer: 1 },
+  { q: 'What changes in the FIRST word of smichut?', options: ['Nothing', 'Vowels often shift', 'Always becomes plural', 'Loses the suffix'], answer: 1, explain: 'bayit → beit, yom → yom (some), banim → bnei' }
+]);
+
+addCulturalText('Smichut in Daily Life — Compound Nouns Everywhere', 'Smichut is how Hebrew makes "X of Y" — but the first word changes form. The article "ha-" goes only on the SECOND word.', [
+  { he: 'בֵּית סֵפֶר — school (lit. house of book)', translit: "Beit sefer", fr: 'School' },
+  { he: 'בֵּית קָפֶה — café', translit: "Beit kafe", fr: 'Café' },
+  { he: 'בֵּית כְּנֶסֶת — synagogue', translit: "Beit knesset", fr: 'Synagogue' },
+  { he: 'תַּחֲנַת אוֹטוֹבּוּס — bus station', translit: "Tachanat otobus", fr: 'Bus station' },
+  { he: 'תְּעוּדַת זֶהוּת — ID card', translit: "Teudat zehut", fr: 'ID card' },
+  { he: 'יוֹם הַזִּכָּרוֹן — Memorial Day (note: ha- on second only)', translit: "Yom ha-zikaron", fr: 'Memorial Day' },
+  { he: 'עוֹרֵךְ דִּין — lawyer (lit. arranger of law)', translit: "Orech din", fr: 'Lawyer' },
+  { he: 'מְשִׂיגֵי הַמָּטָרָה — goal achievers', translit: "Masigey ha-matara", fr: 'Goal achievers (pl. smichut)' },
+  { he: 'אִישׁ עֲסָקִים — businessman', translit: "Ish asakim", fr: 'Businessman' },
+  { he: 'מַסַּע הַחַיִּים שֶׁלְּךָ — your life journey (3-word smichut + possessive)', translit: "Masa ha-chayim shelcha", fr: 'Your life journey' }
+]);
+</script>
+</body>
+</html>

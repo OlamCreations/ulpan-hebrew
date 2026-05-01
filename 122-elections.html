@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>122 — Elections & Voting</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Elections — How Israelis Vote</h1><div class="subtitle">Lesson 122 · בְּחִירוֹת</div></div><div class="nav"><a href="index.html">Home</a><a href="122-elections.html" class="active">122</a></div></header>
+
+<p class="intro">Israelis vote for a party, not a candidate. You drop a single paper slip with two Hebrew letters into an envelope, into a box. That slip is your vote for an entire ranked list. Election Day is a national holiday — schools and most workplaces closed. Israel has had 5 elections in 4 years (2019-2022) — chronic instability is part of the system. This lesson covers the actual mechanics.</p>
+
+<div class="tip"><strong>Cultural note</strong> — On election night, Israelis cluster around TVs at 10 PM for the "מִדְגָּם" (exit poll). Channels 11, 12, and 13 each release one. The first 1-2 minutes of polling night dictate the next morning\'s headlines, often wrongly. Final official results take 2-3 days because IDF soldiers and embassy ballots are counted last.</div>
+
+<h2>Election Day Vocabulary</h2>
+<div class="word-list" id="day"></div>
+
+<h2>The Ballot (Pataq)</h2>
+<div class="word-list" id="ballot"></div>
+
+<h2>Party Letter Codes (real examples)</h2>
+<div class="word-list" id="letters"></div>
+
+<h2>Polls & Predictions</h2>
+<div class="word-list" id="polls"></div>
+
+<h2>Government Formation</h2>
+<div class="word-list" id="formation"></div>
+
+<hr class="section-divider">
+
+<h2>Election Night Live Broadcast Phrases</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">The Hebrew you\'ll hear at 10:00 PM on Channel 12 when the polls close. Anchors say these phrases on autopilot every election.</div>
+  <div id="broadcast"></div>
+</div>
+
+<h2>Asking Israelis About Their Vote (or Not)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Israelis discuss politics constantly but voting is technically private. These are the polite and impolite ways to ask.</div>
+  <div id="asking"></div>
+</div>
+
+<footer>Lesson 122 · Elections · <a href="123-government.html" style="color:var(--accent)">Next: Government →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const DAY = [
+  { he: 'יוֹם הַבְּחִירוֹת', translit: 'yom ha-b\'chirot', fr: 'Election Day [modern]' },
+  { he: 'יוֹם שְׁבִיתָה', translit: 'yom sh\'vita', fr: 'national day off (Election Day)' },
+  { he: 'קַלְפִּי', translit: 'kalpi', fr: 'ballot box / polling station [modern]' },
+  { he: 'תָּא הַצְבָּעָה', translit: 'ta hatzba\'a', fr: 'voting booth' },
+  { he: 'וַעֲדַת הַקַּלְפִּי', translit: 'va\'adat ha-kalpi', fr: 'polling station committee' },
+  { he: 'תְּעוּדַת זֶהוּת', translit: 't\'udat zehut', fr: 'ID card (required to vote)' },
+  { he: 'פֶּתֶק הַצְבָּעָה', translit: 'petek hatzba\'a', fr: 'ballot slip' },
+  { he: 'מַעֲטָפָה', translit: 'ma\'atafa', fr: 'envelope (slip goes inside)' },
+  { he: 'הַצְבָּעָה כְּפוּלָה', translit: 'hatzba\'a k\'fula', fr: 'double voting (illegal)' },
+  { he: 'שִׁעוּר הַצְבָּעָה', translit: 'shi\'ur hatzba\'a', fr: 'turnout percentage' },
+  { he: 'בּוֹחֲרִים זַכָּאִים', translit: 'bochrim zaka\'im', fr: 'eligible voters' },
+  { he: 'גִּיל בְּחִירָה', translit: 'gil b\'chira', fr: 'voting age (18 in Israel)' }
+];
+const BALLOT = [
+  { he: 'אוֹתִיּוֹת הַמִּפְלָגָה', translit: 'otiyot ha-miflaga', fr: 'party letters (1-2 Hebrew letters per party)' },
+  { he: 'רְשִׁימָה', translit: 'reshima', fr: 'electoral list [modern]' },
+  { he: 'מָקוֹם רֵיאָלִי', translit: 'makom re\'ali', fr: '"realistic spot" (likely-elected position on list)' },
+  { he: 'מְקוֹמוֹת מְשֻׁמָּרִים', translit: 'm\'komot m\'shumarim', fr: 'reserved spots (e.g. for women, minorities)' },
+  { he: 'פְּרַיְמֵרִיז', translit: 'praymeriz', fr: 'primaries [modern, English loanword]' },
+  { he: 'רֹאשׁ הָרְשִׁימָה', translit: 'rosh ha-reshima', fr: 'list head (the candidate for PM)' },
+  { he: 'רוֹטַצְיָה', translit: 'rotatziya', fr: 'rotation (PM swap mid-term)' },
+  { he: 'פֶּתֶק לָבָן', translit: 'petek lavan', fr: 'blank slip (counted as invalid)' },
+  { he: 'פֶּתֶק פָּסוּל', translit: 'petek pasul', fr: 'invalid slip [modern]' }
+];
+const LETTERS = [
+  { he: 'מַחַ"ל', translit: 'machal', fr: 'Likud (long-running, right-wing)' },
+  { he: 'אֱמֶת', translit: 'emet', fr: 'Labor / HaAvoda (long-running, center-left)' },
+  { he: 'יֵ"שׁ', translit: 'yesh', fr: 'Yesh Atid (Lapid, center)' },
+  { he: 'ב', translit: 'bet', fr: 'Bayit Yehudi / national religious' },
+  { he: 'שָׁ"ס', translit: 'Shas', fr: 'Shas (Sephardi religious)' },
+  { he: 'ג', translit: 'gimel', fr: 'United Torah Judaism (Ashkenazi haredi)' },
+  { he: 'מֶ"רֶצ', translit: 'merets', fr: 'Meretz (left, secular)' },
+  { he: 'ע"ם', translit: 'am', fr: 'Ra\'am (Arab Islamist)' },
+  { he: 'וָ"ם', translit: 'vam', fr: 'Hadash-Ta\'al (Arab joint)' },
+  { he: 'אַחַד הָעָם הָיוּ סְבוּרִים שֶׁ___', translit: '___', fr: 'NOTE: party letters CHANGE between elections' }
+];
+const POLLS = [
+  { he: 'סֶקֶר', translit: 'seker', fr: 'poll [modern]' },
+  { he: 'מִדְגָּם', translit: 'midgam', fr: 'sample / exit poll' },
+  { he: 'מַכְבִּיר', translit: 'machbir', fr: 'pollster / polling firm' },
+  { he: 'טְעוּת דְּגִימָה', translit: 't\'ut d\'gima', fr: 'sampling error / margin of error' },
+  { he: 'אָחוּז', translit: 'achuz', fr: 'percentage [modern]' },
+  { he: 'מְקַבֵּל מָנְדָּטִים', translit: 'm\'kabel mandatim', fr: '"receives X seats" (poll language)' },
+  { he: 'מַחֲקֶה אֶת הַסֶּקֶר הַקּוֹדֵם', translit: 'machke et ha-seker ha-kodem', fr: 'matches the previous poll' },
+  { he: 'גּוּשׁ בְּלוֹקֵר', translit: 'gush bloker', fr: 'blocking bloc in polls' },
+  { he: 'תֵּזוּזָה', translit: 't\'zuza', fr: 'movement / shift (in polls) [modern]' },
+  { he: 'יַצִּיב', translit: 'yatziv', fr: 'stable [modern]' }
+];
+const FORMATION = [
+  { he: 'נָשִׂיא הַמְּדִינָה', translit: 'nasi ha-m\'dina', fr: 'President of the State (ceremonial)' },
+  { he: 'הַטָּלַת מְלָאכָה', translit: 'hatalat m\'lacha', fr: '"assigning the task" (President asks MK to form gov\'t)' },
+  { he: '28 יוֹם', translit: '28 yom', fr: '28 days (initial PM-designate window)' },
+  { he: '14 יוֹם נוֹסָפִים', translit: '14 yom nosafim', fr: '14 additional days (extension)' },
+  { he: 'מוּעֲמָד לְרֹאשׁ הַמֶּמְשָׁלָה', translit: 'mu\'amad l\'rosh ha-memshala', fr: 'PM-designate' },
+  { he: 'הָרְכָּבַת מֶמְשָׁלָה', translit: 'harkavat memshala', fr: 'forming a government' },
+  { he: 'מֶמְשָׁלַת חִירוּם', translit: 'memshelet cherum', fr: 'emergency government (wartime)' },
+  { he: 'מֶמְשֶׁלֶת אַחְדוּת', translit: 'memshelet achdut', fr: 'unity government' },
+  { he: 'מֶמְשֶׁלֶת מַעֲבָר', translit: 'memshelet ma\'avar', fr: 'transitional government (caretaker)' },
+  { he: 'הַשְׁבָּעַת הַמֶּמְשָׁלָה', translit: 'hashba\'at ha-memshala', fr: 'government swearing-in' }
+];
+const BROADCAST = [
+  { he: 'עֶשֶׂר בָּעֶרֶב, הַקַּלְפִּיּוֹת נִסְגְּרוּ', translit: 'Eser ba-erev, ha-kalpiyot nisg\'ru', fr: 'Ten in the evening, the polls have closed' },
+  { he: 'וְלִפְנֵיכֶם הַמִּדְגָּם הָרִאשׁוֹן', translit: 've-lifneichem ha-midgam ha-rishon', fr: 'And here is the first exit poll' },
+  { he: 'לְפִי הַמִּדְגָּם, הַמִּפְלָגָה הַ___ מְקַבֶּלֶת ___ מָנְדָּטִים', translit: 'L\'fi ha-midgam, ha-miflaga ha-___ m\'kabelet ___ mandatim', fr: 'According to the sample, the ___ party receives ___ seats' },
+  { he: 'הַגּוּשׁ הַ___ מַגִּיעַ לְ-61 מָנְדָּטִים', translit: 'Ha-gush ha-___ magia l\'-61 mandatim', fr: 'The ___ bloc reaches 61 seats' },
+  { he: 'אִי-וַדָּאוּת לַגַּבֵּי אָחוּז הַחֲסִימָה', translit: 'I-vada\'ut l\'gabei achuz ha-chasima', fr: 'Uncertainty regarding the threshold' },
+  { he: 'הַמִּפְלָגָה עַל הַסַּף', translit: 'Ha-miflaga al ha-saf', fr: 'The party is on the threshold' },
+  { he: 'תּוֹצָאוֹת אֲמִיתִיּוֹת רַק מָחָר', translit: 'totza\'ot amitiyot rak machar', fr: 'Real results only tomorrow' },
+  { he: 'קוֹלוֹת הַחַיָּלִים נִסְפָּרִים אַחֲרוֹנִים', translit: 'kolot ha-chayalim nisparim acharonim', fr: 'Soldier votes are counted last' }
+];
+const ASKING = [
+  { he: 'בְּעַד מִי הִצְבַּעְתָּ?', translit: 'B\'ad mi hitzbata?', fr: 'For whom did you vote? (direct, common)' },
+  { he: 'הִצְבַּעְתָּ הַפַּעַם?', translit: 'Hitzbata ha-pa\'am?', fr: 'Did you vote this time?' },
+  { he: 'אֲנִי לֹא אוֹמֵר לְמִי הִצְבַּעְתִּי', translit: 'Ani lo omer l\'mi hitzbati', fr: 'I don\'t say who I voted for' },
+  { he: 'זֶה לֹא עִנְיָנְךָ', translit: 'Ze lo inyancha', fr: 'That\'s not your business (rude)' },
+  { he: 'אַתָּה יָמִין אוֹ שְׂמֹאל?', translit: 'Ata yamin o smol?', fr: 'Are you right or left? [common]' },
+  { he: 'אֲנִי בַּמֶּרְכָּז', translit: 'Ani ba-merkaz', fr: 'I\'m in the center' },
+  { he: 'הִצְבַּעְתִּי לְבִיבִי', translit: 'Hitzbati l\'Bibi', fr: 'I voted for Bibi (Netanyahu nickname)' },
+  { he: 'אֲנִי לֹא בִּיבִיסְט', translit: 'Ani lo bibist', fr: 'I am not a Bibist [modern political slang]' },
+  { he: 'אַתָּה נֶגֶד בִּיבִי?', translit: 'Ata neged Bibi?', fr: 'Are you anti-Bibi? [defining axis 2015-]' },
+  { he: 'הָלַכְתִּי לְפֶתֶק לָבָן', translit: 'Halachti l\'petek lavan', fr: 'I cast a blank ballot (in protest)' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('day', DAY); R('ballot', BALLOT); R('letters', LETTERS); R('polls', POLLS); R('formation', FORMATION);
+renderTextBlock('broadcast', BROADCAST);
+renderTextBlock('asking', ASKING);
+
+addMiniQuiz('Elections Quiz', [
+  { q: 'In Israel, you vote for...', options: ['A specific candidate', 'A party (single slip)', 'Multiple candidates ranked', 'PM directly'], answer: 1, explain: 'Closed-list proportional representation' },
+  { q: 'Israeli voting age is...', options: ['16', '18', '21', '25'], answer: 1 },
+  { q: 'The exit poll is called...', options: ['Seker', 'Midgam', 'Achuz', 'Petek'], answer: 1, explain: 'Released at 10 PM when polls close' },
+  { q: 'After elections, the President...', options: ['Becomes PM', 'Asks an MK to form a government', 'Disbands Knesset', 'Calls new elections'], answer: 1, explain: 'Hatalat m\'lacha — assigning the task' },
+  { q: 'Who counts last?', options: ['Tel Aviv', 'Soldiers and embassies', 'Rural areas', 'Religious settlements'], answer: 1, explain: 'Hence "real results only tomorrow"' },
+  { q: 'A party not passing the threshold means...', options: ['It got banned', 'Its votes are wasted, no seats', 'It must merge', 'Re-election needed'], answer: 1, explain: 'All votes below 3.25% are redistributed via Bader-Ofer to others' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('elections'); } });
+</script></body></html>

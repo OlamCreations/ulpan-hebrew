@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>79 — Coffee Culture</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Coffee Culture</h1><div class="subtitle">Lesson 79 · קפה</div></div><div class="nav"><a href="index.html">Home</a><a href="79-coffee.html" class="active">79</a></div></header>
+
+<p class="intro">Coffee is sacred in Israel. Café hafuch ("upside-down") is the national drink. Cafés are everywhere, packed all day. Vocabulary for ordering, types, and meeting "for coffee".</p>
+
+<h2>Coffee Types</h2>
+<div class="word-list" id="types"></div>
+
+<h2>Sizes & Customizations</h2>
+<div class="word-list" id="custom"></div>
+
+<h2>Café Vocabulary</h2>
+<div class="word-list" id="cafe"></div>
+
+<h2>Pastries to Pair</h2>
+<div class="word-list" id="pastry"></div>
+
+<h2>Tea & Other Hot Drinks</h2>
+<div class="word-list" id="tea"></div>
+
+<h2>Coffee Chains</h2>
+<div class="word-list" id="chains"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 79 · coffee · <a href="80-fitness.html" style="color:var(--accent)">Next: Fitness →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const TYPES = [
+  { he: 'קָפֶה', translit: 'kafe', fr: 'coffee' },
+  { he: 'קָפֶה הָפוּךְ', translit: 'kafe hafuch', fr: 'cappuccino-style (national favorite)' },
+  { he: 'אֶסְפְּרֶסּוֹ', translit: 'espresso', fr: 'espresso' },
+  { he: 'קָפֶה שָׁחוֹר', translit: 'kafe shachor', fr: 'black coffee' },
+  { he: 'אָמֶרִיקָנוֹ', translit: 'americano', fr: 'americano' },
+  { he: 'מָקְיָאטוֹ', translit: 'machiato', fr: 'macchiato' },
+  { he: 'קָפֶה קַר', translit: 'kafe kar', fr: 'iced coffee' },
+  { he: 'קָפֶה בּוֹץ', translit: 'kafe botz', fr: 'mud coffee (Turkish-style)' },
+  { he: 'קָפֶה תּוּרְכִּי', translit: 'kafe turki', fr: 'Turkish coffee' },
+  { he: 'קָפֶה נָמֵס', translit: 'kafe names', fr: 'instant coffee' },
+  { he: 'קָפֶה נֶס', translit: 'kafe nes', fr: 'Nescafe (instant)' }
+];
+const CUSTOM = [
+  { he: 'גָּדוֹל', translit: 'gadol', fr: 'large' },
+  { he: 'בֵּינוֹנִי', translit: 'beynoni', fr: 'medium' },
+  { he: 'קָטָן', translit: 'katan', fr: 'small' },
+  { he: 'בְּחָלָב', translit: 'be-chalav', fr: 'with milk' },
+  { he: 'בִּלְי חָלָב', translit: 'bli chalav', fr: 'no milk' },
+  { he: 'חָלָב סוֹיָה', translit: 'chalav soya', fr: 'soy milk' },
+  { he: 'חָלָב שְׁקֵדִים', translit: 'chalav shkedim', fr: 'almond milk' },
+  { he: 'בְּלִי סֻכָּר', translit: 'bli sukar', fr: 'no sugar' },
+  { he: 'עִם סֻכָּר', translit: 'im sukar', fr: 'with sugar' },
+  { he: 'מָתוֹק', translit: 'matok', fr: 'sweet' },
+  { he: 'מַר', translit: 'mar', fr: 'bitter' },
+  { he: 'חָזָק', translit: 'chazak', fr: 'strong' },
+  { he: 'חַם', translit: 'cham', fr: 'hot' },
+  { he: 'קַר', translit: 'kar', fr: 'cold' }
+];
+const CAFE = [
+  { he: 'בֵּית קָפֶה', translit: 'beit kafe', fr: 'café' },
+  { he: 'מֶלְצַר', translit: 'meltzar', fr: 'waiter' },
+  { he: 'בָּרִיסְטָה', translit: 'barista', fr: 'barista' },
+  { he: 'תַּפְרִיט', translit: 'tafrit', fr: 'menu' },
+  { he: 'שֻׁלְחָן', translit: 'shulchan', fr: 'table' },
+  { he: 'יָשַׁבְתִּי', translit: 'yashavti', fr: 'I sat (lit. "I sat")' },
+  { he: 'תָּפַסְתִּי שֻׁלְחָן', translit: 'tafasti shulchan', fr: "I grabbed a table" },
+  { he: 'לֶהָבִיא', translit: 'lehavi', fr: 'to bring' },
+  { he: 'לְהַזְמִין', translit: 'lehazmin', fr: 'to order' }
+];
+const PASTRY = [
+  { he: 'עֻגָה', translit: 'uga', fr: 'cake' },
+  { he: 'עוּגִיָּה', translit: 'ugiya', fr: 'cookie' },
+  { he: 'בּוֹרֶקַס', translit: 'borekas', fr: 'borekas' },
+  { he: 'קוֹנְדִיטוֹרְיָה', translit: 'konditorya', fr: 'patisserie / bakery' },
+  { he: 'מָאפֶּה', translit: 'ma\'afe', fr: 'pastry' },
+  { he: 'בֵּייגֶל', translit: 'beigel', fr: 'bagel' },
+  { he: 'קְרוּאָסָאן', translit: 'krua\'asan', fr: 'croissant' }
+];
+const TEA = [
+  { he: 'תֵּה', translit: 'te', fr: 'tea' },
+  { he: 'תֵּה צֶמַחִים', translit: 'te tzmachim', fr: 'herbal tea' },
+  { he: 'נַעֲנַע', translit: 'na\'ana', fr: 'mint tea' },
+  { he: 'שׁוֹקוֹ', translit: 'shoko', fr: 'hot chocolate' },
+  { he: 'מֵיזוֹג', translit: 'mezig', fr: 'pour' },
+  { he: 'שָׁכַעַ', translit: 'shacha', fr: 'sage' },
+  { he: 'קְלוֹלֶס', translit: 'k\'loles', fr: 'lemon balm' }
+];
+const CHAINS = [
+  { he: 'אַרוֹמָה', translit: 'Aroma', fr: 'Aroma (largest chain)' },
+  { he: 'קָפֶה גְּרֶג', translit: 'kafe Greg', fr: 'Cafe Greg' },
+  { he: 'לֶנְדֵוֵר', translit: 'Landwer', fr: 'Landwer' },
+  { he: 'קָפֶה הִילֵל', translit: 'Cafe Hillel', fr: 'Cafe Hillel' },
+  { he: 'אִילָן', translit: 'Ilan', fr: 'Ilan\'s Coffee Shop' },
+  { he: 'הַחֲנוּת שֶׁלְּךָ', translit: 'ha-chanut shelcha', fr: 'your local (m.)' }
+];
+const PHRASES = [
+  { he: 'הָפוּךְ גָּדוֹל בְּבַקָּשָׁה', translit: 'hafuch gadol bevakasha', fr: 'large hafuch please' },
+  { he: 'בּוֹאוּ נֵצֵא לְקָפֶה', translit: 'bo\'u netze le-kafe', fr: 'let\'s go for coffee' },
+  { he: 'אֲנִי לֹא יָכוֹל לְלֹא קָפֶה', translit: 'ani lo yachol le-lo kafe', fr: "I can't function without coffee (m.)" },
+  { he: 'הַקָּפֶה כָּאן מְעֻלֶּה', translit: 'ha-kafe kan me\'ule', fr: 'the coffee here is excellent' },
+  { he: 'עוֹד אֶחָד, בְּבַקָּשָׁה', translit: 'od echad, bevakasha', fr: 'another one, please' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('types', TYPES); R('custom', CUSTOM); R('cafe', CAFE); R('pastry', PASTRY); R('tea', TEA); R('chains', CHAINS); R('phrases', PHRASES);
+addExtraVocab('Café Pastries & Snacks', [
+  { he: 'קְרוּאָסָן', translit: 'kruason', fr: 'croissant' },
+  { he: 'בּוּרֶקַס', translit: 'burekas', fr: 'bourekas (filled pastry)' },
+  { he: 'רוּגֶלָךְ', translit: 'rugelach', fr: 'rugelach (chocolate roll)' },
+  { he: 'עוּגַת שׁוֹקוֹלָד', translit: 'ugat shokolad', fr: 'chocolate cake' },
+  { he: 'עוּגַת גְּבִינָה', translit: 'ugat gvina', fr: 'cheesecake' },
+  { he: 'בְּרָאוּנִי', translit: 'brauni', fr: 'brownie' },
+  { he: 'עוּגִיָּה', translit: 'ugiya', fr: 'cookie' },
+  { he: 'מָאפֶה מָתוֹק', translit: 'ma\'afe matok', fr: 'sweet pastry' },
+  { he: 'מָאפֶה מָלוּחַ', translit: 'ma\'afe maluach', fr: 'savory pastry' },
+  { he: 'סָנְדְוִיץ\'', translit: 'sandwich', fr: 'sandwich' },
+  { he: 'טוֹסְט', translit: 'tost', fr: 'toast (sandwich)' },
+  { he: 'סָלָט יְרָקוֹת', translit: 'salat yerakot', fr: 'green salad' }
+]);
+
+addExtraVocab('Coffee Types Israelis Drink', [
+  { he: 'הָפוּךְ', translit: 'hafuch', fr: 'cappuccino (lit. "upside down")' },
+  { he: 'הָפוּךְ גָּדוֹל', translit: 'hafuch gadol', fr: 'large cappuccino' },
+  { he: 'הָפוּךְ קָטָן', translit: 'hafuch katan', fr: 'small cappuccino' },
+  { he: 'אֶסְפְּרֶסוֹ', translit: 'espresso', fr: 'espresso' },
+  { he: 'אֶסְפְּרֶסוֹ קָצָר', translit: 'espresso katzar', fr: 'short espresso' },
+  { he: 'אֶסְפְּרֶסוֹ אָרֹךְ', translit: 'espresso aroch', fr: 'long espresso' },
+  { he: 'אֶסְפְּרֶסוֹ כָּפוּל', translit: 'espresso kaful', fr: 'double shot' },
+  { he: 'מָקְיָאטוֹ', translit: 'makyato', fr: 'macchiato' },
+  { he: 'אָמֶרִיקָנוֹ', translit: 'americano', fr: 'americano' },
+  { he: 'קָפֶה שָׁחֹר', translit: 'kafe shachor', fr: 'black coffee' },
+  { he: 'קָפֶה בּוֹץ', translit: 'kafe botz', fr: 'mud coffee (Turkish-style)' },
+  { he: 'קָפֶה קַר', translit: 'kafe kar', fr: 'iced coffee (popular)' },
+  { he: 'אַייס קָפֶה', translit: 'iced kafe', fr: 'iced coffee blend' },
+  { he: 'נֶס קָפֶה', translit: 'nes kafe', fr: 'instant coffee' },
+  { he: 'בְּלִי סֻכָּר', translit: 'bli sukar', fr: 'no sugar' },
+  { he: 'בְּלִי חָלָב', translit: 'bli chalav', fr: 'no milk' },
+  { he: 'חָלָב סוֹיָה / שִׁבּוֹלֶת שׁוּעָל', translit: 'chalav soya / shibolet shu\'al', fr: 'soy / oat milk' }
+]);
+
+addMiniQuiz('Coffee Quiz', [
+  { q: 'What is הָפוּךְ?', options: ['Cold coffee', 'Cappuccino', 'Black coffee', 'Tea'], answer: 1, explain: 'lit. "upside down" — cappuccino' },
+  { q: '"Large iced coffee" =', options: ['קָפֶה הָפוּךְ גָּדוֹל', 'אַייס קָפֶה גָּדוֹל', 'קָפֶה שָׁחֹר גָּדוֹל', 'אֶסְפְּרֶסוֹ גָּדוֹל'], answer: 1 },
+  { q: 'Israeli coffee culture: traditional Turkish-style is...', options: ['Hafuch', 'Botz', 'Espresso', 'Nes'], answer: 1, explain: 'kafe botz = "mud coffee"' },
+  { q: 'A "shaket" / quick coffee meeting is...', options: ['Coffee Israeli style', '15-min coffee chat', 'Free coffee', 'Drive-through'], answer: 1, explain: 'Israelis love impromptu café meetings' },
+  { q: 'Soy milk in Hebrew =', options: ['חָלָב סוֹיָה', 'חָלָב לָבָן', 'חָלָב טִבְעוֹנִי', 'חָלָב חַם'], answer: 0 }
+]);
+
+addCulturalText('Ordering Coffee — Tel Aviv Cafe Dialogue', 'How a real Tel Aviv coffee order sounds. Israelis are obsessive about coffee — wrong temperature gets sent back.', [
+  { he: 'מְלַצֵר: מָה תַּזְמִין?', translit: "Meletzer: Ma tazmin?", fr: 'Waiter: What\'ll you order?' },
+  { he: 'אַתָּה: הָפוּךְ גָּדוֹל עַל חָלָב סוֹיָה', translit: "Ata: Hafuch gadol al chalav soya", fr: 'You: Large cappuccino on soy milk' },
+  { he: 'מְלַצֵר: חַם רָגִיל אוֹ פּוֹשֵׁר?', translit: "Meletzer: Cham ragil o posher?", fr: 'Waiter: Regular hot or lukewarm?' },
+  { he: 'אַתָּה: רוֹתֵחַ. הַקֵּצֶף לְעֻמַּת הַקָּפֶה — חֲצִי-חֲצִי', translit: "Ata: Rote\'ach. Ha-ketzef le-umat ha-kafe — chatzi-chatzi", fr: 'You: Boiling. Foam vs coffee — half-half' },
+  { he: 'מְלַצֵר: עִם סֻכָּר?', translit: "Meletzer: Im sukar?", fr: 'Waiter: With sugar?' },
+  { he: 'אַתָּה: לֹא, סְטֵבְיָה אִם יֵשׁ', translit: "Ata: Lo, stevia im yesh", fr: 'You: No, stevia if you have' },
+  { he: 'מְלַצֵר: יֵשׁ. מַשֶּׁהוּ לֶאֱכוֹל?', translit: "Meletzer: Yesh. Mashehu le-echol?", fr: 'Waiter: Yes. Anything to eat?' },
+  { he: 'אַתָּה: בֻּרֶקַס גְּבִינָה, חַם', translit: "Ata: Burekas gvina, cham", fr: 'You: Cheese bourekas, hot' },
+  { he: 'מְלַצֵר: סָבָבָה, בָּא לְךָ עוֹד 5 דַּקּוֹת', translit: "Meletzer: Sababa, ba lecha od 5 dakot", fr: "Waiter: Cool, coming in 5 minutes" }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('coffee'); } });
+</script></body></html>

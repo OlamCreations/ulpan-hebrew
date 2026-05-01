@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>23 — Imperative & Commands</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Imperative & Commands</h1>
+    <div class="subtitle">Lesson 23 · ציווי</div>
+  </div>
+  <div class="nav"><a href="index.html">Home</a><a href="23-imperative.html" class="active">23</a></div>
+</header>
+
+<p class="intro">
+  In modern spoken Hebrew, the future tense replaces the formal imperative. So instead of "shma!" (listen!), Israelis say "tishma" (you will listen). Each command has 3 forms: m. sg., f. sg., and plural.
+</p>
+
+<div class="tip">
+  <strong>Spoken vs literary</strong> — The classical imperative still exists in writing and signs (שְׁמַע, שְׁמַע יִשְׂרָאֵל "Hear O Israel"), but everyday speech uses future-as-imperative. Both are taught here.
+</div>
+
+<h2>Common Spoken Commands (future-form)</h2>
+<div class="word-list" id="spoken"></div>
+
+<h2>Polite Requests (please / would you...)</h2>
+<div class="word-list" id="polite"></div>
+
+<h2>Negative Commands ("don't...")</h2>
+<div class="word-list" id="negative"></div>
+
+<h2>Classical Imperative (signs, formal, songs)</h2>
+<div class="word-list" id="classical"></div>
+
+<h2>Useful Imperatives — Daily</h2>
+<div class="word-list" id="daily"></div>
+
+<hr class="section-divider">
+
+<h2>Example Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 23 · imperative · <a href="24-object-pronouns.html" style="color:var(--accent)">Next: Object Pronouns →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const SPOKEN = [
+  { he: 'תִּשְׁמַע',   translit: 'tishma',   fr: 'listen! (m.)' },
+  { he: 'תִּשְׁמְעִי', translit: 'tishme\'i', fr: 'listen! (f.)' },
+  { he: 'תֵּלֵךְ',     translit: 'telech',   fr: 'go! (m.)' },
+  { he: 'תֵּלְכִי',    translit: 'telchi',   fr: 'go! (f.)' },
+  { he: 'תָּבוֹא',    translit: 'tavo',     fr: 'come! (m.)' },
+  { he: 'תָּבוֹאִי',  translit: 'tavo\'i',  fr: 'come! (f.)' },
+  { he: 'תֹּאכַל',    translit: 'tochal',   fr: 'eat! (m.)' },
+  { he: 'תִּשְׁתֶּה', translit: 'tishte',   fr: 'drink! (m.)' },
+  { he: 'תָּשִׁים',   translit: 'tasim',    fr: 'put! (m.)' },
+  { he: 'תֵּן',        translit: 'ten',      fr: 'give! (m.)' },
+  { he: 'תְּנִי',     translit: 'tni',      fr: 'give! (f.)' },
+  { he: 'קוּם',       translit: 'kum',      fr: 'get up! (m.)' }
+];
+
+const POLITE = [
+  { he: 'אֶפְשָׁר...?',           translit: 'efshar...?',         fr: 'may I...? / can we...?' },
+  { he: 'בְּבַקָּשָׁה',           translit: 'bevakasha',          fr: 'please / here you go' },
+  { he: 'אִם אֶפְשָׁר',           translit: 'im efshar',          fr: 'if possible' },
+  { he: 'תּוּכַל לַעֲזֹר?',      translit: 'tuchal la\'azor?',   fr: 'could you help? (m. polite)' },
+  { he: 'הָיִיתִי רוֹצֶה...',    translit: 'hayiti rotze...',    fr: 'I would like... (cond. polite)' },
+  { he: 'תּוּכַל לְהַסְבִּיר?',  translit: 'tuchal lehasbir?',   fr: 'could you explain? (m.)' }
+];
+
+const NEGATIVE = [
+  { he: 'אַל תַּגִּיד',    translit: 'al tagid',     fr: "don't say (m.)" },
+  { he: 'אַל תָּבוֹא',     translit: 'al tavo',      fr: "don't come (m.)" },
+  { he: 'אַל תַּעֲשֶׂה',   translit: 'al ta\'ase',   fr: "don't do (m.)" },
+  { he: 'אַל תִּדְאַג',    translit: 'al tid\'ag',   fr: "don't worry (m.)" },
+  { he: 'אַל תִּדְאֲגִי',  translit: 'al tid\'agi',  fr: "don't worry (f.)" },
+  { he: 'אַל תַּפְרִיעַ',  translit: 'al tafri\'a',  fr: "don't disturb (m.)" },
+  { he: 'אַל תִּכְעַס',    translit: 'al tich\'as',  fr: "don't be angry (m.)" }
+];
+
+const CLASSICAL = [
+  { he: 'שְׁמַע',     translit: 'shma',     fr: 'listen! (literary, prayer)' },
+  { he: 'שְׁמַע יִשְׂרָאֵל', translit: 'shma yisrael', fr: 'Hear O Israel (Shema prayer)' },
+  { he: 'בּוֹא',      translit: 'bo',       fr: 'come! (m. classical)' },
+  { he: 'בּוֹאִי',    translit: 'bo\'i',    fr: 'come! (f. classical)' },
+  { he: 'לֵךְ',       translit: 'lech',     fr: 'go! (m. classical)' },
+  { he: 'אֱכֹל',      translit: 'echol',    fr: 'eat! (classical)' },
+  { he: 'הַבֵּט',     translit: 'habet',    fr: 'look! (classical)' }
+];
+
+const DAILY = [
+  { he: 'בְּבַקָּשָׁה',         translit: 'bevakasha',         fr: 'please' },
+  { he: 'תּוֹדָה',              translit: 'toda',              fr: 'thanks' },
+  { he: 'סְלִיחָה',             translit: 'slicha',            fr: 'sorry / excuse me' },
+  { he: 'שֵׁב',                 translit: 'shev',              fr: 'sit down (m.)' },
+  { he: 'שְׁבִי',               translit: 'shvi',              fr: 'sit down (f.)' },
+  { he: 'תִּיכָּנֵס',          translit: 'tikanes',            fr: 'come in (m.)' },
+  { he: 'חַכֵּה רֶגַע',         translit: 'chake rega',        fr: 'wait a moment (m.)' },
+  { he: 'תִּזָּהֵר',            translit: 'tizaher',           fr: 'be careful (m.)' },
+  { he: 'תֵּהָנֶה',             translit: 'tehane',            fr: 'enjoy (m.)' },
+  { he: 'תֵּהָנִי',             translit: 'tehani',            fr: 'enjoy (f.)' }
+];
+
+const PHRASES = [
+  { he: 'תָּבוֹא הֵנָּה!',                  translit: 'tavo hena!',                  fr: 'come here! (m.)' },
+  { he: 'תְּדַבֵּר לְאַט יוֹתֵר',          translit: 'tedaber le\'at yoter',        fr: 'speak more slowly (m.)' },
+  { he: 'תְּחַיֵּךְ!',                      translit: 'techayech!',                  fr: 'smile! (m.)' },
+  { he: 'אַל תִּשְׁכַּח אֶת הַתִּיק',       translit: 'al tishkach et ha-tik',       fr: "don't forget the bag (m.)" },
+  { he: 'תֵּן לִי דַּקָּה',                 translit: 'ten li daka',                 fr: 'give me a minute (m.)' },
+  { he: 'תָּבוֹאוּ לְבַקֵּר',               translit: 'tavo\'u levaker',             fr: 'come visit (pl.)' },
+  { he: 'בְּבַקָּשָׁה לְדַבֵּר אַנְגְּלִית', translit: 'bevakasha ledaber anglit',    fr: 'please speak English' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('spoken', SPOKEN);
+renderRows('polite', POLITE);
+renderRows('negative', NEGATIVE);
+renderRows('classical', CLASSICAL);
+renderRows('daily', DAILY);
+renderRows('phrases', PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) { count++; if (count >= 15) markLessonDone('imperative'); }
+});
+
+addExtraVocab('Polite Requests (future-tense imperative)', [
+  { he: 'תּוּכַל לַעֲזוֹר לִי?', translit: 'tuchal la\'azor li?', fr: 'could you help me? (m.)' },
+  { he: 'תּוּכְלִי לְהַחְזִיק?', translit: 'tuchli lehachzik?', fr: 'could you hold? (f.)' },
+  { he: 'אֶפְשָׁר לְבַקֵּשׁ?', translit: 'efshar levakesh?', fr: 'may I ask?' },
+  { he: 'בְּבַקָּשָׁה תָּבוֹא הֵנָּה', translit: 'bevakasha tavo hena', fr: 'please come here (m.)' },
+  { he: 'תַּגִּיד לִי בְּבַקָּשָׁה', translit: 'tagid li bevakasha', fr: 'tell me please (m.)' },
+  { he: 'תַּגִּידִי לִי', translit: 'tagidi li', fr: 'tell me (f.)' },
+  { he: 'תְּחַכֶּה רֶגַע בְּבַקָּשָׁה', translit: 'techake rega bevakasha', fr: 'wait a moment please (m.)' },
+  { he: 'תֵּן לִי לַעֲשׂוֹת', translit: 'ten li la\'asot', fr: 'let me do it (m.)' },
+  { he: 'תֵּשֵׁב בְּבַקָּשָׁה', translit: 'teshev bevakasha', fr: 'sit please (m.)' },
+  { he: 'תְּקַשֵּׁר אוֹתִי בְּבַקָּשָׁה', translit: 'tekasher oti bevakasha', fr: 'connect me please (m.)' }
+]);
+
+addExtraVocab('Common Imperatives', [
+  { he: 'בּוֹא', translit: 'bo', fr: 'come (m.)' },
+  { he: 'בּוֹאִי', translit: 'bo\'i', fr: 'come (f.)' },
+  { he: 'לֵךְ', translit: 'lech', fr: 'go (m.)' },
+  { he: 'לְכִי', translit: 'lechi', fr: 'go (f.)' },
+  { he: 'תֵּן', translit: 'ten', fr: 'give (m.)' },
+  { he: 'קַח', translit: 'kach', fr: 'take (m.)' },
+  { he: 'תֶּן לִי', translit: 'ten li', fr: 'give me (m.)' },
+  { he: 'שֵׁב', translit: 'shev', fr: 'sit (m.)' },
+  { he: 'קוּם', translit: 'kum', fr: 'get up (m.)' },
+  { he: 'שְׁתֵה', translit: 'shte', fr: 'drink (m.)' },
+  { he: 'אֱכוֹל', translit: 'echol', fr: 'eat (m.)' },
+  { he: 'תַּעֲצוֹר', translit: 'ta\'atzor', fr: 'stop (m.)' },
+  { he: 'אַל תַּעֲשֶׂה', translit: 'al ta\'aseh', fr: 'don\'t do (m.)' },
+  { he: 'תְּחַכֶּה', translit: 'techake', fr: 'wait (m.)' },
+  { he: 'תֵּן לִי לִחְשֹׁב', translit: 'ten li lichshov', fr: 'let me think' }
+]);
+
+addMiniQuiz('Imperative Quiz', [
+  { q: '"Come!" (m.) =', options: ['לֵךְ', 'בּוֹא', 'קַח', 'שֵׁב'], answer: 1 },
+  { q: 'Negative imperative uses...', options: ['אֵין', 'לֹא', 'אַל + future', 'בְּלִי'], answer: 2, explain: 'Al + future tense form' },
+  { q: '"Don\'t go" (m.) =', options: ['לֹא לֵךְ', 'אַל תֵּלֵךְ', 'אֵין לְהָלֵך', 'בְּלִי לָלֶכֶת'], answer: 1 },
+  { q: 'Modern Hebrew often uses... instead of strict imperative:', options: ['Past tense', 'Future tense (you-form)', 'Infinitive', 'Present continuous'], answer: 1, explain: 'תַּעֲשֶׂה / תָּבוֹא = future used as polite imperative' },
+  { q: '"Take this" (m.) =', options: ['קַח אֶת זֶה', 'תֵּן אֶת זֶה', 'שִׂים אֶת זֶה', 'בּוֹא אֶת זֶה'], answer: 0 }
+]);
+
+addCulturalText('Mom\'s Commands — A Lifetime in 10 Lines', 'Every Israeli kid grows up hearing these. Learn them and you\'ll feel adopted within minutes.', [
+  { he: 'תֵּשֵׁב יָשָׁר!', translit: "Teshev yashar!", fr: 'Sit straight! (m.)' },
+  { he: 'תֹּאכַל אֶת הַיְּרָקוֹת!', translit: "Tochal et ha-yerakot!", fr: 'Eat your vegetables! (m.)' },
+  { he: 'תִּקְרָא לְאַבָּא!', translit: "Tikra le-aba!", fr: 'Call dad! (m.)' },
+  { he: 'אַל תְּעַשֶּׁה רַעַשׁ!', translit: "Al te\'aseh ra\'ash!", fr: 'Don\'t make noise! (m.)' },
+  { he: 'תֵּלֵךְ לִישֹׁן!', translit: "Telech lishon!", fr: 'Go to sleep! (m.)' },
+  { he: 'תִּתְלַבְּשׁוּ מַהֵר! נֵצֵא בְּעוֹד 5 דַּקּוֹת', translit: "Titlabshu maher! Netze be-od 5 dakot", fr: 'Get dressed fast (pl.)! We leave in 5 minutes' },
+  { he: 'תְּזִיזוּ אֶת הָרַגְלַיִם מֵהַסַּפָּה', translit: "Tezizu et ha-raglayim me-ha-sapa", fr: 'Move your feet off the couch (pl.)' },
+  { he: 'תַּעֲנֶה לִי כְּשֶׁאֲנִי מְדַבֶּרֶת אִתְּךָ!', translit: "Ta\'aneh li kshe-ani medaberet itcha!", fr: "Answer me when I'm talking to you! (m.)" },
+  { he: 'תְּסַדֵּר אֶת הַחֶדֶר!', translit: "Tesader et ha-cheder!", fr: 'Tidy your room! (m.)' },
+  { he: 'אֱכוֹל לְאַט, לֹא תֵּחָנֵק!', translit: "Echol le\'at, lo techanek!", fr: 'Eat slowly, don\'t choke!' }
+]);
+</script>
+</body>
+</html>

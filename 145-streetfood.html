@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>145 — Israeli Street Food</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Street Food & The Shuk</h1><div class="subtitle">Lesson 145 · אֹכֶל רְחוֹב וְהַשּׁוּק</div></div><div class="nav"><a href="index.html">Home</a><a href="145-streetfood.html" class="active">145</a></div></header>
+
+<p class="intro">Israeli street food is a daily institution. Hummus joints (חוּמוּסְיָה), falafel stands (פָּלָאפֶלִיָּה), shawarma rotisseries, sabich pita, sausage stalls. The shuks — Mahane Yehuda (Jerusalem), Carmel (Tel Aviv), Ramla, Tzfat — are the social, gastronomic, and political heart of every Israeli city. Knowing how to order, haggle, and hold your own in a shuk is essential Israeli skill.</p>
+
+<div class="tip"><strong>Cultural note</strong> — On Friday afternoons, every shuk transforms into a chaotic pre-Shabbat shopping ritual. Vendors shout prices, drop them, drop them again. The "buy it before sundown" pressure is real. Mahane Yehuda becomes a bar district at night — the same stalls converted to seating after 7 PM. The shuk lives in 3-4 different modes per day.</div>
+
+<h2>Street Food Spots</h2>
+<div class="word-list" id="spots"></div>
+
+<h2>Iconic Street Foods</h2>
+<div class="word-list" id="foods"></div>
+
+<h2>Order Phrases (Quick)</h2>
+<div class="word-list" id="orders"></div>
+
+<h2>Shuk Vocabulary</h2>
+<div class="word-list" id="shuk"></div>
+
+<h2>Famous Shuks</h2>
+<div class="word-list" id="shuks"></div>
+
+<hr class="section-divider">
+
+<h2>Friday Afternoon at Mahane Yehuda — Shuk Sounds</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A composite of phrases you actually hear at the shuk on Friday at 1-3 PM. Vendors shouting, customers haggling, smells of sage tea and roasting meat.</div>
+  <div id="shuk-friday"></div>
+</div>
+
+<h2>Sabich Stand Order</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical exchange at a Sabich Tchernichovsky-style sabich stand. Fast, casual, classic.</div>
+  <div id="sabich"></div>
+</div>
+
+<footer>Lesson 145 · Street Food · <a href="146-holidays-food.html" style="color:var(--accent)">Next: Holiday Foods →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const SPOTS = [
+  { he: 'דּוּכָן', translit: 'duchan', fr: 'stall' },
+  { he: 'דּוּכָן רְחוֹב', translit: 'duchan r\'chov', fr: 'street stall' },
+  { he: 'מִזְנוֹן', translit: 'miznon', fr: 'snack bar / fast food joint' },
+  { he: 'חוּמוּסִיָּה', translit: 'chumusiya', fr: 'hummus restaurant' },
+  { he: 'פָּלָאפֶלִיָּה', translit: 'falafelya', fr: 'falafel stand' },
+  { he: 'שָׁווַרְמָה', translit: 'shawarma', fr: 'shawarma stand' },
+  { he: 'דָּג מְטֻגָּן', translit: 'dag m\'tugan', fr: 'fried fish stall' },
+  { he: 'מִסְעָדוֹת אַחֲרוֹנוֹת', translit: 'mis\'adot acharonot', fr: '"last-minute restaurants"' },
+  { he: 'שׁוּק', translit: 'shuk', fr: 'market' },
+  { he: 'בָּזָאר', translit: 'bazar', fr: 'bazaar' },
+  { he: 'פִּתּוּחַ עֲבוֹדָה', translit: 'pituach avoda', fr: 'work permit (street vendors need this)' },
+  { he: 'יוֹם שִׁשִּׁי בָּצָהֳרַיִם', translit: 'yom shishi ba-tzhorayim', fr: 'Friday afternoon (peak shuk time)' }
+];
+const FOODS = [
+  { he: 'פָּלָאפֶל בִּפְּתָה', translit: 'falafel bi-pita', fr: 'falafel in pita' },
+  { he: 'פָּלָאפֶל בִּלָאפָה', translit: 'falafel b\'lafa', fr: 'falafel in laffa (large flatbread)' },
+  { he: 'פָּלָאפֶל בִּצַּלַחַת', translit: 'falafel ba-tzalachat', fr: 'falafel on a plate (sit-down)' },
+  { he: 'שָׁווַרְמָה בִּפְּתָה', translit: 'shawarma bi-pita', fr: 'shawarma in pita' },
+  { he: 'שָׁווַרְמָה בְּלָאפָה', translit: 'shawarma b\'lafa', fr: 'shawarma in laffa' },
+  { he: 'סָבִּיךְ בִּפְּתָה', translit: 'sabich bi-pita', fr: 'sabich in pita' },
+  { he: 'מַלָאוַח', translit: 'malawach', fr: 'malawach (Yemeni fried bread + tomato + egg)' },
+  { he: 'גְּ\'חְנוּן', translit: 'jachnun', fr: 'jachnun (Saturday morning)' },
+  { he: 'בּוּרֶקַס', translit: 'borekas', fr: 'borekas (typical morning snack)' },
+  { he: 'תוּת בָּנָה', translit: 'tut bana', fr: '"tut banana" — Israeli yogurt+strawberry brand' },
+  { he: 'בְּצַלֶּל', translit: 'b\'tzalel', fr: 'fried-onion croutons' },
+  { he: 'מְלִיגוֹת בָּשָׂר', translit: 'm\'ligot basar', fr: 'meat-filled patties' }
+];
+const ORDERS = [
+  { he: 'אֲנִי רוֹצֶה...', translit: 'Ani rotze...', fr: 'I want...' },
+  { he: 'אֶחָד / שְׁנַיִם / שְׁלוֹשָׁה', translit: 'echad / shnayim / shlosha', fr: '1 / 2 / 3' },
+  { he: 'עִם הַכֹּל', translit: 'im ha-kol', fr: 'with everything' },
+  { he: 'בְּלִי בָּצָל', translit: 'b\'li batzal', fr: 'no onion' },
+  { he: 'בְּלִי חוּמוּס', translit: 'b\'li chumus', fr: 'no hummus' },
+  { he: 'בְּלִי חָרִיף', translit: 'b\'li charif', fr: 'no spicy' },
+  { he: 'הַרְבֵּה חָרִיף', translit: 'harbe charif', fr: 'lots of spicy' },
+  { he: 'בְּלִי טְחִינָה', translit: 'b\'li tchina', fr: 'no tahini' },
+  { he: 'תּוֹסֶפֶת חָצִיל', translit: 'tosefet chatzil', fr: 'extra eggplant' },
+  { he: 'בְּלִי מִיִם', translit: 'b\'li mayim', fr: 'no water (when too liquid)' },
+  { he: 'לְכָאן אוֹ לְשָׁם?', translit: 'l\'kan o l\'sham?', fr: 'eat-in or take-away?' },
+  { he: 'בִּשְׁבִיל לַקַּחַת', translit: 'bi-shvil lakachat', fr: 'to take away' },
+  { he: 'כַּמָּה זֶה?', translit: 'Kama ze?', fr: 'How much is this?' },
+  { he: 'בְּסֵדֶר?', translit: 'B\'seder?', fr: 'OK?' }
+];
+const SHUK = [
+  { he: 'דּוּכָן יְרָקוֹת', translit: 'duchan y\'rakot', fr: 'vegetable stand' },
+  { he: 'דּוּכָן פֵּרוֹת', translit: 'duchan perot', fr: 'fruit stand' },
+  { he: 'דּוּכָן בָּשָׂר', translit: 'duchan basar', fr: 'butcher' },
+  { he: 'דּוּכָן דָּגִים', translit: 'duchan dagim', fr: 'fishmonger' },
+  { he: 'דּוּכָן תְּבָלִינִים', translit: 'duchan t\'valinim', fr: 'spice stand' },
+  { he: 'דּוּכָן זַיִתִים', translit: 'duchan zeitim', fr: 'olive stand' },
+  { he: 'דּוּכָן גְּבִינוֹת', translit: 'duchan g\'vinot', fr: 'cheese stand' },
+  { he: 'דּוּכָן יַיִן', translit: 'duchan yayin', fr: 'wine stand' },
+  { he: 'בְּבַקָּשָׁה לִשְׁקֹל', translit: 'b\'vakasha lishkol', fr: 'please weigh' },
+  { he: 'קִילוֹ אֶחָד', translit: 'kilo echad', fr: 'one kilo' },
+  { he: 'חֲצִי קִילוֹ', translit: 'chatzi kilo', fr: 'half a kilo' },
+  { he: 'רֹבַע קִילוֹ', translit: 'rova kilo', fr: 'quarter kilo' },
+  { he: 'מָה הַכַּמָּה?', translit: 'Ma ha-kama?', fr: 'How much? (informal)' },
+  { he: 'הַנְחָה', translit: 'hanacha', fr: 'discount' },
+  { he: 'יְרָקוֹת לְשִׁישִׁי', translit: 'y\'rakot l\'shishi', fr: '"Friday vegetables" (cheap dump-prices)' }
+];
+const SHUKS = [
+  { he: 'מַחֲנֵה יְהוּדָה', translit: 'Machane Yehuda', fr: 'Mahane Yehuda (Jerusalem, the most famous)' },
+  { he: 'הַשּׁוּק הַכַּרְמֶל', translit: 'ha-shuk ha-Carmel', fr: 'Carmel Market (Tel Aviv)' },
+  { he: 'שׁוּק לְוִינְסְקִי', translit: 'shuk Levinsky', fr: 'Levinsky Market (Tel Aviv, spices/specialty)' },
+  { he: 'הַתִּקְוָה', translit: 'ha-Tikva', fr: 'HaTikva Market (south Tel Aviv)' },
+  { he: 'שׁוּק רָמְלָה', translit: 'shuk Ramla', fr: 'Ramla shuk (huge)' },
+  { he: 'שׁוּק עַכּוֹ', translit: 'shuk Ako', fr: 'Akko old-city market' },
+  { he: 'שׁוּק יָפוֹ הַפַּרְעוֹת', translit: 'shuk Yafo ha-pir\'ut', fr: 'Yafo Flea Market' },
+  { he: 'שׁוּק מַחֲנֵה יְהוּדָה בַּלַּיְלָה', translit: 'shuk Machane Yehuda ba-laila', fr: 'Mahane Yehuda by night (bar district)' },
+  { he: 'שׁוּק תֵּימָנִי', translit: 'shuk teimani', fr: 'Yemeni Quarter (Tel Aviv, restaurant cluster)' },
+  { he: 'שׁוּק הַמְּחִירִים', translit: 'shuk ha-m\'chirim', fr: 'price-shuk (= cheap)' }
+];
+const SHUK_FRIDAY = [
+  { he: 'יוֹם שִׁשִּׁי, אַחַת בָּצַהֳרַיִם — מַחֲנֵה יְהוּדָה לוֹחֵץ', translit: 'Yom shishi, achat ba-tzhorayim — Machane Yehuda lochetz', fr: 'Friday, 1 PM — Mahane Yehuda is packed' },
+  { he: 'גְּבָרוֹת! בְּצָלִים — שֶׁקֶל לְקִילוֹ! לְשִׁישִׁי בִּלְבָד!', translit: 'G\'varot! B\'tzalim — shekel l\'kilo! L\'shishi bilvad!', fr: 'Ladies! Onions — 1 NIS per kilo! Friday only!' },
+  { he: 'אַתָּה רוֹאֶה אֶת הָעַגְבָנִיוֹת? כָּאלֶּה אֵינְךָ מוֹצֵא בָּסּוּפֶּר', translit: 'Ata ro\'e et ha-agvaniyot? Ka-eleh eincha motze ba-super', fr: 'You see the tomatoes? Like these you won\'t find in the supermarket' },
+  { he: 'תַּן לִי שְׁתֵּי קִילוֹ. כַּמָּה זֶה?', translit: 'Ten li shtei kilo. Kama ze?', fr: 'Give me two kilos. How much?' },
+  { he: 'שֶׁבַע. בִּשְׁבִילָךְ אַרְבַּע', translit: 'Sheva. Bishvilach arba', fr: '7. For you 4' },
+  { he: 'יָאללָה. וְעוֹד מַתָּנָה — שֵׁתֵי גַּזְרִים', translit: 'Yallah. Ve-od matana — shtei gazrim', fr: 'OK. And another gift — two carrots' },
+  { he: 'תַּעֲשִׂי לִי עוֹד פִּלְפֵּל אָדוֹם', translit: 'Ta\'asi li od pilpel adom', fr: 'Throw in another red pepper' },
+  { he: 'דַּי, אַתְּ שׁוֹבֶרֶת אוֹתִי', translit: 'Dai, at shoveret oti', fr: 'Enough, you\'re breaking me' },
+  { he: 'אַתָּה אוֹהֵב אוֹתִי. וַאֲנִי אוֹהֶבֶת אוֹתְךָ', translit: 'Ata ohev oti. Va-ani ohevet otcha', fr: 'You love me. And I love you.' },
+  { he: 'שַׁבָּת שָׁלוֹם, גְּבַרְתִּי', translit: 'Shabbat shalom, g\'virti', fr: 'Shabbat shalom, ma\'am' },
+  { he: 'שַׁבָּת שָׁלוֹם, אֲחִי', translit: 'Shabbat shalom, achi', fr: 'Shabbat shalom, brother' }
+];
+const SABICH = [
+  { he: 'סָבִּיךְ אֶחָד עִם הַכֹּל', translit: 'Sabich echad im ha-kol', fr: 'One sabich with everything' },
+  { he: 'בְּלָפָה אוֹ בִּפְּתָה?', translit: 'B\'lafa o bi-pita?', fr: 'Laffa or pita?' },
+  { he: 'פִּיתָה. וְעִם הַרְבֵּה אַמְבָּא', translit: 'Pita. Ve-im harbe amba', fr: 'Pita. And with lots of amba' },
+  { he: 'חָצִיל מְטֻגָּן, בֵּיצָה קָשָׁה, חוּמוּס, סָלָט?', translit: 'Chatzil m\'tugan, beitza kasha, chumus, salat?', fr: 'Fried eggplant, hard-boiled egg, hummus, salad?' },
+  { he: 'הַכֹּל. וְחָרִיף', translit: 'Ha-kol. Ve-charif', fr: 'Everything. And spicy' },
+  { he: 'כַּמָּה חָרִיף?', translit: 'Kama charif?', fr: 'How spicy?' },
+  { he: 'יִשְׂרְאֵלִי בֵּינוֹנִי. לֹא יוֹתֵר', translit: 'Yisr\'eli beinoni. Lo yoter', fr: 'Israeli medium. Not more.' },
+  { he: 'תֵּכֶף מוּכָן', translit: 'Tachef muchan', fr: 'Almost ready' },
+  { he: 'בִּשְׁבִיל כָּאן אוֹ לַקַּחַת?', translit: 'Bi-shvil kan o lakachat?', fr: 'For here or to take away?' },
+  { he: 'לַקַּחַת. בִּיט אוֹ מִזְמָן?', translit: 'Lakachat. Bit o mizman?', fr: 'To go. Bit or cash?' },
+  { he: 'בִּיט. תּוֹדָה רַבָּה', translit: 'Bit. Toda raba', fr: 'Bit. Thanks a lot.' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('spots', SPOTS); R('foods', FOODS); R('orders', ORDERS); R('shuk', SHUK); R('shuks', SHUKS);
+renderTextBlock('shuk-friday', SHUK_FRIDAY);
+renderTextBlock('sabich', SABICH);
+
+addMiniQuiz('Street Food Quiz', [
+  { q: 'A "חוּמוּסִיָּה" is...', options: ['A spice shop', 'A hummus restaurant', 'A bread store', 'A festival'], answer: 1 },
+  { q: 'Mahane Yehuda is in...', options: ['Tel Aviv', 'Jerusalem', 'Haifa', 'Eilat'], answer: 1, explain: 'Famous Jerusalem shuk; bar district at night' },
+  { q: '"בִּשְׁבִיל לַקַּחַת" means...', options: ['Sit-in', 'To go / take away', 'Pay later', 'Reserve'], answer: 1 },
+  { q: 'Sabich classically uses...', options: ['Lamb', 'Fried eggplant + hard-boiled egg', 'Fish', 'Chicken'], answer: 1, explain: 'Iraqi-Jewish in origin' },
+  { q: 'Friday afternoon at the shuk = ', options: ['Quiet', 'Pre-Shabbat shopping chaos with falling prices', 'Closed', 'Food festivals'], answer: 1 },
+  { q: 'Amba is...', options: ['A drink', 'Iraqi mango pickle (tangy)', 'A bread', 'A grilled meat'], answer: 1, explain: 'Defining sauce in sabich and many Iraqi-Jewish dishes' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('streetfood'); } });
+</script></body></html>

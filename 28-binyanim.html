@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>28 — Binyanim Overview</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Binyanim — The 7 Verb Patterns</h1>
+    <div class="subtitle">Lesson 28 · בניינים</div>
+  </div>
+  <div class="nav"><a href="index.html">Home</a><a href="28-binyanim.html" class="active">28</a></div>
+</header>
+
+<p class="intro">
+  Hebrew verbs are built from 3-letter roots (שורש, shoresh) inserted into 7 patterns called <em>binyanim</em> ("buildings"). The pattern determines meaning: active vs passive, simple vs intensive vs causative vs reflexive. Master the binyanim and Hebrew vocabulary becomes systematic.
+</p>
+
+<div class="tip">
+  <strong>Same root, different binyanim, different meanings</strong> — Root כ-ת-ב (k-t-v, "writing"): כָּתַב (katav, wrote, Pa'al) · הִכְתִּיב (hichtiv, dictated, Hif'il) · נִכְתַּב (nichtav, was written, Nif'al) · הִתְכַּתֵּב (hitkatev, corresponded, Hitpa'el).
+</div>
+
+<h2>The 7 Binyanim — Quick Reference</h2>
+
+<div id="binyanim-grid"></div>
+
+<h2>Same Root in Different Binyanim — Example k-t-v (writing)</h2>
+<div class="word-list" id="ktv"></div>
+
+<h2>Same Root — l-m-d (learning / teaching)</h2>
+<div class="word-list" id="lmd"></div>
+
+<h2>Same Root — sh-l-ch (sending)</h2>
+<div class="word-list" id="shlch"></div>
+
+<h2>Recognizing Binyanim by Pattern</h2>
+<div class="word-list" id="recognize"></div>
+
+<hr class="section-divider">
+
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 28 · binyanim · <a href="29-paal-deep.html" style="color:var(--accent)">Next: Pa'al Deep Dive →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const BINYANIM = [
+  { name: 'Pa\'al', heName: 'פָּעַל', usage: 'Simple active — most common (write, eat, go, learn)', sample: 'כָּתַב (katav, wrote)' },
+  { name: 'Nif\'al', heName: 'נִפְעַל', usage: 'Passive of Pa\'al, sometimes reflexive', sample: 'נִכְתַּב (nichtav, was written)' },
+  { name: 'Pi\'el', heName: 'פִּעֵל', usage: 'Intensive / repeated / professional action', sample: 'דִּבֵּר (diber, spoke) · לִמֵּד (limed, taught)' },
+  { name: 'Pu\'al', heName: 'פֻּעַל', usage: 'Passive of Pi\'el (rare in spoken Hebrew)', sample: 'דֻּבַּר (dubar, was spoken)' },
+  { name: 'Hif\'il', heName: 'הִפְעִיל', usage: 'Causative — "to make / cause to..."', sample: 'הִכְתִּיב (hichtiv, dictated, "made write")' },
+  { name: 'Huf\'al', heName: 'הֻפְעַל', usage: 'Passive of Hif\'il', sample: 'הֻכְתַּב (hukhtav, was dictated)' },
+  { name: 'Hitpa\'el', heName: 'הִתְפַּעֵל', usage: 'Reflexive / reciprocal — action on oneself', sample: 'הִתְלַבֵּשׁ (hitlabesh, got dressed)' }
+];
+
+const KTV = [
+  { he: 'כָּתַב',       translit: 'katav',     fr: 'wrote (Pa\'al)' },
+  { he: 'נִכְתַּב',     translit: 'nichtav',   fr: 'was written (Nif\'al)' },
+  { he: 'הִכְתִּיב',    translit: 'hichtiv',   fr: 'dictated (Hif\'il, "caused to write")' },
+  { he: 'הִתְכַּתֵּב',  translit: 'hitkatev',  fr: 'corresponded with (Hitpa\'el, "wrote back-and-forth")' },
+  { he: 'מִכְתָּב',     translit: 'michtav',   fr: 'letter (noun from same root)' },
+  { he: 'כְּתִיבָה',    translit: 'ktiva',     fr: 'writing (noun)' }
+];
+
+const LMD = [
+  { he: 'לָמַד',       translit: 'lamad',     fr: 'learned / studied (Pa\'al)' },
+  { he: 'לִמֵּד',      translit: 'limed',     fr: 'taught (Pi\'el)' },
+  { he: 'הִתְלַמֵּד',  translit: 'hitlamed',  fr: 'apprenticed / self-trained (Hitpa\'el)' },
+  { he: 'תַּלְמִיד',   translit: 'talmid',    fr: 'student (noun)' },
+  { he: 'מוֹרֶה',      translit: 'more',      fr: 'teacher (noun)' },
+  { he: 'לִמּוּד',     translit: 'limud',     fr: 'study / lesson (noun)' }
+];
+
+const SHLCH = [
+  { he: 'שָׁלַח',         translit: 'shalach',     fr: 'sent (Pa\'al)' },
+  { he: 'נִשְׁלַח',       translit: 'nishlach',    fr: 'was sent (Nif\'al)' },
+  { he: 'שִׁלֵּחַ',       translit: 'shileach',    fr: 'sent away / dispatched (Pi\'el)' },
+  { he: 'הִשְׁתַּלֵּחַ', translit: 'hishtaleach', fr: 'attacked verbally (Hitpa\'el)' },
+  { he: 'מִשְׁלוֹחַ',    translit: 'mishloach',   fr: 'shipment (noun)' }
+];
+
+const RECOGNIZE = [
+  { he: 'מ + פוֹעֵל',   translit: 'me- + verb',   fr: 'Present-tense Pi\'el / Hif\'il / Hitpa\'el often start with מ' },
+  { he: 'נ + פוֹעֵל',   translit: 'ni- + verb',   fr: 'Past Nif\'al starts with נִ' },
+  { he: 'הִ + פוֹעֵל',  translit: 'hi- + verb',   fr: 'Past Hif\'il starts with הִ (hichtiv, hizmin, higia)' },
+  { he: 'הִתְ + פוֹעֵל',translit: 'hit- + verb',  fr: 'Hitpa\'el always starts with הִתְ' },
+  { he: 'לְ + שורש',    translit: 'le- + root',   fr: 'Infinitive always starts with לְ' }
+];
+
+const PHRASES = [
+  { he: 'אֲנִי כּוֹתֵב מִכְתָּב',       translit: 'ani kotev michtav',       fr: "I'm writing a letter (Pa'al, m.)" },
+  { he: 'הַמִּכְתָּב נִכְתַּב אֶתְמוֹל', translit: 'ha-michtav nichtav etmol', fr: 'the letter was written yesterday (Nif\'al)' },
+  { he: 'הוּא מְלַמֵּד עִבְרִית',       translit: 'hu melamed ivrit',         fr: "he teaches Hebrew (Pi'el)" },
+  { he: 'הִיא מִתְלַבֶּשֶׁת',           translit: 'hi mitlabeshet',           fr: "she's getting dressed (Hitpa'el)" },
+  { he: 'הוּא הִזְמִין מוֹנִית',         translit: 'hu hizmin monit',          fr: "he ordered a taxi (Hif'il)" },
+  { he: 'אֲנַחְנוּ מִתְכַּתְּבִים',     translit: 'anachnu mitkatvim',        fr: "we correspond (Hitpa'el)" }
+];
+
+const grid = document.getElementById('binyanim-grid');
+BINYANIM.forEach(b => {
+  const block = document.createElement('div');
+  block.style.cssText = 'background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 12px;';
+  block.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+      <span style="color: var(--accent); font-weight: 600; font-size: 16px;">${b.name}</span>
+      <span class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl;">${b.heName}</span>
+    </div>
+    <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 8px;">${b.usage}</div>
+    <div style="font-size: 13px;">${b.sample}</div>
+  `;
+  grid.appendChild(block);
+});
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('ktv', KTV);
+renderRows('lmd', LMD);
+renderRows('shlch', SHLCH);
+renderRows('recognize', RECOGNIZE);
+renderRows('phrases', PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) { count++; if (count >= 12) markLessonDone('binyanim'); }
+});
+
+addExtraVocab('Binyanim — Examples per Family', [
+  { he: 'PA\'AL — לִכְתֹּב', translit: 'lichtov', fr: 'to write (basic action)' },
+  { he: 'NIF\'AL — לְהִכָּתֵב', translit: 'lehikatev', fr: 'to be written (passive of pa\'al)' },
+  { he: 'PI\'EL — לְדַבֵּר', translit: 'ledaber', fr: 'to speak (intensive)' },
+  { he: 'PU\'AL — דֻּבַּר', translit: 'dubar', fr: 'was spoken (passive of pi\'el)' },
+  { he: 'HIF\'IL — לְהַסְבִּיר', translit: 'lehasbir', fr: 'to explain (causative)' },
+  { he: 'HUF\'AL — הֻסְבַּר', translit: 'husbar', fr: 'was explained (passive of hif\'il)' },
+  { he: 'HITPA\'EL — לְהִתְלַבֵּשׁ', translit: 'lehitlabesh', fr: 'to dress oneself (reflexive)' }
+]);
+
+addMiniQuiz('Binyanim Quiz', [
+  { q: 'How many binyanim in Hebrew?', options: ['5', '6', '7', '10'], answer: 2 },
+  { q: 'Which binyan is most common (basic action)?', options: ['Pa\'al / Kal', 'Pi\'el', 'Hif\'il', 'Hitpa\'el'], answer: 0 },
+  { q: 'Hitpa\'el is...', options: ['Causative', 'Reflexive/reciprocal', 'Passive', 'Intensive'], answer: 1 },
+  { q: 'Hif\'il is...', options: ['Reflexive', 'Causative ("make X do")', 'Intensive', 'Passive of pa\'al'], answer: 1, explain: 'הִכְתִּיב = made write / dictated' },
+  { q: 'Nif\'al is...', options: ['Active', 'Passive of pa\'al', 'Reflexive', 'Causative'], answer: 1 },
+  { q: 'Pi\'el and pu\'al are...', options: ['Same meaning', 'Active vs passive (intensive)', 'Pa\'al variants', 'Modern only'], answer: 1, explain: 'pi\'el = intensive active; pu\'al = passive of pi\'el' }
+]);
+
+addCulturalText('The 7 Binyanim — One Root, 7 Meanings', 'The same root ל-מ-ד (l-m-d, learn) takes 7 different forms across the binyanim. Each adds a layer of meaning. The Hebrew superpower.', [
+  { he: 'PA\'AL: לִלְמֹד — to learn (basic action)', translit: "lilmod", fr: 'to learn (basic)' },
+  { he: 'NIF\'AL: לְהִלָּמֵד — to be learned (passive)', translit: "lehilamed", fr: 'to be learned (passive)' },
+  { he: 'PI\'EL: לְלַמֵּד — to teach (intensive/causative)', translit: "lelamed", fr: 'to teach (intensive)' },
+  { he: 'PU\'AL: לְלֻמַּד — to be taught (passive of pi\'el)', translit: "lelumad", fr: 'to be taught (passive)' },
+  { he: 'HIF\'IL: לְהַלְמִיד — to make learn (rare with this root)', translit: "lehalmid", fr: 'to make learn (causative)' },
+  { he: 'HUF\'AL: passive of hif\'il (rare)', translit: "hulmad", fr: 'passive of hif\'il (rare)' },
+  { he: 'HITPA\'EL: לְהִתְלַמֵּד — to apprentice oneself', translit: "lehitlamed", fr: 'to apprentice oneself (reflexive)' },
+  { he: 'הָרֹאשׁ ל-מ-ד נִלְמָד עַל יְדֵי הַמְּלַמֵּד שֶׁמְּלַמֵּד אֶת הַתַּלְמִיד שֶׁמִּתְלַמֵּד', translit: "Ha-shoresh l-m-d nilmad...", fr: 'Each binyan = a different angle on "learn"' }
+]);
+</script>
+</body>
+</html>

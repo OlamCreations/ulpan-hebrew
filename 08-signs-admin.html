@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 — Reading Signs & Admin</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Reading Signs & Admin</h1>
+    <div class="subtitle">Lesson 08 · קריאת שלטים</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="07-articles-prepositions.html">07</a>
+    <a href="08-signs-admin.html" class="active">08</a>
+    <a href="09-colors-adjectives.html">09</a>
+  </div>
+</header>
+
+<p class="intro">
+  Real-world Israeli Hebrew has no niqqud. Words to recognize at a glance: exit, entrance, bus stop, bank, pharmacy, plus essential admin terms for your first weeks as an olim.
+</p>
+
+<div class="tip">
+  <strong>No niqqud here</strong> — In daily life, Hebrew is written without vowel marks. This lesson shows words as you'll actually see them. Transliteration helps you decode pronunciation.
+</div>
+
+<h2>Urban Signs</h2>
+<div class="word-list" id="city"></div>
+
+<h2>Transportation</h2>
+<div class="word-list" id="transport"></div>
+
+<h2>Shops & Services</h2>
+<div class="word-list" id="shops"></div>
+
+<h2>Admin Vocabulary (Olim)</h2>
+<div class="word-list" id="admin"></div>
+
+<h2>Official Documents</h2>
+<div class="word-list" id="docs"></div>
+
+<h2>Money & Payment</h2>
+<div class="word-list" id="money"></div>
+
+<hr class="section-divider">
+
+<h2>Useful Phrases on Arrival</h2>
+<div class="word-list" id="phrases"></div>
+
+<div class="tip">
+  <strong>Misrad HaKlita (משרד הקליטה)</strong> — Ministry of Aliyah & Integration. First stop at Ben Gurion airport: they issue your Teudat Olé and the first Sal Klita payment.
+</div>
+
+<div class="tip">
+  <strong>Teudat Olé / Teudat Zehut</strong> — Olé card (new immigrant) issued on arrival, valid ~6 months. Used to apply for the Teudat Zehut (Israeli ID) at Misrad HaPnim.
+</div>
+
+<footer>
+  Lesson 08 · signs + admin · <a href="09-colors-adjectives.html" style="color:var(--accent)">Next: Colors & Adjectives →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const CITY = [
+  { he: 'יציאה',     translit: 'yetzi\'a',  fr: 'exit' },
+  { he: 'כניסה',     translit: 'knisa',     fr: 'entrance' },
+  { he: 'פתוח',      translit: 'patuach',   fr: 'open' },
+  { he: 'סגור',      translit: 'sagur',     fr: 'closed' },
+  { he: 'אסור',      translit: 'asur',      fr: 'forbidden' },
+  { he: 'מותר',      translit: 'mutar',     fr: 'allowed' },
+  { he: 'זהירות',    translit: 'zehirut',   fr: 'caution' },
+  { he: 'סכנה',      translit: 'sakana',    fr: 'danger' },
+  { he: 'שירותים',   translit: 'sherutim',  fr: 'restrooms' },
+  { he: 'מעלית',     translit: "ma'alit",   fr: 'elevator' },
+  { he: 'מדרגות',    translit: 'madregot',  fr: 'stairs' },
+  { he: 'חניה',      translit: 'chaniya',   fr: 'parking' }
+];
+
+const TRANSPORT = [
+  { he: 'תחנה',           translit: 'tachana',          fr: 'station / stop' },
+  { he: 'תחנת אוטובוס',   translit: 'tachanat otobus',  fr: 'bus stop' },
+  { he: 'אוטובוס',        translit: 'otobus',            fr: 'bus' },
+  { he: 'רכבת',           translit: 'rakevet',           fr: 'train' },
+  { he: 'רכבת קלה',       translit: 'rakevet kala',      fr: 'light rail (Jerusalem tram)' },
+  { he: 'מונית',          translit: 'monit',             fr: 'taxi' },
+  { he: 'שדה תעופה',      translit: "sde te'ufa",        fr: 'airport' },
+  { he: 'נמל תעופה',      translit: "nemal te'ufa",      fr: 'airport (other word)' },
+  { he: 'נתב"ג',          translit: 'natbag',            fr: 'Ben Gurion (acronym)' },
+  { he: 'רחוב',           translit: 'rechov',            fr: 'street' },
+  { he: 'כביש',           translit: 'kvish',             fr: 'road / highway' }
+];
+
+const SHOPS = [
+  { he: 'בנק',            translit: 'bank',          fr: 'bank' },
+  { he: 'דואר',           translit: 'do\'ar',         fr: 'post office' },
+  { he: 'בית מרקחת',      translit: 'beit mirkachat', fr: 'pharmacy' },
+  { he: 'סופר',           translit: 'super',          fr: 'supermarket' },
+  { he: 'מכולת',          translit: 'makolet',        fr: 'corner grocery' },
+  { he: 'קופת חולים',     translit: 'kupat cholim',   fr: 'health fund / HMO' },
+  { he: 'בית חולים',      translit: 'beit cholim',    fr: 'hospital' },
+  { he: 'משטרה',          translit: 'mishtara',       fr: 'police' },
+  { he: 'מסעדה',          translit: "mis'ada",        fr: 'restaurant' },
+  { he: 'בית קפה',        translit: 'beit kafe',      fr: 'café' },
+  { he: 'מאפייה',         translit: 'ma\'afiya',      fr: 'bakery' },
+  { he: 'מספרה',          translit: 'mispara',        fr: 'hair salon / barber' }
+];
+
+const ADMIN = [
+  { he: 'משרד הפנים',     translit: 'misrad ha-pnim',    fr: 'Ministry of Interior (ID card)' },
+  { he: 'משרד הקליטה',    translit: 'misrad ha-klita',   fr: 'Ministry of Aliyah & Integration' },
+  { he: 'ביטוח לאומי',    translit: "bituach le'umi",    fr: 'National Insurance (social security)' },
+  { he: 'מס הכנסה',       translit: 'mas hachnasa',      fr: 'income tax' },
+  { he: 'עירייה',         translit: 'iriya',             fr: 'city hall' },
+  { he: 'סוכנות יהודית',  translit: 'sochnut yehudit',   fr: 'Jewish Agency' },
+  { he: 'מרכז קליטה',     translit: 'merkaz klita',      fr: 'absorption center' },
+  { he: 'אולפן',          translit: 'ulpan',             fr: 'ulpan (Hebrew school)' },
+  { he: 'סל קליטה',       translit: 'sal klita',         fr: 'absorption basket (oleh stipend)' },
+  { he: 'ביטוח רפואי',    translit: 'bituach refui',     fr: 'health insurance' }
+];
+
+const DOCS = [
+  { he: 'תעודת זהות',    translit: 'teudat zehut',  fr: 'ID card' },
+  { he: 'תעודת עולה',    translit: 'teudat oleh',   fr: 'oleh card (new immigrant)' },
+  { he: 'דרכון',         translit: 'darkon',         fr: 'passport' },
+  { he: 'רישיון נהיגה',  translit: 'rishyon nehiga', fr: "driver's license" },
+  { he: 'אישור',         translit: 'ishur',          fr: 'authorization / certificate' },
+  { he: 'חתימה',         translit: 'chatima',        fr: 'signature' },
+  { he: 'טופס',          translit: 'tofes',          fr: 'form' },
+  { he: 'תור',           translit: 'tor',            fr: 'appointment / queue' }
+];
+
+const MONEY = [
+  { he: 'שקל',           translit: 'shekel',         fr: 'shekel (currency)' },
+  { he: 'כסף',           translit: 'kesef',          fr: 'money' },
+  { he: 'כרטיס אשראי',   translit: 'kartis ashrai',  fr: 'credit card' },
+  { he: 'מזומן',         translit: 'mezuman',        fr: 'cash' },
+  { he: 'חשבון',         translit: 'cheshbon',       fr: 'account / bill / check' },
+  { he: 'קבלה',          translit: 'kabala',         fr: 'receipt' },
+  { he: 'מחיר',          translit: 'mechir',         fr: 'price' },
+  { he: 'הנחה',          translit: 'hanacha',        fr: 'discount' },
+  { he: 'בחינם',         translit: 'be-chinam',      fr: 'free of charge' },
+  { he: 'מע"מ',          translit: "ma'am",          fr: 'VAT' }
+];
+
+const PHRASES = [
+  { he: 'אני עולה חדש מצרפת',         translit: 'ani oleh chadash mi-Tzarfat', fr: 'I\'m a new immigrant from France' },
+  { he: 'איפה משרד הקליטה?',           translit: 'eyfo misrad ha-klita?',        fr: 'where is the Ministry of Aliyah?' },
+  { he: 'אני צריך לפתוח חשבון בנק',   translit: 'ani tzarich liftoach cheshbon bank', fr: 'I need to open a bank account' },
+  { he: 'יש לי תור',                   translit: 'yesh li tor',                   fr: 'I have an appointment' },
+  { he: 'איך מגיעים ל...?',           translit: "eich magi'im le...?",            fr: 'how do I get to...?' },
+  { he: 'כמה זה עולה?',                translit: 'kama ze oleh?',                 fr: 'how much does it cost?' },
+  { he: 'אני לא מדבר עברית טוב',       translit: 'ani lo medaber ivrit tov',      fr: 'I don\'t speak Hebrew well (m.)' },
+  { he: 'אפשר לדבר אנגלית?',           translit: 'efshar ledaber anglit?',        fr: 'can we speak English?' }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn" title="Listen">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('city', CITY);
+renderRows('transport', TRANSPORT);
+renderRows('shops', SHOPS);
+renderRows('admin', ADMIN);
+renderRows('docs', DOCS);
+renderRows('money', MONEY);
+renderRows('phrases', PHRASES);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) {
+    count++;
+    if (count >= 15) markLessonDone('signs');
+  }
+});
+
+addExtraVocab('Public Place Signs', [
+  { he: 'דְּחוֹף', translit: 'dchof', fr: 'push' },
+  { he: 'מָשׁוֹךְ', translit: 'mashoch', fr: 'pull' },
+  { he: 'פָּתוּחַ', translit: 'patuach', fr: 'open' },
+  { he: 'סָגוּר', translit: 'sagur', fr: 'closed' },
+  { he: 'תָּפוּס', translit: 'tafus', fr: 'occupied' },
+  { he: 'פָּנוּי', translit: 'panuy', fr: 'free / vacant' },
+  { he: 'גְּבָרִים', translit: 'gvarim', fr: 'men (restroom)' },
+  { he: 'נָשִׁים', translit: 'nashim', fr: 'women (restroom)' },
+  { he: 'נָגִישׁ לְנָכִים', translit: 'nagish le-nachim', fr: 'wheelchair accessible' },
+  { he: 'בְּמַעֲלִית', translit: 'be-ma\'alit', fr: 'by elevator' },
+  { he: 'מַדְרֵגוֹת', translit: 'madregot', fr: 'stairs' },
+  { he: 'יְצִיאַת חֵירוּם', translit: 'yetzi\'at cherum', fr: 'emergency exit' },
+  { he: 'אֵין כְּנִיסָה', translit: 'eyn knisa', fr: 'no entry' },
+  { he: 'הַשְׁגָּחָה כָּשְׁרוּת', translit: 'hashgacha kashrut', fr: 'kosher supervision' },
+  { he: 'יִשְׂרְאֵלִי טוֹב', translit: 'yisre\'eli tov', fr: 'made in Israel' }
+]);
+
+addExtraVocab('Admin Forms — Words on Every Document', [
+  { he: 'שֵׁם פְּרָטִי', translit: 'shem prati', fr: 'first name' },
+  { he: 'שֵׁם מִשְׁפָּחָה', translit: 'shem mishpacha', fr: 'family name' },
+  { he: 'תַּאֲרִיךְ לֵידָה', translit: 'ta\'arich leyda', fr: 'date of birth' },
+  { he: 'מַעֲמָד אִישִׁי', translit: 'ma\'amad ishi', fr: 'civil status' },
+  { he: 'כְּתֹבֶת מְגוּרִים', translit: 'ktovet megurim', fr: 'home address' },
+  { he: 'טֶלֶפוֹן נָיָּד', translit: 'telefon nayad', fr: 'mobile phone' },
+  { he: 'דֹּאַר אֶלֶקְטְרוֹנִי', translit: 'do\'ar electroni', fr: 'email' },
+  { he: 'חֲתִימָה', translit: 'chatima', fr: 'signature' },
+  { he: 'תַּאֲרִיךְ', translit: 'ta\'arich', fr: 'date' },
+  { he: 'תְּעוּדַת עוֹלֶה', translit: 'teudat ole', fr: 'oleh certificate' },
+  { he: 'תַּלוּשׁ שָׂכָר', translit: 'talush sachar', fr: 'pay slip' },
+  { he: 'דַּף חֶשְׁבּוֹן', translit: 'daf cheshbon', fr: 'bank statement' },
+  { he: 'אִישׁוּר תּוֹשָׁב', translit: 'ishur toshav', fr: 'residency proof' },
+  { he: 'צַד הַטּוֹפֶס', translit: 'tzad ha-tofes', fr: 'side / page of form' }
+]);
+
+addMiniQuiz('Signs & Admin Quiz', [
+  { q: 'יְצִיאָה means...', options: ['Entrance', 'Exit', 'Stop', 'Start'], answer: 1 },
+  { q: 'On a form: "First name" =', options: ['שֵׁם מִשְׁפָּחָה', 'שֵׁם פְּרָטִי', 'שֵׁם מָלֵא', 'שֵׁם'], answer: 1 },
+  { q: 'אָסוּר לְעַשֵּׁן means...', options: ['Don\'t enter', 'No smoking', 'Quiet please', 'Caution'], answer: 1 },
+  { q: 'A "מַמָ"ד" sign points to...', options: ['Bathroom', 'Safe room', 'Kitchen', 'Exit'], answer: 1 },
+  { q: 'Israelis date format usually:', options: ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY-MM-DD', 'DD-MMM-YY'], answer: 1, explain: 'European-style' }
+]);
+
+addCulturalText('Real Street Signs You\'ll See in Israel', 'Photos of these are everywhere. Memorize them — your safety depends on it.', [
+  { he: 'מַעֲבַר חֲצִיָּה — הוֹלְכֵי רֶגֶל', translit: "Ma\'avar chatziya — holchei regel", fr: 'Crosswalk — pedestrians' },
+  { he: 'אֵזוֹר זָהִיר — בֵּית סֵפֶר', translit: "Ezor zahir — beit sefer", fr: 'Caution zone — school' },
+  { he: 'תַּחֲנַת אוֹטוֹבּוּס — אֵין חֲנִיָּה', translit: "Tachanat otobus — eyn chaniya", fr: 'Bus stop — no parking' },
+  { he: 'אָסוּר לְעַשֵּׁן בָּמָּקוֹם הַזֶּה', translit: "Asur le-ashen ba-makom ha-ze", fr: 'No smoking in this place' },
+  { he: 'מָקוֹם שָׁמוּר לְנָכֶה', translit: "Makom shamur le-nache", fr: 'Reserved for disabled' },
+  { he: 'יְצִיאַת חֵירוּם — שְׁמֹר נָקִי', translit: "Yetzi\'at chey-rum — shmor naki", fr: 'Emergency exit — keep clear' },
+  { he: 'הַשְׁגָּחָה כָּשְׁרוּת', translit: "Hashgacha kashrut", fr: 'Kosher supervision' },
+  { he: 'הַכְּנִיסָה אֲסוּרָה לְלֹא רְשׁוּת', translit: "Ha-knisa asura le-lo reshut", fr: 'Entry forbidden without authorization' },
+  { he: 'מִקְלָט — לְהָכָּנֵס בִּמְקֶרֶה שֶׁל אָזְעָקָה', translit: "Miklat — le-hikanes be-mikre shel azeaka", fr: 'Shelter — enter in case of alarm' }
+]);
+</script>
+
+</body>
+</html>

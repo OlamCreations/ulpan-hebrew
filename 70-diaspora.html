@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>70 — Israel & The Diaspora</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Israel & The Diaspora</h1><div class="subtitle">Lesson 70 · ארץ ישראל והגלות</div></div><div class="nav"><a href="index.html">Home</a><a href="70-diaspora.html" class="active">70</a></div></header>
+
+<p class="intro">15.7M Jews worldwide: 7.2M in Israel, 6.3M in USA, then France (~440K), Canada, Argentina, UK. Vocabulary for diaspora communities, antisemitism, Aliyah, organizations.</p>
+
+<h2>Diaspora Communities</h2>
+<div class="word-list" id="communities"></div>
+
+<h2>Major Cities Abroad</h2>
+<div class="word-list" id="cities"></div>
+
+<h2>Aliyah & Yerida</h2>
+<div class="word-list" id="aliyah"></div>
+
+<h2>Organizations</h2>
+<div class="word-list" id="orgs"></div>
+
+<h2>Antisemitism</h2>
+<div class="word-list" id="antisem"></div>
+
+<h2>Israel-Diaspora Relations</h2>
+<div class="word-list" id="relations"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 70 · diaspora · Block 7 done · <a href="index.html" style="color:var(--accent)">Home</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const COMMUNITIES = [
+  { he: 'יְהוּדֵי הַתְּפוּצוֹת', translit: 'yehudey ha-tfutzot', fr: 'diaspora Jews' },
+  { he: 'גָּלוּת', translit: 'galut', fr: 'exile / diaspora' },
+  { he: 'תְּפוּצוֹת', translit: 'tfutzot', fr: 'diasporas (modern term)' },
+  { he: 'יְהוּדִים בָּעוֹלָם', translit: 'yehudim ba-olam', fr: 'Jews around the world' },
+  { he: 'אֲמֵרִיקָה', translit: 'America', fr: 'America (largest diaspora)' },
+  { he: 'צָרְפַת', translit: 'Tzarfat', fr: 'France' },
+  { he: 'קָנָדָה', translit: 'Kanada', fr: 'Canada' },
+  { he: 'אַרְגֶּנְטִינָה', translit: 'Argentina', fr: 'Argentina' },
+  { he: 'אוֹסְטְרַלְיָה', translit: 'Australia', fr: 'Australia' },
+  { he: 'דְּרוֹם אַפְרִיקָה', translit: 'drom Africa', fr: 'South Africa' }
+];
+const CITIES = [
+  { he: 'נְיוּ יוֹרְק', translit: 'New York', fr: 'New York' },
+  { he: 'לוֹס אַנְגֶ\'לֶס', translit: 'Los Angeles', fr: 'Los Angeles' },
+  { he: 'מַיָאמִי', translit: 'Miami', fr: 'Miami' },
+  { he: 'פָּרִיז', translit: 'Paris', fr: 'Paris' },
+  { he: 'לוֹנְדּוֹן', translit: 'London', fr: 'London' },
+  { he: 'מוֹסְקְוָה', translit: 'Moskva', fr: 'Moscow' },
+  { he: 'בּוּאֶנוֹס אָיירֵס', translit: 'Buenos Aires', fr: 'Buenos Aires' },
+  { he: 'מַרְסַי', translit: 'Marsay', fr: 'Marseille' }
+];
+const ALIYAH = [
+  { he: 'עֲלִיָּה', translit: 'aliya', fr: 'aliyah (lit. "going up" to Israel)' },
+  { he: 'יְרִידָה', translit: 'yerida', fr: 'yerida (leaving Israel)' },
+  { he: 'יוֹרֵד', translit: 'yored', fr: 'one who left Israel (m., somewhat negative)' },
+  { he: 'תּוֹשָׁב חוֹזֵר', translit: 'toshav chozer', fr: 'returning resident' },
+  { he: 'דַּרְכּוֹן יִשְׂרְאֵלִי', translit: 'darkon yisraeli', fr: 'Israeli passport' },
+  { he: 'בִּרְכַּת הַדֶּרֶךְ', translit: 'birkat ha-derech', fr: 'travel blessing' }
+];
+const ORGS = [
+  { he: 'הַסּוֹכְנוּת הַיְּהוּדִית', translit: 'ha-sochnut ha-yehudit', fr: 'Jewish Agency' },
+  { he: 'נֶפֶשׁ בְּנֶפֶשׁ', translit: 'Nefesh B\'Nefesh', fr: 'Nefesh B\'Nefesh (NA olim)' },
+  { he: 'קֶרֶן הַקַּיֶּמֶת לְיִשְׂרָאֵל', translit: 'Keren Kayemet le-Yisrael', fr: 'JNF (KKL)' },
+  { he: 'מַגְבִּית', translit: 'magbit', fr: 'fundraising campaign (UJA)' },
+  { he: 'בְּנֵי בְּרִית', translit: 'Bnei Brit', fr: "B'nai B'rith" },
+  { he: 'אֶיִי\"פָּ"ק', translit: 'AIPAC', fr: 'AIPAC' },
+  { he: 'אֲדַ"ל', translit: 'ADL', fr: 'ADL (Anti-Defamation League)' }
+];
+const ANTISEM = [
+  { he: 'אַנְטִישֵׁמִיּוּת', translit: 'antishemiyut', fr: 'antisemitism' },
+  { he: 'שִׂנְאַת יִשְׂרָאֵל', translit: 'sinat Yisrael', fr: 'hatred of Israel' },
+  { he: 'אַנְטִי-צִיּוֹנוּת', translit: 'anti-tziyonut', fr: 'anti-Zionism' },
+  { he: 'בּוֹיְקוֹט', translit: 'boikot', fr: 'boycott (BDS)' },
+  { he: 'הָסְתָה', translit: 'hasata', fr: 'incitement' },
+  { he: 'פִּגּוּעַ', translit: 'pigua', fr: 'attack (terror)' },
+  { he: 'שׁוֹאָה', translit: 'shoa', fr: 'Holocaust' },
+  { he: 'הַכְחָשַׁת שׁוֹאָה', translit: 'hachchashat shoa', fr: 'Holocaust denial' }
+];
+const RELATIONS = [
+  { he: 'יַחֲסֵי יִשְׂרָאֵל-תְּפוּצוֹת', translit: 'yachasey Yisrael-tfutzot', fr: 'Israel-diaspora relations' },
+  { he: 'תּוֹמְכֵי יִשְׂרָאֵל', translit: 'tomchey Yisrael', fr: 'Israel supporters' },
+  { he: 'מִשְׁלַחַת', translit: 'mishlachat', fr: 'delegation' },
+  { he: 'תַּגְלִית בִּרְתְרַייט', translit: 'taglit birthright', fr: 'Birthright Israel' },
+  { he: 'מָסָע', translit: 'masa', fr: 'Masa Israel (long-term programs)' },
+  { he: 'גַּרְעִינִים', translit: 'gar\'inim', fr: 'Jewish day schools' },
+  { he: 'תַּלְמוּד תּוֹרָה', translit: 'talmud Torah', fr: 'religious school (yeshiva-style)' }
+];
+const PHRASES = [
+  { he: 'יֵשׁ הַרְבֵּה יְהוּדִים בְּצָרְפַת', translit: 'yesh harbe yehudim be-Tzarfat', fr: 'there are many Jews in France' },
+  { he: 'הִיא עָלְתָה לְפִי שָׁנָה', translit: 'hi alta lifney shana', fr: 'she made aliyah a year ago' },
+  { he: 'הַסּוֹכְנוּת מְסַיַּעַת לָעוֹלִים', translit: 'ha-sochnut mesayatat la-olim', fr: 'the Jewish Agency helps the olim' },
+  { he: 'הָאַנְטִישֵׁמִיּוּת עוֹלָה', translit: 'ha-antishemiyut ola', fr: 'antisemitism is rising' },
+  { he: 'בִּרְכַּת הַדֶּרֶךְ', translit: 'birkat ha-derech', fr: 'safe travels (lit. "blessing of the way")' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('communities', COMMUNITIES); R('cities', CITIES); R('aliyah', ALIYAH); R('orgs', ORGS); R('antisem', ANTISEM); R('relations', RELATIONS); R('phrases', PHRASES);
+addExtraVocab('Diaspora Vocabulary', [
+  { he: 'גָּלוּת', translit: 'galut', fr: 'exile / Diaspora' },
+  { he: 'תְּפוּצוֹת', translit: 'tfutzot', fr: 'Diaspora (Jewish)' },
+  { he: 'יוֹצֵאי...', translit: 'yotzey...', fr: 'people from... (origin)' },
+  { he: 'יוֹצֵאי צָרְפַת', translit: 'yotzey tzarfat', fr: 'French Jews (origin)' },
+  { he: 'יוֹצֵאי בְּרִית הַמּוֹעָצוֹת', translit: 'yotzey brit ha-mo\'atzot', fr: 'former Soviet immigrants' },
+  { he: 'יוֹצֵאי אֶתְיוֹפְּיָה', translit: 'yotzey etyopya', fr: 'Ethiopian Jews' },
+  { he: 'תְּנוּעָה צִיּוֹנִית', translit: 'tnu\'a tziyonit', fr: 'Zionist movement' },
+  { he: 'הַסּוֹכְנוּת הַיְּהוּדִית', translit: 'ha-sochnut ha-yehudit', fr: 'Jewish Agency' },
+  { he: 'נֶפֶשׁ בְּנֶפֶשׁ', translit: 'nefesh be-nefesh', fr: 'NBN (US/CA aliyah)' },
+  { he: 'בְּנֵי הָאָרֶץ', translit: 'bnei ha-aretz', fr: 'native Israelis' },
+  { he: 'יְרִידָה', translit: 'yerida', fr: 'going down (emigration)' },
+  { he: 'שָׂם פָּעַם', translit: 'sam pa\'am', fr: 'visit Israel' },
+  { he: 'מָסָע', translit: 'masa', fr: 'Birthright trip' },
+  { he: 'אַנְטִישֵׁמִיוּת', translit: 'antishemiyut', fr: 'antisemitism' }
+]);
+
+addMiniQuiz('Diaspora Quiz', [
+  { q: 'Largest Jewish community outside Israel =', options: ['UK', 'France', 'USA (~6M)', 'Russia'], answer: 2 },
+  { q: 'Aliyah meaning =', options: ['Going abroad', 'Going up to Israel (immigration)', 'Visit', 'Tour'], answer: 1 },
+  { q: 'Yerida =', options: ['Religious tour', 'Going down (emigration FROM Israel)', 'Visit', 'Aliyah'], answer: 1 },
+  { q: 'Theodor Herzl wrote...', options: ['The Jewish State (Der Judenstaat)', 'Altneuland', 'Diary', 'All of these'], answer: 3 },
+  { q: 'World Zionist Congress first met in...', options: ['Vienna', 'Basel 1897', 'Jerusalem', 'New York'], answer: 1 }
+]);
+
+addCulturalText('Herzl — "If You Will It" (Altneuland epigraph)', "Theodor Herzl (1860-1904), founder of modern Zionism. The phrase from his utopian novel Altneuland (1902), the founding sentence of the movement.", [
+  { he: 'אִם תִּרְצוּ — אֵין זוֹ אַגָּדָה', translit: "Im tirtzu — ein zo agada", fr: 'If you will it — it is no fairy tale' },
+  { he: '— תֵּאוֹדוֹר הֶרְצְל, אֶלְטְנוֹילַנְד 1902', translit: "— Theodor Herzl, Altneuland 1902", fr: '— Theodor Herzl, Altneuland 1902' },
+  { he: 'הַיְּהוּדִים יֶשׁנָם, וּמְדִינָתָם תִּהְיֶה', translit: "Ha-yehudim yeshnam, u-medinatam tihye", fr: 'The Jews exist, and their state will be' },
+  { he: 'בְּבָאזֶל יָסַדְתִּי אֶת מְדִינַת הַיְּהוּדִים', translit: "Be-Bazel yasadti et medinat ha-yehudim", fr: 'In Basel I founded the Jewish state' },
+  { he: 'בְּעוֹד 5 שָׁנִים — אוּלַי. בְּעוֹד 50 שָׁנָה — בְּוַדַּאי', translit: "Be-od 5 shanim — ulay. Be-od 50 shana — be-vaday", fr: 'In 5 years — perhaps. In 50 years — certainly' },
+  { he: '— יוֹמַן הֶרְצְל, 3 בְּסֶפְּטֶמְבֶּר 1897', translit: "— Yoman Herzl, 3 be-September 1897", fr: '— Herzl\'s diary, September 3, 1897' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('diaspora'); } });
+</script></body></html>

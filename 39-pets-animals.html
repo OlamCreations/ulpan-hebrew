@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>39 — Pets & Animals</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Pets & Animals</h1><div class="subtitle">Lesson 39 · בעלי חיים</div></div><div class="nav"><a href="index.html">Home</a><a href="39-pets-animals.html" class="active">39</a></div></header>
+
+<p class="intro">Israelis love animals. Tel Aviv is one of the most dog-friendly cities. Cats roam everywhere — Jerusalem and Haifa have huge stray populations. Vocabulary for pets, wildlife, zoos, and the vet.</p>
+
+<h2>Pets</h2>
+<div class="word-list" id="pets"></div>
+
+<h2>Farm Animals</h2>
+<div class="word-list" id="farm"></div>
+
+<h2>Wild Animals (Israel & beyond)</h2>
+<div class="word-list" id="wild"></div>
+
+<h2>Birds</h2>
+<div class="word-list" id="birds"></div>
+
+<h2>Sea & Water Animals</h2>
+<div class="word-list" id="sea"></div>
+
+<h2>Insects & Small Creatures</h2>
+<div class="word-list" id="insects"></div>
+
+<h2>At the Vet</h2>
+<div class="word-list" id="vet"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 39 · animals · <a href="40-cooking.html" style="color:var(--accent)">Next: Cooking →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const PETS = [
+  { he: 'חַיַּת מַחְמָד', translit: 'chayat machmad', fr: 'pet' },
+  { he: 'כֶּלֶב', translit: 'kelev', fr: 'dog' },
+  { he: 'כַּלְבָּה', translit: 'kalba', fr: 'female dog' },
+  { he: 'גּוּר', translit: 'gur', fr: 'puppy' },
+  { he: 'חָתוּל', translit: 'chatul', fr: 'cat (m.)' },
+  { he: 'חֲתוּלָה', translit: 'chatula', fr: 'cat (f.)' },
+  { he: 'גּוּר חֲתוּלִים', translit: 'gur chatulim', fr: 'kitten' },
+  { he: 'אַרְנָב', translit: 'arnav', fr: 'rabbit' },
+  { he: 'אוֹגֵר', translit: 'oger', fr: 'hamster' },
+  { he: 'דָּג זָהָב', translit: 'dag zahav', fr: 'goldfish' }
+];
+const FARM = [
+  { he: 'פָּרָה', translit: 'para', fr: 'cow' },
+  { he: 'שׁוֹר', translit: 'shor', fr: 'ox / bull' },
+  { he: 'כֶּבֶשׂ', translit: 'keves', fr: 'sheep' },
+  { he: 'עֵז', translit: 'ez', fr: 'goat' },
+  { he: 'חֲמוֹר', translit: 'chamor', fr: 'donkey' },
+  { he: 'סוּס', translit: 'sus', fr: 'horse' },
+  { he: 'תַּרְנְגוֹל', translit: 'tarnegol', fr: 'rooster' },
+  { he: 'תַּרְנְגֹלֶת', translit: 'tarnegolet', fr: 'hen' },
+  { he: 'אַוָּז', translit: 'avaz', fr: 'goose' },
+  { he: 'בַּרְוָז', translit: 'barvaz', fr: 'duck' },
+  { he: 'חֲזִיר', translit: 'chazir', fr: 'pig' }
+];
+const WILD = [
+  { he: 'אַרְיֵה', translit: 'aryeh', fr: 'lion' },
+  { he: 'נָמֵר', translit: 'namer', fr: 'tiger / leopard' },
+  { he: 'דֹּב', translit: 'dov', fr: 'bear' },
+  { he: 'זְאֵב', translit: 'ze\'ev', fr: 'wolf' },
+  { he: 'שׁוּעָל', translit: 'shu\'al', fr: 'fox' },
+  { he: 'אַיָּל', translit: 'ayal', fr: 'deer' },
+  { he: 'גָּמָל', translit: 'gamal', fr: 'camel' },
+  { he: 'פִּיל', translit: 'pil', fr: 'elephant' },
+  { he: 'קוֹף', translit: 'kof', fr: 'monkey' },
+  { he: 'זֶּבְּרָה', translit: 'zebra', fr: 'zebra' },
+  { he: 'שָׁפָן', translit: 'shafan', fr: 'rock hyrax (Israeli native)' },
+  { he: 'נַחָשׁ', translit: 'nachash', fr: 'snake' }
+];
+const BIRDS = [
+  { he: 'צִפּוֹר', translit: 'tzipor', fr: 'bird' },
+  { he: 'יוֹנָה', translit: 'yona', fr: 'dove / pigeon' },
+  { he: 'נֶשֶׁר', translit: 'nesher', fr: 'eagle' },
+  { he: 'תֻּכִּי', translit: 'tuki', fr: 'parrot' },
+  { he: 'דֻּכִיפַת', translit: 'duchifat', fr: 'hoopoe (national bird)' },
+  { he: 'עוֹרֵב', translit: 'orev', fr: 'crow / raven' },
+  { he: 'יַנְשׁוּף', translit: 'yanshuf', fr: 'owl' }
+];
+const SEA = [
+  { he: 'דָּג', translit: 'dag', fr: 'fish' },
+  { he: 'דּוֹלְפִין', translit: 'dolfin', fr: 'dolphin' },
+  { he: 'לִוְיָתָן', translit: 'livyatan', fr: 'whale' },
+  { he: 'כְּרִישׁ', translit: 'krish', fr: 'shark' },
+  { he: 'תַּמְנוּן', translit: 'tamnun', fr: 'octopus' },
+  { he: 'צָב', translit: 'tzav', fr: 'turtle' },
+  { he: 'תַּנִּין', translit: 'tanin', fr: 'crocodile' },
+  { he: 'מְדוּזָה', translit: 'meduza', fr: 'jellyfish' }
+];
+const INSECTS = [
+  { he: 'דְּבוֹרָה', translit: 'dvora', fr: 'bee' },
+  { he: 'נְמָלָה', translit: 'nemala', fr: 'ant' },
+  { he: 'יַתּוּשׁ', translit: 'yatush', fr: 'mosquito' },
+  { he: 'זְבוּב', translit: 'zvuv', fr: 'fly' },
+  { he: 'פַּרְפַּר', translit: 'parpar', fr: 'butterfly' },
+  { he: 'עַכָּבִישׁ', translit: 'akavish', fr: 'spider' },
+  { he: 'עַקְרָב', translit: 'akrav', fr: 'scorpion (Negev)' }
+];
+const VET = [
+  { he: 'וֶטֶרִינָר', translit: 'veterinar', fr: 'vet' },
+  { he: 'מִרְפָּאָה וֶטֶרִינָרִית', translit: 'mirpa\'a veterinarit', fr: 'vet clinic' },
+  { he: 'חִסּוּן', translit: 'chisun', fr: 'vaccine' },
+  { he: 'חֵיוּב', translit: 'cheyuv', fr: 'microchip' },
+  { he: 'עִקּוּר', translit: 'ikur', fr: 'spaying / neutering' },
+  { he: 'מָזוֹן', translit: 'mazon', fr: 'food (animal)' },
+  { he: 'רְצוּעָה', translit: 'retzu\'a', fr: 'leash' },
+  { he: 'קוֹלֶר', translit: 'koler', fr: 'collar' }
+];
+const PHRASES = [
+  { he: 'יֵשׁ לִי כֶּלֶב', translit: 'yesh li kelev', fr: 'I have a dog' },
+  { he: 'אֲנִי אוֹהֵב חָתוּלִים', translit: 'ani ohev chatulim', fr: 'I love cats (m.)' },
+  { he: 'הַכֶּלֶב נוֹבֵחַ', translit: 'ha-kelev nove\'ach', fr: 'the dog is barking' },
+  { he: 'הַחָתוּל מְיַלֵּל', translit: 'ha-chatul meyalel', fr: 'the cat is meowing' },
+  { he: 'אֲנִי לוֹקֵחַ אֶת הַכֶּלֶב לְוֶטֶרִינָר', translit: 'ani loke\'ach et ha-kelev le-veterinar', fr: 'I\'m taking the dog to the vet (m.)' },
+  { he: 'אָסוּר לְהָבִיא חַיּוֹת', translit: 'asur lehavi chayot', fr: 'no animals allowed' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('pets', PETS); R('farm', FARM); R('wild', WILD); R('birds', BIRDS); R('sea', SEA); R('insects', INSECTS); R('vet', VET); R('phrases', PHRASES);
+addExtraVocab('Animal Sounds & Actions', [
+  { he: 'נוֹבֵחַ', translit: 'noveach', fr: 'barks' },
+  { he: 'מְיַלֵּל', translit: 'meyalel', fr: 'meows / howls' },
+  { he: 'נוֹשֵׁךְ', translit: 'noshech', fr: 'bites' },
+  { he: 'גּוֹרֵר', translit: 'gorer', fr: 'purrs' },
+  { he: 'מַכִּישׁ', translit: 'makish', fr: 'stings' },
+  { he: 'אוֹכֵל', translit: 'ochel', fr: 'eats' },
+  { he: 'שׁוֹתֶה', translit: 'shote', fr: 'drinks' },
+  { he: 'יָשֵׁן', translit: 'yashen', fr: 'sleeps' },
+  { he: 'מְלַטֵּף', translit: 'melatef', fr: 'to pet' },
+  { he: 'לְטַיֵּל בַּכֶּלֶב', translit: 'letayel ba-kelev', fr: 'walk the dog' },
+  { he: 'לְהַאֲכִיל', translit: 'leha\'achil', fr: 'to feed' },
+  { he: 'מָזוֹן לְכֶלֶב', translit: 'mazon le-kelev', fr: 'dog food' }
+]);
+
+addExtraVocab('Pets & Common Animals', [
+  { he: 'כֶּלֶב', translit: 'kelev', fr: 'dog' },
+  { he: 'חָתוּל', translit: 'chatul', fr: 'cat' },
+  { he: 'דָּג זָהָב', translit: 'dag zahav', fr: 'goldfish' },
+  { he: 'אַרְנָב', translit: 'arnav', fr: 'rabbit' },
+  { he: 'תֻּכִּי', translit: 'tuki', fr: 'parrot' },
+  { he: 'אוֹגֵר', translit: 'oger', fr: 'hamster' },
+  { he: 'סוּס', translit: 'sus', fr: 'horse' },
+  { he: 'פָּרָה', translit: 'para', fr: 'cow' },
+  { he: 'כֶּבֶשׂ', translit: 'keves', fr: 'sheep' },
+  { he: 'עֵז', translit: 'ez', fr: 'goat' },
+  { he: 'תַּרְנְגוֹלֶת', translit: 'tarnegolet', fr: 'chicken' },
+  { he: 'תַּרְנְגוֹל', translit: 'tarnegol', fr: 'rooster' },
+  { he: 'אַרְיֵה', translit: 'arye', fr: 'lion' },
+  { he: 'נָמֵר', translit: 'namer', fr: 'tiger / leopard' },
+  { he: 'דֻּב', translit: 'dov', fr: 'bear' },
+  { he: 'פִּיל', translit: 'pil', fr: 'elephant' },
+  { he: 'גָּמָל', translit: 'gamal', fr: 'camel' }
+]);
+
+addMiniQuiz('Animals Quiz', [
+  { q: '"Dog" =', options: ['חָתוּל', 'כֶּלֶב', 'אַרְנָב', 'סוּס'], answer: 1 },
+  { q: 'Tel Aviv has more... per capita than any other city:', options: ['Cars', 'Dogs', 'Cats (street)', 'Pets'], answer: 2, explain: 'Famous for its huge street cat population' },
+  { q: 'A "וֶטֶרִינָר" is...', options: ['Pet shop', 'Veterinarian', 'Animal shelter', 'Dog walker'], answer: 1 },
+  { q: '"Camel" =', options: ['גָּמָל', 'חֲמוֹר', 'סוּס', 'פִּיל'], answer: 0 },
+  { q: 'A common Hebrew idiom uses חֲמוֹר for...', options: ['Hard worker', 'Stubborn person', 'Both A and B', 'Fast runner'], answer: 2 }
+]);
+
+addCulturalText('At the Vet — Bringing Your Cat', "Every Tel Aviv apartment has a cat (or two). Israelis are nuts for street cats and will adopt the entire alley.", [
+  { he: 'וֶטֶרִינָר: שָׁלוֹם, מָה הַבְּעָיָה?', translit: "Veterinar: Shalom, ma ha-be\'aya?", fr: 'Vet: Hello, what\'s the problem?' },
+  { he: 'אַתָּה: הֶחָתוּל שֶׁלִּי לֹא אוֹכֵל כְּבָר 3 יָמִים', translit: "Ata: He-chatul sheli lo ochel kvar 3 yamim", fr: "You: My cat hasn't eaten for 3 days" },
+  { he: 'וֶטֶרִינָר: בֶּן כַּמָּה הוּא? יֵשׁ חִסּוּנִים?', translit: "Veterinar: Ben kama hu? Yesh chisunim?", fr: 'Vet: How old is he? Vaccinations?' },
+  { he: 'אַתָּה: בֶּן 5, מְעֻקָּר, חִסּוּנִים מְעוּדְכָּנִים', translit: "Ata: Ben 5, me\'ukar, chisunim me\'udkanim", fr: 'You: 5 years old, neutered, vaccinations updated' },
+  { he: 'וֶטֶרִינָר: אֲנִי מַרְגִּישׁ אֶת הַבֶּטֶן... יֵשׁ פֹּה מַשֶּׁהוּ', translit: "Veterinar: Ani margish et ha-beten... yesh po mashehu", fr: 'Vet: I feel the belly... there\'s something here' },
+  { he: 'וֶטֶרִינָר: צָרִיךְ בְּדִיקַת דָּם וּצִילּוּם', translit: "Veterinar: Tzarich bdikat dam ve-tzilum", fr: 'Vet: We need a blood test and X-ray' },
+  { he: 'אַתָּה: כַּמָּה זֶה יַעֲלֶה?', translit: "Ata: Kama ze ya\'aleh?", fr: 'You: How much will it cost?' },
+  { he: 'וֶטֶרִינָר: 450 שֶׁקֶל הַכֹּל יַחַד', translit: "Veterinar: 450 shekel ha-kol yachad", fr: 'Vet: 450 shekel total' },
+  { he: 'אַתָּה: בְּסֵדֶר, נַעֲשֶׂה אֶת זֶה', translit: "Ata: Beseder, na\'ase et ze", fr: 'You: OK, let\'s do it' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('animals'); } });
+</script></body></html>

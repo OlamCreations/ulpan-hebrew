@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>77 — Agriculture</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Agriculture & Farming</h1><div class="subtitle">Lesson 77 · חקלאות</div></div><div class="nav"><a href="index.html">Home</a><a href="77-agriculture.html" class="active">77</a></div></header>
+
+<p class="intro">Israel is an agricultural innovator: drip irrigation (invented here), greenhouses, water reuse, desert farming. Vocabulary for kibbutz/moshav life, crops, livestock.</p>
+
+<h2>Farm Types & People</h2>
+<div class="word-list" id="people"></div>
+
+<h2>Crops</h2>
+<div class="word-list" id="crops"></div>
+
+<h2>Israeli Specialties</h2>
+<div class="word-list" id="israeli"></div>
+
+<h2>Tools & Equipment</h2>
+<div class="word-list" id="tools"></div>
+
+<h2>Animals (livestock)</h2>
+<div class="word-list" id="animals"></div>
+
+<h2>Cycle & Seasons</h2>
+<div class="word-list" id="cycle"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 77 · agriculture · <a href="78-wine.html" style="color:var(--accent)">Next: Wine →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const PEOPLE = [
+  { he: 'חַקְלָאוּת', translit: 'chakla\'ut', fr: 'agriculture' },
+  { he: 'חַקְלַאי', translit: 'chaklai', fr: 'farmer' },
+  { he: 'קִבּוּץ', translit: 'kibbutz', fr: 'kibbutz' },
+  { he: 'מוֹשָׁב', translit: 'moshav', fr: 'moshav' },
+  { he: 'חַוָּה', translit: 'chava', fr: 'farm' },
+  { he: 'מַטָּע', translit: 'mata', fr: 'orchard' },
+  { he: 'שָׂדֶה', translit: 'sade', fr: 'field' },
+  { he: 'גָּן יְרָקוֹת', translit: 'gan yerakot', fr: 'vegetable garden' },
+  { he: 'חָמָּמָה', translit: 'chamama', fr: 'greenhouse' }
+];
+const CROPS = [
+  { he: 'חִטָּה', translit: 'chita', fr: 'wheat' },
+  { he: 'שְׂעוֹרָה', translit: 'se\'ora', fr: 'barley' },
+  { he: 'תִּירָס', translit: 'tiras', fr: 'corn' },
+  { he: 'אֹרֶז', translit: 'orez', fr: 'rice' },
+  { he: 'תַּפּוּחַ אֲדָמָה', translit: 'tapuach adama', fr: 'potato' },
+  { he: 'עַגְבָנִיָּה', translit: 'agvaniya', fr: 'tomato' },
+  { he: 'מְלָפְפוֹן', translit: 'melafefon', fr: 'cucumber' },
+  { he: 'בָּצָל', translit: 'batzal', fr: 'onion' },
+  { he: 'שׁוּם', translit: 'shum', fr: 'garlic' }
+];
+const ISRAELI = [
+  { he: 'תְּמָרִים', translit: 'tmarim', fr: 'dates (Negev specialty)' },
+  { he: 'אֲבוֹקָדוֹ', translit: 'avokado', fr: 'avocado' },
+  { he: 'תַּפּוּזִים', translit: 'tapuzim', fr: 'oranges (Jaffa famous)' },
+  { he: 'אֶשְׁכּוֹלִיּוֹת', translit: 'eshkoliyot', fr: 'grapefruits' },
+  { he: 'רִמּוֹנִים', translit: 'rimonim', fr: 'pomegranates' },
+  { he: 'זֵיתִים', translit: 'zeytim', fr: 'olives' },
+  { he: 'עֲנָבִים', translit: 'anavim', fr: 'grapes' },
+  { he: 'תַּמְרוּכִית', translit: 'tamruchit', fr: 'sweet date' },
+  { he: 'פִּטָאיָה', translit: 'pitaya', fr: 'dragon fruit' }
+];
+const TOOLS = [
+  { he: 'מַכְשִׁיר', translit: 'machshir', fr: 'tool / device' },
+  { he: 'טְפְטוּף', translit: 'tiftuf', fr: 'drip irrigation (Israeli invention)' },
+  { he: 'הַשְׁקָיָה', translit: 'hashka\'ya', fr: 'irrigation' },
+  { he: 'דֶּשֶׁא', translit: 'deshe', fr: 'lawn / grass' },
+  { he: 'דֶּשֶׁן', translit: 'deshen', fr: 'fertilizer' },
+  { he: 'זֶרַע', translit: 'zera', fr: 'seed' },
+  { he: 'נְבִיטָה', translit: 'nevita', fr: 'germination' },
+  { he: 'קָצִיר', translit: 'katzir', fr: 'harvest' },
+  { he: 'טְרַקְטוֹר', translit: 'traktor', fr: 'tractor' }
+];
+const ANIMALS = [
+  { he: 'בֶּהֱמַת מֶשֶׁק', translit: 'behemat meshek', fr: 'livestock' },
+  { he: 'פָּרָה', translit: 'para', fr: 'cow' },
+  { he: 'תֻרְבּוּת חָלָב', translit: 'turbut chalav', fr: 'dairy farming' },
+  { he: 'כֶּבֶשׂ', translit: 'keves', fr: 'sheep' },
+  { he: 'עֵז', translit: 'ez', fr: 'goat' },
+  { he: 'עוֹף', translit: 'of', fr: 'chicken' },
+  { he: 'לוּל', translit: 'lul', fr: 'chicken coop' },
+  { he: 'דְּבוֹרָה', translit: 'dvora', fr: 'bee' },
+  { he: 'דְּבַשׁ', translit: 'dvash', fr: 'honey' }
+];
+const CYCLE = [
+  { he: 'עוֹנָה', translit: 'ona', fr: 'season' },
+  { he: 'זְרִיעָה', translit: 'zria', fr: 'sowing' },
+  { he: 'נְבִיטָה', translit: 'nevita', fr: 'germination' },
+  { he: 'גִּדּוּל', translit: 'gidul', fr: 'growth' },
+  { he: 'קָצִיר', translit: 'katzir', fr: 'harvest' },
+  { he: 'בָּצִיר', translit: 'batzir', fr: 'grape harvest / vintage' },
+  { he: 'מַסִּיק', translit: 'masik', fr: 'olive harvest' }
+];
+const PHRASES = [
+  { he: 'יִשְׂרָאֵל מַמְצִיאָה הַשְׁקָיָה בַּטְּפְטוּף', translit: 'Yisrael mamtzi\'a hashka\'ya ba-tiftuf', fr: 'Israel invented drip irrigation' },
+  { he: 'הַקִּבּוּצִים מְגַדְּלִים אֲבוֹקָדוֹ', translit: 'ha-kibutzim megadlim avokado', fr: 'the kibbutzim grow avocado' },
+  { he: 'תְּמָרִים מֵהַנֶּגֶב', translit: 'tmarim me-ha-Negev', fr: 'dates from the Negev' },
+  { he: 'הַקָּצִיר בָּא', translit: 'ha-katzir ba', fr: 'the harvest is coming' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('people', PEOPLE); R('crops', CROPS); R('israeli', ISRAELI); R('tools', TOOLS); R('animals', ANIMALS); R('cycle', CYCLE); R('phrases', PHRASES);
+addExtraVocab('Agriculture Vocabulary', [
+  { he: 'חַקְלָאוּת', translit: 'chakla\'ut', fr: 'agriculture' },
+  { he: 'חַקְלַאי', translit: 'chakla\'i', fr: 'farmer' },
+  { he: 'שָׂדֶה', translit: 'sade', fr: 'field' },
+  { he: 'מַטָּע', translit: 'mata', fr: 'orchard' },
+  { he: 'יְבוּל', translit: 'yvul', fr: 'crop / yield' },
+  { he: 'קָצִיר', translit: 'katzir', fr: 'harvest' },
+  { he: 'זְרִיעָה', translit: 'zri\'a', fr: 'sowing' },
+  { he: 'הַשְׁקָיָה', translit: 'hashkaya', fr: 'irrigation' },
+  { he: 'דֶּשֶׁן', translit: 'deshen', fr: 'fertilizer' },
+  { he: 'חֲמַמָה', translit: 'chamama', fr: 'greenhouse' },
+  { he: 'בַּעַל-חַיִּים', translit: 'ba\'al-chayim', fr: 'animal' },
+  { he: 'רֶפֶת', translit: 'refet', fr: 'cowshed' },
+  { he: 'לוּל', translit: 'lul', fr: 'chicken coop' },
+  { he: 'בַּקָר', translit: 'bakar', fr: 'cattle' },
+  { he: 'אֲסַם', translit: 'asam', fr: 'barn / silo' }
+]);
+
+addMiniQuiz('Agriculture Quiz', [
+  { q: 'Drip irrigation invented by Israeli =', options: ['Aaron Aaronsohn', 'Simcha Blass', 'Netafim', 'Both B and the founders of Netafim'], answer: 3 },
+  { q: 'Kibbutz =', options: ['Religious commune', 'Collective agricultural settlement', 'City', 'Refugee camp'], answer: 1 },
+  { q: 'Moshav =', options: ['City', 'Cooperative agricultural village (private homes, shared marketing)', 'Religious sect', 'Type of fruit'], answer: 1 },
+  { q: 'Israel exports famously...', options: ['Cotton', 'Cherry tomatoes (developed at Hebrew U!)', 'Olive oil', 'B and C'], answer: 3 },
+  { q: '"Tu Bishvat" celebrates...', options: ['Independence', 'New Year of Trees', 'Harvest', 'Spring'], answer: 1, explain: '15th of Shvat' }
+]);
+
+addCulturalText('Drip Irrigation (Hashkaya Tiftufit) — Israeli Invention', 'Invented by Simcha Blass (1959) and commercialized by Netafim (Kibbutz Hatzerim, 1965). Saved global agriculture in arid zones. The single most important Israeli agricultural export.', [
+  { he: 'הַשְׁקָיָה טִפְטוּפִית', translit: "Hashkaya tiftufit", fr: 'Drip irrigation' },
+  { he: 'הַמַּמְצִיא: סִמְחָה בְּלָאס', translit: "Ha-mamtzi: Simcha Blass", fr: 'The inventor: Simcha Blass' },
+  { he: 'נֶטָפִים — קִבּוּץ חֲצֵרִים, 1965', translit: "Netafim — kibbutz Chatzerim, 1965", fr: 'Netafim — Kibbutz Hatzerim, 1965' },
+  { he: 'חוֹסֶכֶת 60-70 אֲחוּזִים מַיִם', translit: "Chosechet 60-70 achuzim mayim", fr: 'Saves 60-70% of water' },
+  { he: 'מַעֲבִירָה דֶּשֶׁן יָשִׁיר לַשְּׁרֹשׁ', translit: "Ma\'avira deshen yashir la-shoresh", fr: 'Delivers fertilizer directly to the root' },
+  { he: 'מְיֻצֶּרֶת בְּ-110 מְדִינוֹת', translit: "Meyutzeret be-110 medinot", fr: 'Used in 110 countries' },
+  { he: 'הִפְּכָה אֶת הַנֶּגֶב לִשְׂדוֹת חַקְלָאוּת', translit: "Hifcha et ha-negev li-sdot chakla\'ut", fr: 'Turned the Negev into agricultural fields' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('agriculture'); } });
+</script></body></html>

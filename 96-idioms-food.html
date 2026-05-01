@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>96 — Idioms with Food</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Idioms with Food</h1><div class="subtitle">Lesson 96 · ביטויים עם אוכל</div></div><div class="nav"><a href="index.html">Home</a><a href="96-idioms-food.html" class="active">96</a></div></header>
+
+<p class="intro">Food in Hebrew idioms reveals priorities: bread (לֶחֶם) means livelihood, salt (מֶלַח) means truth, milk and honey (חָלָב וּדְבַשׁ) means abundance. The Israeli kitchen is also the Israeli philosophy.</p>
+
+<div class="tip"><strong>Cultural reality</strong> — When an Israeli says לֶחֶם וְמַיִם (bread and water), they mean "the bare minimum for survival." When they say חָלָב וּדְבַשׁ (milk and honey), they mean paradise. The food spectrum maps the life spectrum.</div>
+
+<h2>Bread (לֶחֶם)</h2>
+<div class="word-list" id="bread"></div>
+
+<h2>Salt & Sugar (מֶלַח / סֻכָּר)</h2>
+<div class="word-list" id="salt"></div>
+
+<h2>Milk, Honey, Eggs</h2>
+<div class="word-list" id="dairy"></div>
+
+<h2>Vegetables & Fruit</h2>
+<div class="word-list" id="produce"></div>
+
+<h2>Meat & Fish</h2>
+<div class="word-list" id="meat"></div>
+
+<h2>Cooking & Eating</h2>
+<div class="word-list" id="cooking"></div>
+
+<h2>Drink Idioms</h2>
+<div class="word-list" id="drink"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Dialogue: Two Friends at the Shuk</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<h2>Food Idioms in Context</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 96 · idioms · <a href="97-mistakes.html" style="color:var(--accent)">Next: Common Mistakes →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const BREAD = [
+  { he: 'לֶחֶם וּמַיִם', translit: 'lechem u-mayim', fr: 'bread and water / bare minimum' },
+  { he: 'לֶחֶם בִּרְכָתוֹ', translit: 'lechem birchato', fr: 'his daily bread / livelihood' },
+  { he: 'לִקְצוֹר לֶחֶם', translit: 'liktzor lechem', fr: 'to harvest bread / earn living' },
+  { he: 'אֵין לֶחֶם בַּבַּיִת', translit: 'eyn lechem ba-bayit', fr: "no bread at home / poverty" },
+  { he: 'לֶחֶם הַחֻקִּים', translit: 'lechem ha-chukim', fr: 'bread of the laws / regulated existence' },
+  { he: 'הַלֶּחֶם וְהַחֶמְאָה שֶׁלִּי', translit: 'ha-lechem ve-ha-chem\'a sheli', fr: 'my bread and butter' }
+];
+const SALT = [
+  { he: 'מֶלַח הָאָרֶץ', translit: 'melach ha-aretz', fr: 'salt of the earth' },
+  { he: 'גַּרְגִּיר מֶלַח', translit: 'gargir melach', fr: 'grain of salt' },
+  { he: 'נָתַן בּוֹ מֶלַח', translit: 'natan bo melach', fr: 'gave him salt / criticized' },
+  { he: 'מָתוֹק כְּמוֹ דְּבַשׁ', translit: 'matok kmo dvash', fr: 'sweet as honey' },
+  { he: 'חָסֵר סֻכָּר', translit: 'chaser sukar', fr: 'lacks sugar / tasteless' },
+  { he: 'סֻכָּר וְחָלָב', translit: 'sukar ve-chalav', fr: 'sugar and milk / sweet life' }
+];
+const DAIRY = [
+  { he: 'אֶרֶץ זָבַת חָלָב וּדְבַשׁ', translit: 'eretz zavat chalav u-dvash', fr: 'land flowing with milk and honey' },
+  { he: 'חָלָב אֵם', translit: 'chalav em', fr: "mother's milk / from cradle" },
+  { he: 'בִּיצָה רַכָּה', translit: 'beytza raka', fr: 'soft egg / fragile person' },
+  { he: 'רוֹקֵד עַל הַבֵּיצִים', translit: 'roked al ha-beytzim', fr: 'dancing on eggs / treading carefully' },
+  { he: 'אֶחָד בְּלִי הַשֵּׁנִי כְּמוֹ חָלָב בְּלִי דְּבַשׁ', translit: 'echad bli ha-sheni kmo chalav bli dvash', fr: 'one without the other like milk without honey' }
+];
+const PRODUCE = [
+  { he: 'תַּפּוּחַ זָהָב', translit: 'tapuach zahav', fr: 'orange (lit. golden apple)' },
+  { he: 'עֵץ הַתְּאֵנָה', translit: 'etz ha-te\'ena', fr: 'fig tree (peace symbol)' },
+  { he: 'גֶּזֶר וּמַקֵּל', translit: 'gezer u-makel', fr: 'carrot and stick' },
+  { he: 'בָּצָל בְּתוֹךְ בָּצָל', translit: 'batzal be-toch batzal', fr: 'onion within onion / many layers' },
+  { he: 'תָּמָר עַל הָעֵץ', translit: 'tamar al ha-etz', fr: 'date on the tree / valuable but inaccessible' },
+  { he: 'עָגוּל כְּמוֹ עַגְבָנִיָּה', translit: 'agol kmo agvania', fr: 'round like a tomato' }
+];
+const MEAT = [
+  { he: 'בָּשָׂר וָדָם', translit: 'basar va-dam', fr: 'flesh and blood / human' },
+  { he: 'דָּג קָטָן בְּיָם גָּדוֹל', translit: 'dag katan be-yam gadol', fr: 'small fish in big sea' },
+  { he: 'דָּג מָלוּחַ', translit: 'dag maluach', fr: 'salted fish (gullible)' },
+  { he: 'בָּשָׂר רַךְ', translit: 'basar rach', fr: 'soft flesh / weakling' },
+  { he: 'מַרְק עוֹף לַחוֹלִים', translit: 'marak of la-cholim', fr: 'chicken soup for the sick' }
+];
+const COOKING = [
+  { he: 'מֵבִישׁ דַּיְסָה', translit: 'mevish daysa', fr: 'cooks porridge / makes a mess' },
+  { he: 'הַמַּרְק יָצָא טוֹב', translit: 'ha-marak yatza tov', fr: 'the soup turned out good (idiom: it worked)' },
+  { he: 'בִּשֵּׁל בַּקְּדֵרָה שֶׁלּוֹ', translit: 'bishel ba-kedera shelo', fr: 'cooked in his own pot' },
+  { he: 'אָכַל אוֹתוֹ חַי', translit: 'achal oto chai', fr: 'ate him alive (defeated him)' },
+  { he: 'אֲנִי לֹא אוֹכֵל אֶת זֶה', translit: 'ani lo ochel et ze', fr: "I'm not buying that" }
+];
+const DRINK = [
+  { he: 'יֵין יָשָׁן בְּקַנְקַן חָדָשׁ', translit: 'yayin yashan be-kankan chadash', fr: 'old wine in new bottle' },
+  { he: 'מַיִם שֶׁקֶטוֹם', translit: 'mayim shketim', fr: 'still waters / quiet but deep' },
+  { he: 'קָפֶה בַּצֹּהֳרַיִם', translit: 'kafe ba-tzohorayim', fr: 'noon coffee / Israeli tradition' },
+  { he: 'תֵּה עִם מָתוֹק', translit: 'te im matok', fr: 'sweet tea / friendliness' },
+  { he: 'מַיִם מְלוּחִים', translit: 'mayim mluchim', fr: 'salty water / Dead Sea / disappointment' }
+];
+const DIALOGUE = [
+  { speaker: 'A', he: 'אֲנִי הוֹלֵךְ לַשּׁוּק לִקְנוֹת לֶחֶם וּבָצָל.', translit: 'Ani holech la-shuk liknot lechem u-batzal.', fr: "I'm going to the shuk to buy bread and onion." },
+  { speaker: 'B', he: 'הָאֵם שֶׁלִּי תָּמִיד אוֹמֶרֶת: בְּלִי לֶחֶם, אֵין חַיִּים.', translit: 'Ha-em sheli tamid omeret: bli lechem, eyn chayim.', fr: 'My mother always says: without bread, no life.' },
+  { speaker: 'A', he: 'נָכוֹן. בְּמַרְכַּז הַמַּחֲנֶה יְהוּדָה הַמּוֹכֵר עוֹשֶׂה לֶחֶם זָהָב.', translit: 'Nachon. Be-merkaz ha-machane Yehuda ha-mocher ose lechem zahav.', fr: "Right. In Mahane Yehuda center, the seller makes golden bread." },
+  { speaker: 'B', he: 'אַתָּה מַזְמִין אוֹתִי? אֲנִי לֹא רוֹצֶה לִהְיוֹת דָּג קָטָן.', translit: "Ata mazmin oti? Ani lo rotze lihyot dag katan.", fr: "Are you inviting me? I don't want to be a small fish." },
+  { speaker: 'A', he: 'בּוֹא, נֵצֵא יַחַד. נֶאֱכַל גַּם פַלָאפֶל.', translit: 'Bo, netze yachad. Ne\'echal gam falafel.', fr: "Come, let's go together. We'll eat falafel too." },
+  { speaker: 'B', he: 'יָאלָה, אַחֲרֵי הַשּׁוּק קָפֶה. זוֹ אֶרֶץ זָבַת חָלָב וּדְבַשׁ.', translit: 'Yalla, acharey ha-shuk kafe. Zo eretz zavat chalav u-dvash.', fr: 'Yalla, after the shuk, coffee. This is a land of milk and honey.' }
+];
+const PHRASES = [
+  { he: 'הוּא הַלֶּחֶם וְהַחֶמְאָה שֶׁל הַמִּשְׁפָּחָה', translit: 'hu ha-lechem ve-ha-chem\'a shel ha-mishpacha', fr: "he's the breadwinner of the family" },
+  { he: 'תֵּן לָהּ גַּרְגִּיר מֶלַח שֶׁל אֱמֶת', translit: 'ten la gargir melach shel emet', fr: 'give her a grain of truth (m.)' },
+  { he: 'אֲנִי לֹא אוֹכֵל אֶת זֶה', translit: 'ani lo ochel et ze', fr: "I don't buy that excuse" },
+  { he: 'הַסִּפּוּר הַזֶּה הוּא דַּיְסָה', translit: 'ha-sipur ha-ze hu daysa', fr: "this story's a mess" },
+  { he: 'הוּא בָּשָׂר רַךְ', translit: 'hu basar rach', fr: 'he\'s soft / weak' },
+  { he: 'יָצָא לִי הַמַּרְק טוֹב', translit: 'yatza li ha-marak tov', fr: "it turned out well for me" },
+  { he: 'יֵין יָשָׁן בְּקַנְקַן חָדָשׁ — תַּסְתַּכֵּל מֵעֵבֶר', translit: 'yayin yashan be-kankan chadash — tastakel me-ever', fr: 'old wine in new bottle — look beyond (m.)' },
+  { he: 'אַל תְּבַשֵּׁל מָה שֶׁלֹּא תֹּאכַל', translit: 'al tevashel ma she-lo tochal', fr: "don't cook what you won't eat (m.)" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('bread', BREAD); R('salt', SALT); R('dairy', DAIRY); R('produce', PRODUCE); R('meat', MEAT); R('cooking', COOKING); R('drink', DRINK); R('phrases', PHRASES);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  dialogueEl.appendChild(el);
+});
+async function playDialogue() { for (const line of DIALOGUE) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 2600)); } markLessonDone('idioms-food'); }
+
+addExtraVocab('More Food Idioms', [
+  { he: 'לֶחֶם בְּחִינָּם', translit: 'lechem be-chinam', fr: 'free bread (something easy)' },
+  { he: 'לְקַבֵּל אֶת הַלֶּחֶם', translit: 'lekabel et ha-lechem', fr: 'receive one\'s livelihood' },
+  { he: 'מָה זֶה הַחָלָב הַזֶּה?', translit: 'ma ze ha-chalav ha-ze?', fr: 'what is this milk? (no good)' },
+  { he: 'דְּבַשׁ עַל הַשְּׂפָתַיִם', translit: 'dvash al ha-sfatayim', fr: 'honey on the lips (sweet talker)' },
+  { he: 'יַיִן יָשָׁן', translit: 'yayin yashan', fr: 'old wine (something classic)' },
+  { he: 'מָתוֹק מִדְּבַשׁ', translit: 'matok mi-dvash', fr: 'sweeter than honey' },
+  { he: 'מָר כְּמוֹ לַעֲנָה', translit: 'mar kmo la\'ana', fr: 'bitter as wormwood' },
+  { he: 'שׁוּם דָּבָר אַחֵר עַל הָאֵשׁ', translit: 'shum davar acher al ha-esh', fr: 'nothing else on the fire (not interested)' },
+  { he: 'אָכַל אֶת הַלֵּב', translit: 'achal et ha-lev', fr: 'ate the heart (heartbroken)' },
+  { he: 'בֵּיצָה רַכָּה', translit: 'beytza raka', fr: 'soft egg (sensitive)' },
+  { he: 'גְּלִידָה בָּרֹאשׁ', translit: 'glida ba-rosh', fr: 'ice cream in the head (brain freeze)' }
+]);
+
+addMiniQuiz('Food Idioms Quiz', [
+  { q: 'אֶרֶץ זָבַת חָלָב וּדְבַשׁ =', options: ['Land of milk and honey', 'Sour land', 'Hot land', 'Holy land'], answer: 0 },
+  { q: 'מֶלַח הָאָרֶץ =', options: ['Salted bread', 'Salt of the earth (good people)', 'Salty sea', 'Spice'], answer: 1 },
+  { q: '"My bread and butter" =', options: ['הַלֶּחֶם וְהַחֶמְאָה שֶׁלִּי', 'הַחָלָב וְהַדְּבַשׁ', 'הַתֵּה וְהַקָּפֶה', 'הַמַּיִם וְהַיַּיִן'], answer: 0 },
+  { q: 'יֵין יָשָׁן בְּקַנְקַן חָדָשׁ =', options: ['Old wine in new bottle', 'Fresh wine', 'Cheap wine', 'Spilled wine'], answer: 0 },
+  { q: 'בִּיצָה רַכָּה =', options: ['Hard egg', 'Soft egg = fragile/sensitive person', 'Boiled egg', 'Healthy person'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('idioms-food'); } });
+</script></body></html>

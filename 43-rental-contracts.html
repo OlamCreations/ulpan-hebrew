@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>43 — Rental Contracts</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Rental Contracts</h1><div class="subtitle">Lesson 43 · חוזה שכירות</div></div><div class="nav"><a href="index.html">Home</a><a href="43-rental-contracts.html" class="active">43</a></div></header>
+
+<p class="intro">A rental contract in Israel is detailed and tightly worded. It includes guarantor (arev), bank guarantees (arvut bankait), security deposit (pikadon). Understanding the legal vocabulary protects you from disputes.</p>
+
+<div class="tip"><strong>Standard rental year</strong> — Most leases are 1 year with 1-year renewal option. 2-month security deposit + bank guarantee + 1-2 guarantors are typical. Furniture (mefurash / lo mefurash) is a key clause.</div>
+
+<h2>Contract Parties</h2>
+<div class="word-list" id="parties"></div>
+
+<h2>Contract Terms</h2>
+<div class="word-list" id="terms"></div>
+
+<h2>Payments & Deposits</h2>
+<div class="word-list" id="payments"></div>
+
+<h2>Guarantors & Guarantees</h2>
+<div class="word-list" id="guarantee"></div>
+
+<h2>Maintenance & Repairs</h2>
+<div class="word-list" id="maintenance"></div>
+
+<h2>Termination & Disputes</h2>
+<div class="word-list" id="termination"></div>
+
+<hr class="section-divider">
+<h2>Negotiation Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 43 · contracts · <a href="44-job-hunting.html" style="color:var(--accent)">Next: Job Hunting →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const PARTIES = [
+  { he: 'מַשְׂכִּיר', translit: 'maskir', fr: 'lessor / landlord' },
+  { he: 'שׂוֹכֵר', translit: 'socher', fr: 'lessee / tenant' },
+  { he: 'בַּעַל הַדִּירָה', translit: 'ba\'al ha-dira', fr: 'apartment owner' },
+  { he: 'מְתַוֵּךְ', translit: 'metavech', fr: 'real estate agent' },
+  { he: 'עוֹרֵךְ דִּין', translit: 'orech din', fr: 'lawyer' },
+  { he: 'נוֹטָרְיוֹן', translit: 'notaryon', fr: 'notary' },
+  { he: 'צַד', translit: 'tzad', fr: 'party (to a contract)' }
+];
+const TERMS = [
+  { he: 'חוֹזֶה שְׂכִירוּת', translit: 'choze schirut', fr: 'rental contract' },
+  { he: 'תְּקוּפַת שְׂכִירוּת', translit: 'tkufat schirut', fr: 'lease term' },
+  { he: 'הַתְחָלָה', translit: 'hatchala', fr: 'start date' },
+  { he: 'סִיּוּם', translit: 'siyum', fr: 'end date' },
+  { he: 'אוֹפְּצְיָה', translit: 'optzia', fr: 'option (to extend)' },
+  { he: 'הַאֲרָכָה', translit: 'ha\'aracha', fr: 'extension' },
+  { he: 'הוֹדָעָה מֻקְדֶּמֶת', translit: 'hoda\'a mukdemet', fr: 'advance notice' },
+  { he: 'תְּקוּפַת הוֹדָעָה', translit: 'tkufat hoda\'a', fr: 'notice period' },
+  { he: 'מְפֻרָשׁ', translit: 'meforash', fr: 'furnished' },
+  { he: 'לֹא מְפֻרָשׁ', translit: 'lo meforash', fr: 'unfurnished' }
+];
+const PAYMENTS = [
+  { he: 'שֶׂכֶר חֹדֶשׁ', translit: 'sechar chodesh', fr: 'monthly rent' },
+  { he: 'דְּמֵי שְׂכִירוּת', translit: 'dmey schirut', fr: 'rental fees' },
+  { he: 'פִּקָּדוֹן', translit: 'pikadon', fr: 'security deposit' },
+  { he: 'שְׁנֵי חֳדָשִׁים', translit: 'shney chodashim', fr: '2 months (deposit norm)' },
+  { he: 'תַּשְׁלוּם רִאשׁוֹן', translit: 'tashlum rishon', fr: 'first payment' },
+  { he: 'הַעֲבָרָה בַּנְקָאִית', translit: 'ha\'avara bankait', fr: 'bank transfer' },
+  { he: 'שֵׁקִים דְּחוּיִים', translit: 'shekim dechuyim', fr: 'post-dated checks' },
+  { he: 'הוֹרָאַת קֶבַע', translit: 'hora\'at keva', fr: 'standing order / direct debit' }
+];
+const GUARANTEE = [
+  { he: 'עָרֵב', translit: 'arev', fr: 'guarantor' },
+  { he: 'עֲרֵבוּת', translit: 'arevut', fr: 'guarantee' },
+  { he: 'עֲרֵבוּת בַּנְקָאִית', translit: 'arevut bankait', fr: 'bank guarantee' },
+  { he: 'עֲרֵבוּת אִישִׁית', translit: 'arevut ishit', fr: 'personal guarantee' },
+  { he: 'תֹּקֶף הָעֲרֵבוּת', translit: 'tokef ha-arevut', fr: 'guarantee validity' },
+  { he: 'מִמּוּשׁ עֲרֵבוּת', translit: 'mimush arevut', fr: 'guarantee enforcement' }
+];
+const MAINTENANCE = [
+  { he: 'אַחְזָקָה', translit: 'achzaka', fr: 'maintenance' },
+  { he: 'תִּקּוּן', translit: 'tikun', fr: 'repair' },
+  { he: 'בַּעַל הַבַּיִת אַחְרַאי', translit: 'ba\'al ha-bayit achrai', fr: 'landlord responsible' },
+  { he: 'הַשּׂוֹכֵר אַחְרַאי', translit: 'ha-socher achrai', fr: 'tenant responsible' },
+  { he: 'בְּלָאוֹת', translit: 'bla\'ut', fr: 'wear & tear' },
+  { he: 'נֵזֶק', translit: 'nezek', fr: 'damage' }
+];
+const TERMINATION = [
+  { he: 'סִיּוּם חוֹזֶה', translit: 'siyum choze', fr: 'contract termination' },
+  { he: 'יְצִיאָה מֻקְדֶּמֶת', translit: 'yetzi\'a mukdemet', fr: 'early exit' },
+  { he: 'פְּרֵדַת חוֹזֶה', translit: 'predat choze', fr: 'breach of contract' },
+  { he: 'פִּצּוּי', translit: 'pitzuy', fr: 'compensation' },
+  { he: 'בּוֹרְרוּת', translit: 'borerut', fr: 'arbitration' },
+  { he: 'תְּבִיעָה', translit: 'tvi\'a', fr: 'lawsuit / claim' },
+  { he: 'בֵּית מִשְׁפָּט', translit: 'beit mishpat', fr: 'court' }
+];
+const PHRASES = [
+  { he: 'אֲנִי רוֹצֶה לְהוֹרִיד אֶת הַמְּחִיר', translit: 'ani rotze lehorid et ha-mechir', fr: 'I want to lower the price (m.)' },
+  { he: 'יֵשׁ אַרְנוֹנָה כְּלוּלָה?', translit: 'yesh arnona klula?', fr: 'is arnona included?' },
+  { he: 'אֲנִי צָרִיךְ עָרֵב', translit: 'ani tzarich arev', fr: 'I need a guarantor (m.)' },
+  { he: 'אֶפְשָׁר תַּשְׁלוּם בְּהַעֲבָרָה?', translit: 'efshar tashlum be-ha\'avara?', fr: 'can I pay by transfer?' },
+  { he: 'מָה כְּלוּל בַּשְּׂכִירוּת?', translit: 'ma kalul ba-schirut?', fr: 'what\'s included in the rent?' },
+  { he: 'הָעֲרֵבוּת בַּנְקָאִית', translit: 'ha-arevut bankait', fr: 'the bank guarantee' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('parties', PARTIES); R('terms', TERMS); R('payments', PAYMENTS); R('guarantee', GUARANTEE); R('maintenance', MAINTENANCE); R('termination', TERMINATION); R('phrases', PHRASES);
+
+addMiniQuiz('Rental Contract Quiz', [
+  { q: 'A "פִּקָּדוֹן" is...', options: ['Rent', 'Security deposit', 'Tax', 'Service fee'], answer: 1, explain: 'Pikadon — usually 2 months rent' },
+  { q: 'An "עָרֵב" is...', options: ['Real estate agent', 'Landlord', 'Guarantor', 'Notary'], answer: 2, explain: 'Israeli landlords usually require 1-2 guarantors' },
+  { q: 'Standard rental term =', options: ['6 months', '1 year + option', '5 years', '10 years'], answer: 1 },
+  { q: '"מְפֻרָשׁ" means the apartment is...', options: ['Furnished', 'Unfurnished', 'New', 'Renovated'], answer: 0 },
+  { q: 'Bank guarantee in Hebrew =', options: ['פִּקָּדוֹן בַּנְקָאִי', 'עֲרֵבוּת בַּנְקָאִית', 'מַשְׁכַּנְתָּא', 'הַעֲבָרָה בַּנְקָאִית'], answer: 1, explain: 'arevut bankait — common alongside guarantor' }
+]);
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('contracts'); } });
+</script></body></html>

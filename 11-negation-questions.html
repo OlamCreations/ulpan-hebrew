@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11 — Negation & Questions</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Negation & Questions</h1>
+    <div class="subtitle">Lesson 11 · שלילה ושאלות</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="10-time-clock.html">10</a>
+    <a href="11-negation-questions.html" class="active">11</a>
+    <a href="12-verbs-past.html">12</a>
+  </div>
+</header>
+
+<p class="intro">
+  To negate in Hebrew: place לֹא (lo) before the verb or adjective. To ask: no inversion needed — just raise your voice at the end (intonation), or start with a question word (who, what, where, when, why, how).
+</p>
+
+<h2>Question Words</h2>
+<div class="word-list" id="interrogatives"></div>
+
+<div class="tip">
+  <strong>Yes/no questions</strong> — In spoken Hebrew, keep normal word order and raise your voice. <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px;">אַתָּה אוֹכֵל?</span> (ata ochel?) = are you eating? The optional word <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px;">הַאִם</span> (ha'im) marks a formal question.
+</div>
+
+<h2>Simple Negation — לֹא</h2>
+<div class="word-list" id="negation-simple"></div>
+
+<h2>Negation with "Not Have" — אֵין (eyn)</h2>
+
+<div class="tip">
+  <strong>Have / not have</strong> — Hebrew has no verb "to have". You say "there is to me": <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px;">יֵשׁ לִי</span> (yesh li, I have). And "there is not to me": <span style="font-family: 'Frank Ruhl Libre', serif; font-size: 18px;">אֵין לִי</span> (eyn li, I don't have).
+</div>
+
+<div class="word-list" id="have"></div>
+
+<h2>Negation with "Nobody / Nothing / Never"</h2>
+<div class="word-list" id="total-negation"></div>
+
+<h2>Yes/No Questions</h2>
+<div class="word-list" id="yes-no"></div>
+
+<h2>Wh- Questions</h2>
+<div class="word-list" id="wh-questions"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Question Dialogue</h2>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<footer>
+  Lesson 11 · negation + questions · <a href="12-verbs-past.html" style="color:var(--accent)">Next: Past-tense Verbs →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const INTERROGATIVES = [
+  { he: 'מָה',       translit: 'ma',      fr: 'what' },
+  { he: 'מִי',       translit: 'mi',      fr: 'who' },
+  { he: 'אֵיפֹה',    translit: 'eyfo',    fr: 'where' },
+  { he: 'מָתַי',     translit: 'matay',   fr: 'when' },
+  { he: 'לָמָּה',    translit: 'lama',    fr: 'why' },
+  { he: 'אֵיךְ',     translit: 'eich',    fr: 'how' },
+  { he: 'כַּמָּה',    translit: 'kama',    fr: 'how much / how many' },
+  { he: 'אֵיזֶה',    translit: 'eyze',    fr: 'which (m.)' },
+  { he: 'אֵיזוֹ',    translit: 'eyzo',    fr: 'which (f.)' },
+  { he: 'הַאִם',     translit: "ha'im",   fr: 'is it that...? (formal)' },
+  { he: 'מֵאַיִן',   translit: 'me-ayin', fr: 'from where' },
+  { he: 'לְאָן',     translit: 'le-an',   fr: 'to where' }
+];
+
+const NEGATION_SIMPLE = [
+  { he: 'אֲנִי לֹא יוֹדֵעַ',    translit: "ani lo yode'a",   fr: "I don't know (m.)" },
+  { he: 'אֲנִי לֹא רוֹצָה',     translit: 'ani lo rotza',    fr: "I don't want (f.)" },
+  { he: 'הוּא לֹא בַּבַּיִת',  translit: 'hu lo ba-bayit',  fr: "he's not at home" },
+  { he: 'זֶה לֹא טוֹב',          translit: 'ze lo tov',       fr: "this isn't good" },
+  { he: 'אַתָּה לֹא מֵבִין?',    translit: 'ata lo mevin?',   fr: "don't you understand? (m.)" },
+  { he: 'הִיא לֹא בָּאָה',       translit: "hi lo ba'a",      fr: "she's not coming" }
+];
+
+const HAVE = [
+  { he: 'יֵשׁ לִי',         translit: 'yesh li',       fr: 'I have (lit. "there is to me")' },
+  { he: 'יֵשׁ לְךָ?',       translit: 'yesh lecha?',   fr: 'do you have? (m.)' },
+  { he: 'יֵשׁ לָךְ?',       translit: 'yesh lach?',    fr: 'do you have? (f.)' },
+  { he: 'יֵשׁ לוֹ',         translit: 'yesh lo',       fr: 'he has' },
+  { he: 'יֵשׁ לָהּ',        translit: 'yesh la',       fr: 'she has' },
+  { he: 'יֵשׁ לָנוּ',       translit: 'yesh lanu',     fr: 'we have' },
+  { he: 'אֵין לִי',         translit: 'eyn li',        fr: "I don't have" },
+  { he: 'אֵין לְךָ?',       translit: 'eyn lecha?',    fr: "don't you have? (m.)" },
+  { he: 'אֵין לִי כֶּסֶף',  translit: 'eyn li kesef',  fr: "I have no money" },
+  { he: 'יֵשׁ לִי תּוֹר',   translit: 'yesh li tor',   fr: 'I have an appointment' }
+];
+
+const TOTAL_NEGATION = [
+  { he: 'אַף אֶחָד',                 translit: 'af echad',                fr: 'nobody (m.)' },
+  { he: 'אַף אַחַת',                 translit: 'af achat',                fr: 'nobody (f.)' },
+  { he: 'שׁוּם דָּבָר',              translit: 'shum davar',              fr: 'nothing' },
+  { he: 'אַף פַּעַם',                translit: "af pa'am",                fr: 'never' },
+  { he: 'בְּשׁוּם מָקוֹם',           translit: 'be-shum makom',           fr: 'nowhere' },
+  { he: 'אֵין אַף אֶחָד',            translit: 'eyn af echad',            fr: "there's nobody" },
+  { he: 'אֲנִי לֹא יוֹדֵעַ שׁוּם דָּבָר', translit: "ani lo yode'a shum davar", fr: "I know nothing (m.)" },
+  { he: 'אַף פַּעַם לֹא הָיִיתִי שָׁם', translit: "af pa'am lo hayiti sham", fr: "I've never been there" }
+];
+
+const YES_NO = [
+  { he: 'אַתָּה מְדַבֵּר עִבְרִית?',     translit: 'ata medaber ivrit?',          fr: 'do you speak Hebrew? (m.)' },
+  { he: 'אַתְּ מִיִּשְׂרָאֵל?',           translit: 'at mi-Yisrael?',              fr: 'are you from Israel? (f.)' },
+  { he: 'יֵשׁ לְךָ זְמָן?',                translit: 'yesh lecha zman?',            fr: 'do you have time? (m.)' },
+  { he: 'אֶפְשָׁר לְשַׁלֵּם בְּכַרְטִיס?', translit: 'efshar leshalem be-kartis?', fr: 'can I pay by card?' },
+  { he: 'אַתָּה רוֹצֶה קָפֶה?',           translit: 'ata rotze kafe?',             fr: 'do you want coffee? (m.)' },
+  { he: 'הַאִם זֶה כָּשֵׁר?',              translit: "ha'im ze kasher?",            fr: 'is this kosher? (formal)' }
+];
+
+const WH_QUESTIONS = [
+  { he: 'מָה זֶה?',                       translit: 'ma ze?',                    fr: 'what is this?' },
+  { he: 'מָה אַתָּה עוֹשֶׂה?',            translit: 'ma ata oseh?',              fr: 'what are you doing? (m.)' },
+  { he: 'מִי אַתָּה?',                    translit: 'mi ata?',                   fr: 'who are you? (m.)' },
+  { he: 'אֵיפֹה הַתַּחֲנָה?',             translit: 'eyfo ha-tachana?',          fr: 'where is the station?' },
+  { he: 'מָתַי הָאוֹטוֹבּוּס בָּא?',     translit: 'matay ha-otobus ba?',       fr: 'when does the bus come?' },
+  { he: 'לָמָּה לֹא?',                    translit: 'lama lo?',                  fr: 'why not?' },
+  { he: 'אֵיךְ קוֹרְאִים לְךָ?',          translit: "eich kor'im lecha?",        fr: "what's your name? (m.)" },
+  { he: 'כַּמָּה זֶה עוֹלֶה?',            translit: 'kama ze oleh?',             fr: 'how much does it cost?' },
+  { he: 'אֵיזֶה יוֹם הַיּוֹם?',           translit: 'eyze yom ha-yom?',          fr: 'what day is today?' },
+  { he: 'מֵאַיִן אַתָּה?',                 translit: 'me-ayin ata?',              fr: 'where are you from? (m.)' },
+  { he: 'לְאָן אַתָּה הוֹלֵךְ?',          translit: 'le-an ata holech?',         fr: 'where are you going? (m.)' }
+];
+
+const DIALOGUE = [
+  { speaker: 'A', he: 'שָׁלוֹם, אֵיךְ קוֹרְאִים לְךָ?',       translit: "Shalom, eich kor'im lecha?",     fr: "Hello, what's your name?" },
+  { speaker: 'B', he: 'קוֹרְאִים לִי דָּוִד. וְאַתָּה?',     translit: "Kor'im li David. Ve-ata?",        fr: "My name is David. And you?" },
+  { speaker: 'A', he: 'אֲנִי יוֹנָס. מֵאַיִן אַתָּה?',       translit: 'Ani Yonas. Me-ayin ata?',         fr: 'I am Jonas. Where are you from?' },
+  { speaker: 'B', he: 'אֲנִי מִיְּרוּשָׁלַיִם. וְאַתָּה?',  translit: 'Ani mi-Yerushalayim. Ve-ata?',    fr: "I'm from Jerusalem. And you?" },
+  { speaker: 'A', he: 'אֲנִי מִצָּרְפַת. אֲנִי לֹא מְדַבֵּר עִבְרִית טוֹב.', translit: "Ani mi-Tzarfat. Ani lo medaber ivrit tov.", fr: "I'm from France. I don't speak Hebrew well." },
+  { speaker: 'B', he: 'אֵין דָּבָר! אַתָּה לוֹמֵד מָהֵר?',   translit: 'Eyn davar! Ata lomed maher?',     fr: "No worries! Are you learning fast?" },
+  { speaker: 'A', he: 'לֹא, זֶה קָשֶׁה. אֲבָל אֲנִי מְנַסֶּה.', translit: "Lo, ze kashe. Aval ani menase.",  fr: "No, it's hard. But I'm trying." }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('interrogatives', INTERROGATIVES);
+renderRows('negation-simple', NEGATION_SIMPLE);
+renderRows('have', HAVE);
+renderRows('total-negation', TOTAL_NEGATION);
+renderRows('yes-no', YES_NO);
+renderRows('wh-questions', WH_QUESTIONS);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `
+    <div style="display: flex; gap: 16px; align-items: baseline;">
+      <span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span>
+      <div style="flex: 1;">
+        <div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div>
+        <div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div>
+        <div style="font-size: 14px; margin-top: 4px;">${line.fr}</div>
+      </div>
+    </div>
+  `;
+  dialogueEl.appendChild(el);
+});
+
+async function playDialogue() {
+  for (const line of DIALOGUE) {
+    speak(line.he, 0.8);
+    await new Promise(r => setTimeout(r, 2400));
+  }
+  markLessonDone('negation');
+}
+
+addExtraVocab('Negation Words & Forms', [
+  { he: 'לֹא', translit: 'lo', fr: 'no / not' },
+  { he: 'אֵין', translit: 'eyn', fr: 'there is not / none' },
+  { he: 'אַף אֶחָד', translit: 'af echad', fr: 'no one' },
+  { he: 'אַף פַּעַם', translit: 'af pa\'am', fr: 'never' },
+  { he: 'אַף פַּעַם לֹא', translit: 'af pa\'am lo', fr: 'never (with verb)' },
+  { he: 'בְּשׁוּם אוֹפֶן', translit: 'be-shum ofen', fr: 'in no way' },
+  { he: 'כְּלוּם', translit: 'klum', fr: 'nothing' },
+  { he: 'שׁוּם דָּבָר', translit: 'shum davar', fr: 'nothing at all' },
+  { he: 'אַף לֹא', translit: 'af lo', fr: 'not even' },
+  { he: 'בְּלִי', translit: 'bli', fr: 'without' },
+  { he: 'מִבְּלִי לְ-', translit: 'mi-bli le-', fr: 'without (verb)' },
+  { he: 'לֹא עוֹד', translit: 'lo od', fr: 'no longer' }
+]);
+
+addExtraVocab('Question Words — All of Them', [
+  { he: 'מָה', translit: 'ma', fr: 'what' },
+  { he: 'מִי', translit: 'mi', fr: 'who' },
+  { he: 'אֵיפֹה', translit: 'eyfo', fr: 'where' },
+  { he: 'לְאָן', translit: 'le-an', fr: 'where to' },
+  { he: 'מֵאַיִן', translit: 'me-ayin', fr: 'where from' },
+  { he: 'מָתַי', translit: 'matay', fr: 'when' },
+  { he: 'לָמָּה', translit: 'lama', fr: 'why' },
+  { he: 'מַדּוּעַ', translit: 'madua', fr: 'why (formal)' },
+  { he: 'אֵיךְ', translit: 'eich', fr: 'how' },
+  { he: 'כַּמָּה', translit: 'kama', fr: 'how much / how many' },
+  { he: 'אֵיזֶה', translit: 'eyze', fr: 'which (m.)' },
+  { he: 'אֵיזוֹ', translit: 'eyzo', fr: 'which (f.)' },
+  { he: 'הַאִם', translit: 'ha\'im', fr: 'whether (yes/no question)' },
+  { he: 'בִּשְׁבִיל מָה?', translit: 'bishvil ma?', fr: 'what for?' },
+  { he: 'עִם מִי?', translit: 'im mi?', fr: 'with whom?' },
+  { he: 'אֶל מִי?', translit: 'el mi?', fr: 'to whom?' }
+]);
+
+addMiniQuiz('Negation & Questions Quiz', [
+  { q: '"Where are you from?" =', options: ['מָה אַתָּה?', 'מֵאַיִן אַתָּה?', 'אֵיפֹה אַתָּה?', 'לָמָּה אַתָּה?'], answer: 1 },
+  { q: 'How to negate "I have"?', options: ['יֵשׁ לִי לֹא', 'אֵין לִי', 'לֹא יֵשׁ לִי', 'בְּלִי לִי'], answer: 1, explain: 'eyn li = I don\'t have' },
+  { q: '"How many shekels?" =', options: ['מָה שֶׁקֶל?', 'מִי שֶׁקֶל?', 'כַּמָּה שֶׁקֶל?', 'אֵיךְ שֶׁקֶל?'], answer: 2 },
+  { q: 'אֵיזֶה / אֵיזוֹ depend on...', options: ['Time', 'Gender of noun', 'Number', 'Tense'], answer: 1 },
+  { q: 'How to ask "do you speak Hebrew?" yes/no style?', options: ['אַתָּה מְדַבֵּר עִבְרִית?', 'הַאִם אַתָּה מְדַבֵּר עִבְרִית?', 'מָה עִבְרִית?', 'A or B'], answer: 3, explain: 'Both work; "ha\'im" is more formal' }
+]);
+</script>
+
+</body>
+</html>

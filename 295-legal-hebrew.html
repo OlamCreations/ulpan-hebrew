@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>295 — Legal Hebrew Basics</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Legal Hebrew Basics — Contracts, Courts, Rights</h1><div class="subtitle">Lesson 295 · עִבְרִית מִשְׁפָּטִית</div></div><div class="nav"><a href="index.html">Home</a><a href="295-legal-hebrew.html" class="active">295</a></div></header>
+
+<p class="intro">Legal Hebrew is the most archaic register — full of Aramaic, Mishnaic Hebrew, and 19th-century terminology. At B2 you can read a rental contract, employment agreement, or court summons; identify the parties, obligations, terms, and termination clauses. You don't need to draft contracts (use a lawyer), but you must understand what you're signing. Israel\'s legal system: secular civil + religious courts (Rabbinical, Sharia, Druze, Christian) for personal status.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Hebrew legal vocabulary draws heavily from Talmudic Aramaic ("dina d\'malchuta dina" — the law of the kingdom is law) and modern Hebrew statutory terms. Always read the small print ("האותיות הקטנות"), look for cancellation clauses ("ביטול"), payment terms ("תשלומים"), and obligations ("התחייבויות"). Use a lawyer (orech din) for major contracts. Small claims court (m\'shpat ktanim) handles disputes up to ~33K NIS without a lawyer.</div>
+
+<h2 id="courts">Courts & Justice</h2>
+<div class="word-list" id="courts-list"></div>
+
+<h2 id="contracts">Contract Vocabulary</h2>
+<div class="word-list" id="contracts-list"></div>
+
+<h2 id="rights-legal">Legal Rights</h2>
+<div class="word-list" id="rights-list"></div>
+
+<h2 id="actions">Legal Actions</h2>
+<div class="word-list" id="actions-list"></div>
+
+<h2 id="vocab">Legal Vocabulary</h2>
+<div class="word-list" id="vocab-list"></div>
+
+<hr class="section-divider">
+
+<h2>Reading a Rental Contract Clause</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh works through the termination clauses of his rental contract.</div>
+  <div id="contract-read"></div>
+</div>
+
+<footer>Lesson 295 · Legal Hebrew · <a href="296-grammar-capstone.html" style="color:var(--accent)">Next: Grammar Capstone →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const COURTS = [
+  { he: 'בֵּית מִשְׁפָּט', translit: 'beit mishpat', fr: 'court' },
+  { he: 'בֵּית מִשְׁפָּט הַשָּׁלוֹם', translit: 'beit mishpat ha-shalom', fr: 'magistrate court' },
+  { he: 'בֵּית מִשְׁפָּט מְחוֹזִי', translit: 'beit mishpat mechozi', fr: 'district court' },
+  { he: 'בֵּית מִשְׁפָּט עֶלְיוֹן', translit: 'beit mishpat elyon', fr: 'Supreme Court' },
+  { he: 'בָּגַ"ץ', translit: 'BAGATZ', fr: 'High Court of Justice' },
+  { he: 'בֵּית דִּין רַבָּנִי', translit: 'beit din rabani', fr: 'rabbinical court' },
+  { he: 'מִשְׁפָּט קְטַנּוֹת', translit: 'mishpat ktanot', fr: 'small claims court' },
+  { he: 'בֵּית מִשְׁפָּט לְעִנְיְנֵי מִשְׁפָּחָה', translit: 'beit mishpat l\'inyanei mishpacha', fr: 'family court' },
+  { he: 'בֵּית מִשְׁפָּט לְעִבְרוֹת', translit: 'beit mishpat l\'avrot', fr: 'criminal court' },
+  { he: 'בֵּית דִּין לַעֲבוֹדָה', translit: 'beit din la\'avoda', fr: 'labor court' }
+];
+const CONTRACTS = [
+  { he: 'חוֹזֶה', translit: 'choze', fr: 'contract' },
+  { he: 'הֶסְכֵּם', translit: 'heskem', fr: 'agreement' },
+  { he: 'צַד א\' / צַד ב\'', translit: 'tzad alef / tzad bet', fr: 'party A / party B' },
+  { he: 'הִתְחַיְּבוּת', translit: 'hitchaybut', fr: 'obligation' },
+  { he: 'תַּשְׁלוּם', translit: 'tashlum', fr: 'payment' },
+  { he: 'בִּטּוּל', translit: 'bitul', fr: 'cancellation' },
+  { he: 'הַפְרָה', translit: 'hafrah', fr: 'breach' },
+  { he: 'פִּצּוּי', translit: 'pitzui', fr: 'compensation' },
+  { he: 'תְּקוּפַת הַחוֹזֶה', translit: 'tkufat ha-choze', fr: 'contract period' },
+  { he: 'חוֹזֶה הִתְחַיְּבוּת בִּלְתִּי-הָפִיךְ', translit: 'choze hitchaybut bilti-hafich', fr: 'irrevocable obligation contract' }
+];
+const RIGHTS = [
+  { he: 'זְכוּת', translit: 'zchut', fr: 'right' },
+  { he: 'חֵרוּת', translit: 'cherut', fr: 'liberty' },
+  { he: 'הַזְּכוּת לְהֵיוֹת מְיוּצָּג', translit: 'ha-zchut l\'heyot m\'yutzag', fr: 'right to be represented' },
+  { he: 'הַזְּכוּת לִהְיוֹת שׁוֹמֵעַ', translit: 'ha-zchut l\'shamea', fr: 'right to be heard' },
+  { he: 'חֲזָקַת הַחֵף מִפֶּשַׁע', translit: 'chazakat ha-chef mi-pesha', fr: 'presumption of innocence' },
+  { he: 'זְכוּת הָעֶמְדָה', translit: 'zchut ha-emdah', fr: 'standing (legal)' },
+  { he: 'זְכוּת הָאָדָם', translit: 'zchut ha-adam', fr: 'human rights' },
+  { he: 'חֹק יְסוֹד: כְּבוֹד הָאָדָם וְחֵרוּתוֹ', translit: 'chok yesod: kvod ha-adam v\'cheruto', fr: 'Basic Law: Human Dignity and Liberty' },
+  { he: 'חֹק יְסוֹד: חֹפֶשׁ הָעִסּוּק', translit: 'chok yesod: chofesh ha-isuk', fr: 'Basic Law: Freedom of Occupation' },
+  { he: 'הַזְּכוּת לִשְׁתִיקָה', translit: 'ha-zchut l\'shtikah', fr: 'right to silence' }
+];
+const ACTIONS = [
+  { he: 'תְּבִיעָה', translit: 'tvi\'a', fr: 'lawsuit' },
+  { he: 'הַגָּנָה', translit: 'haganah', fr: 'defense' },
+  { he: 'תַּצְהִיר', translit: 'tatzhir', fr: 'sworn affidavit' },
+  { he: 'עֵד', translit: 'ed', fr: 'witness' },
+  { he: 'עֵדוּת', translit: 'edut', fr: 'testimony' },
+  { he: 'פְּסַק דִּין', translit: 'psak din', fr: 'verdict / ruling' },
+  { he: 'עִרְעוּר', translit: 'ir\'ur', fr: 'appeal' },
+  { he: 'צַו', translit: 'tzav', fr: 'court order' },
+  { he: 'צַו מָנֵעַ', translit: 'tzav manea', fr: 'restraining order' },
+  { he: 'הַסְכָּמָה מִחוּץ לְכֹתְלֵי הַמִּשְׁפָּט', translit: 'haskama michutz l\'kotlei ha-mishpat', fr: 'out-of-court settlement' }
+];
+const VOCAB = [
+  { he: 'עוֹרֵךְ דִּין', translit: 'orech din', fr: 'lawyer' },
+  { he: 'שׁוֹפֵט', translit: 'shofet', fr: 'judge' },
+  { he: 'פְּרַקְלִיט', translit: 'praklit', fr: 'attorney / DA' },
+  { he: 'נֶאֱשָׁם', translit: 'ne\'esham', fr: 'defendant' },
+  { he: 'תּוֹבֵעַ', translit: 'tovea', fr: 'plaintiff / prosecutor' },
+  { he: 'הַחְלָטָה', translit: 'hachlatah', fr: 'decision' },
+  { he: 'תַּקָּנוֹן', translit: 'takanon', fr: 'bylaws / regulations' },
+  { he: 'חֹק', translit: 'chok', fr: 'law' },
+  { he: 'תַּקָּנָה', translit: 'takanah', fr: 'regulation' },
+  { he: 'מִשְׁפָּט מִנְהָלִי', translit: 'mishpat minhali', fr: 'administrative law' }
+];
+const CONTRACT_READ = [
+  { he: 'סְעִיף 12 - בִּטּוּל הֶסְכֵּם הַשְּׂכִירוּת', translit: 's\'if 12 - bitul heskem ha-schirut', fr: 'Clause 12 — termination of the rental agreement' },
+  { he: 'הַשּׂוֹכֵר רַשַּׁאי לְבַטֵּל בְּהוֹדָעָה מֻקְדֶּמֶת שֶׁל 60 יוֹם', translit: 'ha-socher rashai l\'vatel b\'hoda\'a mukdemet shel 60 yom', fr: 'The tenant may terminate with 60 days advance notice' },
+  { he: 'בִּמְקוּם הֲפָרָה - יוּטָּל פִּצּוּי שֶׁל שְׁכַר חוֹדֶשׁ', translit: 'bimkom hafrah - yutal pitzui shel schar chodesh', fr: 'In case of breach — compensation of one month\'s rent will apply' },
+  { he: 'הַמַּשְׂכִּיר רַשַּׁאי לְבַטֵּל לְאַלְתַּר בְּמִקְרֵה אִי-תַשְׁלוּם', translit: 'ha-maskir rashai l\'vatel l\'altar b\'mikre i-tashlum', fr: 'The landlord may terminate immediately in case of non-payment' },
+  { he: 'מַחֲלוֹקוֹת יִתְבָּרְרוּ בְּבֵית מִשְׁפָּט הַשָּׁלוֹם בְּתֵל אָבִיב', translit: 'machlokot yitbar\'ru b\'beit mishpat ha-shalom b\'Tel Aviv', fr: 'Disputes will be settled in the Tel Aviv magistrate court' },
+  { he: 'הַחוֹזֶה כָּפוּף לְחוֹק הַשְּׂכִירוּת וְהַשַּׁאֲלָה', translit: 'ha-choze chafuf l\'chok ha-schirut v\'ha-she\'ela', fr: 'The contract is subject to the Rental and Loan Law' },
+  { he: 'אֲנִי קוֹרֵא הַכֹּל לִפְנֵי שֶׁאֲנִי חוֹתֵם', translit: 'ani kore ha-kol lifnei she-ani chotem', fr: 'I read everything before I sign' }
+];
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('courts-list', COURTS);
+R('contracts-list', CONTRACTS);
+R('rights-list', RIGHTS);
+R('actions-list', ACTIONS);
+R('vocab-list', VOCAB);
+renderTextBlock('contract-read', CONTRACT_READ);
+addMiniQuiz('Block 30 · Legal Hebrew Quiz', [
+  { q: 'The Hebrew word for "lawyer" is...', options: ['shofet', 'orech din', 'tovea', 'praklit'], answer: 1, explain: 'orech din = literally "arranger of law."' },
+  { q: 'Small claims court (mishpat ktanot) limit is approximately...', options: ['1K NIS', '~33K NIS', '1M NIS', 'no limit'], answer: 1, explain: '~33K NIS limit for small claims, no lawyer required.' },
+  { q: 'BAGATZ is...', options: ['rabbinical court', 'High Court of Justice', 'family court', 'small claims'], answer: 1, explain: 'BAGATZ = beit din gavoah letzedek.' },
+  { q: 'Israel\'s constitutional foundation document is the...', options: ['Constitution', 'Basic Laws', 'Talmud', 'Knesset Rulebook'], answer: 1, explain: 'Israel has Basic Laws (chukei yesod) instead of a constitution.' },
+  { q: 'The Hebrew for "verdict" is...', options: ['choze', 'psak din', 'tatzhir', 'tovea'], answer: 1, explain: 'psak din = ruling/verdict.' },
+  { q: 'Best practice when signing a contract is...', options: ['skip the small print', 'read fully, ideally with a lawyer for big contracts', 'sign and ask later', 'never sign'], answer: 1, explain: 'Read everything; use orech din for major contracts.' }
+]);
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('legal-hebrew');
+  }
+});
+</script></body></html>

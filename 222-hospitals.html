@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>222 — Hospitals</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Hospitals — Beit Cholim Network</h1><div class="subtitle">Lesson 222 · בָּתֵּי חוֹלִים</div></div><div class="nav"><a href="index.html">Home</a><a href="222-hospitals.html" class="active">222</a></div></header>
+
+<p class="intro">Israeli hospitals (~50 acute care) include government-run, kupa-owned, and university-affiliated. Major centers: Hadassah Ein Kerem and Mt. Scopus (Jerusalem, Hebrew University), Sheba Tel HaShomer (Tel Aviv area, ranked top 10 globally), Ichilov / Tel Aviv Sourasky (downtown TLV), Rambam (Haifa), Soroka (Be\'er Sheva, Negev\'s main), Beilinson (Petach Tikva). Trauma centers handle 1.5M emergency visits annually. Most non-emergency admissions require a Tofes 17 (referral form) from your kupa.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israeli hospitals are extraordinarily busy and crowded. Sheba/Ichilov ER waits can hit 6-8 hours for non-acute. Departments operate 24/7 but ambulatory clinics close 4pm. Single rooms are rare; expect shared rooms with families crowding bedside (very Israeli). Hospitals have synagogues, mosques, kosher kitchens, and cafés. Hebrew/Arabic/Russian/English signage standard. If you\'re hospitalized, your kupa member ID + Tofes 17 + photo ID get you through admission.</div>
+
+<h2>Major Hospitals</h2>
+<div class="word-list" id="major-hospitals"></div>
+
+<h2>Hospital Departments</h2>
+<div class="word-list" id="departments"></div>
+
+<h2>Admission Vocabulary</h2>
+<div class="word-list" id="admission"></div>
+
+<h2>Hospital Staff</h2>
+<div class="word-list" id="staff"></div>
+
+<h2>Hospital Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>An Oleh in the Sheba ER</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh with chest pain navigates Sheba\'s emergency room intake.</div>
+  <div id="er-visit"></div>
+</div>
+
+<footer>Lesson 222 · Hospitals · <a href="223-doctor-visit.html" style="color:var(--accent)">Next: Doctor Visit →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const MAJOR_HOSPITALS = [
+  { he: 'הֲדַסָּה עֵין כֶּרֶם', translit: 'hadassah ein kerem', fr: 'Hadassah Ein Kerem (Jerusalem)' },
+  { he: 'הֲדַסָּה הַר הַצּוֹפִים', translit: 'hadassah har ha-tzofim', fr: 'Hadassah Mt. Scopus (Jerusalem)' },
+  { he: 'שִׁיבָּא תֵּל הַשּׁוֹמֵר', translit: 'sheba tel ha-shomer', fr: 'Sheba Tel HaShomer (Ramat Gan)' },
+  { he: 'אִיכִילוֹב / סוֹרַסְקִי', translit: 'ichilov / sourasky', fr: 'Ichilov / Tel Aviv Sourasky (Tel Aviv)' },
+  { he: 'רַמְבַּ"ם', translit: 'rambam', fr: 'Rambam (Haifa)' },
+  { he: 'סוֹרוֹקָה', translit: 'soroka', fr: 'Soroka (Be\'er Sheva)' },
+  { he: 'בֵּילִינְסוֹן', translit: 'beilinson', fr: 'Beilinson (Petach Tikva)' },
+  { he: 'שַׁעֲרֵי צֶדֶק', translit: 'sha\'arei tzedek', fr: 'Shaare Zedek (Jerusalem)' },
+  { he: 'וֹלְפְסוֹן', translit: 'wolfson', fr: 'Wolfson (Holon)' },
+  { he: 'כַּרְמֶל', translit: 'karmel', fr: 'Carmel (Haifa)' }
+];
+const DEPARTMENTS = [
+  { he: 'חֲדַר מִיוּן', translit: 'chadar miyun', fr: 'emergency room (ER)' },
+  { he: 'מִיוּן', translit: 'miyun', fr: 'triage' },
+  { he: 'פְּנִימִית', translit: 'pnimit', fr: 'internal medicine' },
+  { he: 'כִּירוּרְגְיָה', translit: 'kirurgia', fr: 'surgery' },
+  { he: 'מַעֲרָך', translit: 'ma\'arach', fr: 'organ system / unit' },
+  { he: 'אוֹרְתוֹפֵּדְיָה', translit: 'orthopedya', fr: 'orthopedics' },
+  { he: 'נָשִׁים', translit: 'nashim', fr: 'gynecology (women\'s ward)' },
+  { he: 'יְלָדִים', translit: 'yeladim', fr: 'pediatrics' },
+  { he: 'נֶפְרוֹלוֹגְיָה', translit: 'nefrologia', fr: 'nephrology' },
+  { he: 'אוֹנְקוֹלוֹגְיָה', translit: 'onkologia', fr: 'oncology' }
+];
+const ADMISSION = [
+  { he: 'טוֹפֶס 17', translit: 'tofes 17', fr: 'Form 17 (kupa authorization)' },
+  { he: 'קַבָּלַת לָקוֹחַ', translit: 'kabalat lakuach', fr: 'admission' },
+  { he: 'הַבְטָחָה', translit: 'havtacha', fr: 'warranty / guarantee' },
+  { he: 'תְּעוּדַת זֶהוּת', translit: 'te\'udat zehut', fr: 'ID card' },
+  { he: 'אִשְׁפּוּז', translit: 'ishpuz', fr: 'hospitalization' },
+  { he: 'שִׁחְרוּר', translit: 'shichrur', fr: 'discharge' },
+  { he: 'חֶשְׁבּוֹנִית', translit: 'cheshbonit', fr: 'invoice' },
+  { he: 'שֵׁם מִשְׁפָּחָה', translit: 'shem mishpacha', fr: 'last name' },
+  { he: 'שֵׁם פְּרָטִי', translit: 'shem prati', fr: 'first name' },
+  { he: 'תְּעוּדַת עוֹלֶה', translit: 'te\'udat oleh', fr: 'immigrant card' }
+];
+const STAFF = [
+  { he: 'רוֹפֵא', translit: 'rofe', fr: 'doctor' },
+  { he: 'רוֹפְאָה', translit: 'rofa', fr: 'female doctor' },
+  { he: 'אָחוֹת', translit: 'achot', fr: 'nurse (female)' },
+  { he: 'אָח', translit: 'ach', fr: 'male nurse' },
+  { he: 'מְנַצֵּחַ מַחְלָקָה', translit: 'm\'natze\'ach machlaka', fr: 'department head' },
+  { he: 'פְּרוֹפֶסוֹר', translit: 'profesor', fr: 'professor' },
+  { he: 'מוּמְחֶה', translit: 'mumcheh', fr: 'specialist' },
+  { he: 'כִּירוּרְג', translit: 'kirurg', fr: 'surgeon' },
+  { he: 'פָּרָאמֶדִיק', translit: 'paramedik', fr: 'paramedic' },
+  { he: 'פָּקִיד קַבָּלָה', translit: 'pakid kabala', fr: 'admissions clerk' }
+];
+const VOCABULARY = [
+  { he: 'מַחְלָקָה', translit: 'machlaka', fr: 'department' },
+  { he: 'בֵּית חוֹלִים', translit: 'beit cholim', fr: 'hospital' },
+  { he: 'מֶרְכָּז אֵזוֹרִי', translit: 'merkaz ezori', fr: 'regional center' },
+  { he: 'טְרָאוּמָה', translit: 'trauma', fr: 'trauma' },
+  { he: 'בְּדִיקַת דָּם', translit: 'b\'dikat dam', fr: 'blood draw' },
+  { he: 'אֶא"ק"ג', translit: 'ECG', fr: 'electrocardiogram' },
+  { he: 'אוּלְטְרָסָאוּנְד', translit: 'ultrasound', fr: 'ultrasound' },
+  { he: 'רֶנְטְגֶן', translit: 'rentgen', fr: 'x-ray' },
+  { he: 'הַפְנָיָה', translit: 'hafnaya', fr: 'referral' },
+  { he: 'הִיסְטוֹרְיָה רְפוּאִית', translit: 'historya r\'fu\'it', fr: 'medical history' }
+];
+
+const ER_VISIT = [
+  { he: 'יוֹנָאס: שָׁלוֹם, יֵשׁ לִי כְּאֵב חָזֶה. הִגַּעְתִּי עַכְשָׁיו לַמִּיוּן.', translit: 'yonas: shalom, yesh li ke\'ev chazeh. higati achshav la-miyun.', fr: 'Jonas: Hello, I have chest pain. I just arrived at triage.' },
+  { he: 'אָחוֹת: שֵׁב בְּבַקָּשָׁה. מָתַי הִתְחִיל הַכְּאֵב? אֵיפֹה בְּדִיּוּק?', translit: 'achot: shev b\'vakasha. matai hitchil ha-ke\'ev? eifo b\'diyuk?', fr: 'Nurse: Sit down please. When did the pain start? Where exactly?' },
+  { he: 'יוֹנָאס: לִפְנֵי שָׁעָה. בָּאֶמְצַע הַחָזֶה, מְקַרְקֵר לַזְּרוֹעַ הַשְּׂמָאלִית.', translit: 'yonas: lifnei sha\'ah. ba-emtza ha-chazeh, m\'karker la-zro\'a ha-smalit.', fr: 'Jonas: An hour ago. In the middle of my chest, radiating to my left arm.' },
+  { he: 'אָחוֹת: תְּעוּדַת זֶהוּת בְּבַקָּשָׁה, וְכַרְטִיס קוּפָּה.', translit: 'achot: te\'udat zehut b\'vakasha, v\'kartis kupa.', fr: 'Nurse: ID card please, and kupa card.' },
+  { he: 'יוֹנָאס: הִנֵּה תְּעוּדַת עוֹלֶה וְכַרְטִיס מַכַּבִּי.', translit: 'yonas: hineh te\'udat oleh v\'kartis maccabi.', fr: 'Jonas: Here\'s my immigrant card and Maccabi card.' },
+  { he: 'אָחוֹת: טוֹב. הַהַמְתָּנָה כָּעֵת אַרְבַּע עַד שֵׁשׁ שָׁעוֹת לְלֹא-דָּחוּף, אֲבָל כְּאֵב חָזֶה זֶה דָּחוּף.', translit: 'achot: tov. ha-hamtana ka\'et arba ad shesh sha\'ot l\'lo-dachuf, aval ke\'ev chazeh zeh dachuf.', fr: 'Nurse: OK. Wait time now is 4-6 hours for non-urgent, but chest pain is urgent.' },
+  { he: 'אָחוֹת: לֵךְ עַכְשָׁיו לְאֶא"ק"ג, חֶדֶר 3. אַחַר כָּךְ רוֹפֵא יִרְאֶה אוֹתְךָ.', translit: 'achot: lech achshav l\'ECG, cheder 3. achar kach rofe yir\'eh ot\'cha.', fr: 'Nurse: Go now to ECG, room 3. Afterwards a doctor will see you.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('major-hospitals', MAJOR_HOSPITALS);
+R('departments', DEPARTMENTS);
+R('admission', ADMISSION);
+R('staff', STAFF);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('er-visit', ER_VISIT);
+
+addMiniQuiz('Block 23 · Hospitals Quiz', [
+  { q: 'Israel\'s largest hospital and one of the world\'s top 10 is...', options: ['Ichilov', 'Sheba Tel HaShomer', 'Hadassah', 'Rambam'], answer: 1, explain: 'Sheba in Ramat Gan, regularly ranked top 10 by Newsweek.' },
+  { q: 'The Negev\'s main referral hospital is...', options: ['Soroka', 'Hadassah', 'Sheba', 'Rambam'], answer: 0, explain: 'Soroka in Be\'er Sheva, Ben-Gurion University-affiliated.' },
+  { q: 'To be admitted (non-emergency), you need a...', options: ['Tofes 17', 'Tofes 8', 'Tofes 1', 'Letter from PM'], answer: 0, explain: 'Tofes 17 = kupa hospitalization authorization form.' },
+  { q: 'The Hebrew word for emergency room is...', options: ['chadar miyun', 'pnimit', 'kirurgia', 'machlaka'], answer: 0, explain: 'Literally "triage room" — the ER.' },
+  { q: 'Hadassah is affiliated with...', options: ['Hebrew University', 'Tel Aviv University', 'Technion', 'Ben-Gurion'], answer: 0, explain: 'Hadassah Medical Center is HU\'s teaching hospital.' },
+  { q: 'Israeli ER waits for non-acute issues are typically...', options: ['15 minutes', '1 hour', '4-8 hours', 'instant'], answer: 2, explain: 'ERs are routinely overwhelmed; non-acute waits are long.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('hospitals');
+  }
+});
+</script></body></html>

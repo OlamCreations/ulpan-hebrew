@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>67 — Sephardi vs Ashkenazi</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Sephardi vs Ashkenazi</h1><div class="subtitle">Lesson 67 · ספרדי ואשכנזי</div></div><div class="nav"><a href="index.html">Home</a><a href="67-sephardi-ashkenazi.html" class="active">67</a></div></header>
+
+<p class="intro">The two main historical streams of Jewish life: Ashkenazim (Eastern/Central Europe) and Sephardim (Spain/North Africa/Middle East). Different prayers, foods, melodies, customs. Modern Israel is the great melting pot of both.</p>
+
+<h2>Categories</h2>
+<div class="word-list" id="categories"></div>
+
+<h2>Ashkenazi Origins</h2>
+<div class="word-list" id="ashkenazi"></div>
+
+<h2>Sephardi/Mizrahi Origins</h2>
+<div class="word-list" id="sephardi"></div>
+
+<h2>Ritual Differences</h2>
+<div class="word-list" id="ritual"></div>
+
+<h2>Cultural Markers</h2>
+<div class="word-list" id="culture"></div>
+
+<h2>Foods</h2>
+<div class="word-list" id="foods"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 67 · streams · <a href="68-yiddish-ladino.html" style="color:var(--accent)">Next: Yiddish & Ladino →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CATEGORIES = [
+  { he: 'אַשְׁכְּנַזִּי', translit: 'ashkenazi', fr: 'Ashkenazi (European)' },
+  { he: 'סְפָרַדִּי', translit: 'sfaradi', fr: 'Sephardi (Iberian descent)' },
+  { he: 'מִזְרָחִי', translit: 'mizrachi', fr: 'Mizrahi (Middle East / North Africa)' },
+  { he: 'יְהוּדֵי תֵּימָן', translit: 'yehudey Teyman', fr: 'Yemenite Jews' },
+  { he: 'יְהוּדֵי אֶתְיוֹפְּיָה', translit: 'yehudey Etyopya', fr: 'Ethiopian Jews (Beta Israel)' },
+  { he: 'יְהוּדֵי הוֹדוּ', translit: 'yehudey Hodu', fr: 'Indian Jews (Cochin, Bnei Israel)' },
+  { he: 'יְהוּדֵי בּוֹכָרָה', translit: 'yehudey Bochara', fr: 'Bukharan Jews' }
+];
+const ASHKENAZI = [
+  { he: 'גֶּרְמַנְיָה', translit: 'Germanya', fr: 'Germany (Ashkenaz)' },
+  { he: 'פּוֹלִין', translit: 'Polin', fr: 'Poland' },
+  { he: 'רוּסְיָה', translit: 'Rusya', fr: 'Russia' },
+  { he: 'אוֹקְרָאִינָה', translit: 'Ukraine', fr: 'Ukraine' },
+  { he: 'הוּנְגַרְיָה', translit: 'Hungarya', fr: 'Hungary' },
+  { he: 'גָּלוּת אֵירוֹפָּה', translit: 'galut Eyropa', fr: 'European exile' },
+  { he: 'יִידִישׁ', translit: 'Yiddish', fr: 'Yiddish (German-Hebrew)' },
+  { he: 'הַשְׁתָּל', translit: 'shtetl', fr: 'shtetl (small Eastern Eu. Jewish town)' }
+];
+const SEPHARDI = [
+  { he: 'סְפָרַד', translit: 'Sfarad', fr: 'Spain (Sephardi homeland)' },
+  { he: 'גֵּרוּשׁ סְפָרַד', translit: 'gerush Sfarad', fr: 'Spanish Expulsion (1492)' },
+  { he: 'מָרוֹקוֹ', translit: 'Maroko', fr: 'Morocco' },
+  { he: 'תּוּנִיסְיָה', translit: 'Tunisya', fr: 'Tunisia' },
+  { he: 'עִירָאק', translit: 'Irak', fr: 'Iraq' },
+  { he: 'אִירָן', translit: 'Iran', fr: 'Iran (Persian)' },
+  { he: 'תֵּימָן', translit: 'Teyman', fr: 'Yemen' },
+  { he: 'לָאדִינוֹ', translit: 'Ladino', fr: 'Ladino (Judeo-Spanish)' },
+  { he: 'יְהוּדִית עַרְבִית', translit: 'yehudit aravit', fr: 'Judeo-Arabic' }
+];
+const RITUAL = [
+  { he: 'נֻסַח אַשְׁכְּנַז', translit: 'nusach Ashkenaz', fr: 'Ashkenazi prayer rite' },
+  { he: 'נֻסַח סְפָרַד', translit: 'nusach Sfarad', fr: 'Sephardic prayer rite' },
+  { he: 'נֻסַח אֲרִ"י', translit: 'nusach Ari', fr: 'Lurianic (Hasidic)' },
+  { he: 'נִגּוּן', translit: 'nigun', fr: 'melody / chant style' },
+  { he: 'מִנְהָגִים', translit: 'minhagim', fr: 'customs' },
+  { he: 'פֶּסַח עִם קִטְנִיּוֹת', translit: 'Pesach im kitniyot', fr: 'Pesach with legumes (Sephardim eat)' },
+  { he: 'פֶּסַח בְּלִי קִטְנִיּוֹת', translit: 'Pesach bli kitniyot', fr: 'Pesach without legumes (Ashkenazim)' }
+];
+const CULTURE = [
+  { he: 'מַטְכַּחוֹת מִזְרָחִיּוֹת', translit: 'matkechot mizrachiyot', fr: 'Mizrahi cuisines' },
+  { he: 'שִׁירִים מִזְרָחִיִּים', translit: 'shirim mizrachiyim', fr: 'Mizrahi music' },
+  { he: 'הִתְעוֹרְרוּת אֶתְנִית', translit: 'hit\'orerut etnit', fr: 'ethnic awakening' },
+  { he: 'אֵפְלֵיוֹת', translit: 'aflayot', fr: 'discrimination (historical)' },
+  { he: 'הַפַּנְתֵּרִים הַשְּׁחוֹרִים', translit: 'ha-pantherim ha-shchorim', fr: 'Black Panthers (Mizrahi protest movement, 1971)' }
+];
+const FOODS = [
+  { he: 'גֶּעֶ֯פְעֶל֮טֶע פִישׁ', translit: 'gefilte fish', fr: 'gefilte fish (Ashkenazi)' },
+  { he: 'בּוֹרְשְׁט', translit: 'borscht', fr: 'borscht (beet soup, Ashkenazi)' },
+  { he: 'מָרָק עוֹף', translit: 'marak of', fr: 'chicken soup (universal)' },
+  { he: 'שַׁקְשׁוּקָה', translit: 'shakshuka', fr: 'shakshuka (North African)' },
+  { he: 'מָרָק תֵּימָנִי', translit: 'marak teymani', fr: 'Yemeni soup' },
+  { he: 'מַלְוָח', translit: 'malawach', fr: 'malawach (Yemeni)' },
+  { he: 'חָרוּסֶת אַשְׁכְּנַזִּי', translit: 'charoset ashkenazi', fr: 'apple-walnut charoset' },
+  { he: 'חָרוּסֶת סְפָרַדִּי', translit: 'charoset sfaradi', fr: 'date-fig charoset' },
+  { he: 'כּוּסְכּוּס', translit: 'kuskus', fr: 'couscous (Moroccan)' }
+];
+const PHRASES = [
+  { he: 'אֲנִי מִמּוֹצָא אַשְׁכְּנַזִּי', translit: 'ani mi-motza ashkenazi', fr: "I'm of Ashkenazi origin" },
+  { he: 'הַסַּבָּא שֶׁלִּי הָיָה מִתֵּימָן', translit: 'ha-saba sheli haya mi-Teyman', fr: 'my grandfather was from Yemen' },
+  { he: 'הַמָּרָק שֶׁל הַסַּבְתָּא', translit: 'ha-marak shel ha-savta', fr: "grandma's soup" },
+  { he: 'בְּפֶסַח אֲנַחְנוּ אוֹכְלִים קִטְנִיּוֹת', translit: 'be-Pesach anachnu ochlim kitniyot', fr: 'on Pesach we eat legumes (Sephardic)' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('categories', CATEGORIES); R('ashkenazi', ASHKENAZI); R('sephardi', SEPHARDI); R('ritual', RITUAL); R('culture', CULTURE); R('foods', FOODS); R('phrases', PHRASES);
+addExtraVocab('Ethnic Foods (by tradition)', [
+  { he: 'גְּפִילְטֶה פִישׁ — אַשְׁכְּנַזִּי', translit: 'gefilte fish', fr: 'Gefilte fish (Ashkenazi)' },
+  { he: 'צ\'וֹלֶנְט — אַשְׁכְּנַזִּי', translit: 'cholent', fr: 'Cholent (Shabbat stew)' },
+  { he: 'קוּגֶעל — אַשְׁכְּנַזִּי', translit: 'kugel', fr: 'Kugel (noodle/potato pudding)' },
+  { he: 'חַמִּין — סְפָרַדִּי', translit: 'chamin', fr: 'Chamin (Sephardic Shabbat stew)' },
+  { he: 'מָאלָאוואחְ — תֵּימָנִי', translit: 'malawach', fr: 'Malawach (Yemeni flaky bread)' },
+  { he: 'גְּ\'חְנוּן — תֵּימָנִי', translit: 'jachnun', fr: 'Jachnun (Yemeni slow-roll)' },
+  { he: 'חָרִיף — מָרוֹקָאִי', translit: 'charif', fr: 'Spicy (Moroccan)' },
+  { he: 'חַרִיסָה — תּוּנִיסָאִי', translit: 'charisa', fr: 'Harissa paste (Tunisian)' },
+  { he: 'בּוּרֶקַס — בַּלְקָנִי', translit: 'burekas', fr: 'Bourekas (Balkan/Sephardic)' },
+  { he: 'אִינְגֵּ\'רָה — אֶתְיוֹפִּי', translit: 'injera', fr: 'Injera (Ethiopian flat bread)' },
+  { he: 'מַטְבּוּחָה — מָרוֹקָאִי', translit: 'matbucha', fr: 'Matbucha (cooked tomato salad)' }
+]);
+
+addMiniQuiz('Sephardi/Ashkenazi/Mizrahi Quiz', [
+  { q: 'Ashkenazi origin =', options: ['Spain', 'Germany / Eastern Europe', 'North Africa', 'Yemen'], answer: 1 },
+  { q: 'Sephardi origin =', options: ['Spain & Portugal', 'Russia', 'India', 'Yemen'], answer: 0 },
+  { q: 'Mizrahi origin =', options: ['Middle East / North Africa', 'Eastern Europe', 'Spain', 'Ethiopia'], answer: 0 },
+  { q: 'Hanukkah pancakes:', options: ['Latkes (Ashkenazi)', 'Sufganiyot (Mizrahi-influenced modern)', 'Both', 'Neither'], answer: 2 },
+  { q: 'Israel\'s 2 chief rabbis = one Ashkenazi + one...', options: ['Reform', 'Sephardi', 'Mizrahi', 'Yemenite'], answer: 1 }
+]);
+
+addCulturalText('Mizrahi Wedding — Henna Ceremony Phrases', 'Before the wedding the bride\'s hands are dyed with henna. Sephardic/Mizrahi tradition. Sung by the older women.', [
+  { he: 'יָאלָה לֵיל הַחִינָּא, יָאלָה!', translit: "Yalla leyl ha-chinna, yalla!", fr: 'Yalla, henna night, yalla!' },
+  { he: 'הַכַּלָּה שֶׁלָּנוּ הֲכִי יָפָה', translit: "Ha-kala shelanu hachi yafa", fr: 'Our bride is the most beautiful' },
+  { he: 'בְּרָכָה לְמִשְׁפָּחָה, פְּרִיחָה לַבַּיִת', translit: "Bracha la-mishpacha, pricha la-bayit", fr: 'Blessing for the family, blossoming for the home' },
+  { he: 'יִזְכּוּ לְבָנִים וּבָנוֹת', translit: "Yizku le-vanim u-vanot", fr: 'May they merit sons and daughters' },
+  { he: 'אֶת הַחִינָּא בּוֹא לִיד הַכַּלָּה', translit: "Et ha-chinna bo le-yad ha-kala", fr: 'Bring the henna near the bride' },
+  { he: 'תִּזְכִּי לְעוֹלָם שֶׁל מָתוֹק', translit: "Tizki le-olam shel matok", fr: 'May you merit a sweet world' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('streams'); } });
+</script></body></html>

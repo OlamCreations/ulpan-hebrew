@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>62 — Religious Distinctions</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Religious Distinctions</h1><div class="subtitle">Lesson 62 · זרמים דתיים</div></div><div class="nav"><a href="index.html">Home</a><a href="62-religious-types.html" class="active">62</a></div></header>
+
+<p class="intro">Israeli Jewish society has a religious spectrum: secular (chiloni), traditional (masorti), national-religious (dati leumi), Haredi (charedi), Hassidic, Mizrahi traditional. Understanding the labels = understanding social cues.</p>
+
+<h2>Main Categories</h2>
+<div class="word-list" id="categories"></div>
+
+<h2>National-Religious (Dati Leumi)</h2>
+<div class="word-list" id="dati"></div>
+
+<h2>Haredi Subgroups</h2>
+<div class="word-list" id="charedi"></div>
+
+<h2>Mizrahi Religious</h2>
+<div class="word-list" id="mizrahi"></div>
+
+<h2>Reform & Conservative</h2>
+<div class="word-list" id="reform"></div>
+
+<h2>Visual Markers</h2>
+<div class="word-list" id="markers"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 62 · religious types · <a href="63-synagogue.html" style="color:var(--accent)">Next: Synagogue →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CATEGORIES = [
+  { he: 'חִלּוֹנִי', translit: 'chiloni', fr: 'secular (~45% of Jews)' },
+  { he: 'מָסָרְתִי', translit: 'masorti', fr: 'traditional (~25%)' },
+  { he: 'דָּתִי לְאוּמִי', translit: 'dati leumi', fr: 'national-religious / modern Orthodox (~12%)' },
+  { he: 'חָרֵדִי', translit: 'charedi', fr: 'Haredi / ultra-Orthodox (~12%)' },
+  { he: 'דָּתִי', translit: 'dati', fr: 'religious (general, encompasses several)' },
+  { he: 'יְהוּדִי רֵפוֹרְמִי', translit: 'yehudi reformi', fr: 'Reform Jew' },
+  { he: 'יְהוּדִי קוֹנְסֶרְוָטִיבִי', translit: 'yehudi conservativi', fr: 'Conservative Jew' }
+];
+const DATI = [
+  { he: 'דָּתִי לְאוּמִי', translit: 'dati leumi', fr: 'national-religious' },
+  { he: 'מַ"ם', translit: 'mam', fr: 'Mafdal predecessor' },
+  { he: 'בְּנֵי עֲקִיבָא', translit: 'bnei akiva', fr: 'Bnei Akiva (youth movement)' },
+  { he: 'הֶסְדֵּר', translit: 'hesder', fr: 'hesder yeshiva (combine study + army)' },
+  { he: 'מֶכִינָה', translit: 'mechina', fr: 'mechina (pre-army year)' },
+  { he: 'גְּבוּלִית', translit: 'gvulit', fr: 'border yeshiva' },
+  { he: 'מִצְוָה גְּדוֹלָה', translit: 'mitzvah gdola', fr: 'great commandment (settlements)' },
+  { he: 'הִתְנַחֲלוּת', translit: 'hitnachalut', fr: 'settlement' }
+];
+const CHAREDI = [
+  { he: 'חָרֵדִי לִיטָאִי', translit: 'charedi litai', fr: 'Lithuanian Haredi (Misnagdim)' },
+  { he: 'חָסִיד', translit: 'chasid', fr: 'Hasidic Jew' },
+  { he: 'גּוּר', translit: 'Gur', fr: 'Gur (Hasidic dynasty)' },
+  { he: 'בֶּלְזְ', translit: 'Belz', fr: 'Belz (Hasidic dynasty)' },
+  { he: 'חַבָּ"ד', translit: 'Chabad', fr: 'Chabad-Lubavitch' },
+  { he: 'בְּרִיקְלִין', translit: 'Breslav', fr: 'Breslav (Rabbi Nachman)' },
+  { he: 'יְשִׁיבָה', translit: 'yeshiva', fr: 'yeshiva (religious school)' },
+  { he: 'בַּעַל תְּשׁוּבָה', translit: 'baal teshuva', fr: 'returnee to faith' },
+  { he: 'יוֹצֵא לִשְׁאֵלָה', translit: 'yotze li-she\'ela', fr: 'leaving religion (lit. "in question")' }
+];
+const MIZRAHI = [
+  { he: 'שָׁ"ס', translit: 'Shas', fr: 'Shas (Sephardic Haredi)' },
+  { he: 'רַב עוֹבַדְיָה יוֹסֵף', translit: 'Rav Ovadia Yosef', fr: 'Rav Ovadia Yosef (Shas founder)' },
+  { he: 'מַסָּרְתִי', translit: 'masorti', fr: 'traditional Mizrahi' },
+  { he: 'אַל"מ', translit: 'alm', fr: 'Mizrahi Orthodox' }
+];
+const REFORM = [
+  { he: 'הַתְּנוּעָה הָרֵפוֹרְמִית', translit: 'ha-tnua ha-reformit', fr: 'Reform movement' },
+  { he: 'הַתְּנוּעָה הַקּוֹנְסֶרְוָטִיבִית', translit: 'ha-tnua ha-conservativit', fr: 'Conservative / Masorti movement' },
+  { he: 'יָהֲדוּת מִתְקַדֶּמֶת', translit: 'yahadut mitkademet', fr: 'progressive Judaism' },
+  { he: 'נָשִׁים בִּכְהֻנָּה', translit: 'nashim bi-khehuna', fr: 'women in clergy' }
+];
+const MARKERS = [
+  { he: 'כִּפָּה סְרוּגָה', translit: 'kippa sruga', fr: 'knit kippa (national-religious)' },
+  { he: 'כִּפָּה שְׁחוֹרָה', translit: 'kippa shchora', fr: 'black kippa (Haredi)' },
+  { he: 'שִׁטְרֵיימֶל', translit: 'shtreimel', fr: 'shtreimel (Hasidic fur hat, shabbat)' },
+  { he: 'פֵּאוֹת', translit: 'pe\'ot', fr: 'sidelocks' },
+  { he: 'זָקָן', translit: 'zakan', fr: 'beard' },
+  { he: 'מִטְפַּחַת', translit: 'mitpachat', fr: 'headscarf (married Orthodox women)' },
+  { he: 'שֵׁיטֶל', translit: 'sheytel', fr: 'wig (Orthodox women)' },
+  { he: 'חֲצָאִית אֲרֻכָּה', translit: 'chatza\'it aruka', fr: 'long skirt' },
+  { he: 'גַּרְבַּיִם', translit: 'garbayim', fr: 'stockings (modesty)' }
+];
+const PHRASES = [
+  { he: 'אֲנִי חִלּוֹנִי', translit: 'ani chiloni', fr: "I'm secular (m.)" },
+  { he: 'הוּא דָּתִי לְאוּמִי', translit: 'hu dati leumi', fr: "he's national-religious" },
+  { he: 'מַהוּ הַחָסִידוּת שֶׁלְּךָ?', translit: 'mahu ha-chasidut shelcha?', fr: 'what is your Hasidic dynasty? (m.)' },
+  { he: 'אֲנִי שׁוֹמֵר שַׁבָּת', translit: 'ani shomer shabbat', fr: 'I observe Shabbat (m.)' },
+  { he: 'אֲנִי לֹא דָּתִי אֲבָל מָסָרְתִי', translit: 'ani lo dati aval masorti', fr: "I'm not religious but traditional (m.)" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('categories', CATEGORIES); R('dati', DATI); R('charedi', CHAREDI); R('mizrahi', MIZRAHI); R('reform', REFORM); R('markers', MARKERS); R('phrases', PHRASES);
+addExtraVocab('Religious Identity Spectrum', [
+  { he: 'חִלּוֹנִי', translit: 'chiloni', fr: 'secular' },
+  { he: 'מָסוֹרְתִּי', translit: 'masorti', fr: 'traditional' },
+  { he: 'דָּתִי', translit: 'dati', fr: 'religious' },
+  { he: 'דָּתִי לְאֻמִּי', translit: 'dati le\'umi', fr: 'religious-Zionist' },
+  { he: 'חַרְדָּ"ל', translit: 'chardal', fr: 'Charedi-leumi (mix)' },
+  { he: 'חָרֵדִי', translit: 'charedi', fr: 'ultra-Orthodox' },
+  { he: 'חָרֵדִי לִיטָאִי', translit: 'charedi lita\'i', fr: 'Lithuanian Charedi' },
+  { he: 'חָרֵדִי חַסִידִי', translit: 'charedi chasidi', fr: 'Hassidic' },
+  { he: 'מַרְצוֹן', translit: 'martzon', fr: 'modern Orthodox' },
+  { he: 'בַּעַל תְּשׁוּבָה', translit: 'ba\'al tshuva', fr: 'returnee to religion' },
+  { he: 'יוֹצֵא בִּשְׁאֵלָה', translit: 'yotze bi-she\'ela', fr: 'leaver of religion' },
+  { he: 'רֵפוֹרְמִי', translit: 'reformi', fr: 'Reform Jew' },
+  { he: 'קוֹנְסֶרְבָטִיבִי', translit: 'konservativi', fr: 'Conservative Jew' }
+]);
+
+addMiniQuiz('Religious Types Quiz', [
+  { q: 'חִלּוֹנִי means...', options: ['Religious', 'Secular', 'Charedi', 'Sephardi'], answer: 1 },
+  { q: 'Charedi men typically wear...', options: ['Black suit + black hat', 'Knit kippa', 'No kippa', 'Kaftan'], answer: 0, explain: 'Black "Lithuanian" or shtreimel for Hassidim' },
+  { q: 'דָּתִי לְאֻמִּי identifies with...', options: ['Anti-Zionism', 'Religious Zionism (knit kippa)', 'Reform', 'Charedi'], answer: 1 },
+  { q: '~% of Israelis are Charedi (2024)?', options: ['~5%', '~13%', '~30%', '~50%'], answer: 1, explain: 'Growing fast — fastest demographic' },
+  { q: 'Most Israelis identify as...', options: ['Charedi', 'Dati', 'Masorti (traditional)', 'Chiloni'], answer: 3, explain: 'Chiloni + masorti = majority' }
+]);
+
+addCulturalText('Identifying Yourself — The Core Question', 'Within 5 minutes of meeting an Israeli, the question comes: "What are you?" (religiously). Here\'s how to answer in any spectrum position.', [
+  { he: 'אַתָּה דָּתִי?', translit: "Ata dati?", fr: 'Are you religious? (m.)' },
+  { he: 'אֲנִי חִלּוֹנִי לְגַמְרֵי', translit: "Ani chiloni le-gamrey", fr: 'I\'m completely secular (m.)' },
+  { he: 'אֲנִי מָסוֹרְתִּי — קִדּוּשׁ בְּשִׁשִּׁי, שׁוֹמֵר כַּשְׁרוּת בָּסִיסִית', translit: "Ani masorti — kidush be-shishi, shomer kashrut basisit", fr: 'I\'m traditional — kiddush on Friday, basic kosher' },
+  { he: 'אֲנִי דָּתִי לְאֻמִּי — כִּפָּה סְרוּגָה, שֵׁרוּת צְבָאִי', translit: "Ani dati le\'umi — kipa sruga, sherut tzva\'i", fr: "I'm Religious-Zionist — knit kippah, military service" },
+  { he: 'אֲנִי דָּתִי-קַל — שׁוֹמֵר שַׁבָּת, לֹא חָרֵדִי', translit: "Ani dati-kal — shomer shabbat, lo charedi", fr: 'I\'m modestly religious — keep Shabbat, not Charedi' },
+  { he: 'אֲנִי חָרֵדִי — לִיטָאִי / חַסִידִי', translit: "Ani charedi — lita\'i / chasidi", fr: 'I\'m Charedi — Lithuanian / Chassidic' },
+  { he: 'אֲנִי בְּחֲזָרָה בִּתְשׁוּבָה', translit: "Ani be-chazara bi-tshuva", fr: 'I\'m becoming religious (returning)' },
+  { he: 'אֲנִי בְּיָצִיאָה בִּשְׁאֵלָה', translit: "Ani be-yetzi\'a bi-she\'ela", fr: 'I\'m leaving religion (questioning out)' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('religious-types'); } });
+</script></body></html>

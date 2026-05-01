@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>354 — Mimouna Festival</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Mimouna Festival</h1><div class="subtitle">Lesson 354 · מִימוּנָה</div></div><div class="nav"><a href="index.html">Home</a><a href="354-mimouna.html" class="active">354</a></div></header>
+
+<p class="intro">Mimouna is the celebration that opens the night following the last day of Pesach. Born in the Jewish communities of Morocco, it is the moment when chametz (leavened food) becomes permitted again — and the moment Jewish neighbors traditionally welcomed Muslim friends into their homes for sweet table, music, and blessings. In Israel since 1966 it has become a national festival drawing political leaders and crowds of thousands, while preserving its quiet domestic core: open door, mufleta hot off the pan, and the greeting "Tarbiha umbarka" — may you be blessed and successful.</p>
+
+<div class="tip"><strong>Cultural note</strong> — The open door is the heart of Mimouna. In Moroccan Jewish quarters, families left their doors literally unlocked through the night. Neighbors of all faiths walked from house to house, tasting mufleta, drinking sweet mint tea, blessing the host. The Israeli politicians who attend public Mimounas every year (every PM since Begin) are continuing — performatively or sincerely — that same gesture: the festival of crossing a threshold someone else opened for you.</div>
+
+<h2>Mimouna Origin & Naming</h2>
+<div class="word-list" id="origin"></div>
+
+<h2>Mufleta & Other Foods</h2>
+<div class="word-list" id="foods"></div>
+
+<h2>Table Symbolism (gold, wheat, fish)</h2>
+<div class="word-list" id="table"></div>
+
+<h2>Greetings & Songs</h2>
+<div class="word-list" id="greetings"></div>
+
+<h2>Modern Israeli Mimouna</h2>
+<div class="word-list" id="modern"></div>
+
+<hr class="section-divider">
+
+<h2>The Mimouna Night — A Walk Through</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short narrated walk through the night — from the moment Pesach utensils are put away, to the first mufleta on the pan, to the neighbors arriving with blessings.</div>
+  <div id="walkthrough"></div>
+</div>
+
+<footer>Lesson 354 · Mimouna Festival · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const ORIGIN = [
+  { he: 'מִימוּנָה', translit: 'mimouna', fr: 'Mimouna (the festival itself)' },
+  { he: 'לֵיל מִימוּנָה', translit: 'leil mimouna', fr: 'Mimouna night (after last day of Pesach)' },
+  { he: 'מוֹצָאֵי פֶּסַח', translit: 'motza\'ei pesach', fr: 'the night ending Pesach (when Mimouna begins)' },
+  { he: 'יְהוּדֵי מָרוֹקוֹ', translit: 'yehudei maroko', fr: 'Moroccan Jews' },
+  { he: 'הָרַב מַימוֹן', translit: 'ha-rav maimon', fr: 'Rabbi Maimon (Maimonides\' father, yahrzeit theory)' },
+  { he: 'יוֹם הַזִּכָּרוֹן שֶׁל הָרַב', translit: 'yom ha-zikaron shel ha-rav', fr: 'memorial day of the rabbi (yahrzeit)' },
+  { he: 'מַאמוּן (אַרָבִית)', translit: 'ma\'mun (arabic)', fr: '"trustworthy" — Arabic etymology theory' },
+  { he: 'מָזָל / מִימוּן', translit: 'mazal / mimun', fr: 'luck — Hebrew etymology theory' },
+  { he: 'שָׁלוֹשׁ תֵּאוֹרְיוֹת מָקוֹר', translit: 'shalosh teoryot makor', fr: 'three origin theories (Maimon / ma\'mun / mimun)' },
+  { he: 'מָסּוֹרֶת מָרוֹקָאִית', translit: 'masoret marokait', fr: 'Moroccan tradition' }
+];
+const FOODS = [
+  { he: 'מוּפְלֶטָה', translit: 'mufleta', fr: 'mufleta (signature thin Moroccan crepe)' },
+  { he: 'חֶמְאָה וּדְבַשׁ', translit: 'chem\'a u-dvash', fr: 'butter and honey (the mufleta topping)' },
+  { he: 'קֶמַח לָבָן', translit: 'kemach lavan', fr: 'white flour (newly permitted post-Pesach)' },
+  { he: 'בִּרְכַּת הַקֶּמַח', translit: 'birkat ha-kemach', fr: 'blessing over the flour' },
+  { he: 'כְּלֵי פֶּסַח מוּחְזָרִים', translit: 'klei pesach muchzarim', fr: 'Pesach utensils put away' },
+  { he: 'תֵּה נַעֲנַע', translit: 'te na\'na', fr: 'mint tea' },
+  { he: 'מָרוֹקָקוֹ — מָתוֹק', translit: 'marokoko — matok', fr: 'sweet pastries (almond, honey, sesame)' },
+  { he: 'תְּמָרִים', translit: 't\'marim', fr: 'dates (table symbol + eaten)' },
+  { he: 'חָלָב', translit: 'chalav', fr: 'milk (table + first taste of post-Pesach)' },
+  { he: 'אֲגוֹזִים וּפֵרוֹת יְבֵשִׁים', translit: 'egozim u-perot y\'veshim', fr: 'nuts and dried fruits' }
+];
+const TABLE = [
+  { he: 'שֻׁלְחָן הַמִּימוּנָה', translit: 'shulchan ha-mimouna', fr: 'the Mimouna table (decorated and full)' },
+  { he: 'תַּכְשִׁיטֵי זָהָב', translit: 'tachshitei zahav', fr: 'gold jewelry (placed on table for blessing)' },
+  { he: 'דָּג שָׁלֵם', translit: 'dag shalem', fr: 'whole fish (fertility, abundance)' },
+  { he: 'חִטָּה / שִׁבּוֹלִים', translit: 'chita / shibolim', fr: 'wheat / wheat sheaves (parnassa, livelihood)' },
+  { he: 'פּוֹלֵי גָּדוֹל', translit: 'polei gadol', fr: 'large fava beans (good fortune)' },
+  { he: 'יְרָקִים יְרוּקִים', translit: 'y\'rakim y\'rukim', fr: 'fresh greenery (renewal, spring)' },
+  { he: 'חָמֵשׁ — יָד שֶׁל מִרְיָם', translit: 'chamesh — yad shel miryam', fr: 'five — hamsa hand (protection from evil eye)' },
+  { he: 'נֵרוֹת לְבָנִים', translit: 'nerot l\'vanim', fr: 'white candles' },
+  { he: 'פְּרָחִים אֲדוּמִים', translit: 'p\'rachim adumim', fr: 'red flowers (love, blessing)' },
+  { he: 'מַטְבְּעוֹת זָהָב', translit: 'matb\'ot zahav', fr: 'gold coins (sometimes wrapped in dough)' }
+];
+const GREETINGS = [
+  { he: 'תִּרְבִּיחוּ וּמְבוֹרָקִים', translit: 'tirbichu u-m\'vorakim', fr: 'may you be blessed and successful (Hebrew form)' },
+  { he: 'תַּרְבִּיחָה אוּמְבָּרְקָה', translit: 'tarbicha umbarka', fr: 'Tarbiha umbarka — classic Mimouna greeting (Judeo-Arabic)' },
+  { he: 'מַזַל טוֹב וְשָׁנָה טוֹבָה', translit: 'mazal tov v\'shana tova', fr: 'good luck and a good year' },
+  { he: 'כָּל הַטּוֹב', translit: 'kol ha-tov', fr: 'all the good (typical blessing)' },
+  { he: 'בָּרוּךְ הַבָּא', translit: 'baruch ha-ba', fr: 'welcome / blessed is the one who comes' },
+  { he: 'שִׁירִים מָרוֹקָאִיִם', translit: 'shirim marokai\'im', fr: 'Moroccan songs' },
+  { he: 'פִּיוּטִים', translit: 'piyutim', fr: 'liturgical poems / piyutim' },
+  { he: 'דַּרְבּוּקָה', translit: 'darbuka', fr: 'darbuka drum' },
+  { he: 'עוּד', translit: 'oud', fr: 'oud (Moroccan stringed instrument)' },
+  { he: 'נְעִילַת הַחַג בְּשִׁיר', translit: 'n\'ilat ha-chag b\'shir', fr: 'closing the festival in song' }
+];
+const MODERN = [
+  { he: 'הַכְרָזָה רִשְׁמִית 1966', translit: 'hachraza rishmit 1966', fr: 'official declaration as Israeli national festival, 1966' },
+  { he: 'חַג לְאוּמִי', translit: 'chag l\'umi', fr: 'national festival (in Israel)' },
+  { he: 'מִימוּנָה צִיבּוּרִית', translit: 'mimouna tziburit', fr: 'public Mimouna (open to crowds)' },
+  { he: 'רֹאשׁ הַמֶּמְשָׁלָה בָּמִימוּנָה', translit: 'rosh ha-memshala ba-mimouna', fr: 'PM at Mimouna (every PM since Begin)' },
+  { he: 'פּוֹלִיטִיקָאִים מְבַקְּרִים', translit: 'politikaim m\'vakrim', fr: 'visiting politicians (every party)' },
+  { he: '5,000+ מְבַקְּרִים', translit: '5,000+ m\'vakrim', fr: '5,000+ attendees (large public Mimouna)' },
+  { he: 'גַּן צִבּוּרִי', translit: 'gan tziburi', fr: 'public park (typical venue)' },
+  { he: 'רוֹאֵשׁ הָעִיר', translit: 'rosh ha-ir', fr: 'mayor (often hosts a Mimouna)' },
+  { he: 'מָרוֹקָאִיִּם בְּיִשְׂרָאֵל', translit: 'marokai\'im b\'yisra\'el', fr: 'Moroccan-Israelis (~700K diaspora)' },
+  { he: 'עָדוֹת הַמִּזְרָח', translit: 'edot ha-mizrach', fr: 'Mizrahi communities (broader inclusion)' }
+];
+
+const WALKTHROUGH = [
+  { he: 'אַחֲרֵי הַסְּעוּדָה הָאַחֲרוֹנָה שֶׁל פֶּסַח, הַמִּשְׁפָּחָה אוֹסֶפֶת אֶת כְּלֵי פֶּסַח. מַתְחִיל לֵיל מִימוּנָה.', translit: 'acharei ha-s\'uda ha-acharona shel pesach, ha-mishpacha osefet et klei pesach. matchil leil mimouna.', fr: 'After the last Pesach meal, the family puts away the Pesach utensils. Mimouna night begins.' },
+  { he: 'הַשֻּׁלְחָן מְקוּשָּׁט. תַּכְשִׁיטֵי זָהָב, חִטָּה, דָּג שָׁלֵם, יְרָקִים יְרוּקִים, נֵרוֹת לְבָנִים, פְּרָחִים אֲדוּמִים — כֻּלָּם בְּמָקוֹם.', translit: 'ha-shulchan m\'kushat. tachshitei zahav, chita, dag shalem, y\'rakim y\'rukim, nerot l\'vanim, p\'rachim adumim — kulam b\'makom.', fr: 'The table is decorated. Gold jewelry, wheat, whole fish, fresh greenery, white candles, red flowers — all in place.' },
+  { he: 'אַבָּא מְבָרֵךְ עַל קֶמַח לָבָן — הַחַמֵּץ חוֹזֵר, מוּתָּר. אִמָּא מַתְחִילָה לֶאֱפוֹת אֶת הַמּוּפְלֶטָה הָרִאשׁוֹנָה.', translit: 'aba m\'varech al kemach lavan — ha-chametz chozer, mutar. ima matchila le\'efot et ha-mufleta ha-rishona.', fr: 'Father blesses the white flour — chametz returns, permitted again. Mother begins to bake the first mufleta.' },
+  { he: 'הַדֶּלֶת פְּתוּחָה. שָׁכֵן יְהוּדִי וְשָׁכֵן מוּסְלְמִי נִכְנָסִים יַחַד, אוֹמְרִים: "תַּרְבִּיחָה אוּמְבָּרְקָה!"', translit: 'ha-delet p\'tucha. shachen y\'hudi v\'shachen muslemi nichnasim yachad, omrim: "tarbicha umbarka!"', fr: 'The door is open. A Jewish neighbor and a Muslim neighbor walk in together, saying: "Tarbiha umbarka!"' },
+  { he: 'הַמּוּפְלֶטָה הָרִאשׁוֹנָה מוּגֶשֶׁת חַמָּה, עִם חֶמְאָה וּדְבַשׁ. הַשָּׁכֵן טוֹעֵם וְמְבָרֵךְ אֶת הַבַּיִת.', translit: 'ha-mufleta ha-rishona mugeshet chama, im chem\'a u-dvash. ha-shachen to\'em u-m\'varech et ha-bayit.', fr: 'The first mufleta is served hot, with butter and honey. The neighbor tastes it and blesses the house.' },
+  { he: 'דַּרְבּוּקָה וְעוּד מַתְחִילִים. הַמִּשְׁפָּחָה וְהַשְּׁכֵנִים שָׁרִים פִּיוּטִים מָרוֹקָאִיִם עַד מְאוּחָר בַּלַּיְלָה.', translit: 'darbuka v\'oud matchilim. ha-mishpacha v\'ha-sh\'chenim sharim piyutim marokai\'im ad m\'uchar ba-laila.', fr: 'Darbuka and oud begin. The family and neighbors sing Moroccan piyutim late into the night.' },
+  { he: 'בְּיִשְׂרָאֵל מוֹדֶרְנִית, רֹאשׁ הַמֶּמְשָׁלָה מַגִּיעַ לְמִימוּנָה צִיבּוּרִית בְּגָן עִם 5,000 אִישׁ. כָּל הָעָדוֹת יַחַד.', translit: 'b\'yisra\'el modernit, rosh ha-memshala magia l\'mimouna tziburit b\'gan im 5,000 ish. kol ha-edot yachad.', fr: 'In modern Israel, the PM arrives at a public Mimouna in a park with 5,000 people. All communities together.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('origin', ORIGIN);
+R('foods', FOODS);
+R('table', TABLE);
+R('greetings', GREETINGS);
+R('modern', MODERN);
+
+renderTextBlock('walkthrough', WALKTHROUGH);
+
+addMiniQuiz('Mimouna Quiz', [
+  { q: 'When does Mimouna begin?', options: ['First night of Pesach', 'Night following the last day of Pesach', 'Day before Pesach', 'Two weeks after Pesach'], answer: 1, explain: 'Mimouna opens the moment Pesach ends — the night chametz becomes permitted again.' },
+  { q: 'The signature Mimouna food is...', options: ['Matzah', 'Mufleta (thin Moroccan crepe with butter and honey)', 'Challah', 'Kugel'], answer: 1, explain: 'Mufleta — a thin pan-cooked crepe served hot with butter and honey — is the iconic Mimouna dish.' },
+  { q: 'The classic Mimouna greeting "Tarbiha umbarka" means...', options: ['Happy holiday', 'May you be blessed and successful', 'Welcome home', 'Good morning'], answer: 1, explain: 'Tarbiha umbarka (Judeo-Arabic) = may you be blessed and successful.' },
+  { q: 'Why is white flour blessed at Mimouna?', options: ['It\'s rare', 'Chametz is newly permitted post-Pesach — the flour blessing marks the return', 'It\'s gold-colored', 'For decoration only'], answer: 1, explain: 'Chametz (leavened) was forbidden during Pesach. The white flour blessing marks its return to the home.' },
+  { q: 'Which year was Mimouna officially declared an Israeli national festival?', options: ['1948', '1956', '1966', '1980'], answer: 2, explain: 'In 1966 Mimouna was declared official Israeli national festival; every PM since Begin has attended public Mimounas.' },
+  { q: 'Which item is NOT typically on the decorated Mimouna table?', options: ['Whole fish', 'Wheat sheaves', 'Gold jewelry', 'Empty plates'], answer: 3, explain: 'The Mimouna table is full — fish (abundance), wheat (livelihood), gold (blessing), greenery (renewal). Empty plates would defeat the symbolism.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(354);
+  }
+});
+</script></body></html>

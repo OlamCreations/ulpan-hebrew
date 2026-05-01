@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>161 — Yiddish Layer in Hebrew</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Yiddish Loanwords in Modern Hebrew</h1><div class="subtitle">Lesson 161 · שִׁכְבַת יִידִישׁ</div></div><div class="nav"><a href="index.html">Home</a><a href="161-yiddish-layer.html" class="active">161</a></div></header>
+
+<p class="intro">Modern Hebrew was rebuilt on biblical bones, but its slang and emotional register are heavily Yiddish. Knowing the Yiddish layer means understanding the warmth, sarcasm, and irony Israelis carry with them — even those who never spoke a word of Yiddish at home. From Tel Aviv comedians to Knesset insults, Yiddish is the affective spine.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Yiddish was nearly killed twice: by the Holocaust (which murdered most native speakers) and by Ben-Gurion's policy of Hebrew-only nation-building. Yet Yiddish slipped back in through the window — first via Eastern European parents who couldn't fully shed it, then via comedy and affection. Today even Mizrahi Israelis use "balagan", "schlep", "chutzpah" without irony. It's no longer "Ashkenazi" — it's Israeli.</div>
+
+<h2>Common Yiddish Loanwords (everyone uses these)</h2>
+<div class="word-list" id="loanwords"></div>
+
+<h2>Emotion & Reaction Words</h2>
+<div class="word-list" id="emotion"></div>
+
+<h2>People & Personalities</h2>
+<div class="word-list" id="people"></div>
+
+<h2>Insults & Affection (often the same word)</h2>
+<div class="word-list" id="insults"></div>
+
+<h2>Yiddish-Origin Idioms in Hebrew</h2>
+<div class="word-list" id="idioms"></div>
+
+<hr class="section-divider">
+
+<h2>Yiddish in Tel Aviv Café Conversation</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A conversation between two friends — secular Israelis, born in Tel Aviv, never spoke Yiddish at home, yet half their emotional vocabulary is Yiddish. Yiddish words in bold-feeling.</div>
+  <div id="cafe-talk"></div>
+</div>
+
+<footer>Lesson 161 · Yiddish loanwords · <a href="162-yiddish-emotion.html">Next →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const LOANWORDS = [
+  { he: 'בָּלָגָן', translit: 'balagan', fr: 'mess, chaos (THE most common word in Israel)' },
+  { he: 'שְׁלֶפּ', translit: 'shlep', fr: 'to drag/haul (used as verb: lishlop)' },
+  { he: 'חוּצְפָּה', translit: 'chutzpah', fr: 'audacity (already English now)' },
+  { he: 'שְׁמוּץ', translit: 'shmutz', fr: 'dirt, grime' },
+  { he: 'מִיש-מָש', translit: 'mish-mash', fr: 'mixed-up jumble' },
+  { he: 'נוּ', translit: 'nu', fr: '"so?" / "well?" / "come on" (universal Israeli filler)' },
+  { he: 'אוֹי וֵיי', translit: 'oy vey', fr: '"oh dear" (exhausted reaction)' },
+  { he: 'אוֹי גֶעוַואלְד', translit: 'oy gevald', fr: '"oh dear God" (alarm)' },
+  { he: 'מָזָּל-טוֹב', translit: 'mazal-tov', fr: 'congratulations (Yiddish pronunciation prevailed)' },
+  { he: 'לְהַחְבְּרֵל', translit: 'l\'hachbrel', fr: 'to chat / shoot the breeze (from haver+Yiddish)' }
+];
+const EMOTION = [
+  { he: 'נֶבֶּעך', translit: 'nebbech', fr: 'poor thing / pity expression' },
+  { he: 'נַחֵס', translit: 'naches', fr: 'pride (esp. parents in children)' },
+  { he: 'קְוֶעטשׁ', translit: 'kvetch', fr: 'to complain whiningly' },
+  { he: 'שְׁמַלְץ', translit: 'shmaltz', fr: 'over-sentimentality (also chicken fat)' },
+  { he: 'שַׁעֵפ', translit: 'shep (naches)', fr: 'to derive (pride/joy)' },
+  { he: 'פַּרְוֵה', translit: 'parve', fr: 'neither dairy nor meat / emotionally neutral, blah' },
+  { he: 'שׁוּפֶּעט', translit: 'shpitz', fr: 'top, pinnacle, the best (often ironic)' },
+  { he: 'גְּזוּנְטהַייט', translit: 'gezuntheit', fr: 'bless you (after sneeze, replacing "labri\'ut" sometimes)' },
+  { he: 'מֶעעעה', translit: 'meeeeh', fr: '"meh" / unimpressed sound' },
+  { he: 'אֵייוֵויִי', translit: 'oyveyzmir', fr: '"oh dear me" (exaggerated suffering)' }
+];
+const PEOPLE = [
+  { he: 'שְׁלִימָזֵל', translit: 'shlimazel', fr: 'unlucky person (things happen TO him)' },
+  { he: 'שְׁלִימִיל', translit: 'shlemiel', fr: 'klutz (he MAKES things happen, bad ones)' },
+  { he: 'מֶענְטשׁ', translit: 'mensch', fr: 'a decent, upright person — ultimate compliment' },
+  { he: 'יִידֵענֶע', translit: 'yidene', fr: 'gossipy older woman / busybody' },
+  { he: 'בּוֹבּעֶה', translit: 'bobe', fr: 'grandmother (warmer than "savta")' },
+  { he: 'זֵיידֶע', translit: 'zeide', fr: 'grandfather (warmer than "saba")' },
+  { he: 'מַייכֵר', translit: 'macher', fr: 'big shot, fixer, operator' },
+  { he: 'גָּנָב', translit: 'ganav', fr: 'thief (Hebrew root, Yiddish flavor)' },
+  { he: 'שְׁמוֹק', translit: 'shmok', fr: 'jerk / idiot (vulgar)' },
+  { he: 'פַּרְכֵר', translit: 'frecher', fr: 'cheeky / brazen (kids)' }
+];
+const INSULTS = [
+  { he: 'שְׁמוֹק', translit: 'shmok', fr: 'idiot (literal: penis — strong)' },
+  { he: 'פּוּטץ', translit: 'putz', fr: 'fool (originally vulgar, now milder)' },
+  { he: 'שְׁמַטֶע', translit: 'shmate', fr: 'rag — 1) clothes, 2) worthless thing' },
+  { he: 'שְׁלוּם', translit: 'shlub', fr: 'lazy slob / poorly dressed person' },
+  { he: 'נִיוּדְנִיק', translit: 'nudnik', fr: 'pest / boring nag' },
+  { he: 'בָּלָבּוּסְטֶע', translit: 'balabusta', fr: '(positive) excellent housewife / hostess' },
+  { he: 'מָאיין קִינְד', translit: 'mein kind', fr: '"my child" (term of endearment for adults)' },
+  { he: 'נֶשׁוּמֶע', translit: 'neshume', fr: 'soul / sweetie (very tender)' },
+  { he: 'בּוּבּעֶלֶע', translit: 'bubbele', fr: 'darling (often to children)' },
+  { he: 'טַטֶעלֶע', translit: 'tatele', fr: 'little daddy (term of affection)' }
+];
+const IDIOMS = [
+  { he: 'אַרְבַּע מֵאוֹת אַחוּז', translit: 'arba meot achuz', fr: '"400%" — fully agree (calque from Yiddish hyperbole)' },
+  { he: 'מָה הַסִּפּוּר?', translit: 'ma ha-sipur?', fr: '"what\'s the story?" (Yiddish "vos\'iz?")' },
+  { he: 'אֵיכְשֶׁהוּ זֶה הוֹלֵךְ', translit: 'eichshehu ze holech', fr: '"somehow it goes" (resigned acceptance)' },
+  { he: 'הָלַךְ פֶעדֶר', translit: 'halach feder', fr: 'totally lost / vanished (feder=feather in Yiddish)' },
+  { he: 'תָּפַסְתָּ אוֹתִי בָּרֶגֶל', translit: 'tafasta oti baregel', fr: '"caught me by the foot" — caught me unprepared' },
+  { he: 'מַה זֶה הַעֵסֶק שֶׁלָּךְ?', translit: 'ma ze ha-esek shelach?', fr: 'what\'s your business / not your concern' },
+  { he: 'יַעֵשׂ סְדָר', translit: 'ya\'as seder', fr: 'will sort it out (calque from Yiddish syntax)' },
+  { he: 'אִם בִּכְלָל', translit: 'im biklal', fr: '"if at all" (Yiddish-influenced syntax)' },
+  { he: 'מוֹדֶה עַל הָאֱמֶת', translit: 'mode al ha-emet', fr: 'I\'ll admit the truth (Talmudic via Yiddish)' },
+  { he: 'מָה לַעֲשׂוֹת?', translit: 'ma la\'asot?', fr: '"what to do?" — fatalistic shrug' }
+];
+
+const CAFE_TALK = {
+  intro: 'Two old friends meet at a Tel Aviv café. Note how Yiddish words slip in — none of them feel "Yiddish" anymore.',
+  lines: [
+    { speaker: 'Friend A', he: 'נוּ, אֵיךְ זֶה הָיָה אֶצְלְךָ אֶתְמוֹל?', translit: 'nu, eich ze haya etzlecha etmol?', fr: 'Nu, how was it for you yesterday?' },
+    { speaker: 'Friend B', he: 'בָּלָגָן שָׁלֵם. הָאוֹטוֹ הִתְקַלְקֵל, הַיְלָדִים חוֹלִים, וְהַחֲמוֹתִי הִיא נִיוּדְנִיקִית גְּמוּרָה.', translit: 'balagan shalem. ha-oto hitkalkel, ha-yeladim cholim, ve-ha-chamoti hi nudnikit gmurah.', fr: 'Total mess. The car broke, the kids are sick, and my mother-in-law is a complete pest.' },
+    { speaker: 'Friend A', he: 'אוֹי וֵיי. נֶבֶּעךְ. אַתָּה צָרִיךְ קוֹלָה?', translit: 'oy vey. nebbech. atah tzarich cola?', fr: 'Oy vey. Poor thing. You need a Coke?' },
+    { speaker: 'Friend B', he: 'בּוּבּעֶלֶע, אֲנִי צָרִיךְ אַרָק. אֲבָל קוֹלָה אִם זֶה כָּל מָה שֶׁיֵּשׁ. מַה לַעֲשׂוֹת.', translit: 'bubbele, ani tzarich arak. aval cola im ze kol ma she-yesh. ma la\'asot.', fr: 'Sweetie, I need arak. But Coke if that\'s all there is. What can you do.' },
+    { speaker: 'Friend A', he: 'תָּגִיד, וְאֵיךְ הַמִּשְׂרָד? עוֹדֵךְ עוֹבֵד עִם הַשְּׁמוֹק הַזֶּה?', translit: 'tagid, ve-eich ha-misrad? odecha oved im ha-shmok ha-ze?', fr: 'Tell me, how\'s the office? Still working with that jerk?' },
+    { speaker: 'Friend B', he: 'הוּא לֹא שְׁמוֹק, הוּא רַק שְׁלִימָזֵל. כָּל פְּרוֹיֶקְט מִתְפָּרֵק לוֹ. אֲנִי מַעֲרִיךְ אוֹתוֹ דַּוְקָא — הוּא מֶענְטשׁ.', translit: 'hu lo shmok, hu rak shlimazel. kol proyect mitparek lo. ani ma\'arich oto davka — hu mensch.', fr: 'He\'s not a jerk, just unlucky. Every project falls apart for him. I actually respect him — he\'s a mensch.' },
+    { speaker: 'Friend A', he: 'נָכוֹן, מֶענְטשׁ הַכֹּל סוֹלֵחַ. אֲבָל הַבָּלָגָן בִּמְשָׂרָדְךָ — אוֹי גֶעוַואלְד.', translit: 'nachon, mensch ha-kol soleach. aval ha-balagan b\'misradcha — oy gevald.', fr: 'True, a mensch is forgiven everything. But the mess at your office — oh god.' }
+  ]
+};
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('loanwords', LOANWORDS);
+R('emotion', EMOTION);
+R('people', PEOPLE);
+R('insults', INSULTS);
+R('idioms', IDIOMS);
+
+renderTextBlock('cafe-talk', CAFE_TALK.lines.map(l => ({ he: l.he, translit: l.translit, fr: l.speaker ? '[' + l.speaker + '] ' + l.fr : l.fr })));
+
+addMiniQuiz('Yiddish Layer Quiz', [
+  { q: 'What does "balagan" mean?', options: ['Order', 'Mess/chaos', 'Beauty', 'Money'], answer: 1, explain: 'Balagan is the most-used Yiddish loanword in Israel.' },
+  { q: 'A "mensch" is...', options: ['A fool', 'A decent upstanding person', 'A businessman', 'A Yiddish speaker'], answer: 1, explain: 'Mensch is a high compliment — implies integrity.' },
+  { q: 'What\'s the difference between shlemiel and shlimazel?', options: ['No difference', 'Shlemiel spills the soup, shlimazel gets it spilled on him', 'Shlemiel is rich', 'Shlimazel is a woman'], answer: 1, explain: 'A shlemiel makes the bad luck happen; a shlimazel receives it.' },
+  { q: '"Nu" means roughly...', options: ['No', '"So?" / "Well?" / Come on', 'New', 'Yes'], answer: 1, explain: 'Nu is the universal Yiddish/Israeli conversation prompt.' },
+  { q: 'What\'s "shlep"?', options: ['To run', 'To drag/haul tediously', 'To sleep', 'To complain'], answer: 1, explain: 'Used as verb form lishlop in Hebrew.' },
+  { q: 'Why is Yiddish in modern Israeli Hebrew?', options: ['Government policy', 'Imposed by yeshivas', 'Eastern European parents + comedy + affection slipped it back in', 'Was always biblical'], answer: 2, explain: 'Despite Ben-Gurion\'s Hebrew-only push, Yiddish returned through emotion and humor.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('yiddish-layer');
+  }
+});
+</script></body></html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>169 — Yiddish Grammar in Hebrew</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>How Yiddish Grammar Shapes Hebrew</h1><div class="subtitle">Lesson 169 · דִּקְדּוּק יִידִישׁ</div></div><div class="nav"><a href="index.html">Home</a><a href="169-yiddish-grammar.html" class="active">169</a></div></header>
+
+<p class="intro">The most invisible Yiddish influence on Hebrew is grammatical. Word order, intonation, question construction, particle use — these all carry Yiddish patterns. Native Israelis don\'t notice they\'re using Yiddish syntax in Hebrew sentences. This lesson decodes the structures so you can hear the layer.</p>
+
+<div class="tip"><strong>Cultural note</strong> — When an Israeli says "What he wants?" instead of "What does he want?" — that\'s Yiddish syntax (Yiddish doesn\'t do auxiliary "do"). When they end a sentence with rising intonation as a half-question — that\'s Yiddish too. When you hear "Already he came" instead of "He already came" — that\'s Yiddish word order. The grammar is invisible to natives because it IS native to them.</div>
+
+<h2>Yiddish Word Order Patterns</h2>
+<div class="word-list" id="word-order"></div>
+
+<h2>Question Construction</h2>
+<div class="word-list" id="questions"></div>
+
+<h2>Yiddish Particles in Hebrew</h2>
+<div class="word-list" id="particles"></div>
+
+<h2>Intonation & Rhythm</h2>
+<div class="word-list" id="intonation"></div>
+
+<h2>Calques (Word-for-Word Translations)</h2>
+<div class="word-list" id="calques"></div>
+
+<hr class="section-divider">
+
+<h2>Same Sentence, Two Grammars</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Side-by-side: classical Hebrew vs. Yiddish-influenced everyday Israeli Hebrew. Notice how the colloquial version takes Yiddish syntax even when no Yiddish words are used.</div>
+  <div id="side-by-side"></div>
+</div>
+
+<h2>Listening for the Yiddish Layer</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A typical secular Israeli\'s phone monologue — listen for the Yiddish grammar patterns underneath.</div>
+  <div id="monologue"></div>
+</div>
+
+<footer>Lesson 169 · Yiddish grammar · <a href="170-yiddish-summary.html">Next →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const WORD_ORDER = [
+  { he: 'כְּבָר הוּא בָּא', translit: 'kvar hu ba', fr: '"already he came" (Yiddish: shoyn iz er gekumen)' },
+  { he: 'גַּם אֲנִי אוֹכֵל', translit: 'gam ani ochel', fr: '"also I eat" (Yiddish: oykh ikh es)' },
+  { he: 'לֹא כָּל כָּךְ אוֹהֵב', translit: 'lo kol kach ohev', fr: '"not so much love" (Yiddish: nit azoy lib)' },
+  { he: 'מָה הוּא רוֹצֶה?', translit: 'ma hu rotzeh?', fr: '"what he wants?" (Yiddish-style without auxiliary)' },
+  { he: 'אֵיךְ אַתָּה יוֹדֵעַ?', translit: 'eich atah yode\'a?', fr: '"how you know?" (no Hebrew verb-fronting)' },
+  { he: 'הוּא אוֹמֵר שֶׁ...', translit: 'hu omer she-...', fr: '"he says that..." (Yiddish: er zogt az...)' },
+  { he: 'אֲנִי הוֹלֵךְ הַבַּיְתָה', translit: 'ani holech ha-bayta', fr: '"I go home-ward" (loc. -a like Yiddish aheym)' },
+  { he: 'יֵשׁ לְהַגִּיד...', translit: 'yesh l\'hagid...', fr: '"there is to say..." (Yiddish: m\'darf zogn)' },
+  { he: 'אַחַר כָּךְ אָכַלְנוּ', translit: 'achar kach achalnu', fr: '"after-that we ate" (sequential, Yiddish style)' },
+  { he: 'נְתַתִּי לוֹ', translit: 'natati lo', fr: '"I gave him" (dative pattern, common in both)' }
+];
+const QUESTIONS = [
+  { he: 'נוּ?', translit: 'nu?', fr: '"so?" / "well?" (universal Yiddish)' },
+  { he: 'מָה כְּבָר?', translit: 'ma kvar?', fr: '"what already?" / "no big deal"' },
+  { he: 'בְּדִיּוּק?', translit: 'b\'diyuk?', fr: '"exactly?" (rising rhetorical)' },
+  { he: 'מַמָּשׁ כָּכָה?', translit: 'mamash kacha?', fr: '"really like that?" (skeptical)' },
+  { he: 'תַגִּיד...', translit: 'tagid...', fr: '"tell me..." (conversation opener)' },
+  { he: 'נוּ, אוּלַי...', translit: 'nu, ulay...', fr: '"well, maybe..."' },
+  { he: 'מָה זֶה הַסּיפּוּר?', translit: 'ma ze ha-sipur?', fr: '"what\'s the story?" (calque from "vos\'iz?")' },
+  { he: 'מַה תֹּאמַר?', translit: 'ma tomar?', fr: '"what would you say?" (rhetorical)' },
+  { he: 'יָדוּעַ?', translit: 'yadu\'a?', fr: '"known?" / "you know?"' },
+  { he: 'אוֹי וֵיי, נָכוֹן?', translit: 'oy vey, nachon?', fr: '"oh dear, right?" (with sigh question)' }
+];
+const PARTICLES = [
+  { he: 'נוּ', translit: 'nu', fr: 'so/well/come on' },
+  { he: 'דַּוְקָא', translit: 'davka', fr: 'specifically/particularly (Yiddish: davke)' },
+  { he: 'בְּיֶחְיָן', translit: 'b\'yachyan', fr: '"in Yiddish way" — emphasizing the manner' },
+  { he: 'רֶק כָּכָה', translit: 'rak kacha', fr: '"only just so" (Yiddish: nor azoy)' },
+  { he: 'בִּכְלָל', translit: 'biklal', fr: 'at all / generally (Yiddish: bichlal)' },
+  { he: 'מַמָּשׁ', translit: 'mamash', fr: 'really/literally (Yiddish: mamesh)' },
+  { he: 'אַ זוֹי', translit: 'azoy', fr: '"so" / "thus" (Yiddish: azoy)' },
+  { he: 'אֶצֶל', translit: 'etzel', fr: '"by/at someone\'s place" (locational, Yiddish-like)' },
+  { he: 'אִם בִּכְלָל', translit: 'im biklal', fr: '"if at all" (calque)' },
+  { he: 'מָה גַּם', translit: 'ma gam', fr: '"what also" / "moreover" (Yiddish: vos noch)' }
+];
+const INTONATION = [
+  { he: 'עֲלִיָּה בָּסּוֹף', translit: 'aliya ba-sof', fr: 'rising intonation at sentence end (Yiddish-derived question-like)' },
+  { he: 'הַטָּעָמָה', translit: 'ha-ta\'amah', fr: 'stress pattern' },
+  { he: 'יִירָה', translit: 'yi\'rah', fr: 'sigh' },
+  { he: 'אוֹי...', translit: 'oy...', fr: 'lengthening "oy" (lament)' },
+  { he: 'הָה?', translit: 'ha?', fr: 'rising tag-question' },
+  { he: 'לֹא?', translit: 'lo?', fr: '"no?" — checking agreement' },
+  { he: 'בָּלָגָן בְּשָׁפָה', translit: 'balagan b\'safa', fr: 'verbal "mess" — multiple ideas at once' },
+  { he: 'הִתְפָּעַלוּת', translit: 'hitpaalut', fr: 'expressive emphasis' },
+  { he: 'גוֹנֵב גְּמָרָא', translit: 'gonev gemara', fr: '"steals from gemara" — Talmudic-Yiddish rhythm' },
+  { he: 'תְּלוּלָה', translit: 'tlula', fr: 'steep (intonation curve)' }
+];
+const CALQUES = [
+  { he: 'יֵשׁ לוֹ עִם מָה לְהִתְעַסֵּק', translit: 'yesh lo im ma l\'hit\'asek', fr: '"he has with what to deal" — Yiddish syntax' },
+  { he: 'אֲנִי הוֹלֵךְ לִקְנוֹת', translit: 'ani holech liknot', fr: '"I am going to buy" (going-to future, Yiddish-style)' },
+  { he: 'עוֹמֵד לִפֹּל', translit: 'omed lipol', fr: '"standing to fall" (about to)' },
+  { he: 'בְּדִיּוּק יָצָאתִי', translit: 'b\'diyuk yatzati', fr: '"exactly I went out" — emphasis on perfection of timing' },
+  { he: 'הָיָה לִי טוֹב', translit: 'haya li tov', fr: '"was to me good" (dative possessive, common to both)' },
+  { he: 'יֵשׁ לִי כְּאֵב רֹאשׁ', translit: 'yesh li ke\'ev rosh', fr: '"there is to me head pain" (Yiddish: ikh hob a kopvey)' },
+  { he: 'אֲנִי בָּא לוֹמַר', translit: 'ani ba lomar', fr: '"I am coming to say" (Yiddish: ikh kum tsu zogn)' },
+  { he: 'מָה זֶה לִי?', translit: 'ma ze li?', fr: '"what is this to me?" (Yiddish: vos iz dos mir?)' },
+  { he: 'תֵּן לִי לִחְשׁוֹב', translit: 'ten li lichshov', fr: '"give me to think" (Yiddish: lozn mikh trakhtn)' },
+  { he: 'לֹא יוֹדֵעַ אֵיךְ לוֹמַר', translit: 'lo yode\'a eich lomar', fr: '"I don\'t know how to say" (Yiddish: vey ikh nit azoy)' }
+];
+
+const SIDE_BY_SIDE = {
+  intro: 'Same meaning, two grammar registers. Classical (formal) Hebrew vs. Yiddish-flavored everyday Israeli Hebrew.',
+  lines: [
+    { speaker: 'Classical', he: 'הָאִישׁ הַזֶּה הִגִּיעַ זֶה עַתָּה.', translit: 'ha-ish ha-ze higi\'a ze ata.', fr: 'This man has just arrived now. (formal)' },
+    { speaker: 'Yiddish-flavored', he: 'הָאִישׁ הַזֶּה כְּבָר בָּא.', translit: 'ha-ish ha-ze kvar ba.', fr: '"This man already came." (Yiddish word-order)' },
+    { speaker: 'Classical', he: 'הוּא רוֹצֶה לְהַזְמִין אוֹתָנוּ לְבָרוֹחַ.', translit: 'hu rotzeh l\'hazmin otanu l\'varuach.', fr: 'He wishes to invite us to dinner. (formal)' },
+    { speaker: 'Yiddish-flavored', he: 'הוּא בָּא לְהַזְמִין אוֹתָנוּ.', translit: 'hu ba l\'hazmin otanu.', fr: '"He is coming to invite us." (Yiddish "kumen")' },
+    { speaker: 'Classical', he: 'הִנֵּה הַסֵּפֶר אֲשֶׁר הִזְמַנּוּ אוֹתוֹ.', translit: 'hineh ha-sefer asher hizmanu oto.', fr: 'Behold the book which we ordered. (biblical-formal)' },
+    { speaker: 'Yiddish-flavored', he: 'הַסֵּפֶר שֶׁהִזְמַנּוּ — נוּ?', translit: 'ha-sefer she-hizmanu — nu?', fr: '"The book we ordered — nu?" (Yiddish particle ending)' }
+  ]
+};
+
+const MONOLOGUE = {
+  intro: 'A 30-something Tel Avivian on a phone call. Watch the Yiddish under the Hebrew.',
+  lines: [
+    { speaker: 'Speaker', he: 'נוּ, מָה הָיָה? תַגֵּד.', translit: 'nu, ma haya? taged.', fr: '"Nu, what was? Tell." (Yiddish opener + minimal Hebrew)' },
+    { speaker: 'Speaker', he: 'אַל תְּסַפֵּר לִי. אַתָּה כְּבָר אִחַרְתָּ. וַאֲנִי אָמַרְתִּי לְךָ — אַל תֵּלֵךְ. אֲבָל לֹא, אַתָּה דַּוְקָא הָלַכְתָּ.', translit: 'al t\'saper li. atah kvar icharta. va\'ani amarti l\'cha — al telech. aval lo, atah davka halachta.', fr: '"Don\'t tell me. You already late. And I told you — don\'t go. But no, you precisely went." (multiple Yiddish patterns)' },
+    { speaker: 'Speaker', he: 'מָה זֶה הַסִּפּוּר עִם הַמִּשְׂרָד? בָּלָגָן שָׁלֵם. אַתָּה רוֹצֶה אוֹ לֹא? נוּ נוּ.', translit: 'ma ze ha-sipur im ha-misrad? balagan shalem. atah rotzeh o lo? nu nu.', fr: '"What\'s the story with the office? Total mess. Do you want or not? Nu nu." (Yiddish exclamations)' },
+    { speaker: 'Speaker', he: 'אוֹי וֵיי, לִי אֵין כֹּחַ לָזֶה. אֲנִי בָּא הַבַּיְתָה. בּוֹאַ נְדַבֵּר מָחָר. נוּ, צ\'או.', translit: 'oy vey, li ein ko\'ach la-ze. ani ba ha-bayta. bo n\'daber machar. nu, ciao.', fr: '"Oy vey, I have no strength for this. I come home-ward. Let\'s talk tomorrow. Nu, ciao." (Italian + Yiddish + Hebrew)' }
+  ]
+};
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('word-order', WORD_ORDER);
+R('questions', QUESTIONS);
+R('particles', PARTICLES);
+R('intonation', INTONATION);
+R('calques', CALQUES);
+
+renderTextBlock('side-by-side', SIDE_BY_SIDE.lines.map(l => ({ he: l.he, translit: l.translit, fr: l.speaker ? '[' + l.speaker + '] ' + l.fr : l.fr })));
+renderTextBlock('monologue', MONOLOGUE.lines.map(l => ({ he: l.he, translit: l.translit, fr: l.speaker ? '[' + l.speaker + '] ' + l.fr : l.fr })));
+
+addMiniQuiz('Yiddish Grammar Quiz', [
+  { q: '"Kvar hu ba" reflects which influence?', options: ['Pure Biblical Hebrew', 'Yiddish word order ("already he came")', 'Arabic', 'English'], answer: 1, explain: 'Yiddish "shoyn iz er gekumen" — "already" comes first.' },
+  { q: 'The particle "davka" comes from...', options: ['Aramaic only', 'Yiddish (davke)', 'Arabic', 'Greek'], answer: 1, explain: 'Davka is Aramaic in root but lives in Hebrew through Yiddish "davke".' },
+  { q: '"Yesh li ke\'ev rosh" is...', options: ['Pure Biblical Hebrew', 'Calque from Yiddish ("ikh hob a kopvey" = I have a head-pain)', 'English idiom', 'Arabic loan'], answer: 1, explain: 'The structure "is to me X" mirrors Yiddish dative possession.' },
+  { q: 'Rising intonation at sentence end in Israeli Hebrew is...', options: ['From Arabic', 'A Yiddish-derived feature', 'Modern slang', 'Always interrogative only'], answer: 1, explain: 'Yiddish-style "asking-while-stating" intonation persists in everyday Hebrew.' },
+  { q: '"Nu" functionally...', options: ['Means "no"', 'Is a universal Yiddish particle: "so?", "well?", "come on"', 'Is a Hebrew negation', 'Is Arabic'], answer: 1, explain: 'Nu is the most-used Yiddish particle in Israeli speech.' },
+  { q: 'Why is Yiddish grammar invisible to native Israelis?', options: ['Because they were taught it explicitly', 'Because they grew up with both, can\'t distinguish', 'Because it doesn\'t exist anymore', 'Because it\'s only in books'], answer: 1, explain: 'Native Israelis absorbed Yiddish grammar through Hebrew speech without distinguishing.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('yiddish-grammar');
+  }
+});
+</script></body></html>

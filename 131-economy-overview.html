@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>131 — Israeli Economy Overview</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>The Israeli Economy — Structure</h1><div class="subtitle">Lesson 131 · הַכַּלְכָּלָה הַיִּשְׂרְאֵלִית</div></div><div class="nav"><a href="index.html">Home</a><a href="131-economy-overview.html" class="active">131</a></div></header>
+
+<p class="intro">Israel: ~$550B GDP, ~$53K per capita, OECD member since 2010. The economy is dual-track — a globally competitive high-tech sector and a high-cost-of-living domestic sector dominated by oligopolies. ~50% of exports are tech. The shekel (NIS) is freely convertible. Inflation, housing, the Sheqel-Dollar exchange rate, and the cost of bureka are all daily Israeli conversation topics.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israelis discuss money openly. Salaries are gossip, not taboo. The standard question "כַּמָּה אַתָּה מַרְוִיחַ?" ("how much do you make?") is rude in Britain but normal in Israel. The number to know is "שָׂכָר מִינִימוּם" — minimum wage (~5,300 NIS/month, late 2025) — and "שָׂכָר חָדְשִׁי בַּמֶּמֶש" — average monthly wage (~13,400 NIS).</div>
+
+<h2>Economic Indicators</h2>
+<div class="word-list" id="indicators"></div>
+
+<h2>Currency & Banking</h2>
+<div class="word-list" id="currency"></div>
+
+<h2>Sectors</h2>
+<div class="word-list" id="sectors"></div>
+
+<h2>The Bank of Israel & Macro Policy</h2>
+<div class="word-list" id="boi"></div>
+
+<h2>Cost of Living Vocabulary</h2>
+<div class="word-list" id="col"></div>
+
+<hr class="section-divider">
+
+<h2>Bank of Israel Statement Patterns</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Recurring phrases from the Bank of Israel Governor\'s monthly press conferences. Once you know these, you can read any business newsletter in under a minute.</div>
+  <div id="boi-statement"></div>
+</div>
+
+<h2>Cost-of-Living Conversation at the Office</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A composite of the kind of complaint conversation that erupts daily at every Israeli workplace and bus stop.</div>
+  <div id="office"></div>
+</div>
+
+<footer>Lesson 131 · Economy Overview · <a href="132-hi-tech.html" style="color:var(--accent)">Next: Hi-Tech →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const INDICATORS = [
+  { he: 'תּוֹצָר מְקוֹמִי גוֹלָמִי', translit: 'totzar m\'komi golami', fr: 'GDP (Gross Domestic Product)' },
+  { he: 'תָּמ"ג', translit: 'TAMaG', fr: 'GDP (acronym)' },
+  { he: 'תָּמ"ג לְנֶפֶשׁ', translit: 'TAMaG l\'nefesh', fr: 'GDP per capita' },
+  { he: 'אִינְפְלַצְיָה', translit: 'inflatziya', fr: 'inflation [modern]' },
+  { he: 'מַדַּד הַמְּחִירִים לַצַּרְכָן', translit: 'madad ha-m\'chirim la-tzarchan', fr: 'Consumer Price Index (CPI)' },
+  { he: 'הַמַדַּ"ד', translit: 'ha-MaDaD', fr: 'CPI (acronym, on every utility bill)' },
+  { he: 'אַבְטָלָה', translit: 'avtala', fr: 'unemployment [modern]' },
+  { he: 'שִׁעוּר אַבְטָלָה', translit: 'shi\'ur avtala', fr: 'unemployment rate' },
+  { he: 'גִּדּוּל כַּלְכָּלִי', translit: 'gidul kalkali', fr: 'economic growth' },
+  { he: 'מִתּוֹן', translit: 'miton', fr: 'recession / slowdown [modern]' },
+  { he: 'גַּרְעוֹן תַּקְצִיבִי', translit: 'gar\'on taktzivi', fr: 'budget deficit' },
+  { he: 'יִתְרַת מַטְבֵּעַ', translit: 'yitrat matbe\'a', fr: 'foreign currency reserves' }
+];
+const CURRENCY = [
+  { he: 'שֶׁקֶל חָדָשׁ', translit: 'shekel chadash', fr: 'New Israeli Shekel (NIS)' },
+  { he: 'ש"ח', translit: 'sh.ch.', fr: '"shekel chadash" (sign on price tags)' },
+  { he: 'אֲגוֹרָה', translit: 'agora', fr: 'agora (1/100 of a shekel) [modern]' },
+  { he: 'דּוֹלָר', translit: 'dolar', fr: 'dollar [modern]' },
+  { he: 'יוֹרוֹ', translit: 'yuro', fr: 'euro [modern]' },
+  { he: 'שַׁעַר חֲלִיפִין', translit: 'sha\'ar chalifin', fr: 'exchange rate' },
+  { he: 'שַׁעַר הַדּוֹלָר', translit: 'sha\'ar ha-dolar', fr: 'dollar exchange rate (always news)' },
+  { he: 'הִתְחַזְּקוּת הַשֶּׁקֶל', translit: 'hitchazkut ha-shekel', fr: 'shekel strengthening' },
+  { he: 'הִיחַלְשׁוּת הַשֶּׁקֶל', translit: 'hi-chalshut ha-shekel', fr: 'shekel weakening' },
+  { he: 'הַמְרָה', translit: 'hamara', fr: 'currency conversion' },
+  { he: 'בְּרֵרַת מַחְדָּל', translit: 'b\'rerat machdal', fr: 'default option [modern, financial]' }
+];
+const SECTORS = [
+  { he: 'תַּעֲשִׂיָּה', translit: 'ta\'asiya', fr: 'industry [modern]' },
+  { he: 'הִיט-טַק', translit: 'hi-tek', fr: 'high-tech [modern]' },
+  { he: 'בִּיוֹטֶק', translit: 'biotek', fr: 'biotech [modern]' },
+  { he: 'חַקְלָאוּת', translit: 'chakla\'ut', fr: 'agriculture [modern]' },
+  { he: 'תִּיּוּר', translit: 'tiyur', fr: 'tourism [modern]' },
+  { he: 'יַמָּאוּת', translit: 'yama\'ut', fr: 'maritime / shipping' },
+  { he: 'גַּז טִבְעִי', translit: 'gaz tiv\'i', fr: 'natural gas (Tamar/Leviathan fields, since 2013)' },
+  { he: 'אֵנֵרְגְיָה מְחֻדֶּשֶׁת', translit: 'energiya m\'chudeshet', fr: 'renewable energy' },
+  { he: 'בַּנְקָאוּת', translit: 'banka\'ut', fr: 'banking' },
+  { he: 'בִּיטּוּחַ', translit: 'bituach', fr: 'insurance' },
+  { he: 'נְדֵילָ"ן', translit: 'NaDlaN', fr: 'real estate (acronym, on signs everywhere)' },
+  { he: 'מִסְחָר קִמְעוֹנָאִי', translit: 'mischar kim\'ona\'i', fr: 'retail trade' }
+];
+const BOI = [
+  { he: 'בַּנְק יִשְׂרָאֵל', translit: 'Bank Yisrael', fr: 'Bank of Israel (central bank)' },
+  { he: 'הַנָּגִיד', translit: 'ha-nagid', fr: 'the Governor (BoI head)' },
+  { he: 'אֲמִיר יָרוֹן', translit: 'Amir Yaron', fr: 'Amir Yaron (Governor since 2018, 2nd term to 2028)' },
+  { he: 'רִיבִּית בַּנְק יִשְׂרָאֵל', translit: 'ribit Bank Yisrael', fr: 'BoI interest rate (the prime rate driver)' },
+  { he: 'הָעֲלָאַת רִיבִּית', translit: 'ha\'alat ribit', fr: 'rate hike' },
+  { he: 'הוֹרָדַת רִיבִּית', translit: 'horadat ribit', fr: 'rate cut' },
+  { he: 'יַעַד אִינְפְלַצְיָה', translit: 'ya\'ad inflatziya', fr: 'inflation target (1-3%)' },
+  { he: 'הוֹדָעַת רִיבִּית', translit: 'hoda\'at ribit', fr: 'rate announcement (8x a year)' },
+  { he: 'שׁוּק הַהוֹן', translit: 'shuk ha-hon', fr: 'capital market' },
+  { he: 'הַבּוּרְסָה לְנְיָרוֹת עֲרָךְ', translit: 'ha-bursa li-niyarot erech', fr: 'Tel Aviv Stock Exchange (TASE)' },
+  { he: 'תָּ"א 35', translit: 'TA-35', fr: 'Tel Aviv 35 (top 35 stocks index)' },
+  { he: 'תָּ"א 125', translit: 'TA-125', fr: 'Tel Aviv 125 (broader index)' }
+];
+const COL = [
+  { he: 'יֹקֶר הַמִּחְיָה', translit: 'yoker ha-michya', fr: 'cost of living [perpetual issue]' },
+  { he: 'מַשְׁכֹּרֶת', translit: 'maskoret', fr: 'salary [modern]' },
+  { he: 'שָׂכָר מִינִימוּם', translit: 'sachar minimum', fr: 'minimum wage' },
+  { he: 'שָׂכָר חָדְשִׁי מָמוּצָע', translit: 'sachar chodshi m\'mutza', fr: 'average monthly wage' },
+  { he: 'שָׂכָר נָקִי', translit: 'sachar naki', fr: 'net pay (after tax)' },
+  { he: 'שָׂכָר בְּרוּטוֹ', translit: 'sachar bruto', fr: 'gross pay' },
+  { he: 'מִיסּוּי', translit: 'misui', fr: 'taxation [modern]' },
+  { he: 'מָנָה תֶּקֶן', translit: 'mana teken', fr: 'standard portion' },
+  { he: 'סַל הַקְנִיּוֹת', translit: 'sal ha-k\'niyot', fr: 'shopping basket [CPI calc.]' },
+  { he: 'שָׂכָר דִּירָה', translit: 'sachar dira', fr: 'rent [modern]' },
+  { he: 'מַיִם / חַשְׁמַל / אַרְנוֹנָה', translit: 'mayim / chashmal / arnona', fr: 'water / electricity / municipal tax' },
+  { he: 'בּוּקֵר הַחִשְׁבּוֹן', translit: 'boker ha-cheshbon', fr: '"morning of the bill" (when bills arrive)' }
+];
+const BOI_STATEMENT = [
+  { he: 'הַוַּעֲדָה הַמּוֹנֵטָרִית הֶחְלִיטָה הַיּוֹם', translit: 'Ha-va\'ada ha-monetarit hechlita ha-yom', fr: 'The Monetary Committee decided today' },
+  { he: 'לְהַעֲלוֹת אֶת הָרִיבִּית בְּרֶבַע אָחוּז', translit: 'l\'ha\'alot et ha-ribit b\'reva achuz', fr: 'to raise the interest rate by a quarter percent' },
+  { he: 'הָרִיבִּית עוֹמֶדֶת עַל ___ אֲחוּזִים', translit: 'Ha-ribit omedet al ___ achuzim', fr: 'The rate stands at ___ percent' },
+  { he: 'הָאִינְפְלַצְיָה נִמְצֵאת מֵעַל יַעַד הַבַּנְק', translit: 'Ha-inflatziya nimtzeyt me-al ya\'ad ha-bank', fr: 'Inflation is above the bank\'s target' },
+  { he: 'בִּכְוָנַתֵנוּ לְהַחְזִיר אוֹתָהּ לְתוֹךְ טְוָח הַיַּעַד', translit: 'Bi-ch\'vanatenu l\'hachzir ota l\'toch t\'vach ha-ya\'ad', fr: 'We intend to return it to within the target range' },
+  { he: 'שׁוּק הָעֲבוֹדָה הָדוּק', translit: 'Shuk ha-avoda haduk', fr: 'The labor market is tight' },
+  { he: 'תַּחֲזִית הַצְּמִיחָה הָעוֹמֶדֶת עַל ___', translit: 'Tachazit ha-tz\'micha ha-omedet al ___', fr: 'The growth forecast standing at ___' },
+  { he: 'אִי-וַדָּאוּת גְּבוֹהָה בְּסֵבֶך הַמִּלְחָמָה', translit: 'I-vada\'ut g\'voha b\'sevech ha-milchama', fr: 'High uncertainty due to the war' },
+  { he: 'בַּנְק יִשְׂרָאֵל יַמְשִׁיךְ לִפְעֹל לְמַעַן יַצִּיבוּת מְחִירִים', translit: 'Bank Yisrael yamshich lif\'ol l\'ma\'an yatzivut m\'chirim', fr: 'The Bank of Israel will continue to act for price stability' }
+];
+const OFFICE = [
+  { he: 'רָאִיתָ אֶת הַחֶשְׁבּוֹן בָּחַשְׁמַל הַחֹדֶשׁ?', translit: 'Ra\'ita et ha-cheshbon ba-chashmal ha-chodesh?', fr: 'Did you see the electricity bill this month?' },
+  { he: 'אֶלֶף וּמָאתַיִם שֶׁקֶל. בִּשְׁבִיל מָה?', translit: 'Elef u-matayim shekel. Bishvil ma?', fr: '1,200 shekels. For what?' },
+  { he: 'אֲנִי לֹא יוֹדֵעַ. מַזְגָּן? מְקָרֵר?', translit: 'Ani lo yode\'a. Mazgan? M\'karer?', fr: 'I don\'t know. AC? Fridge?' },
+  { he: 'הִתְעַלִּיוּ עוֹד פַּעַם אֶת הַתַּעֲרִיף', translit: 'Hit\'alu od pa\'am et ha-ta\'arif', fr: 'They raised the rate again' },
+  { he: 'הַכֹּל מִתְיַקֵּר. אַתָּה רוֹאֶה אֶת הַקּוֹטֶג\'?', translit: 'Ha-kol mityaker. Ata ro\'e et ha-cottage?', fr: 'Everything is getting more expensive. You see the cottage cheese?' },
+  { he: 'שְׁמוֹנֶה שֶׁקֶל לְמְכָל. שְׁמוֹנֶה!', translit: 'Shmone shekel l\'mechal. Shmone!', fr: '8 shekels per container. Eight!' },
+  { he: 'בָּעֲבוֹדָה זֶה הָיָה אַרְבָּעָה. אֲנִי זוֹכֵר', translit: 'Ba-avoda ze haya arba\'a. Ani zocher', fr: 'In the past it was four. I remember.' },
+  { he: 'בָּתִּים אִי-אֶפְשָׁר לִקְנוֹת. שָׂכָר דִּירָה אִי-אֶפְשָׁר לִשְׁלֹם', translit: 'Batim i-efshar liknot. S\'char dira i-efshar lishlom', fr: 'You can\'t buy a house. You can\'t pay rent.' },
+  { he: 'אֲנִי בֶּן 35 וְעוֹד אֲנִי גָּר עִם הַהוֹרִים', translit: 'Ani ben 35 ve-od ani gar im ha-horim', fr: 'I\'m 35 and still living with my parents' },
+  { he: 'מַה לַעֲשׂוֹת? לִקְפֹּץ?', translit: 'Ma la\'asot? Likpotz?', fr: 'What can you do? Jump?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('indicators', INDICATORS); R('currency', CURRENCY); R('sectors', SECTORS); R('boi', BOI); R('col', COL);
+renderTextBlock('boi-statement', BOI_STATEMENT);
+renderTextBlock('office', OFFICE);
+
+addMiniQuiz('Economy Overview Quiz', [
+  { q: 'Israel\'s currency is...', options: ['Israeli pound', 'New Israeli Shekel (NIS)', 'Lira', 'Dollar'], answer: 1, explain: 'Replaced the Old Shekel in 1985 after hyperinflation' },
+  { q: 'תָּמ"ג means...', options: ['Tax rate', 'GDP', 'Currency', 'Inflation'], answer: 1, explain: 'Totzar m\'komi golami' },
+  { q: 'The TASE main index is...', options: ['DOW 30', 'TA-35', 'NASDAQ', 'FTSE'], answer: 1, explain: 'Tel Aviv 35' },
+  { q: 'מַדַּ"ד tracks...', options: ['Wages', 'Consumer Price Index (inflation)', 'Currency', 'Tourism'], answer: 1, explain: 'Used for cost-of-living adjustments' },
+  { q: 'Bank of Israel is led by...', options: ['The PM', 'The Governor (Nagid)', 'A council', 'The Knesset'], answer: 1, explain: 'Independent central bank' },
+  { q: 'BoI inflation target is...', options: ['0%', '1-3%', '5%', 'No target'], answer: 1, explain: 'Range, not a single number' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('economy-overview'); } });
+</script></body></html>

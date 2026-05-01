@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>223 — Doctor Visit</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Doctor Visit — At the Mirpaa</h1><div class="subtitle">Lesson 223 · בִּקּוּר אֵצֶל הָרוֹפֵא</div></div><div class="nav"><a href="index.html">Home</a><a href="223-doctor-visit.html" class="active">223</a></div></header>
+
+<p class="intro">The standard Israeli medical workflow: book a tor (appointment) with rofe mishpacha (family doctor) via your kupa app or website. Most appointments are 8-15 minutes. For specialists (rofe mumche), get a hafnaya (referral) from the family doctor first. Online check-in via Maccabi/Clalit apps reduces the wait. Bring kartis kupat cholim, te\'udat zehut, and a list of medications. The kupa app shows your medical history, prescriptions, and lab results in real time.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israeli doctors are direct: short on chat, fast on diagnosis. A typical visit: 90 seconds intro, 5 minutes symptoms + exam, 5 minutes treatment plan + prescription. They expect you to be specific and prepared, so bring a list. Russian-speaking doctors are common in Maccabi and Clalit; English-speaking doctors are common in Anglo neighborhoods (Modi\'in, Beit Shemesh, Ra\'anana). If you need an English-speaking doctor, search the kupa app filter "English-speaking" or "rofe dover anglit."</div>
+
+<h2>Booking an Appointment</h2>
+<div class="word-list" id="appointment"></div>
+
+<h2>Common Symptoms</h2>
+<div class="word-list" id="symptoms"></div>
+
+<h2>During the Exam</h2>
+<div class="word-list" id="exam"></div>
+
+<h2>Diagnosis & Treatment</h2>
+<div class="word-list" id="diagnosis"></div>
+
+<h2>Conversation Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>Standard Family Doctor Visit</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh with a persistent cough sees the family doctor.</div>
+  <div id="appointment-dialog"></div>
+</div>
+
+<footer>Lesson 223 · Doctor Visit · <a href="224-prescriptions.html" style="color:var(--accent)">Next: Prescriptions →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const APPOINTMENT = [
+  { he: 'לִקְבּוֹעַ תּוֹר', translit: 'likboa tor', fr: 'to book an appointment' },
+  { he: 'תּוֹר', translit: 'tor', fr: 'appointment' },
+  { he: 'תּוֹר דָּחוּף', translit: 'tor dachuf', fr: 'urgent appointment' },
+  { he: 'בִּטּוּל', translit: 'bitul', fr: 'cancellation' },
+  { he: 'שִׁנּוּי', translit: 'shinui', fr: 'change' },
+  { he: 'אֵלֶקְטְרוֹנִי', translit: 'eli\'ezri', fr: 'online' },
+  { he: 'בַּטֶלֶפוֹן', translit: 'b\'telefon', fr: 'by phone' },
+  { he: 'אַף עַכְשָׁיו', translit: 'af achshav', fr: 'right now' },
+  { he: 'בּוֹאִי מָחָר', translit: 'bo\'i mahar', fr: 'come tomorrow' },
+  { he: 'זְמַן הַמְתָּנָה', translit: 'zman hamtana', fr: 'wait time' }
+];
+const SYMPTOMS = [
+  { he: 'כְּאֵב רֹאשׁ', translit: 'k\'ev rosh', fr: 'headache' },
+  { he: 'כְּאֵב גַּב', translit: 'k\'ev gav', fr: 'back pain' },
+  { he: 'כְּאֵב בֶּטֶן', translit: 'k\'ev beten', fr: 'stomach pain' },
+  { he: 'שִׁלְשׁוּל', translit: 'shichul', fr: 'diarrhea' },
+  { he: 'בְּחִילָה', translit: 'b\'chila', fr: 'nausea' },
+  { he: 'חוֹם', translit: 'chom', fr: 'fever' },
+  { he: 'שִׁעוּל', translit: 'shi\'ul', fr: 'cough' },
+  { he: 'צִנּוּנִים', translit: 'tznunim', fr: 'cold/flu' },
+  { he: 'גִּמּוּל', translit: 'gimul', fr: 'rash' },
+  { he: 'מַאֲחִים', translit: 'm\'achim', fr: 'allergies' }
+];
+const EXAM = [
+  { he: 'בְּדִיקַת לַחַץ דָּם', translit: 'bdikat lachatz dam', fr: 'blood pressure' },
+  { he: 'בְּדִיקַת דָּם', translit: 'bdikat dam', fr: 'blood test' },
+  { he: 'מִשְׁקָל', translit: 'me\'shkal', fr: 'weight' },
+  { he: 'גוֹבַהּ', translit: 'gova', fr: 'height' },
+  { he: 'זָרִיקָה', translit: 'zarka', fr: 'injection' },
+  { he: 'בְּדִיקַת אוֹזְנַיִם', translit: 'bidikat oznayim', fr: 'ear exam' },
+  { he: 'בְּדִיקַת עֵינַיִם', translit: 'bdikat enayim', fr: 'eye exam' },
+  { he: 'רֶצֶף לֵב', translit: 'retzef lev', fr: 'heart rhythm' },
+  { he: 'נְשִׁימָה', translit: 'nshima', fr: 'breathing' },
+  { he: 'בְּדִיקָה כְּלָלִית', translit: 'bdikat ifron', fr: 'general check' }
+];
+const DIAGNOSIS = [
+  { he: 'אַבְחָנָה', translit: 'avhana', fr: 'diagnosis' },
+  { he: 'טִפּוּל', translit: 'tipul', fr: 'treatment' },
+  { he: 'תְּרוּפָה', translit: 'trufa', fr: 'medication' },
+  { he: 'מִרְשָׁם', translit: 'mirsham', fr: 'prescription' },
+  { he: 'הַפְנָיָה', translit: 'hafnaya', fr: 'referral' },
+  { he: 'בְּדִיקַת דָּם', translit: 'bidikat dam', fr: 'blood test' },
+  { he: 'צִלּוּם', translit: 'tzilum', fr: 'X-ray' },
+  { he: 'MRI', translit: 'MRI', fr: 'MRI' },
+  { he: 'CT', translit: 'CT', fr: 'CT scan' },
+  { he: 'מוּמְחֶה', translit: 'mumche', fr: 'specialist' }
+];
+const VOCABULARY = [
+  { he: 'כּוֹאֵב לִי', translit: 'koev li', fr: 'it hurts me' },
+  { he: 'אֲנִי מַרְגִּישׁ', translit: 'ani margish', fr: 'I feel' },
+  { he: 'מֵאָז', translit: 'me-az', fr: 'since when' },
+  { he: 'מְלֻוֶּה בְּ', translit: 'm\'ikvat', fr: 'followed by' },
+  { he: 'תְּרוּפָה קְבוּעָה', translit: 'trufa kvuah', fr: 'regular medication' },
+  { he: 'הֵרָיוֹן', translit: 'hriot', fr: 'pregnancy' },
+  { he: 'אַלֶּרְגְּיָה', translit: 'allergia', fr: 'allergy' },
+  { he: 'נָא לְ', translit: 'na le', fr: 'please' },
+  { he: 'תּוֹדָה', translit: 'todah', fr: 'thanks' },
+  { he: 'בְּרָצוֹן', translit: 'beratzon', fr: 'gladly' }
+];
+
+const APPOINTMENT_DIALOG = [
+  { he: 'רוֹפֵא: שָׁלוֹם, יוֹנָאס. שֵׁב בְּבַקָּשָׁה. מָה הַבְּעָיָה?', translit: 'rofe: shalom, yonas. shev b\'vakasha. ma ha-b\'aya?', fr: 'Doctor: Hello, Jonas. Have a seat please. What\'s the problem?' },
+  { he: 'יוֹנָאס: יֵשׁ לִי שִׁעוּל כְּבָר עֲשָׂרָה יָמִים, וְהוּא לֹא עוֹבֵר.', translit: 'yonas: yesh li shi\'ul kvar asara yamim, v\'hu lo over.', fr: 'Jonas: I\'ve had a cough for ten days now, and it\'s not going away.' },
+  { he: 'רוֹפֵא: בּוֹא נִשְׁמַע אוֹתְךָ. נָא לְהוֹרִיד אֶת הַחֻלְצָה וְלִנְשֹׁם עָמוֹק.', translit: 'rofe: bo nishma otcha. na l\'horid et ha-chultza v\'linshom amok.', fr: 'Doctor: Let\'s listen to you. Please remove your shirt and breathe deeply.' },
+  { he: 'יוֹנָאס: בְּסֵדֶר.', translit: 'yonas: b\'seder.', fr: 'Jonas: OK.' },
+  { he: 'רוֹפֵא: יֵשׁ לְךָ חוֹם? כְּאֵבִים בְּחָזֶה?', translit: 'rofe: yesh lecha chom? k\'evim b\'chazeh?', fr: 'Doctor: Do you have a fever? Chest pain?' },
+  { he: 'יוֹנָאס: לֹא, אֵין חוֹם. רַק שִׁעוּל וּקְצָת עֲיֵפוּת.', translit: 'yonas: lo, ein chom. rak shi\'ul u-k\'tzat ayefut.', fr: 'Jonas: No, no fever. Just cough and a bit of fatigue.' },
+  { he: 'רוֹפֵא: זוֹ דַּלֶּקֶת סִמְפּוֹנוֹת. אֲנִי רוֹשֵׁם לְךָ אַנְטִיבְּיוֹטִיקָה לְשִׁבְעָה יָמִים וְסִירוֹפּ לַשִּׁעוּל. הַמִּרְשָׁם בָּאַפְלִיקַצְיָה.', translit: 'rofe: zo daleket simponot. ani roshem lecha antibiotika l\'shiv\'a yamim v\'sirop la-shi\'ul. ha-mirsham ba-aplikatzya.', fr: 'Doctor: It\'s bronchitis. I\'m prescribing antibiotics for seven days and a cough syrup. The prescription is in the app.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('appointment', APPOINTMENT);
+R('symptoms', SYMPTOMS);
+R('exam', EXAM);
+R('diagnosis', DIAGNOSIS);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('appointment-dialog', APPOINTMENT_DIALOG);
+
+addMiniQuiz('Block 23 · Doctor Visit Quiz', [
+  { q: 'To book a doctor appointment, the Hebrew is...', options: ['likboa tor', 'lashlach mismach', 'lehazmin oref', 'lashtot mayim'], answer: 0, explain: 'Likboa tor = book an appointment.' },
+  { q: 'To see a specialist, you typically need a...', options: ['private payment', 'hafnaya from family doctor', 'Tofes 17', 'immigration paper'], answer: 1, explain: 'Hafnaya = referral; the gatekeeper for specialists.' },
+  { q: '"Koev li" means...', options: ['I am tired', 'it hurts me', 'I am hungry', 'I am happy'], answer: 1, explain: 'Literally "it pains me" — the standard Israeli way to express pain.' },
+  { q: 'A typical Israeli family doctor visit lasts...', options: ['5-10 minutes', '30 minutes', '1 hour', '2 hours'], answer: 0, explain: '8-15 minutes is standard — direct and fast.' },
+  { q: 'The Hebrew word for "prescription" is...', options: ['mirsham', 'mumche', 'hafnaya', 'heshbonit'], answer: 0, explain: 'Mirsham = written prescription, often digital today.' },
+  { q: 'To find an English-speaking doctor, search the kupa app for...', options: ['rofe dover anglit', 'rofe Tzionit', 'rofe yeladim', 'rofe sefardi'], answer: 0, explain: 'Dover anglit = English-speaking; the filter is widely available.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('doctor-visit');
+  }
+});
+</script></body></html>

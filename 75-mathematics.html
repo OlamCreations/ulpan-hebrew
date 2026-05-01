@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>75 — Mathematics</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Mathematics</h1><div class="subtitle">Lesson 75 · מתמטיקה</div></div><div class="nav"><a href="index.html">Home</a><a href="75-mathematics.html" class="active">75</a></div></header>
+
+<p class="intro">Math vocabulary — for school, banking, statistics, and everyday calculations. Plus advanced terms for engineers and scientists.</p>
+
+<h2>Operations</h2>
+<div class="word-list" id="ops"></div>
+
+<h2>Numbers Beyond 100</h2>
+<div class="word-list" id="numbers"></div>
+
+<h2>Geometry</h2>
+<div class="word-list" id="geometry"></div>
+
+<h2>Algebra</h2>
+<div class="word-list" id="algebra"></div>
+
+<h2>Statistics & Probability</h2>
+<div class="word-list" id="stats"></div>
+
+<h2>Comparisons</h2>
+<div class="word-list" id="compare"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 75 · math · <a href="76-construction.html" style="color:var(--accent)">Next: Construction →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const OPS = [
+  { he: 'חִבּוּר', translit: 'chibur', fr: 'addition' },
+  { he: 'חִסּוּר', translit: 'chisur', fr: 'subtraction' },
+  { he: 'כֶּפֶל', translit: 'kefel', fr: 'multiplication' },
+  { he: 'חִלּוּק', translit: 'chiluk', fr: 'division' },
+  { he: 'שָׁווֶה', translit: 'shave', fr: 'equals' },
+  { he: 'פְּלוּס', translit: 'plus', fr: 'plus' },
+  { he: 'מִינוּס', translit: 'minus', fr: 'minus' },
+  { he: 'כָּפוּל', translit: 'kaful', fr: 'times' },
+  { he: 'חָלָק', translit: 'chalak', fr: 'divided by' },
+  { he: 'אָחוּז', translit: 'achuz', fr: 'percent' }
+];
+const NUMBERS = [
+  { he: 'מֵאָה', translit: 'me\'a', fr: '100' },
+  { he: 'מָאתַיִם', translit: 'matayim', fr: '200' },
+  { he: 'אֶלֶף', translit: 'elef', fr: '1000' },
+  { he: 'אַלְפַּיִם', translit: 'alpayim', fr: '2000' },
+  { he: 'עֲשֶׂרֶת אֲלָפִים', translit: 'aseret alafim', fr: '10000' },
+  { he: 'מִלְיוֹן', translit: 'milyon', fr: 'million' },
+  { he: 'מִילְיַארְד', translit: 'milyard', fr: 'billion' },
+  { he: 'אֶפֶס', translit: 'efes', fr: '0' },
+  { he: 'חֲצִי', translit: 'chatzi', fr: 'half' },
+  { he: 'שְׁלִישׁ', translit: 'shlish', fr: 'third' },
+  { he: 'רֶבַע', translit: 'reva', fr: 'quarter' },
+  { he: 'שְׁבִיעִית', translit: 'shvi\'it', fr: 'one seventh' }
+];
+const GEOMETRY = [
+  { he: 'גֵּאוֹמֶטְרְיָה', translit: 'geometrya', fr: 'geometry' },
+  { he: 'נְקֻדָּה', translit: 'nekuda', fr: 'point' },
+  { he: 'קַו', translit: 'kav', fr: 'line' },
+  { he: 'מִשּׁוּלָשׁ', translit: 'meshulash', fr: 'triangle' },
+  { he: 'רִבּוּעַ', translit: 'ribua', fr: 'square' },
+  { he: 'מַלְבֵּן', translit: 'malben', fr: 'rectangle' },
+  { he: 'עִגּוּל', translit: 'igul', fr: 'circle' },
+  { he: 'זָוִית', translit: 'zavit', fr: 'angle' },
+  { he: 'הֶיקֵף', translit: 'heykef', fr: 'perimeter' },
+  { he: 'שֶׁטַח', translit: 'shetach', fr: 'area' },
+  { he: 'נֶפַח', translit: 'nefach', fr: 'volume' }
+];
+const ALGEBRA = [
+  { he: 'אַלְגֶּבְּרָה', translit: 'algebra', fr: 'algebra' },
+  { he: 'מִשְׁתַּנֶּה', translit: 'mishtane', fr: 'variable' },
+  { he: 'מִשְׁוָאָה', translit: 'mishva\'a', fr: 'equation' },
+  { he: 'נֻסְחָה', translit: 'nuscha', fr: 'formula' },
+  { he: 'פוּנְקְצְיָה', translit: 'funktzya', fr: 'function' },
+  { he: 'גְּרָף', translit: 'graf', fr: 'graph' },
+  { he: 'פִּתְרוֹן', translit: 'pitron', fr: 'solution' },
+  { he: 'נֶגְזֶרֶת', translit: 'negzeret', fr: 'derivative' },
+  { he: 'אִינְטֶגְרָל', translit: 'integral', fr: 'integral' }
+];
+const STATS = [
+  { he: 'סְטָטִיסְטִיקָה', translit: 'statistika', fr: 'statistics' },
+  { he: 'מָמוּצַע', translit: 'memuza', fr: 'average' },
+  { he: 'חֲצִיוֹן', translit: 'chetzyon', fr: 'median' },
+  { he: 'שְׁכִיחָה', translit: 'shchicha', fr: 'mode' },
+  { he: 'הִסְתַּבְּרוּת', translit: 'histabrut', fr: 'probability' },
+  { he: 'דֶּגֶם', translit: 'degem', fr: 'sample / model' },
+  { he: 'סִדְרָה', translit: 'sidra', fr: 'sequence' },
+  { he: 'תַּפְלוּת תֵּקֶף', translit: 'taflat tekef', fr: 'standard deviation' }
+];
+const COMPARE = [
+  { he: 'גָּדוֹל מ', translit: 'gadol mi-', fr: 'greater than' },
+  { he: 'קָטָן מ', translit: 'katan mi-', fr: 'less than' },
+  { he: 'שָׁווֶה ל', translit: 'shave le-', fr: 'equal to' },
+  { he: 'פִּי', translit: 'pi', fr: 'times (multiplier)' },
+  { he: 'יוֹתֵר מ', translit: 'yoter mi-', fr: 'more than' },
+  { he: 'פָּחוֹת מ', translit: 'pachot mi-', fr: 'less than' },
+  { he: 'בִּמְקוֹם', translit: 'bi-mekom', fr: 'in place of' }
+];
+const PHRASES = [
+  { he: 'שְׁתַּיִם פְּלוּס שְׁתַּיִם שָׁוֶוה אַרְבַּע', translit: 'shtayim plus shtayim shave arba', fr: '2+2=4' },
+  { he: 'חָמֵשׁ כָּפוּל שֵׁשׁ', translit: 'chamesh kaful shesh', fr: '5×6' },
+  { he: 'הַתּוֹצָאָה הִיא...', translit: 'ha-totza\'a hi...', fr: 'the result is...' },
+  { he: 'מָה הַחֶשְׁבּוֹן?', translit: 'ma ha-cheshbon?', fr: "what's the bill / calculation?" },
+  { he: 'עֶשְׂרִים אָחוּז', translit: 'esrim achuz', fr: '20 percent' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('ops', OPS); R('numbers', NUMBERS); R('geometry', GEOMETRY); R('algebra', ALGEBRA); R('stats', STATS); R('compare', COMPARE); R('phrases', PHRASES);
+addExtraVocab('Math Operations & Symbols', [
+  { he: 'חִבּוּר', translit: 'chibur', fr: 'addition' },
+  { he: 'חִסּוּר', translit: 'chisur', fr: 'subtraction' },
+  { he: 'כֶּפֶל', translit: 'kefel', fr: 'multiplication' },
+  { he: 'חִלּוּק', translit: 'chiluk', fr: 'division' },
+  { he: 'שָׁוֶה', translit: 'shave', fr: 'equals' },
+  { he: 'גָּדוֹל מִ-', translit: 'gadol mi-', fr: 'greater than' },
+  { he: 'קָטָן מִ-', translit: 'katan mi-', fr: 'less than' },
+  { he: 'אֲחוּז', translit: 'achuz', fr: 'percent' },
+  { he: 'סְכוּם', translit: 'schum', fr: 'sum' },
+  { he: 'מִכְפָּלָה', translit: 'michpala', fr: 'product' },
+  { he: 'שֶׁבֶר', translit: 'shever', fr: 'fraction' },
+  { he: 'עֲשׂוֹרִי', translit: 'asori', fr: 'decimal' },
+  { he: 'מָסְפָּר זוּגִי', translit: 'mispar zugi', fr: 'even number' },
+  { he: 'מָסְפָּר אִי-זוּגִי', translit: 'mispar i-zugi', fr: 'odd number' },
+  { he: 'שָׁרָשׁ רִבּוּעִי', translit: 'shoresh ribu\'i', fr: 'square root' },
+  { he: 'חֶזְקָה', translit: 'chezka', fr: 'power / exponent' },
+  { he: 'מִשְׁוָאָה', translit: 'mishva\'a', fr: 'equation' },
+  { he: 'מִשְׁתַּנֶּה', translit: 'mishtane', fr: 'variable' }
+]);
+
+addMiniQuiz('Math Quiz', [
+  { q: '"Plus" =', options: ['פָּחוֹת', 'כָּפוּל', 'פְּלוּס / וְעוֹד', 'חֵלֶק'], answer: 2 },
+  { q: '"Minus" =', options: ['פָּחוֹת / מִינוּס', 'כָּפוּל', 'אֲחוּז', 'שָׁוֶה'], answer: 0 },
+  { q: '"3 + 5 = 8" in Hebrew =', options: ['שָׁלוֹשׁ פָּחוֹת חָמֵשׁ שׁוֶוה שְׁמוֹנֶה', 'שָׁלוֹשׁ וְעוֹד חָמֵשׁ שָׁוֶה שְׁמוֹנֶה', 'שָׁלוֹשׁ כָּפוּל חָמֵשׁ', 'שָׁלוֹשׁ חֵלֶק חָמֵשׁ'], answer: 1 },
+  { q: '"Bagrut" math levels go up to...', options: ['3 units', '5 units (highest)', '10 units', '7 units'], answer: 1, explain: '5-unit math is the highest level' },
+  { q: 'Israeli math olympiad rank =', options: ['Last', 'Top 10 worldwide', 'Middle', 'Doesn\'t participate'], answer: 1 }
+]);
+
+addCulturalText('A Math Word Problem (Bagrut Style)', 'A typical 5-units bagrut math problem. Read the Hebrew, work the problem.', [
+  { he: 'רָכַב יָצָא מִתֵּל אָבִיב לִירוּשָׁלַיִם בִּמְהִירוּת 80 קמ"ש', translit: "Rachav yatza mi-Tel Aviv li-Yerushalayim bi-mhirut 80 km/h", fr: 'A vehicle left Tel Aviv for Jerusalem at 80 km/h' },
+  { he: 'אַחֲרֵי שָׁעָה יָצָא רָכַב שֵׁנִי בְּאוֹתוֹ הַכִּוּוּן', translit: "Acharey sha\'a yatza rachav sheni be-oto ha-kivun", fr: 'After an hour, a second vehicle left in the same direction' },
+  { he: 'בִּמְהִירוּת 100 קמ"ש', translit: "bi-mhirut 100 km/h", fr: 'at 100 km/h' },
+  { he: 'הַמֶּרְחָק בֵּין הָעָרִים — 60 ק"מ', translit: "Ha-merchak beyn ha-arim — 60 km", fr: 'The distance between the cities — 60 km' },
+  { he: 'שְׁאֵלָה א: כַּמָּה זְמָן יִיקַח לָרָכַב הַשֵּׁנִי לְהַשִּׂיג אֶת הָרִאשׁוֹן?', translit: "She\'ela A: Kama zman yikach la-rachav ha-sheni le-hasig et ha-rishon?", fr: 'Q1: How long for the second vehicle to catch the first?' },
+  { he: 'שְׁאֵלָה ב: בְּאֵיזֶה מֶרְחָק מִתֵּל אָבִיב יִקְרֶה הַמִּפְגָשׁ?', translit: "She\'ela B: Be-eyze merchak mi-Tel Aviv yikre ha-mifgash?", fr: 'Q2: At what distance from Tel Aviv will the meeting occur?' },
+  { he: 'תְּשׁוּבָה: הַמְּשׁוֹאָה הִיא 80(t+1) = 100t', translit: "Tshuva: Ha-mshova hi 80(t+1) = 100t", fr: 'Answer: The equation is 80(t+1) = 100t' },
+  { he: 'פֶּתֶר: t = 4 שָׁעוֹת, מֶרְחָק 400 ק"מ — אֲבָל זֶה רָחוֹק מִיר. אֲזְכָּרָה!', translit: "Peter: t = 4 sha\'ot, merchak 400 km — aval ze rachok mi-Yerushalayim. Azkara!", fr: 'Solve: t=4h, distance 400km — but that\'s past Jerusalem. Trick!' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('math'); } });
+</script></body></html>

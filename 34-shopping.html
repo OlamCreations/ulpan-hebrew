@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>34 — Shopping</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Shopping & Markets</h1><div class="subtitle">Lesson 34 · קניות</div></div><div class="nav"><a href="index.html">Home</a><a href="34-shopping.html" class="active">34</a></div></header>
+
+<p class="intro">Israel has shuks (open-air markets) for produce, supermarkets, and modern malls. The shuk is theater — bargaining, friendly arguments, samples. Vocabulary for both worlds.</p>
+
+<div class="tip"><strong>Shuk Machane Yehuda (שוק מחנה יהודה)</strong> Jerusalem · <strong>Shuk HaCarmel (שוק הכרמל)</strong> Tel Aviv · <strong>Shuk Talpiot</strong> Haifa. Best Friday before Shabbat: discounts, energy, food samples.</div>
+
+<h2>Shop Types</h2>
+<div class="word-list" id="shops"></div>
+
+<h2>Mall & Department Store</h2>
+<div class="word-list" id="mall"></div>
+
+<h2>Bargaining at the Shuk</h2>
+<div class="word-list" id="bargain"></div>
+
+<h2>Sizes & Quantities</h2>
+<div class="word-list" id="sizes"></div>
+
+<h2>Money & Receipts</h2>
+<div class="word-list" id="money"></div>
+
+<h2>Returns & Complaints</h2>
+<div class="word-list" id="returns"></div>
+
+<hr class="section-divider">
+<h2>Shopping Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 34 · shopping · <a href="35-clothing.html" style="color:var(--accent)">Next: Clothing →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const SHOPS = [
+  { he: 'חֲנוּת', translit: 'chanut', fr: 'shop' },
+  { he: 'שׁוּק', translit: 'shuk', fr: 'open-air market' },
+  { he: 'סוּפֶּרְמַרְקֶט', translit: 'supermarket', fr: 'supermarket' },
+  { he: 'מַכֹּלֶת', translit: 'makolet', fr: 'corner grocery' },
+  { he: 'קַנְיוֹן', translit: 'kanyon', fr: 'mall' },
+  { he: 'בּוּטִיק', translit: 'butik', fr: 'boutique' },
+  { he: 'דּוּכָן', translit: 'duchan', fr: 'stall / kiosk' },
+  { he: 'יְרִיד', translit: 'yarid', fr: 'fair' },
+  { he: 'חֲנוּת סְפָרִים', translit: 'chanut sfarim', fr: 'bookstore' },
+  { he: 'חֲנוּת בְּגָדִים', translit: 'chanut bgadim', fr: 'clothing store' }
+];
+const MALL = [
+  { he: 'קוֹמָה', translit: 'koma', fr: 'floor' },
+  { he: 'מְדָרְגוֹת נָעוֹת', translit: 'madregot na\'ot', fr: 'escalator' },
+  { he: 'מַעֲלִית', translit: 'ma\'alit', fr: 'elevator' },
+  { he: 'מְלוֹנָאוּת', translit: 'meluna\'ut', fr: 'department' },
+  { he: 'קוּפָּה', translit: 'kupa', fr: 'cashier / register' },
+  { he: 'תּוֹר', translit: 'tor', fr: 'queue / line' },
+  { he: 'חֲדַר הַלְבָּשָׁה', translit: 'chadar halbasha', fr: 'fitting room' }
+];
+const BARGAIN = [
+  { he: 'כַּמָּה זֶה?', translit: 'kama ze?', fr: 'how much is it?' },
+  { he: 'יֵשׁ הַנָּחָה?', translit: 'yesh hanacha?', fr: 'is there a discount?' },
+  { he: 'יָקָר', translit: 'yakar', fr: 'expensive' },
+  { he: 'זוֹל', translit: 'zol', fr: 'cheap' },
+  { he: 'תֵּן לִי הַנָּחָה', translit: 'ten li hanacha', fr: 'give me a discount (m.)' },
+  { he: 'מְצִיאָה', translit: 'metzi\'a', fr: 'bargain / find' },
+  { he: 'מִבְצָע', translit: 'mivtza', fr: 'sale / promotion' },
+  { he: 'אֶחָד פְּלוּס אֶחָד', translit: 'echad plus echad', fr: 'buy one get one' },
+  { he: 'מְעֻלֶּה', translit: 'me\'ule', fr: 'excellent (quality)' },
+  { he: 'אֵיכוּת', translit: 'eichut', fr: 'quality' }
+];
+const SIZES = [
+  { he: 'מִדָּה', translit: 'mida', fr: 'size' },
+  { he: 'גָּדוֹל', translit: 'gadol', fr: 'large' },
+  { he: 'בֵּינוֹנִי', translit: 'beynoni', fr: 'medium' },
+  { he: 'קָטָן', translit: 'katan', fr: 'small' },
+  { he: 'קִילוֹ', translit: 'kilo', fr: 'kilo' },
+  { he: 'חֲצִי קִילוֹ', translit: 'chatzi kilo', fr: 'half kilo' },
+  { he: 'גְּרַם', translit: 'gram', fr: 'gram' },
+  { he: 'לִיטֶר', translit: 'liter', fr: 'liter' },
+  { he: 'יְחִידָה', translit: 'yechida', fr: 'unit' },
+  { he: 'חֲבִילָה', translit: 'chavila', fr: 'pack / package' }
+];
+const MONEY = [
+  { he: 'שֶׁקֶל', translit: 'shekel', fr: 'shekel (₪)' },
+  { he: 'אֲגוֹרָה', translit: 'agora', fr: 'agora (1/100 shekel)' },
+  { he: 'מְזוּמָן', translit: 'mezuman', fr: 'cash' },
+  { he: 'כַּרְטִיס', translit: 'kartis', fr: 'card' },
+  { he: 'קַבָּלָה', translit: 'kabala', fr: 'receipt' },
+  { he: 'חֶשְׁבּוֹנִית', translit: 'cheshbonit', fr: 'invoice' },
+  { he: 'תַּשְׁלוּמִים', translit: 'tashlumim', fr: 'installments' },
+  { he: 'בְּ-3 תַּשְׁלוּמִים', translit: 'be-3 tashlumim', fr: 'in 3 installments' },
+  { he: 'עֹדֶף', translit: 'odef', fr: 'change (money back)' }
+];
+const RETURNS = [
+  { he: 'הֶחְזָר', translit: 'hechzer', fr: 'refund' },
+  { he: 'הַחְלָפָה', translit: 'hachlafa', fr: 'exchange' },
+  { he: 'אַחֲרָיוּת', translit: 'achrayut', fr: 'warranty' },
+  { he: 'תַּקָּלָה', translit: 'takala', fr: 'defect / malfunction' },
+  { he: 'תְּלוּנָה', translit: 'tluna', fr: 'complaint' }
+];
+const PHRASES = [
+  { he: 'אֲנִי רוֹצֶה לִקְנוֹת...', translit: 'ani rotze liknot...', fr: 'I want to buy... (m.)' },
+  { he: 'מָה הַמָּחִיר?', translit: 'ma ha-mechir?', fr: "what's the price?" },
+  { he: 'יָקָר מִדַּי', translit: 'yakar miday', fr: 'too expensive' },
+  { he: 'אֲנִי רַק מִסְתַּכֵּל', translit: 'ani rak mistakel', fr: "I'm just looking (m.)" },
+  { he: 'אֵיפֹה הַקּוּפָּה?', translit: 'eyfo ha-kupa?', fr: 'where\'s the cashier?' },
+  { he: 'אֶפְשָׁר תַּשְׁלוּמִים?', translit: 'efshar tashlumim?', fr: 'can I pay in installments?' },
+  { he: 'אֲנִי רוֹצֶה לְהַחֲזִיר אֶת זֶה', translit: 'ani rotze lehachzir et ze', fr: 'I want to return this (m.)' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('shops', SHOPS); R('mall', MALL); R('bargain', BARGAIN); R('sizes', SIZES); R('money', MONEY); R('returns', RETURNS); R('phrases', PHRASES);
+addExtraVocab('Fruits & Vegetables (Shuk Edition)', [
+  { he: 'תַּפּוּחַ', translit: 'tapuach', fr: 'apple' },
+  { he: 'בָּנָנָה', translit: 'banana', fr: 'banana' },
+  { he: 'תַּפּוּז', translit: 'tapuz', fr: 'orange' },
+  { he: 'אֲבַטִּיחַ', translit: 'avatiach', fr: 'watermelon' },
+  { he: 'מְלוֹן', translit: 'melon', fr: 'melon' },
+  { he: 'עֲנָבִים', translit: 'anavim', fr: 'grapes' },
+  { he: 'תְּאֵנִים', translit: 'te\'enim', fr: 'figs' },
+  { he: 'תְּמָרִים', translit: 'tmarim', fr: 'dates' },
+  { he: 'רִמּוֹן', translit: 'rimon', fr: 'pomegranate' },
+  { he: 'עַגְבָנִיָּה', translit: 'agvania', fr: 'tomato' },
+  { he: 'מְלָפְפוֹן', translit: 'melafefon', fr: 'cucumber' },
+  { he: 'בָּצָל', translit: 'batzal', fr: 'onion' },
+  { he: 'שׁוּם', translit: 'shum', fr: 'garlic' },
+  { he: 'תַּפּוּחַ אֲדָמָה', translit: 'tapuach adama', fr: 'potato' },
+  { he: 'גֶּזֶר', translit: 'gezer', fr: 'carrot' },
+  { he: 'פִּלְפֵּל', translit: 'pilpel', fr: 'pepper' },
+  { he: 'חָסָה', translit: 'chasa', fr: 'lettuce' },
+  { he: 'פֶּטְרוֹסִילְיָה', translit: 'petrosilya', fr: 'parsley' }
+]);
+
+addExtraVocab('Supermarket / Shuk Vocabulary', [
+  { he: 'סוּפֶּרְמַרְקֶט', translit: 'supermarket', fr: 'supermarket' },
+  { he: 'מַכּוֹלֶת', translit: 'makolet', fr: 'corner store' },
+  { he: 'שׁוּק הַכַּרְמֶל', translit: 'shuk ha-Carmel', fr: 'Carmel market (TLV)' },
+  { he: 'עֲגָלָה', translit: 'agala', fr: 'shopping cart' },
+  { he: 'סַל', translit: 'sal', fr: 'basket' },
+  { he: 'קוּפָּה', translit: 'kupa', fr: 'cash register' },
+  { he: 'קוּפַּאי', translit: 'kupa\'i', fr: 'cashier (m.)' },
+  { he: 'קוּפַּאית', translit: 'kupa\'it', fr: 'cashier (f.)' },
+  { he: 'שָׁקִית', translit: 'sakit', fr: 'plastic bag' },
+  { he: 'שָׁקִית רַב פַּעֲמִית', translit: 'sakit rav-pa\'amit', fr: 'reusable bag' },
+  { he: 'מִבְצָע', translit: 'mivtza', fr: 'sale / promotion' },
+  { he: 'הַנָּחָה', translit: 'hanacha', fr: 'discount' },
+  { he: '2 ב-1', translit: 'shtayim be-echad', fr: '2 for 1' },
+  { he: 'מַסְלוּל מָהִיר', translit: 'maslul mahir', fr: 'express checkout' },
+  { he: 'הַחְזָר', translit: 'hechzer', fr: 'refund' },
+  { he: 'קַבָּלָה', translit: 'kabala', fr: 'receipt' }
+]);
+
+addMiniQuiz('Shopping Quiz', [
+  { q: 'You want a discount — say...', options: ['יֵשׁ עַמְלָה?', 'יֵשׁ הַנָּחָה?', 'יֵשׁ קַבָּלָה?', 'יֵשׁ עֲגָלָה?'], answer: 1 },
+  { q: 'מַכּוֹלֶת is...', options: ['A big mall', 'A corner store', 'A kosher market', 'A flea market'], answer: 1 },
+  { q: 'A "מִבְצָע" is...', options: ['A complaint', 'A sale/promo', 'A receipt', 'A refund'], answer: 1 },
+  { q: 'Shuk vendors expect you to...', options: ['Pay full price', 'Bargain', 'Pay by card', 'Tip'], answer: 1, explain: 'Bargaining is part of the experience' },
+  { q: 'יָקָר מִדַּי means...', options: ['too cheap', 'too expensive', 'too small', 'just right'], answer: 1 }
+]);
+
+addCulturalText('Bargaining at Mahane Yehuda Shuk', 'How a real bargain conversation goes. Israelis love it. Don\'t pay sticker price for produce or trinkets — always counter.', [
+  { he: 'מוֹכֵר: גְּבֶרֶת, עַגְבָנִיּוֹת — 12 שֶׁקֶל לְקִילוֹ', translit: "Mocher: Gveret, agvaniyot — 12 shekel le-kilo", fr: 'Seller: Lady, tomatoes — 12 shekel/kilo' },
+  { he: 'אַתְּ: 12? יָקָר! נָתַתָּ אֶתְמוֹל בְּ-9', translit: "At: 12? Yakar! Natata etmol be-9", fr: 'You: 12? Expensive! You gave 9 yesterday' },
+  { he: 'מוֹכֵר: אֶתְמוֹל זֶה אֶתְמוֹל. הַיּוֹם 12', translit: "Mocher: Etmol ze etmol. Ha-yom 12", fr: 'Seller: Yesterday is yesterday. Today 12' },
+  { he: 'אַתְּ: בּוֹא, 10 לְקִילוֹ וְקַח שְׁנֵי קִילוֹ', translit: "At: Bo, 10 le-kilo ve-kach shney kilo", fr: "You: Come on, 10/kilo and I'll take 2 kilo" },
+  { he: 'מוֹכֵר: אַתְּ הוֹרֶגֶת אוֹתִי. 11', translit: "Mocher: At horeget oti. 11", fr: 'Seller: You\'re killing me. 11' },
+  { he: 'אַתְּ: 10.50 וְזֶהוּ', translit: "At: 10.50 ve-zehu", fr: "You: 10.50 and that's it" },
+  { he: 'מוֹכֵר: יָאלָה, רַק בִּשְׁבִילֵךְ. כַּמָּה?', translit: "Mocher: Yalla, rak bishvilech. Kama?", fr: 'Seller: Yalla, only for you. How much?' },
+  { he: 'אַתְּ: שְׁנֵי קִילוֹ, וְהוֹסֵף לִי בָּזִיל', translit: "At: Shney kilo, ve-hosef li bazil", fr: 'You: Two kilo, and throw in some basil' },
+  { he: 'מוֹכֵר: בָּזִיל חִנָּם רַק לִיפָה כָּמוֹךְ', translit: "Mocher: Bazil chinam rak li-yafa kamoch", fr: 'Seller: Free basil only for someone as pretty as you' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('shopping'); } });
+</script></body></html>

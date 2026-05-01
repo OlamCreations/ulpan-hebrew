@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>115 — Kashrut Halacha</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Kashrut — The Laws in Detail</h1><div class="subtitle">Lesson 115 · כַּשְׁרוּת</div></div><div class="nav"><a href="index.html">Home</a><a href="115-kashrut.html" class="active">115</a></div></header>
+
+<p class="intro">Beyond "no pork, no shellfish" — kashrut is a 3000-year-old food code that touches every meal, every supermarket aisle, every restaurant in Israel. Even the most chiloni Israelis recognize the rules: meat and milk separation, kashering meat (salting), kosher slaughter (shechita), the four signs of kosher animals, the certification system. Reading a kashrut label is a daily literacy skill in Israel.</p>
+
+<div class="tip"><strong>Cultural note</strong> — In Israel, the Chief Rabbinate (הָרַבָּנוּת הָרָאשִׁית) controls the official kashrut certification. There are also private "mehadrin" (more strict) certifications: Eda Charedit, Beit Yosef, OU, etc. Some Israelis avoid Rabbinate-certified products in favor of mehadrin; others eat at any kosher place. McDonald\'s in Israel has both kosher and non-kosher branches.</div>
+
+<h2>Categories</h2>
+<div class="word-list" id="categories"></div>
+
+<h2>Kosher Animals — The 4 Signs</h2>
+<div class="word-list" id="signs"></div>
+
+<h2>Forbidden Animals (examples)</h2>
+<div class="word-list" id="forbidden"></div>
+
+<h2>Meat & Milk Separation</h2>
+<div class="word-list" id="meatmilk"></div>
+
+<h2>Kashrut Labels & Certifications</h2>
+<div class="word-list" id="labels"></div>
+
+<hr class="section-divider">
+
+<h2>Vayikra 11:1-3 — The Original Source</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">The opening verses of the kashrut laws. Two signs for kosher land animals: split hooves and chewing cud. Both required.</div>
+  <div id="vayikra"></div>
+</div>
+
+<h2>Modern Israeli Kosher Dialogue (at the supermarket)</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Practical Hebrew you\'ll hear at the deli counter or kosher information desk in any Israeli supermarket.</div>
+  <div id="dialog"></div>
+</div>
+
+<footer>Lesson 115 · Kashrut · <a href="116-shabbat-laws.html" style="color:var(--accent)">Next: Shabbat Laws →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CATEGORIES = [
+  { he: 'בָּשָׂרִי', translit: 'basari', fr: 'meat (category) [modern, on labels]' },
+  { he: 'חֲלָבִי', translit: 'chalavi', fr: 'dairy (category) [modern, on labels]' },
+  { he: 'פַּרְוֶה', translit: 'parve', fr: 'pareve / neutral (neither meat nor dairy) [modern]' },
+  { he: 'כָּשֵׁר', translit: 'kasher', fr: 'kosher / fit [modern]' },
+  { he: 'טָרֵף', translit: 'taref', fr: 'non-kosher [modern, also Yiddish "treif"]' },
+  { he: 'כָּשֵׁר לַמְהַדְרִין', translit: 'kasher la-mehadrin', fr: 'kosher mehadrin (extra-strict)' },
+  { he: 'גְּלָט', translit: 'glat', fr: 'glatt (no lung adhesions, stricter meat) [modern]' },
+  { he: 'נְבֵלָה', translit: 'n\'vela', fr: 'an animal that died improperly' },
+  { he: 'טְרֵפָה', translit: 't\'refa', fr: 'a torn or fatally injured animal' },
+  { he: 'בִּשּׁוּל', translit: 'bishul', fr: 'cooking (issue: cooked by non-Jew = bishul akum)' }
+];
+const SIGNS = [
+  { he: 'שֶׁסַע פַּרְסָה', translit: 'shesa parsa', fr: 'split hoof (1st kosher land sign)' },
+  { he: 'מַעֲלֵה גֵּרָה', translit: 'ma\'ale gera', fr: 'chews the cud (2nd kosher land sign)' },
+  { he: 'סְנַפִּיר וְקַשְׂקֶשֶׂת', translit: 's\'napir v\'kaskeset', fr: 'fins and scales (kosher fish signs)' },
+  { he: 'בְּהֵמוֹת טְהוֹרוֹת', translit: 'b\'hemot t\'horot', fr: 'pure (kosher) animals — cow, sheep, goat, deer' },
+  { he: 'עוֹפוֹת טְהוֹרִים', translit: 'ofot t\'horim', fr: 'pure (kosher) birds — chicken, turkey, duck, goose' },
+  { he: 'דָּגִים טְהוֹרִים', translit: 'dagim t\'horim', fr: 'pure (kosher) fish' },
+  { he: 'אֵין שׁוֹחֲטִין מְצֻוָּה', translit: 'ein shochtin m\'tzuva', fr: 'requires shechita (ritual slaughter)' },
+  { he: 'שׁוֹחֵט', translit: 'shochet', fr: 'kosher slaughterer' },
+  { he: 'הַכְשָׁרַת בָּשָׂר', translit: 'hachsharat basar', fr: 'meat preparation (salting + soaking to remove blood)' }
+];
+const FORBIDDEN = [
+  { he: 'חֲזִיר', translit: 'chazir', fr: 'pig [modern, also = idiom "pig" for selfish]' },
+  { he: 'שָׁפָן', translit: 'shafan', fr: 'rock hyrax / coney' },
+  { he: 'אַרְנֶבֶת', translit: 'arnevet', fr: 'rabbit / hare [modern]' },
+  { he: 'גָּמָל', translit: 'gamal', fr: 'camel [modern]' },
+  { he: 'פֵּירוֹת יָם', translit: 'perot yam', fr: 'seafood (shellfish, all non-kosher)' },
+  { he: 'שְׁרִימְפְּס', translit: 'shrimps', fr: 'shrimp [modern, English loanword]' },
+  { he: 'חֲגָבִים', translit: 'chagavim', fr: 'most insects (some locusts permitted in some traditions)' },
+  { he: 'נִשְׁרִים', translit: 'n\'sharim', fr: 'eagles / vultures (forbidden birds)' },
+  { he: 'שֶׁרֶץ', translit: 'sheretz', fr: 'creeping things / vermin' }
+];
+const MEATMILK = [
+  { he: 'לֹא תְבַשֵּׁל גְּדִי בַּחֲלֵב אִמּוֹ', translit: 'Lo t\'vashel g\'di ba-chalev imo', fr: '"Do not boil a kid in its mother\'s milk" (Torah source, repeated 3x)' },
+  { he: 'הַפְרָדָה', translit: 'hafrada', fr: 'separation [modern]' },
+  { he: 'כֵּלִים בָּשָׂרִיִּים', translit: 'kelim b\'sariyim', fr: 'meat utensils' },
+  { he: 'כֵּלִים חֲלָבִיִּים', translit: 'kelim chalaviyim', fr: 'dairy utensils' },
+  { he: 'כִּיּוֹרִים נִפְרָדִים', translit: 'kiyorim nifradim', fr: 'separate sinks' },
+  { he: 'שֵׁשׁ שָׁעוֹת', translit: 'shesh sha\'ot', fr: 'six hours (meat → dairy waiting time, Sephardi)' },
+  { he: 'שָׁלוֹשׁ שָׁעוֹת', translit: 'shalosh sha\'ot', fr: 'three hours (German/Dutch custom)' },
+  { he: 'שָׁעָה', translit: 'sha\'a', fr: 'one hour (Dutch custom)' },
+  { he: 'מִילְקִי', translit: 'milki', fr: 'milky / dairy [modern Yiddish-Hebrew]' },
+  { he: 'הַטְבָּלָה', translit: 'hatbala', fr: 'tevila — immersion of new dishes in mikveh' }
+];
+const LABELS = [
+  { he: 'הָרַבָּנוּת הָרָאשִׁית', translit: 'ha-Rabbanut ha-rashit', fr: 'Chief Rabbinate (default Israeli kashrut)' },
+  { he: 'בַּדַּ"ץ', translit: 'BaDaTz', fr: 'BaDaTz (Eda Charedit, very strict, anti-Zionist)' },
+  { he: 'מְהַדְרִין', translit: 'mehadrin', fr: 'mehadrin (more strict)' },
+  { he: 'בֵּית יוֹסֵף', translit: 'Beit Yosef', fr: 'Beit Yosef (Sephardi mehadrin)' },
+  { he: 'חַתָּם סוֹפֵר', translit: 'Chatam Sofer', fr: 'Chatam Sofer (Hungarian-style strict)' },
+  { he: 'OU', translit: 'OU (Orthodox Union)', fr: 'American OU (most common in US imports)' },
+  { he: 'יְשָׁן וְחָדָשׁ', translit: 'yashan v\'chadash', fr: 'old / new (grain harvest issue)' },
+  { he: 'שְׁמִטָּה', translit: 'sh\'mita', fr: 'sabbatical year (every 7 years, agricultural)' },
+  { he: 'הֶכְשֵׁר', translit: 'hechsher', fr: 'kosher certification stamp' },
+  { he: 'מַשְׁגִּיחַ', translit: 'mashgi\'ach', fr: 'kashrut supervisor' }
+];
+const VAYIKRA = [
+  { he: 'וַיְדַבֵּר ה\' אֶל מֹשֶׁה וְאֶל אַהֲרֹן לֵאמֹר אֲלֵהֶם', translit: 'Vay\'daber Adonai el Moshe ve-el Aharon lemor alehem', fr: 'And the Lord spoke to Moshe and Aharon, saying to them' },
+  { he: 'דַּבְּרוּ אֶל בְּנֵי יִשְׂרָאֵל לֵאמֹר', translit: 'Dabru el b\'nei Yisrael lemor', fr: 'Speak to the children of Israel saying' },
+  { he: 'זֹאת הַחַיָּה אֲשֶׁר תֹּאכְלוּ מִכָּל הַבְּהֵמָה אֲשֶׁר עַל הָאָרֶץ', translit: 'Zot ha-chaya asher tochlu mi-kol ha-b\'hema asher al ha-aretz', fr: 'These are the animals you may eat from among all the beasts on the earth' },
+  { he: 'כֹּל מַפְרֶסֶת פַּרְסָה וְשֹׁסַעַת שֶׁסַע פְּרָסוֹת', translit: 'Kol mafreset parsa ve-shosa\'at shesa p\'rasot', fr: 'Whatever has a divided hoof and is wholly cloven-hoofed' },
+  { he: 'מַעֲלַת גֵּרָה בַּבְּהֵמָה — אֹתָהּ תֹּאכֵלוּ', translit: 'ma\'alat gera ba-b\'hema — ota tochelu', fr: 'and chews the cud, among the beasts — that you may eat' }
+];
+const DIALOG = [
+  { he: 'סְלִיחָה, הַגְּבִינָה הַזֹּאת חֲלָבִית?', translit: 'S\'licha, ha-g\'vina ha-zot chalavit?', fr: 'Excuse me, is this cheese dairy?' },
+  { he: 'כֵּן, חֲלָבִית. יֵשׁ גַּם פַּרְוֶה בְּצַד', translit: 'Ken, chalavit. Yesh gam parve b\'tzad', fr: 'Yes, dairy. There\'s also pareve on the side' },
+  { he: 'אֵיזֶה כַּשְׁרוּת יֵשׁ עַל זֶה?', translit: 'Eize kashrut yesh al ze?', fr: 'What kashrut is on this?' },
+  { he: 'רַבָּנוּת + מְהַדְרִין בֵּית יוֹסֵף', translit: 'Rabanut + mehadrin Beit Yosef', fr: 'Rabbinate + Beit Yosef mehadrin' },
+  { he: 'מְצֻיָּן. וְהָעוֹף — שְׁחִיטָה אַשְׁכְּנַזִּית אוֹ סְפָרַדִּית?', translit: 'M\'tzuyan. Ve-ha-of — sh\'chita ashkenazit o s\'faradit?', fr: 'Excellent. And the chicken — Ashkenazi or Sephardi shechita?' },
+  { he: 'כָּאן רַק סְפָרַדִּית. לְאַשְׁכְּנַזִּית — בַּמַּדָּף הַשֵּׁנִי', translit: 'Kan rak s\'faradit. L\'ashkenazit — ba-madaf ha-sheni', fr: 'Here only Sephardi. For Ashkenazi — second shelf' },
+  { he: 'תּוֹדָה רַבָּה!', translit: 'Toda raba!', fr: 'Thanks a lot!' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('categories', CATEGORIES); R('signs', SIGNS); R('forbidden', FORBIDDEN); R('meatmilk', MEATMILK); R('labels', LABELS);
+renderTextBlock('vayikra', VAYIKRA);
+renderTextBlock('dialog', DIALOG);
+
+addMiniQuiz('Kashrut Quiz', [
+  { q: 'How many signs make a land animal kosher?', options: ['1', '2', '3', '4'], answer: 1, explain: 'Split hoof + chews cud. Both required.' },
+  { q: 'Kosher fish must have...', options: ['Scales only', 'Fins only', 'Fins AND scales', 'Either fins or scales'], answer: 2, explain: 'Both required' },
+  { q: 'פַּרְוֶה means...', options: ['Forbidden', 'Pareve / neutral (not meat or dairy)', 'Strict', 'Salty'], answer: 1, explain: 'On every Israeli food label' },
+  { q: 'The Sephardi waiting time meat→dairy is...', options: ['1 hour', '3 hours', '6 hours', '24 hours'], answer: 2, explain: 'Sephardi & most Ashkenazi: 6 hours. Dutch: 1. German: 3.' },
+  { q: 'Pig is forbidden because...', options: ['Eats meat', 'Has split hoof but doesn\'t chew cud', 'Lives in mud', 'Bible says so but no reason given'], answer: 1, explain: 'Has only ONE of the two signs — the most-deceptive non-kosher animal' },
+  { q: 'מַשְׁגִּיחַ is a...', options: ['Chef', 'Kashrut supervisor', 'Customer', 'Slaughterer'], answer: 1, explain: 'On site at restaurants and food factories' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('kashrut'); } });
+</script></body></html>

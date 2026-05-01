@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>377 — Sephardi-Ladino Music Tradition</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Sephardi-Ladino Music Tradition</h1><div class="subtitle">Lesson 377 · מוּזִיקָה סְפָרַדִּית-לָדִינוֹ</div></div><div class="nav"><a href="index.html">Home</a><a href="377-sephardi-music.html" class="active">377</a></div></header>
+
+<p class="intro">The Sephardi musical tradition carries a millennium of memory: medieval Spanish ballads (romanzas) preserved in Ladino across the Ottoman diaspora, daily-life kantikas, Salonika paytan-craft fused with Ottoman maqamat, and a modern Israeli revival led by Yehoram Gaon, Yasmin Levy, Sarah Aroeste, and others. This lesson maps the genres, the canonical songs, the instruments, and the people who keep the repertoire alive in Israel today.</p>
+
+<div class="tip"><strong>Cultural note</strong> — When Sephardim were expelled from Spain in 1492, they took the songs with them. For 500 years, the romanzas traveled by mouth from Salonika to Sarajevo to Jerusalem, sung at weddings, deathbeds, and cradles. The melodies absorbed Ottoman maqam, Greek rebetiko, Bulgarian rhythms — but the Castilian-rooted Ladino lyrics held. Today an old Sephardi grandmother in Bat Yam may sing a tune that crossed seven empires intact.</div>
+
+<h2>Romanzas & Medieval Ballads</h2>
+<div class="word-list" id="romanzas"></div>
+
+<h2>Kantikas Djudias (Daily Songs)</h2>
+<div class="word-list" id="kantikas"></div>
+
+<h2>Liturgical Sephardi Music</h2>
+<div class="word-list" id="liturgical"></div>
+
+<h2>Yehoram Gaon & Israeli Pioneers</h2>
+<div class="word-list" id="pioneers"></div>
+
+<h2>Modern Revival (Yasmin Levy, etc.)</h2>
+<div class="word-list" id="revival"></div>
+
+<hr class="section-divider">
+
+<h2>A Conversation at a Ladino Concert</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short exchange between a young Israeli and an older Sephardi woman after a Yasmin Levy concert at the Jerusalem Khan Theater — the kind of moment where heritage moves from grandmother to grandchild.</div>
+  <div id="dialogue"></div>
+</div>
+
+<footer>Lesson 377 · Sephardi-Ladino Music · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const ROMANZAS = [
+  { he: 'רוֹמַנְסָה', translit: 'romansa', fr: 'romanza — medieval Spanish ballad preserved in Ladino' },
+  { he: 'אַדְיוֹ קֶרִידָה', translit: 'Adio Kerida', fr: 'Adio Querida — iconic farewell romanza, Verdi-influenced melody' },
+  { he: 'מוֹרֶנִיקָה', translit: 'Morenika', fr: 'Morenika — "the dark girl", Sephardi standard' },
+  { he: 'דּוּרְמֶה דּוּרְמֶה מִי אַלְמָה', translit: 'Durme Durme Mi Alma', fr: 'Durme Durme Mi Alma — lullaby "sleep, sleep my soul"' },
+  { he: 'אוּנָה טַארְדֶה דֶה וֶרָנוֹ', translit: 'Una Tarde de Verano', fr: 'Una Tarde de Verano — "one summer afternoon", classic ballad' },
+  { he: 'לָדִינוֹ', translit: 'Ladino', fr: 'Ladino — Judeo-Spanish, language of Sephardi diaspora' },
+  { he: 'יְהוּדִית-סְפָרַדִּית', translit: 'yehudit-sfaradit', fr: 'Judeo-Spanish — academic name for Ladino' },
+  { he: 'שִׁיר עָם', translit: 'shir am', fr: 'folk song' },
+  { he: 'מָסוֹרֶת בְּעַל-פֶּה', translit: 'masoret b\'al-peh', fr: 'oral tradition — how romanzas survived 500 years' },
+  { he: 'גֵּרוּשׁ סְפָרַד 1492', translit: 'gerush sfarad 1492', fr: 'expulsion from Spain 1492 — origin of diaspora repertoire' }
+];
+const KANTIKAS = [
+  { he: 'קַנְטִיקָה', translit: 'kantika', fr: 'kantika — daily-life Sephardi song' },
+  { he: 'קַנְטֶה דֶה בּוֹדָה', translit: 'kante de boda', fr: 'kante de boda — wedding song' },
+  { he: 'קַנְטֶה דֶה לוּטוֹ', translit: 'kante de luto', fr: 'kante de luto — mourning song' },
+  { he: 'שִׁיר עֶרֶשׂ לָדִינוֹ', translit: 'shir eres ladino', fr: 'Ladino lullaby — sung mother to child for centuries' },
+  { he: 'אֵיל רֶיי דֶה פְרַאנְסְיָה', translit: 'El Rey de Francia', fr: 'El Rey de Francia — narrative kantika about a French king' },
+  { he: 'קוּאַנְדוֹ אֵל רֶיי נִמְרוֹד', translit: 'Kuando el Rey Nimrod', fr: 'Kuando el Rey Nimrod — "when King Nimrod", Avraham legend' },
+  { he: 'נוֹצֶ׳ה נוֹצֶ׳ה', translit: 'Noche Noche', fr: 'Noche Noche — night/longing kantika' },
+  { he: 'אַבְרָהָם אָבִינוּ (קוּאַנְדוֹ)', translit: 'Avraham Avinu kantika', fr: 'Avraham Avinu — Sephardi version of patriarchal song' },
+  { he: 'קַנְטֶה דֶה קוּנָה', translit: 'kante de kuna', fr: 'kante de kuna — cradle song' },
+  { he: 'רֶפֶּרְטוּאָר בֵּיתִי', translit: 'repertuar beiti', fr: 'home repertoire — songs sung at hearth, not stage' }
+];
+const LITURGICAL = [
+  { he: 'מַקַאם', translit: 'maqam', fr: 'maqam — Arabic-Ottoman modal system, base of liturgy' },
+  { he: 'בַּיָאתִי', translit: 'bayati', fr: 'Bayati — sad-lyrical maqam, weekday prayers' },
+  { he: 'חִיגַ׳אז', translit: 'hijaz', fr: 'Hijaz — yearning-spiritual maqam, Shabbat eve' },
+  { he: 'פַּיְטָן', translit: 'paytan', fr: 'paytan — liturgical poet-cantor' },
+  { he: 'מָסוֹרֶת סָלוֹנִיקִי', translit: 'masoret saloniki', fr: 'Salonika tradition — center of Sephardi paytanut' },
+  { he: 'בַּקָּשׁוֹת', translit: 'bakashot', fr: 'bakashot — pre-dawn Shabbat hymn cycle' },
+  { he: 'פִּיוּט', translit: 'piyut', fr: 'piyut — liturgical poem set to maqam' },
+  { he: 'מוּסִיקָה עוֹתְמַאנִית-יְהוּדִית', translit: 'musika otmanit-yehudit', fr: 'Ottoman-Jewish music — synagogue fusion' },
+  { he: 'חַזָּן סְפָרַדִּי', translit: 'chazan sfaradi', fr: 'Sephardi cantor — trained in maqamat cycle' },
+  { he: 'שִׁיר הַשִּׁירִים בְּמַקַאם', translit: 'shir ha-shirim b\'maqam', fr: 'Song of Songs in maqam — performed Shabbat afternoon' }
+];
+const PIONEERS = [
+  { he: 'יְהוֹרָם גָּאוֹן', translit: 'Yehoram Gaon', fr: 'Yehoram Gaon — born Jerusalem 1939, Sephardi singer & actor icon' },
+  { he: 'מִשְׁפָּחַת גָּאוֹן', translit: 'mishpachat Gaon', fr: 'Gaon family — old Sephardi-Jerusalem dynasty' },
+  { he: 'יִצְחָק לֵוִי', translit: 'Yitzhak Levy', fr: 'Yitzhak Levy — ethnomusicologist, 4-volume Ladino songbook' },
+  { he: 'בְּרָכָה צְפִירָה', translit: 'Bracha Tzefira', fr: 'Bracha Tzefira — Yemenite-Sephardi bridge singer, pre-state era' },
+  { he: 'אֶסְתֵר עוֹפָרִים', translit: 'Esther Ofarim', fr: 'Esther Ofarim — 1960s star, included Ladino in repertoire' },
+  { he: 'יְהוּדָה פוֹלִיקֶר (שׁוֹרְשִׁים)', translit: 'Yehuda Poliker (shorashim)', fr: 'Yehuda Poliker — Greek-Sephardi rocker, brought tradition to mainstream' },
+  { he: 'אַרְכִיּוֹן הַצַּלִיל הַלְּאוּמִי', translit: 'archiyon ha-tzalil ha-l\'umi', fr: 'National Sound Archive — Jerusalem, preserves Ladino recordings' },
+  { he: 'תִּקְלִיט "רוֹמַנְסֵרוֹ סְפָרַדִּי"', translit: 'taklit Romansero Sfaradi', fr: 'Romansero Sfaradi album — Yehoram Gaon canonical 1969' },
+  { he: 'יוֹם הַלָּדִינוֹ', translit: 'yom ha-ladino', fr: 'Ladino Day — annual Israeli celebration' },
+  { he: 'הָרָשׁוּת הַלְּאוּמִית לַלָּדִינוֹ', translit: 'ha-rashut ha-l\'umit la-ladino', fr: 'National Ladino Authority — gov institution since 1996' }
+];
+const REVIVAL = [
+  { he: 'יַסְמִין לֵוִי', translit: 'Yasmin Levy', fr: 'Yasmin Levy — Israeli-British singer, daughter of Yitzhak Levy' },
+  { he: 'פְלוֹרִי יָגוֹדָה', translit: 'Flory Jagoda', fr: 'Flory Jagoda — Bosnian-Sephardi, "Ocho Kandelikas" composer' },
+  { he: 'שָׂרָה אֲרוֹאֶסְטֶה', translit: 'Sarah Aroeste', fr: 'Sarah Aroeste — American Ladino artist, modern feminist takes' },
+  { he: 'גַ׳נֶט בֶּן-אוֹר', translit: 'Janet Ben-Or', fr: 'Janet Ben-Or — Israeli Ladino preservationist & performer' },
+  { he: 'אֶסְתִּי כֵּנַן-עוֹפְרִי', translit: 'Esti Kenan-Ofri', fr: 'Esti Kenan-Ofri — Israeli ethno-musical performer of Sephardi' },
+  { he: 'הָרְכֵּב עוּד-כִּנּוֹר-קָאנוּן', translit: 'harkev oud-kinor-kanun', fr: 'oud-violin-kanun ensemble — typical instrumentation' },
+  { he: 'עוּד', translit: 'oud', fr: 'oud — pear-shaped lute, central instrument' },
+  { he: 'קָאנוּן', translit: 'kanun', fr: 'kanun — 78-string plucked zither' },
+  { he: 'דַּרְבּוּקָה', translit: 'darbuka', fr: 'darbuka — goblet drum' },
+  { he: 'הִתְחַדְּשׁוּת מוּזִיקָלִית', translit: 'hitchadshut musikalit', fr: 'musical revival — current Israeli Ladino renaissance' }
+];
+
+const DIALOGUE = [
+  { he: 'יוֹנָאס — שָׁמַעְתָּ אֶת "אַדְיוֹ קֶרִידָה"? בָּכִיתִי.', translit: 'yonas — shamata et "Adio Kerida"? bachiti.', fr: 'Jonas — Did you hear "Adio Kerida"? I cried.' },
+  { he: 'סָבְתָא — אָה, יָקִירִי. סָבְתִי שָׁרָה לִי אֶת זֶה בְּסָלוֹנִיקִי לִפְנֵי הַמִּלְחָמָה.', translit: 'savta — ah, yakiri. savti shara li et ze b\'saloniki lifnei ha-milchama.', fr: 'Grandma — Ah, dear. My grandmother sang it to me in Salonika before the war.' },
+  { he: 'יוֹנָאס — הַמַּנְגִּינָה דּוֹמָה לְוֶרְדִי.', translit: 'yonas — ha-manginah doma l\'Verdi.', fr: 'Jonas — The melody resembles Verdi.' },
+  { he: 'סָבְתָא — נָכוֹן. הַסְּפָרַדִּים בְּסָלוֹנִיקִי לָקְחוּ אֲרְיָה אִיטַלְקִית וְהִכְנִיסוּ לָה מִלִּים בְּלָדִינוֹ.', translit: 'savta — nachon. ha-sfaradim b\'saloniki lakchu arya italkit v\'hichnisu lah milim b\'ladino.', fr: 'Grandma — Right. The Salonika Sephardim took an Italian aria and put Ladino words in it.' },
+  { he: 'יוֹנָאס — וְיַסְמִין לֵוִי — אַתְּ אוֹהֶבֶת אוֹתָהּ?', translit: 'yonas — v\'Yasmin Levy — at ohevet ota?', fr: 'Jonas — And Yasmin Levy — do you love her?' },
+  { he: 'סָבְתָא — אַבָּא שֶׁלָּהּ הִצִּיל אֶת הַשִּׁירִים. הִיא לוֹקַחַת אוֹתָם וְעוֹשָׂה אוֹתָם חַיִּים שׁוּב.', translit: 'savta — aba shela hitzil et ha-shirim. hi lokachat otam v\'osa otam chayim shuv.', fr: 'Grandma — Her father saved the songs. She takes them and makes them alive again.' },
+  { he: 'יוֹנָאס — אֲנִי רוֹצֶה לִלְמֹד לָדִינוֹ.', translit: 'yonas — ani rotzeh lilmod ladino.', fr: 'Jonas — I want to learn Ladino.' },
+  { he: 'סָבְתָא — תַּתְחִיל בְּשִׁיר. תָּמִיד מַתְחִילִים בְּשִׁיר.', translit: 'savta — tatchil b\'shir. tamid matchilim b\'shir.', fr: 'Grandma — Start with a song. We always start with a song.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('romanzas', ROMANZAS);
+R('kantikas', KANTIKAS);
+R('liturgical', LITURGICAL);
+R('pioneers', PIONEERS);
+R('revival', REVIVAL);
+
+renderTextBlock('dialogue', DIALOGUE);
+
+addMiniQuiz('Sephardi-Ladino Music Quiz', [
+  { q: 'Romanzas are...', options: ['Modern Israeli pop', 'Medieval Spanish ballads preserved in Ladino', 'Yemenite prayers', 'Russian folk songs'], answer: 1, explain: 'Romanzas are Castilian-rooted ballads carried out of Spain in 1492 and preserved orally for 500 years.' },
+  { q: 'Yehoram Gaon was born in...', options: ['Salonika 1925', 'Jerusalem 1939', 'Tel Aviv 1955', 'Sarajevo 1930'], answer: 1, explain: 'Yehoram Gaon, born Jerusalem 1939, is the central Israeli Sephardi singer of the 20th century.' },
+  { q: 'Yasmin Levy is the daughter of...', options: ['Yehoram Gaon', 'Yitzhak Levy, Ladino ethnomusicologist', 'A British conductor', 'Flory Jagoda'], answer: 1, explain: 'Her father Yitzhak Levy compiled the foundational 4-volume Ladino songbook; she carries his archive into modern stages.' },
+  { q: 'The typical Sephardi ensemble instrumentation is...', options: ['Piano + violin', 'Oud + violin + kanun + darbuka', 'Guitar + drums', 'Saxophone + bass'], answer: 1, explain: 'Oud, violin, kanun, and darbuka form the classic Ottoman-Sephardi ensemble.' },
+  { q: '"Durme Durme Mi Alma" is a...', options: ['Wedding kantika', 'Mourning song', 'Lullaby', 'Liturgical piyut'], answer: 2, explain: 'It is a Ladino lullaby — "sleep, sleep my soul" — sung mother-to-child for centuries.' },
+  { q: 'Salonika tradition centered on...', options: ['Hasidic nigunim', 'Paytanut fused with Ottoman maqamat', 'Yiddish theater', 'Israeli rock'], answer: 1, explain: 'Salonika was the major Sephardi center where paytanim merged Hebrew liturgy with Ottoman modal music.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(377);
+  }
+});
+</script></body></html>

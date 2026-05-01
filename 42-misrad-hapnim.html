@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>42 — Misrad HaPnim</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Misrad HaPnim (Interior Ministry)</h1><div class="subtitle">Lesson 42 · משרד הפנים</div></div><div class="nav"><a href="index.html">Home</a><a href="42-misrad-hapnim.html" class="active">42</a></div></header>
+
+<p class="intro">Misrad HaPnim handles ID cards, passports, civil status, residency. The toughest bureaucracy in Israel — long lines, strict appointment system. You'll go many times. Bring patience and chocolate.</p>
+
+<div class="tip"><strong>Booking</strong> — Use myvisit.gov.il to book appointments. Without an appointment you may wait hours or be turned away.</div>
+
+<h2>Office & Services</h2>
+<div class="word-list" id="office"></div>
+
+<h2>Civil Status</h2>
+<div class="word-list" id="civil"></div>
+
+<h2>ID Card Issues</h2>
+<div class="word-list" id="id"></div>
+
+<h2>Passport (Israeli)</h2>
+<div class="word-list" id="passport"></div>
+
+<h2>Bureaucratic Verbs</h2>
+<div class="word-list" id="verbs"></div>
+
+<h2>Common Forms</h2>
+<div class="word-list" id="forms"></div>
+
+<hr class="section-divider">
+<h2>Useful Phrases at the Counter</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 42 · Misrad HaPnim · <a href="43-rental-contracts.html" style="color:var(--accent)">Next: Rental Contracts →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const OFFICE = [
+  { he: 'מִשְׂרַד הַפְּנִים', translit: 'misrad ha-pnim', fr: 'Ministry of Interior' },
+  { he: 'לִשְׁכָּה', translit: 'lishka', fr: 'office / bureau' },
+  { he: 'עֲמַדַּת קַבָּלָה', translit: 'amadat kabala', fr: 'reception desk' },
+  { he: 'תּוֹר מָקֻוָּן', translit: 'tor mekuvan', fr: 'online appointment' },
+  { he: 'מַסְפֵּר תּוֹר', translit: 'misper tor', fr: 'queue number' },
+  { he: 'פָּקִיד', translit: 'pakid', fr: 'clerk (m.)' },
+  { he: 'פְּקִידָה', translit: 'pkida', fr: 'clerk (f.)' },
+  { he: 'דֶּלֶת', translit: 'delet', fr: 'door / counter window' }
+];
+const CIVIL = [
+  { he: 'מַעֲמָד אִישִׁי', translit: 'ma\'amad ishi', fr: 'civil status' },
+  { he: 'רַוָּק', translit: 'ravak', fr: 'single (m.)' },
+  { he: 'רַוָּקָה', translit: 'ravaka', fr: 'single (f.)' },
+  { he: 'נָשׂוּי', translit: 'nasuy', fr: 'married (m.)' },
+  { he: 'נְשׂוּאָה', translit: 'nesu\'a', fr: 'married (f.)' },
+  { he: 'גָּרוּשׁ', translit: 'garush', fr: 'divorced (m.)' },
+  { he: 'גְּרוּשָׁה', translit: 'grusha', fr: 'divorced (f.)' },
+  { he: 'אַלְמָן', translit: 'alman', fr: 'widower' },
+  { he: 'אַלְמָנָה', translit: 'almana', fr: 'widow' },
+  { he: 'יְדוּעָה בְּצִבּוּר', translit: 'yedu\'a be-tzibur', fr: 'common-law (f.)' }
+];
+const ID = [
+  { he: 'תְּעוּדַת זֶהוּת', translit: 'teudat zehut', fr: 'ID card' },
+  { he: 'מִסְפַּר זֶהוּת', translit: 'mispar zehut', fr: 'ID number (9 digits)' },
+  { he: 'סְפַח', translit: 'sefach', fr: 'attached info page (with address)' },
+  { he: 'תְּעוּדָה בִּיוֹמֶטְרִית', translit: 'teuda biometrit', fr: 'biometric ID' },
+  { he: 'הַנְפָּקָה', translit: 'hanpaka', fr: 'issuing' },
+  { he: 'חִדּוּשׁ', translit: 'chidush', fr: 'renewal' },
+  { he: 'הוֹצָאָה רִאשׁוֹנָה', translit: 'hotza\'a rishona', fr: 'first issue' },
+  { he: 'אֲבֵדָה', translit: 'aveda', fr: 'loss' },
+  { he: 'גְּנֵיבָה', translit: 'gneyva', fr: 'theft' }
+];
+const PASSPORT = [
+  { he: 'דַּרְכּוֹן יִשְׂרְאֵלִי', translit: 'darkon yisraeli', fr: 'Israeli passport' },
+  { he: 'דַּרְכּוֹן זְמַנִּי', translit: 'darkon zmani', fr: 'temporary passport' },
+  { he: 'תְּעוּדַת מַעֲבָר', translit: 'teudat ma\'avar', fr: 'travel document (Laissez-passer)' },
+  { he: 'תּוֹקֶף', translit: 'tokef', fr: 'validity' },
+  { he: 'פּוּג', translit: 'pug', fr: 'expired' },
+  { he: 'תַּצְלוּמִים', translit: 'tatzlumim', fr: 'photos (passport-style)' }
+];
+const VERBS = [
+  { he: 'לְהַנְפִּיק', translit: 'lehanpik', fr: 'to issue' },
+  { he: 'לְחַדֵּשׁ', translit: 'lechadesh', fr: 'to renew' },
+  { he: 'לְהוֹצִיא', translit: 'lehotzi', fr: 'to obtain / take out' },
+  { he: 'לְעַדְכֵּן', translit: 'le\'adken', fr: 'to update' },
+  { he: 'לִרְשֹׁם', translit: 'lirshom', fr: 'to register / record' },
+  { he: 'לְהַגִּישׁ', translit: 'lehagish', fr: 'to submit' },
+  { he: 'לְבַטֵּל', translit: 'levatel', fr: 'to cancel' },
+  { he: 'לְצַלֵּם', translit: 'letzalem', fr: 'to photograph (the bio photo)' }
+];
+const FORMS = [
+  { he: 'טֹפֶס בַּקָּשָׁה', translit: 'tofes bakasha', fr: 'application form' },
+  { he: 'הַצְהָרָה', translit: 'hatzhara', fr: 'declaration' },
+  { he: 'תַּצְהִיר', translit: 'tatzhir', fr: 'sworn statement' },
+  { he: 'אִשּׁוּר תּוֹשַׁב', translit: 'ishur toshav', fr: 'residency confirmation' },
+  { he: 'אַגְרָה', translit: 'agra', fr: 'fee' },
+  { he: 'תַּשְׁלוּם', translit: 'tashlum', fr: 'payment' }
+];
+const PHRASES = [
+  { he: 'יֵשׁ לִי תּוֹר לְשָׁעָה 11', translit: 'yesh li tor le-sha\'a 11', fr: 'I have an 11 AM appointment' },
+  { he: 'אֲנִי רוֹצֶה לְהוֹצִיא תְּעוּדַת זֶהוּת', translit: 'ani rotze lehotzi teudat zehut', fr: 'I want to get an ID card (m.)' },
+  { he: 'אִבַּדְתִּי אֶת הַתְּעוּדָה', translit: 'ibadeti et ha-teuda', fr: 'I lost the ID' },
+  { he: 'מָה הָאַגְרָה?', translit: 'ma ha-agra?', fr: 'what\'s the fee?' },
+  { he: 'אֲנִי גָּר בָּכְתֹבֶת חֲדָשָׁה', translit: 'ani gar ba-ktovet chadasha', fr: 'I live at a new address (m.)' },
+  { he: 'מָתַי הַתְּעוּדָה תֻּכְלָע?', translit: 'matay ha-teuda techelach?', fr: 'when will the ID be ready?' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('office', OFFICE); R('civil', CIVIL); R('id', ID); R('passport', PASSPORT); R('verbs', VERBS); R('forms', FORMS); R('phrases', PHRASES);
+addExtraVocab('Civil Status Vocabulary', [
+  { he: 'רַוָּק / רַוָּקָה', translit: 'ravak / ravaka', fr: 'single (m./f.)' },
+  { he: 'נָשׂוּי / נְשׂוּאָה', translit: 'nasuy / nesu\'a', fr: 'married' },
+  { he: 'גָּרוּשׁ / גְּרוּשָׁה', translit: 'garush / grusha', fr: 'divorced' },
+  { he: 'אַלְמָן / אַלְמָנָה', translit: 'alman / almana', fr: 'widower / widow' },
+  { he: 'יְדוּעָה בְּצִבּוּר', translit: 'yedu\'a be-tzibur', fr: 'common-law (f.)' },
+  { he: 'בֵּן זוּג / בַּת זוּג', translit: 'ben zug / bat zug', fr: 'partner' },
+  { he: 'אַזְרָחוּת', translit: 'ezrachut', fr: 'citizenship' },
+  { he: 'תּוֹשָׁבוּת', translit: 'toshavut', fr: 'residency' },
+  { he: 'דַּת', translit: 'dat', fr: 'religion' },
+  { he: 'יְהוּדִי', translit: 'yehudi', fr: 'Jewish' },
+  { he: 'מוּסְלְמִי', translit: 'muslemi', fr: 'Muslim' },
+  { he: 'נוֹצְרִי', translit: 'notzri', fr: 'Christian' },
+  { he: 'דְּרוּזִי', translit: 'druzi', fr: 'Druze' },
+  { he: 'חִילוֹנִי', translit: 'chiloni', fr: 'secular' }
+]);
+
+addExtraVocab('Misrad HaPnim Forms & Vocabulary', [
+  { he: 'תְּעוּדַת זֶהוּת', translit: 'teudat zehut', fr: 'ID card' },
+  { he: 'דַּרְכּוֹן יִשְׂרְאֵלִי', translit: 'darkon yisre\'eli', fr: 'Israeli passport' },
+  { he: 'תְּעוּדַת מַעֲבָר', translit: 'teudat ma\'avar', fr: 'travel document' },
+  { he: 'מִסְפַּר זֶהוּת', translit: 'mispar zehut', fr: 'ID number' },
+  { he: 'תּוֹר מָקֻוָּן', translit: 'tor mekuvan', fr: 'online appointment' },
+  { he: 'myvisit', translit: 'mai-visit', fr: 'gov appointment website' },
+  { he: 'בִּיוֹמֶטְרִי', translit: 'biometri', fr: 'biometric' },
+  { he: 'הַנְפָּקָה רִאשׁוֹנָה', translit: 'hanpaka rishona', fr: 'first issuance' },
+  { he: 'חִדּוּשׁ', translit: 'chidush', fr: 'renewal' },
+  { he: 'אֲבֵדָה', translit: 'aveda', fr: 'loss' },
+  { he: 'גְּנֵיבָה', translit: 'gneyva', fr: 'theft' },
+  { he: 'עִדְכּוּן כְּתֹבֶת', translit: 'idkun ktovet', fr: 'address update' },
+  { he: 'שִׁנּוּי שֵׁם', translit: 'shinuy shem', fr: 'name change' },
+  { he: 'אַגְרָה', translit: 'agra', fr: 'fee' }
+]);
+
+addMiniQuiz('Misrad HaPnim Quiz', [
+  { q: 'How do you book an appointment?', options: ['Walk-in only', 'Phone only', 'myvisit.gov.il', 'Email'], answer: 2 },
+  { q: 'Number of digits in תְּעוּדַת זֶהוּת?', options: ['7', '8', '9', '10'], answer: 2, explain: '9-digit ID number' },
+  { q: 'I lost my ID — say...', options: ['אִבַּדְתִּי אֶת הַתְּעוּדָה', 'מָצָאתִי תְּעוּדָה', 'יֵשׁ לִי תְּעוּדָה', 'אֵין לִי תְּעוּדָה'], answer: 0 },
+  { q: 'Israeli passport now is...', options: ['Paper only', 'Biometric chip', 'Mobile only', 'Digital only'], answer: 1 },
+  { q: 'New olim get TZ within...', options: ['1 hour', 'Same day', '~2 weeks by mail', '6 months'], answer: 2, explain: 'Temporary at airport, permanent ~14 days' }
+]);
+
+addCulturalText('At the Misrad HaPnim Counter — Real Dialogue', 'A 4-hour wait followed by a 7-minute interaction. The clerk has seen everything. Don\'t take attitude personally.', [
+  { he: 'אַתָּה: שָׁלוֹם, יֵשׁ לִי תּוֹר לְשָׁעָה 11', translit: "Ata: Shalom, yesh li tor le-sha\'a 11", fr: 'You: Hello, I have an 11 AM appointment' },
+  { he: 'פְּקִידָה: תְּעוּדַת זֶהוּת בְּבַקָּשָׁה', translit: "Pkida: Teudat zehut bevakasha", fr: 'Clerk: ID please' },
+  { he: 'אַתָּה: אֲנִי עוֹלֶה חָדָשׁ, יֵשׁ לִי דַּרְכּוֹן וְאִישׁוּר אַלִיָּה', translit: "Ata: Ani ole chadash, yesh li darkon ve-ishur aliya", fr: 'You: I\'m a new oleh, I have a passport and aliyah confirmation' },
+  { he: 'פְּקִידָה: בְּסֵדֶר. תְּעוּדָה זְמַנִּית קִבַּלְתָּ?', translit: "Pkida: Beseder. Teuda zmanit kibalta?", fr: 'Clerk: OK. Did you receive a temporary ID?' },
+  { he: 'אַתָּה: כֵּן, בִּנְמַל הַתְּעוּפָה', translit: "Ata: Ken, bi-nmal ha-te\'ufa", fr: 'You: Yes, at the airport' },
+  { he: 'פְּקִידָה: 4 תְּמוּנוֹת בִּיוֹמֶטְרִיוֹת? גַּב טוֹפֶס?', translit: "Pkida: 4 tmunot biometriyot? Gav tofes?", fr: 'Clerk: 4 biometric photos? Form back?' },
+  { he: 'אַתָּה: הַכֹּל פֹּה', translit: "Ata: Ha-kol po", fr: 'You: Everything\'s here' },
+  { he: 'פְּקִידָה: תֵּשֵׁב, תֵּכֶף קוֹרְאִים אוֹתְךָ לַתַּצְלוּם', translit: "Pkida: Teshev, tekef kor\'im otcha la-tatzlum", fr: 'Clerk: Sit, you\'ll be called for the photo soon' },
+  { he: 'פְּקִידָה: הַתְּעוּדָה תַּגִּיעַ בְּדֹאַר תּוֹךְ 14 יָמִים', translit: "Pkida: Ha-teuda tagia be-do\'ar toch 14 yamim", fr: 'Clerk: The ID will arrive by mail within 14 days' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('hapnim'); } });
+</script></body></html>

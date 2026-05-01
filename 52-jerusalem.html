@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>52 — Jerusalem</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Jerusalem</h1><div class="subtitle">Lesson 52 · ירושלים</div></div><div class="nav"><a href="index.html">Home</a><a href="52-jerusalem.html" class="active">52</a></div></header>
+
+<p class="intro">Yerushalayim — Israel's capital, ~970,000 people. Holy to Jews, Christians, Muslims. Old City within ramparts, New City modern. Cooler than Tel Aviv (mountain elevation), more religious, slower pace.</p>
+
+<h2>Old City Quarters</h2>
+<div class="word-list" id="quarters"></div>
+
+<h2>Holy Sites</h2>
+<div class="word-list" id="holy"></div>
+
+<h2>Neighborhoods (Modern)</h2>
+<div class="word-list" id="neighborhoods"></div>
+
+<h2>Markets & Streets</h2>
+<div class="word-list" id="markets"></div>
+
+<h2>Cultural Sites</h2>
+<div class="word-list" id="culture"></div>
+
+<h2>Government & Institutions</h2>
+<div class="word-list" id="govt"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 52 · Jerusalem · <a href="53-tel-aviv.html" style="color:var(--accent)">Next: Tel Aviv →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const QUARTERS = [
+  { he: 'הָרֹבַע הַיְּהוּדִי', translit: 'ha-rova ha-yehudi', fr: 'Jewish Quarter' },
+  { he: 'הָרֹבַע הַמֻּסְלְמִי', translit: 'ha-rova ha-muslemi', fr: 'Muslim Quarter' },
+  { he: 'הָרֹבַע הַנּוֹצְרִי', translit: 'ha-rova ha-notzri', fr: 'Christian Quarter' },
+  { he: 'הָרֹבַע הָאַרְמֶנִי', translit: 'ha-rova ha-armeni', fr: 'Armenian Quarter' },
+  { he: 'הָעִיר הָעַתִּיקָה', translit: 'ha-ir ha-atika', fr: 'the Old City' },
+  { he: 'חוֹמוֹת', translit: 'chomot', fr: 'walls (ramparts)' }
+];
+const HOLY = [
+  { he: 'הַכֹּתֶל הַמַּעֲרָבִי', translit: 'ha-Kotel ha-ma\'aravi', fr: 'Western (Wailing) Wall' },
+  { he: 'הַר הַבַּיִת', translit: 'Har ha-Bayit', fr: 'Temple Mount' },
+  { he: 'כִּפַּת הַסֶּלַע', translit: 'kipat ha-sela', fr: 'Dome of the Rock' },
+  { he: 'מִסְגַּד אַל-אַקְצָא', translit: 'misgad al-Aqsa', fr: 'Al-Aqsa Mosque' },
+  { he: 'כְּנֵסִיַּת הַקֶּבֶר', translit: 'knesiyat ha-kever', fr: 'Holy Sepulchre' },
+  { he: 'וָוִיָה דּוֹלוֹרוֹסָה', translit: 'Via Dolorosa', fr: 'Via Dolorosa' },
+  { he: 'הַר צִיּוֹן', translit: 'Har Tzion', fr: 'Mount Zion' },
+  { he: 'הַר הַזֵּיתִים', translit: 'Har ha-Zeitim', fr: 'Mount of Olives' },
+  { he: 'גַּן הַשְּׁמָנִים', translit: 'gan ha-shmanim', fr: 'Gethsemane (Garden of Olives)' },
+  { he: 'הַר הַזִּכָּרוֹן', translit: 'Har ha-zikaron', fr: 'Mount Herzl' }
+];
+const NEIGHBORHOODS = [
+  { he: 'מֵאָה שְׁעָרִים', translit: 'Mea Shearim', fr: 'Mea Shearim (ultra-Orthodox)' },
+  { he: 'נַחְלָאוֹת', translit: 'Nachla\'ot', fr: 'Nachlaot (mixed, charming)' },
+  { he: 'גֶּרְמַן קוֹלוֹנִי', translit: 'German Colony', fr: 'German Colony (yuppy)' },
+  { he: 'בָּקָה', translit: 'Baka', fr: 'Baka (mid-class)' },
+  { he: 'רֵחַבְיָה', translit: 'Rechavya', fr: 'Rechavia (central, leafy)' },
+  { he: 'הַר נוֹף', translit: 'Har Nof', fr: 'Har Nof (religious, west)' },
+  { he: 'גִּילוֹ', translit: 'Gilo', fr: 'Gilo (south)' },
+  { he: 'תַּלְפִּיּוֹת', translit: 'Talpiot', fr: 'Talpiot (south, industrial)' },
+  { he: 'אַרְנוֹנָה', translit: 'Arnona', fr: 'Arnona (south, residential)' },
+  { he: 'פִּסְגַּת זְאֵב', translit: 'Pisgat Ze\'ev', fr: 'Pisgat Ze\'ev (NE)' }
+];
+const MARKETS = [
+  { he: 'שׁוּק מַחֲנֵה יְהוּדָה', translit: 'shuk Machane Yehuda', fr: 'Mahane Yehuda Market (the shuk)' },
+  { he: 'בֶּן יְהוּדָה', translit: 'Ben Yehuda', fr: 'Ben Yehuda Street (pedestrian)' },
+  { he: 'יָפוֹ', translit: 'Yafo', fr: 'Yafo Street (main artery)' },
+  { he: 'מַדְרֵגוֹת', translit: 'madregot', fr: '"the steps" (Ben Yehuda area)' },
+  { he: 'הָעִיר הַחֲדָשָׁה', translit: 'ha-ir ha-chadasha', fr: 'New City' }
+];
+const CULTURE = [
+  { he: 'מוּזֵיאוֹן יִשְׂרָאֵל', translit: 'Muzeon Yisrael', fr: 'Israel Museum' },
+  { he: 'יָד וָשֵׁם', translit: 'Yad Vashem', fr: 'Yad Vashem (Holocaust memorial)' },
+  { he: 'הַר הֶרְצְל', translit: 'Har Herzl', fr: 'Mount Herzl (national cemetery)' },
+  { he: 'הַסִּינֶמָטֶק', translit: 'ha-Cinemateque', fr: 'Jerusalem Cinematheque' },
+  { he: 'תֵּאַטְרוֹן יְרוּשָׁלַיִם', translit: 'te\'atron Yerushalayim', fr: 'Jerusalem Theater' },
+  { he: 'בִּינְיָינֵי הָאֻמָּה', translit: 'binyaney ha-uma', fr: 'ICC (Convention Center)' }
+];
+const GOVT = [
+  { he: 'הַכְּנֶסֶת', translit: 'ha-Knesset', fr: 'the Knesset (parliament)' },
+  { he: 'בֵּית הַמִּשְׁפָּט הָעֶלְיוֹן', translit: 'beit ha-mishpat ha-elyon', fr: 'Supreme Court' },
+  { he: 'בֵּית רֹאשׁ הַמֶּמְשָׁלָה', translit: 'beit rosh ha-memshala', fr: 'PM\'s residence' },
+  { he: 'מִשְׂרְדֵי מֶמְשָׁלָה', translit: 'misrdey memshala', fr: 'government ministries' },
+  { he: 'הָאוּנִיבֶרְסִיטָה הָעִבְרִית', translit: 'ha-universita ha-ivrit', fr: 'Hebrew University' }
+];
+const PHRASES = [
+  { he: 'יְרוּשָׁלַיִם הִיא בִּירַת יִשְׂרָאֵל', translit: 'Yerushalayim hi birat Yisrael', fr: 'Jerusalem is the capital of Israel' },
+  { he: 'אֲנִי גָּר בִּירוּשָׁלַיִם', translit: 'ani gar bi-Yerushalayim', fr: "I live in Jerusalem (m.)" },
+  { he: 'נֵלֵךְ לַכֹּתֶל', translit: 'nelech la-kotel', fr: "let's go to the Wall" },
+  { he: 'בְּחוֹרֶף יוֹרֵד שֶׁלֶג', translit: 'be-choref yored sheleg', fr: 'in winter snow falls' },
+  { he: 'בִּירוּשָׁלַיִם זֶה כָּכָה', translit: 'bi-Yerushalayim ze kacha', fr: 'in Jerusalem that\'s how it is' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('quarters', QUARTERS); R('holy', HOLY); R('neighborhoods', NEIGHBORHOODS); R('markets', MARKETS); R('culture', CULTURE); R('govt', GOVT); R('phrases', PHRASES);
+
+addExtraVocab('Jerusalem Phrases for Tourists', [
+  { he: 'אֵיךְ מַגִּיעִים לַכֹּתֶל?', translit: 'eich magi\'im la-kotel?', fr: 'how do I get to the Western Wall?' },
+  { he: 'יֵשׁ סִיּוּר מוּדְרָךְ?', translit: 'yesh siyur mudrach?', fr: 'is there a guided tour?' },
+  { he: 'בְּאֵיזוֹ שָׁעָה הַשַּׁעַר נִסְגָּר?', translit: 'be-eyzo sha\'a ha-sha\'ar nisgar?', fr: 'what time does the gate close?' },
+  { he: 'שַׁעַר יָפוֹ', translit: 'sha\'ar Yafo', fr: 'Jaffa Gate' },
+  { he: 'שַׁעַר דָּמֶשֶׂק', translit: 'sha\'ar Damesek', fr: 'Damascus Gate' },
+  { he: 'שַׁעַר צִיּוֹן', translit: 'sha\'ar Tziyon', fr: 'Zion Gate' },
+  { he: 'יוֹם יְרוּשָׁלַיִם', translit: 'yom Yerushalayim', fr: 'Jerusalem Day (holiday)' },
+  { he: 'הַטַּיֶּלֶת בְּאַרְמוֹן הַנָּצִיב', translit: 'ha-tayelet be-Armon ha-Natziv', fr: 'Haas promenade' },
+  { he: 'גַן הַחֲיּוֹת הַתַּנָ"כִי', translit: 'gan ha-chayot ha-tanachi', fr: 'Biblical Zoo' },
+  { he: 'מוּזֵאוֹן הַזְּכוּכִית', translit: 'muzeyon ha-zchuchit', fr: 'Glass Museum' }
+]);
+
+addExtraVocab('Jerusalem-Specific Vocabulary', [
+  { he: 'הָעִיר הָעַתִּיקָה', translit: 'ha-ir ha-atika', fr: 'the Old City' },
+  { he: 'הָרֹבַע הַיְּהוּדִי', translit: 'ha-rova ha-yehudi', fr: 'Jewish Quarter' },
+  { he: 'הָרֹבַע הָעַרְבִי', translit: 'ha-rova ha-aravi', fr: 'Muslim Quarter' },
+  { he: 'הָרֹבַע הָאַרְמֶנִי', translit: 'ha-rova ha-armeni', fr: 'Armenian Quarter' },
+  { he: 'הָרֹבַע הַנּוֹצְרִי', translit: 'ha-rova ha-notzri', fr: 'Christian Quarter' },
+  { he: 'הַכֹּתֶל הַמַּעֲרָבִי', translit: 'ha-kotel ha-ma\'aravi', fr: 'Western Wall' },
+  { he: 'הַר הַבַּיִת', translit: 'har ha-bayit', fr: 'Temple Mount' },
+  { he: 'כִּפַּת הַסֶּלַע', translit: 'kipat ha-sela', fr: 'Dome of the Rock' },
+  { he: 'מַסְגַּד אַל-אַקְצָא', translit: 'masgad al-aksa', fr: 'Al-Aqsa Mosque' },
+  { he: 'כְּנֵסִיַּת הַקֶּבֶר', translit: 'knesiyat ha-kever', fr: 'Church of the Holy Sepulchre' },
+  { he: 'הַר הַזֵּיתִים', translit: 'har ha-zeitim', fr: 'Mount of Olives' },
+  { he: 'יָד וָשֵׁם', translit: 'yad va-shem', fr: 'Yad Vashem (Holocaust memorial)' },
+  { he: 'מַחֲנֵה יְהוּדָה', translit: 'machane Yehuda', fr: 'Mahane Yehuda market' },
+  { he: 'הַכְּנֶסֶת', translit: 'ha-knesset', fr: 'Israeli parliament' },
+  { he: 'מוּזֵיאוֹן יִשְׂרָאֵל', translit: 'muzeyon Yisrael', fr: 'Israel Museum' },
+  { he: 'יְרוּשָׁלַיִם הַחֲדָשָׁה', translit: 'yerushalayim ha-chadasha', fr: 'New (West) Jerusalem' },
+  { he: 'מֵאָה שְׁעָרִים', translit: 'me\'a she\'arim', fr: 'Mea She\'arim (Charedi neighborhood)' }
+]);
+
+addMiniQuiz('Jerusalem Quiz', [
+  { q: 'How many quarters in the Old City?', options: ['2', '3', '4', '5'], answer: 2, explain: 'Jewish, Muslim, Christian, Armenian' },
+  { q: 'הַכֹּתֶל is...', options: ['Tower', 'Western Wall', 'A street', 'A market'], answer: 1 },
+  { q: 'יָד וָשֵׁם commemorates...', options: ['1948 War', 'The Holocaust', 'The Inquisition', 'Babylonian exile'], answer: 1 },
+  { q: 'Jerusalem\'s elevation:', options: ['Sea level', '~150m', '~750m', '~2000m'], answer: 2, explain: '~750m — cold winters' },
+  { q: 'Mahane Yehuda is...', options: ['A train station', 'A famous shuk', 'A neighborhood', 'A synagogue'], answer: 1 }
+]);
+
+addCulturalText('Psalm 137 — "By the rivers of Babylon"', 'The exiles\' lament for Jerusalem. The vow that gave Israel its second name.', [
+  { he: 'עַל נַהֲרוֹת בָּבֶל שָׁם יָשַׁבְנוּ גַּם בָּכִינוּ', translit: "Al naharot Bavel sham yashavnu gam bachinu", fr: 'By the rivers of Babylon we sat and wept' },
+  { he: 'בְּזָכְרֵנוּ אֶת צִיּוֹן', translit: "be-zochrenu et Tziyon", fr: 'when we remembered Zion' },
+  { he: 'אִם אֶשְׁכָּחֵךְ יְרוּשָׁלָיִם', translit: "Im eshkachech Yerushalayim", fr: 'If I forget you, Jerusalem' },
+  { he: 'תִּשְׁכַּח יְמִינִי', translit: "tishkach yemini", fr: 'let my right hand forget its skill' },
+  { he: 'תִּדְבַּק לְשׁוֹנִי לְחִכִּי', translit: "tidbak leshoni le-chiki", fr: 'let my tongue cleave to the roof of my mouth' },
+  { he: 'אִם לֹא אֶזְכְּרֵכִי', translit: "im lo ezkereki", fr: 'if I do not remember you' },
+  { he: 'אִם לֹא אַעֲלֶה אֶת יְרוּשָׁלַיִם', translit: "im lo a\'ale et Yerushalayim", fr: 'if I do not raise Jerusalem' },
+  { he: 'עַל רֹאשׁ שִׂמְחָתִי', translit: "al rosh simchati", fr: 'above my highest joy' }
+]);
+
+addCulturalText('Mota Gur 1967 — "The Temple Mount is in our hands"', "Brigadier Mordechai 'Motta' Gur's radio broadcast on June 7, 1967, after his paratroopers reached the Western Wall. The most famous Israeli military communication ever recorded.", [
+  { he: 'הַר הַבַּיִת בְּיָדֵינוּ!', translit: "Har ha-bayit be-yadeinu!", fr: 'The Temple Mount is in our hands!' },
+  { he: 'אֲנִי חוֹזֵר: הַר הַבַּיִת בְּיָדֵינוּ!', translit: "Ani chozer: har ha-bayit be-yadeinu!", fr: 'I repeat: the Temple Mount is in our hands!' },
+  { he: 'עוֹבֵר לְכִתָּה ב', translit: "Over le-kita Bet", fr: 'Switching to channel B' },
+  { he: 'כָּל הַיְּחִידוֹת — לְהִתְמַקֵּם', translit: "Kol ha-yechidot — lehitmakem", fr: 'All units — take positions' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('jerusalem'); } });
+</script></body></html>

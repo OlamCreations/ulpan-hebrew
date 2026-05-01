@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>349 — Modern Yemenite-Israeli Community</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Modern Yemenite-Israeli Community</h1><div class="subtitle">Lesson 349 · הַקְּהִילָּה הַתֵּימָנִית בְּיִשְׂרָאֵל הַיּוֹם</div></div><div class="nav"><a href="index.html">Home</a><a href="349-yemenite-modern.html" class="active">349</a></div></header>
+
+<p class="intro">Three generations after the airlift, the Yemenite community in Israel is roughly 400,000 strong, concentrated in a ring of cities east and north of Tel Aviv. The community carries a complex weight: a thriving cultural revival on one side, the still-open wound of the Yemenite Children Affair on the other. This lesson maps where Yemenites live now, the legal-political reckoning around the missing children, the cultural-identity reclamation led by the third generation, and what remains of Jewish life in Yemen itself.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Rosh Ha'ayin is the symbolic capital. Founded in 1949 as a transit settlement next to the Hashed camp evacuation zone, it absorbed roughly 17,000 Yemenite olim almost overnight. Today the city is over 50% Yemenite-descent and hosts the annual Tarbut HaTeimanim festival. If you want to feel the community's center of gravity in one weekend, go there for Friday night dinner and a Saturday morning service at one of the dozens of Beit Knesset HaTeimani.</div>
+
+<h2>Yemenite Cities in Israel</h2>
+<div class="word-list" id="cities"></div>
+
+<h2>Yemenite Children Affair</h2>
+<div class="word-list" id="affair"></div>
+
+<h2>Modern Identity & Movement</h2>
+<div class="word-list" id="identity"></div>
+
+<h2>Cultural Festivals & Sites</h2>
+<div class="word-list" id="festivals"></div>
+
+<h2>Yemenite Diaspora Today</h2>
+<div class="word-list" id="diaspora"></div>
+
+<hr class="section-divider">
+
+<h2>The Story in Brief</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short narrative arc: arrival, settlement, silence, reckoning, revival. Read it as one block.</div>
+  <div id="narrative"></div>
+</div>
+
+<footer>Lesson 349 · Modern Yemenite-Israeli Community · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CITIES = [
+  { he: 'רֹאשׁ הָעַיִן', translit: 'rosh ha-ayin', fr: 'Rosh Ha\'ayin — founded 1949 from Hashed transit camp, ~50% Yemenite-descent today' },
+  { he: 'יְהוּד', translit: 'yehud', fr: 'Yehud — early Yemenite moshava absorbed into city, strong Yemenite synagogue network' },
+  { he: 'פֶּתַח תִּקְוָה', translit: 'petach tikvah', fr: 'Petah Tikva — large Yemenite neighborhoods (Shaariya, Hadar Yosef)' },
+  { he: 'בְּנֵי בְּרַק', translit: 'bnei brak', fr: 'Bnei Berak — Yemenite Haredi enclaves, Baladi liturgy preserved' },
+  { he: 'רַעֲנַנָה', translit: 'ra\'anana', fr: 'Ra\'anana — Yemenite founding families, mixed modern community' },
+  { he: 'גִּבְעַת אוֹלְגָה', translit: 'givat olga', fr: 'Givat Olga (Hadera) — coastal Yemenite settlement zone' },
+  { he: 'רְחוֹבוֹת', translit: 'rechovot', fr: 'Rehovot — Marmorek and Sha\'arayim neighborhoods, founding-era roots' },
+  { he: 'כְּפַר סָבָא', translit: 'kfar saba', fr: 'Kfar Saba — older Yemenite quarter, integrated city' },
+  { he: 'נְוֵה צֶדֶק', translit: 'neve tzedek', fr: 'Neve Tzedek (Tel Aviv) — historic Yemenite Kerem ha-Teimanim adjacent' },
+  { he: 'כֶּרֶם הַתֵּימָנִים', translit: 'kerem ha-teimanim', fr: 'Kerem ha-Teimanim — original Tel Aviv Yemenite quarter, food and synagogue heart' }
+];
+
+const AFFAIR = [
+  { he: 'פָּרָשַׁת יַלְדֵי תֵּימָן', translit: 'parashat yaldei teiman', fr: 'Yemenite Children Affair — disappearance of ~1000+ children 1948-54' },
+  { he: 'וַעֲדַת כֹּהֵן-לֶוִי', translit: 'va\'adat cohen-levy', fr: 'Cohen-Levy Commission (2001) — acknowledged scope, blamed institutional failure' },
+  { he: 'יְלָדִים נֶעֱלָמִים', translit: 'yeladim ne\'elamim', fr: 'disappeared children (official term used in commissions)' },
+  { he: 'מַחֲנֶה עוֹלִים', translit: 'machaneh olim', fr: 'immigrant camp — where most disappearances occurred (Rosh Ha\'ayin, Ein Shemer)' },
+  { he: 'אִמּוּץ כָּפוּי', translit: 'imutz kafui', fr: 'forced adoption — alleged mechanism in many cases' },
+  { he: 'תְּעוּדַת פְּטִירָה', translit: 'teudat ptirah', fr: 'death certificate — often issued without body, parents not allowed to see' },
+  { he: 'הַכָּרָה רִשְׁמִית', translit: 'hakara rishmit', fr: 'official recognition — partial admission by State 2016, fuller 2021' },
+  { he: 'פִּיצּוּי 2018', translit: 'pitzui 2018', fr: '2018 compensation framework — 162M NIS earmarked, ~200K NIS per family' },
+  { he: 'חֲשִׂיפַת תִּיקִים', translit: 'chasifat tikim', fr: 'declassification of files — millions of pages opened 2016-2021' },
+  { he: 'דְּרִישַׁת DNA', translit: 'drishat DNA', fr: 'DNA matching demand — community push for state-funded reunification testing' }
+];
+
+const IDENTITY = [
+  { he: 'דּוֹר שְׁלִישִׁי', translit: 'dor shlishi', fr: 'third generation — grandchildren of olim, leading the cultural revival' },
+  { he: 'הַתְעוֹרְרוּת תֵּימָנִית', translit: 'hit\'orerut teimanit', fr: 'Yemenite awakening — pride/identity reclamation, post-2010' },
+  { he: 'תְּנוּעַת מִזְרָחִים', translit: 'tnu\'at mizrachim', fr: 'Mizrahi rights movement — broader civil rights frame including Yemenites' },
+  { he: 'אַחְוָה (להקה)', translit: 'a-wa (lehakah)', fr: 'A-WA — three sisters, viral 2015 Habib Galbi, modern Yemenite-Arabic pop' },
+  { he: 'גַּאֲוָה אֶתְנִית', translit: 'ga\'ava etnit', fr: 'ethnic pride — public reclaiming of Yemenite name and accent' },
+  { he: 'פָּעִילָה חֶבְרָתִית', translit: 'pe\'ilah chevratit', fr: 'female activist — many community leaders are women (Adato, Madmoni)' },
+  { he: 'מַחֲקָר אֲקָדֵמִי', translit: 'mechkar akademi', fr: 'academic research — university programs in Yemenite Jewish studies' },
+  { he: 'תַּעֲנוּג שֶׁל זֶהוּת', translit: 'ta\'anug shel zehut', fr: 'pleasure of identity — refusing the assimilation expected in 1950s' },
+  { he: 'דִּבּוּר תֵּימָנִי', translit: 'dibur teimani', fr: 'Yemenite speech — preserved guttural ע, ח, ט, ק consonants' },
+  { he: 'אֲרוּחָה מִשְׁפַּחְתִּית', translit: 'aruchah mishpachtit', fr: 'family meal — central transmission vehicle (jachnun, malawach Saturdays)' }
+];
+
+const FESTIVALS = [
+  { he: 'פֶסְטִיבָל תַּרְבּוּת הַתֵּימָנִים', translit: 'festival tarbut ha-teimanim', fr: 'Tarbut HaTeimanim Festival — annual, Rosh Ha\'ayin, music+food+heritage' },
+  { he: 'בֵּית כְּנֶסֶת הַתֵּימָנִי', translit: 'beit knesset ha-teimani', fr: 'Yemenite synagogue — distinctive Baladi or Shami liturgy' },
+  { he: 'דִּיוָאן', translit: 'diwan', fr: 'diwan — communal Sabbath/holiday singing tradition, Yemenite poetry' },
+  { he: 'מִסְעָדוֹת תֵּימָנִיוֹת', translit: 'mis\'adot teimaniyot', fr: 'Yemenite restaurants — Saluf, Erez, Tzipora, Kerem ha-Teimanim staples' },
+  { he: 'מוּזֵיאוֹן הַיַּהֲדוּת הַתֵּימָנִית', translit: 'muzeon ha-yahadut ha-teimanit', fr: 'Yemenite Jewry Museum (Rosh Ha\'ayin) — heritage center' },
+  { he: 'חִנָּה תֵּימָנִית', translit: 'chinah teimanit', fr: 'Yemenite henna ceremony — pre-wedding, increasingly mainstream Israeli' },
+  { he: 'שִׁירַת נָשִׁים', translit: 'shirat nashim', fr: 'women\'s songs — Arabic-Yemenite tradition rediscovered (Ofra Haza legacy)' },
+  { he: 'תַּפְקִיד הָרַב', translit: 'tafkid ha-rav', fr: 'role of the rabbi — Mori, traditional Yemenite teacher-figure' },
+  { he: 'סִדּוּר תֵּימָנִי', translit: 'sidur teimani', fr: 'Yemenite siddur — Baladi (Maimonidean) and Shami (post-1500) variants' },
+  { he: 'שִׁירֵי שַׁבָּזִי', translit: 'shirei shabazi', fr: 'songs of Rabbi Shalom Shabazi — 17th c. Yemenite poet, still sung weekly' }
+];
+
+const DIASPORA = [
+  { he: '~6 יְהוּדִים בְּתֵימָן', translit: '~6 yehudim b\'teiman', fr: '~6 Jews remaining in Yemen as of 2025 — community effectively extinct' },
+  { he: 'מִבְצָע "כָּנְפֵי נְשָׁרִים"', translit: 'mivtza "kanfei nesharim"', fr: 'Operation Magic Carpet (1949-50) — 49,000 olim, transferred entire community' },
+  { he: 'מִבְצָע יְהוּדֵי תֵּימָן 2016', translit: 'mivtza y\'hudei teiman 2016', fr: '2016 final airlift — 19 last remaining were brought (covertly)' },
+  { he: 'תְּפוּצוֹת תֵּימָנִיוֹת', translit: 't\'futzot teimaniyot', fr: 'Yemenite diaspora — small communities in NY, London, Detroit' },
+  { he: 'מַעֲבָר דֶּרֶךְ עַדֶן', translit: 'ma\'avar derech aden', fr: 'transit through Aden — the Hashed camp, 1948-1950' },
+  { he: 'מוֹרָשָׁה שְׁמוּרָה', translit: 'moresha sh\'mura', fr: 'preserved heritage — Israel as the only place Yemenite Judaism survives' },
+  { he: 'אֶמְצָעֵי דִּיגִיטָלִי', translit: 'emtza\'ei digitali', fr: 'digital media — YouTube/TikTok preserving Yemenite Hebrew pronunciation' },
+  { he: 'תֶּקֶס לוֹחֲמִים', translit: 'tekes lochamim', fr: 'fighters\' commemoration — Yemenites in 1948 Palmach, IDF founding' },
+  { he: 'הַחְזָרַת שְׁמוֹת', translit: 'hachzarat shemot', fr: 'reclaiming names — many third-gen restoring Hebraized-back-to-Yemenite names' },
+  { he: 'שׁוּתָפוּת אֶתְיוֹפִּית', translit: 'shutafut etyopit', fr: 'shared cause with Ethiopian community — parallel children disappearance claims' }
+];
+
+const NARRATIVE = [
+  { he: '1. מִבְצָע כָּנְפֵי נְשָׁרִים (1949-50): 49,000 יְהוּדִים מִתֵּימָן עוֹלִים בִּ-380 טִיסוֹת.', translit: '1. mivtza kanfei n\'sharim (1949-50): 49,000 y\'hudim mi-teiman olim bi-380 tisot.', fr: '1. Operation Magic Carpet (1949-50): 49,000 Jews from Yemen made aliyah on 380 flights — almost the entire community in 14 months.' },
+  { he: '2. מַחֲנֵה הָשֵׁד בְּעַדֶן וּמַחֲנוֹת הָעוֹלִים בְּיִשְׂרָאֵל הָיוּ צְפוּפִים, חוֹלָנִיִים, וּבְקוֹשִׁי מְתוּעָדִים.', translit: '2. machaneh hashed b\'aden u-machanot ha-olim b\'yisra\'el hayu tzfufim, cholaniyim, u-v\'koshi m\'tu\'adim.', fr: '2. The Hashed camp in Aden and the absorption camps in Israel were crowded, disease-ridden, and barely documented. Children were separated from parents for "medical reasons" — and many never came back.' },
+  { he: '3. רֹאשׁ הָעַיִן נוֹסְדָה ב-1949 כְּמַעֲבָרָה לִקְלֹט אֶת הָעוֹלִים מִמַּחֲנֵה הָשֵׁד — הִיא הַסֵּמֶל וְהַבִּירָה הַתֵּימָנִית הַיּוֹם.', translit: '3. rosh ha-ayin nosda b-1949 k\'ma\'abara liklot et ha-olim mi-machaneh hashed — hi ha-semel v\'ha-bira ha-teimanit hayom.', fr: '3. Rosh Ha\'ayin was founded in 1949 as a transit settlement to absorb the olim from Hashed camp — it became the symbolic capital of the Yemenite community in Israel.' },
+  { he: '4. בְּמֶשֶׁךְ עֲשָׂרוֹת שָׁנִים הַסּוּגְיָה הוּשְׁתְּקָה. רַק ב-2001 וַעֲדַת כֹּהֵן-לֶוִי הוֹדְתָה רִשְׁמִית בְּהֶעֱלְמוּת אַלְפֵי יְלָדִים.', translit: '4. b\'meshech asarot shanim ha-sugya hush\'tka. rak b-2001 va\'adat cohen-levy hodta rishmit b\'he\'al\'mut alfei yeladim.', fr: '4. For decades the issue was silenced. Only in 2001 did the Cohen-Levy Commission officially acknowledge the disappearance of ~1000+ children, mostly Yemenite, between 1948-1954.' },
+  { he: '5. ב-2016 וּב-2021 הַמְּדִינָה פָּתְחָה מִילְיוֹנֵי דַּפֵּי תִּיקִים, וּב-2018 הִקְצְתָה 162 מִילְיוֹן שֶׁ"ח כְּפִיצּוּי לְמִשְׁפָּחוֹת.', translit: '5. b-2016 u-v-2021 ha-m\'dinah pat\'cha milyonei dapei tikim, u-v-2018 hik\'tza 162 milyon shach k\'pitzui l\'mishpachot.', fr: '5. In 2016 and 2021 the State opened millions of pages of files; in 2018 it allocated 162M NIS in compensation, ~200K NIS per recognized family. The community considers this a partial — not full — reckoning.' },
+  { he: '6. הַדּוֹר הַשְּׁלִישִׁי מְחַדֵּשׁ אֶת הַזֶּהוּת. אַחְוָה (A-WA) הִפְכָה לְוִירָאלִית ב-2015 עִם "חַבִּיב גַּלְבִּי" — שִׁיר תֵּימָנִי-עֲרָבִי שֶׁפָּרַץ עוֹלָמִית.', translit: '6. ha-dor ha-shlishi m\'chadesh et ha-zehut. a-wa hafcha l\'viralit b-2015 im "habib galbi" — shir teimani-aravi she-paratz olamit.', fr: '6. The third generation is reclaiming identity. A-WA went viral in 2015 with "Habib Galbi" — a Yemenite-Arabic song that broke through globally. Pride replaced shame in a single decade.' },
+  { he: '7. בְּתֵימָן עַצְמָהּ נוֹתְרוּ ב-2025 כְּ-6 יְהוּדִים בִּלְבַד. אַלְפֵי שָׁנִים שֶׁל יַהֲדוּת תֵּימָן חַיִּים עַכְשָׁו רַק בְּיִשְׂרָאֵל.', translit: '7. b\'teiman atzmah notru b-2025 k-6 y\'hudim bilvad. alfei shanim shel yahadut teiman chayim achshav rak b\'yisra\'el.', fr: '7. In Yemen itself, only ~6 Jews remained as of 2025. Two thousand years of Yemenite Judaism now lives only in Israel — in the synagogues, songs, language, food, and the slowly healing wound.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('cities', CITIES);
+R('affair', AFFAIR);
+R('identity', IDENTITY);
+R('festivals', FESTIVALS);
+R('diaspora', DIASPORA);
+
+renderTextBlock('narrative', NARRATIVE);
+
+addMiniQuiz('Modern Yemenite-Israeli Quiz', [
+  { q: 'Rosh Ha\'ayin was founded in 1949 specifically to absorb olim from which transit camp?', options: ['Atlit', 'Hashed (Aden)', 'Cyprus', 'Marseille'], answer: 1, explain: 'Hashed camp near Aden, Yemen, staged the entire Operation Magic Carpet population. Rosh Ha\'ayin received about 17,000 of them.' },
+  { q: 'The Cohen-Levy Commission (2001) acknowledged roughly how many children disappeared?', options: ['~50', '~200', '~1000+', '~10,000'], answer: 2, explain: 'The commission officially recognized over 1,000 disappearance cases between 1948 and 1954, most from Yemenite families.' },
+  { q: 'The 2018 government framework allocated approximately how much in compensation?', options: ['16M NIS', '162M NIS', '1.6B NIS', '16B NIS'], answer: 1, explain: '162M NIS was earmarked, with roughly 200K NIS per recognized family. The community considers this a partial reckoning.' },
+  { q: 'A-WA, the band that revived Yemenite-Arabic music globally, broke out in 2015 with which song?', options: ['Habib Galbi', 'Im Nin\'alu', 'Al Quds', 'Yemen Yemen'], answer: 0, explain: '"Habib Galbi" went viral in 2015. The three Haim sisters from Shaharut sing in Yemenite-Arabic over modern beats.' },
+  { q: 'How many Jews are estimated to remain in Yemen itself as of 2025?', options: ['Around 6', 'Around 600', 'Around 6,000', 'Around 60,000'], answer: 0, explain: 'After the 2016 covert airlift of the last 19, only about 6 Jews remained in Yemen by 2025. The community is effectively extinct in its homeland.' },
+  { q: 'The annual cultural festival held in the Yemenite "capital" city is called...', options: ['Festival HaSefaradim', 'Tarbut HaTeimanim Festival', 'Festival HaMizrach', 'Diwan Festival'], answer: 1, explain: 'The Tarbut HaTeimanim Festival in Rosh Ha\'ayin is the largest annual gathering — music, food, heritage, diwan singing.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(349);
+  }
+});
+</script></body></html>

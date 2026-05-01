@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>91 — Directions In-Depth</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Directions In-Depth</h1><div class="subtitle">Lesson 91 · הוראות הגעה</div></div><div class="nav"><a href="index.html">Home</a><a href="91-directions.html" class="active">91</a></div></header>
+
+<p class="intro">Asking and giving directions in Israel — including reading street signs, navigating public transport, dealing with Israeli bluntness when getting directions ("turn left, then right, then stop the next person and ask").</p>
+
+<div class="tip"><strong>Cultural reality</strong> — Israelis love giving directions even if they don't actually know the way. They'll point confidently in any direction. Best strategy: ask 2-3 different people. Or use Waze (Israeli invention).</div>
+
+<h2>Asking for the Way</h2>
+<div class="word-list" id="asking"></div>
+
+<h2>Direction Words</h2>
+<div class="word-list" id="directions"></div>
+
+<h2>Movement Verbs</h2>
+<div class="word-list" id="verbs"></div>
+
+<h2>Landmarks</h2>
+<div class="word-list" id="landmarks"></div>
+
+<h2>Distance & Time</h2>
+<div class="word-list" id="distance"></div>
+
+<h2>Public Transit Directions</h2>
+<div class="word-list" id="transit"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Dialogue: Lost in Tel Aviv</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<h2>Useful Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 91 · directions · <a href="92-small-talk.html" style="color:var(--accent)">Next: Small Talk →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const ASKING = [
+  { he: 'סְלִיחָה, אֵיךְ מַגִּיעִים לְ...?', translit: 'slicha, eich magi\'im le...?', fr: 'excuse me, how do I get to...?' },
+  { he: 'אֵיפֹה...?', translit: 'eyfo...?', fr: 'where is...?' },
+  { he: 'אֵיךְ אֲנִי מַגִּיעַ ל...?', translit: 'eich ani magia le...?', fr: 'how do I get to... (m.)' },
+  { he: 'אַתָּה יוֹדֵעַ אֵיפֹה...?', translit: 'ata yode\'a eyfo...?', fr: 'do you know where... (m.)?' },
+  { he: 'הָלַכְתִּי לְאִבּוּד', translit: 'halachti le-ibud', fr: "I'm lost" },
+  { he: 'אִי אֶפְשָׁר לְמָצוֹא', translit: 'i efshar limtzo', fr: "I can't find it" },
+  { he: 'יֵשׁ מַפָּה?', translit: 'yesh mapa?', fr: 'is there a map?' }
+];
+const DIRECTIONS = [
+  { he: 'יָמִינָה', translit: 'yamina', fr: 'right' },
+  { he: 'שְׂמֹאלָה', translit: 'smola', fr: 'left' },
+  { he: 'יָשָׁר', translit: 'yashar', fr: 'straight' },
+  { he: 'אָחוֹרָה', translit: 'achora', fr: 'backward' },
+  { he: 'קָדִימָה', translit: 'kadima', fr: 'forward' },
+  { he: 'לְמַעְלָה', translit: 'lema\'ala', fr: 'up / above' },
+  { he: 'לְמַטָּה', translit: 'lemata', fr: 'down / below' },
+  { he: 'לְצַד', translit: 'le-tzad', fr: 'to the side of' },
+  { he: 'מוּל', translit: 'mul', fr: 'across from / opposite' },
+  { he: 'לְיַד', translit: 'leyad', fr: 'next to' },
+  { he: 'בֵּין', translit: 'beyn', fr: 'between' },
+  { he: 'מֵאַחֲרֵי', translit: 'me-acharey', fr: 'behind' },
+  { he: 'לִפְנֵי', translit: 'lifney', fr: 'before / in front of' }
+];
+const VERBS = [
+  { he: 'לִפְנוֹת', translit: 'lifnot', fr: 'to turn' },
+  { he: 'לַעֲבוֹר', translit: 'la\'avor', fr: 'to pass / go through' },
+  { he: 'לְהַמְשִׁיךְ', translit: 'lehamshich', fr: 'to continue' },
+  { he: 'לַחֲצוֹת', translit: 'lachatzot', fr: 'to cross' },
+  { he: 'לִיטוֹל', translit: 'litol', fr: 'to take (a route)' },
+  { he: 'לְהַגִּיעַ', translit: 'lehagia', fr: 'to arrive' },
+  { he: 'לָצֵאת', translit: 'latzet', fr: 'to exit' },
+  { he: 'לְהִכָּנֵס', translit: 'lehikanes', fr: 'to enter' },
+  { he: 'לְלֶכֶת בָּרֶגֶל', translit: 'laléket ba-regel', fr: 'to walk' },
+  { he: 'לִנְסוֹעַ', translit: 'linsoa', fr: 'to drive / travel' }
+];
+const LANDMARKS = [
+  { he: 'רַמְזוֹר', translit: 'ramzor', fr: 'traffic light' },
+  { he: 'צֹמֶת', translit: 'tzomet', fr: 'intersection' },
+  { he: 'כִּכָּר', translit: 'kikar', fr: 'roundabout / square' },
+  { he: 'רְחוֹב', translit: 'rechov', fr: 'street' },
+  { he: 'שְׂדֵרָה', translit: 'sdera', fr: 'boulevard' },
+  { he: 'גֶּשֶׁר', translit: 'gesher', fr: 'bridge' },
+  { he: 'מִנְהָרָה', translit: 'minhara', fr: 'tunnel' },
+  { he: 'מְכוֹנִית גְּדוֹלָה', translit: 'mechonit gdola', fr: 'big landmark / building' },
+  { he: 'בִּנְיַן הָעִיר', translit: 'binyan ha-ir', fr: 'city hall building' },
+  { he: 'מַסֶּפֶר', translit: 'masper', fr: 'house number' }
+];
+const DISTANCE = [
+  { he: 'קָרוֹב', translit: 'karov', fr: 'close' },
+  { he: 'רָחוֹק', translit: 'rachok', fr: 'far' },
+  { he: 'דַּקָּה', translit: 'daka', fr: 'a minute (away)' },
+  { he: 'חָמֵשׁ דַּקּוֹת', translit: 'chamesh dakot', fr: '5 minutes' },
+  { he: 'קִילוֹמֶטֶר', translit: 'kilometer', fr: 'kilometer' },
+  { he: 'מֶטְרִים', translit: 'metrim', fr: 'meters' },
+  { he: 'בֶּן רֶגַע', translit: 'ben rega', fr: 'in a moment' },
+  { he: 'עוֹד רְחוֹב', translit: 'od rechov', fr: 'one more street' },
+  { he: 'עוֹד שְׁתֵּי תַּחֲנוֹת', translit: 'od shtey tachanot', fr: '2 more stations' }
+];
+const TRANSIT = [
+  { he: 'תַּחֲנָה הַבָּאָה', translit: 'tachana ha-ba\'a', fr: 'next station' },
+  { he: 'הַתַּחֲנָה הַסּוֹפִית', translit: 'ha-tachana ha-sofit', fr: 'last/end station' },
+  { he: 'לְרֶדֶת', translit: 'laredet', fr: 'to get off' },
+  { he: 'לַעֲלוֹת', translit: 'la\'alot', fr: 'to get on' },
+  { he: 'לְהַחְלִיף קַו', translit: 'lehachlif kav', fr: 'to change line' },
+  { he: 'לִנְסוֹעַ עַד', translit: 'linsoa ad', fr: 'to ride until' },
+  { he: 'מַשְׁאַב הָאוֹטוֹבּוּס', translit: 'mash\'av ha-otobus', fr: 'bus stop' }
+];
+const DIALOGUE = [
+  { speaker: 'A', he: 'סְלִיחָה גְּבֶרֶת, אֵיךְ מַגִּיעִים לִשְׂדֵרוֹת רוֹטְשִׁילְד?', translit: "Slicha gveret, eich magi'im li-Sdrot Rothschild?", fr: 'Excuse me ma\'am, how do I get to Rothschild Boulevard?' },
+  { speaker: 'B', he: 'אַתָּה הוֹלֵךְ יָשָׁר, פּוֹנֶה יָמִינָה בָּרַמְזוֹר.', translit: 'Ata holech yashar, pone yamina ba-ramzor.', fr: 'You go straight, turn right at the traffic light.' },
+  { speaker: 'A', he: 'יָשָׁר וְאָז יָמִינָה?', translit: 'Yashar ve-az yamina?', fr: 'Straight and then right?' },
+  { speaker: 'B', he: 'נָכוֹן. אַחֲרֵי הָרַמְזוֹר תַּמְשִׁיךְ עוֹד שְׁלוֹשָׁה רְחוֹבוֹת.', translit: 'Nachon. Acharey ha-ramzor tamshich od shlosha rechovot.', fr: 'Right. After the light, continue 3 more streets.' },
+  { speaker: 'A', he: 'כַּמָּה זְמָן זֶה לוֹקֵחַ בָּרֶגֶל?', translit: "Kama zman ze loke'ach ba-regel?", fr: 'How long does it take on foot?' },
+  { speaker: 'B', he: 'בְּעֶרֶךְ עֶשֶׂר דַּקּוֹת. תֵּהָנֶה!', translit: 'Be-erech eser dakot. Tehane!', fr: 'About 10 minutes. Enjoy!' },
+  { speaker: 'A', he: 'תּוֹדָה רַבָּה!', translit: 'Toda raba!', fr: 'Thanks a lot!' }
+];
+const PHRASES = [
+  { he: 'תּוּכַל לְהַסְבִּיר לִי שׁוּב?', translit: 'tuchal lehasbir li shuv?', fr: 'can you explain it again? (m.)' },
+  { he: 'אֲנִי לֹא מַכִּיר אֶת הָאֵזוֹר', translit: 'ani lo makir et ha-ezor', fr: "I don't know the area (m.)" },
+  { he: 'הַאִם זֶה רָחוֹק?', translit: 'ha\'im ze rachok?', fr: 'is it far?' },
+  { he: 'אֵיזֶה אוֹטוֹבּוּס לוֹקֵחַ אוֹתִי לְשָׁם?', translit: 'eyze otobus loke\'ach oti le-sham?', fr: 'which bus takes me there?' },
+  { he: 'אֲנִי אֶחָד עִם הַ-Waze', translit: 'ani echad im ha-Waze', fr: "I'm one with Waze" },
+  { he: 'יָמִינָה אַחֲרֵי הַתַּחֲנָה', translit: 'yamina acharey ha-tachana', fr: 'right after the station' },
+  { he: 'אֲנִי שׁוֹאֵל מִישֶׁהוּ אַחֵר', translit: 'ani sho\'el mishehu acher', fr: "I'll ask someone else (m.)" },
+  { he: 'הַמַּפָּה שֶׁלִּי לֹא עוֹבֶדֶת', translit: 'ha-mapa sheli lo ovedet', fr: "my map isn't working" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('asking', ASKING); R('directions', DIRECTIONS); R('verbs', VERBS); R('landmarks', LANDMARKS); R('distance', DISTANCE); R('transit', TRANSIT); R('phrases', PHRASES);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `<div style="display: flex; gap: 16px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span><div style="flex: 1;"><div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div><div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div><div style="font-size: 14px; margin-top: 4px;">${line.fr}</div></div></div>`;
+  dialogueEl.appendChild(el);
+});
+async function playDialogue() { for (const line of DIALOGUE) { speak(line.he, 0.8); await new Promise(r => setTimeout(r, 2400)); } markLessonDone('directions'); }
+
+addExtraVocab('Cardinal Directions', [
+  { he: 'צָפוֹן', translit: 'tzafon', fr: 'north' },
+  { he: 'דָּרוֹם', translit: 'darom', fr: 'south' },
+  { he: 'מִזְרָח', translit: 'mizrach', fr: 'east' },
+  { he: 'מַעֲרָב', translit: 'ma\'arav', fr: 'west' },
+  { he: 'צְפוֹנָה', translit: 'tzafona', fr: 'northward' },
+  { he: 'דָּרוֹמָה', translit: 'daroma', fr: 'southward' },
+  { he: 'מִזְרָחָה', translit: 'mizracha', fr: 'eastward' },
+  { he: 'מַעֲרָבָה', translit: 'ma\'arava', fr: 'westward' },
+  { he: 'צָפוֹן-מִזְרָח', translit: 'tzafon-mizrach', fr: 'northeast' },
+  { he: 'דָּרוֹם-מַעֲרָב', translit: 'darom-ma\'arav', fr: 'southwest' },
+  { he: 'מַצְפֵּן', translit: 'matzpen', fr: 'compass' },
+  { he: 'מַפָּה', translit: 'mapa', fr: 'map' },
+  { he: 'נִיווט', translit: 'nivut', fr: 'navigation' },
+  { he: 'WAZE', translit: 'Waze', fr: 'Waze (Israeli GPS app)' }
+]);
+
+addMiniQuiz('Directions Quiz', [
+  { q: 'Right = ', options: ['שְׂמֹאל', 'יָמִין', 'יָשָׁר', 'אָחוֹרָה'], answer: 1 },
+  { q: '"Turn left at the traffic light" =', options: ['פּוֹנֶה יָמִינָה בָּרַמְזוֹר', 'פּוֹנֶה שְׂמֹאלָה בָּרַמְזוֹר', 'יָשָׁר עַד הָרַמְזוֹר', 'אָחוֹרָה מִן הָרַמְזוֹר'], answer: 1 },
+  { q: '"Roundabout" =', options: ['רַמְזוֹר', 'כִּכָּר', 'גֶּשֶׁר', 'תַּחֲנָה'], answer: 1 },
+  { q: '"Across from" =', options: ['לְיַד', 'מוּל', 'תַּחַת', 'אַחֲרֵי'], answer: 1 },
+  { q: 'Israeli GPS app of choice =', options: ['Apple Maps', 'Waze (Israeli invention!)', 'Google Maps only', 'No GPS'], answer: 1 }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('directions'); } });
+</script></body></html>

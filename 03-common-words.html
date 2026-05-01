@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 — First Words</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>First Words</h1>
+    <div class="subtitle">Lesson 03 · מילים בסיסיות</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="01-alefbet.html">01</a>
+    <a href="02-niqqud.html">02</a>
+    <a href="03-common-words.html" class="active">03</a>
+    <a href="04-greetings.html">04</a>
+    <a href="05-numbers.html">05</a>
+  </div>
+</header>
+
+<p class="intro">
+  About 40 everyday words grouped by theme. Click the play button to hear pronunciation. Quiz at the end to test your English → Hebrew memory.
+</p>
+
+<div class="toolbar">
+  <button class="btn" data-cat="all">All</button>
+  <button class="btn" data-cat="family">Family</button>
+  <button class="btn" data-cat="home">Home</button>
+  <button class="btn" data-cat="food">Food</button>
+  <button class="btn" data-cat="places">Places</button>
+  <button class="btn" data-cat="time">Time</button>
+  <button class="btn" onclick="document.getElementById('quiz').scrollIntoView()">Quiz ↓</button>
+</div>
+
+<h2 id="cat-title">All Words</h2>
+<div class="word-list" id="word-list"></div>
+
+<hr class="section-divider">
+
+<div class="quiz" id="quiz">
+  <div class="score" id="score">Score: 0/0</div>
+  <h2 style="margin-top:0">Quiz — Pick the Hebrew Word</h2>
+  <div style="font-size: 22px; margin: 20px 0; color: var(--text-dim)">How do you say <span id="quiz-fr" style="color: var(--text); font-weight: 500"></span> in Hebrew?</div>
+  <div class="options" id="quiz-options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div style="margin-top:24px;">
+    <button class="btn btn-primary" onclick="newQuestion()">New question</button>
+    <button class="btn" onclick="resetQuiz()">Reset</button>
+  </div>
+</div>
+
+<footer>
+  Lesson 03 · 40+ words · <a href="04-greetings.html" style="color:var(--accent)">Next: Greetings →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const WORDS = [
+  // Family
+  { he: 'אַבָּא',     translit: 'aba',     fr: 'dad',           cat: 'family' },
+  { he: 'אִמָּא',     translit: 'ima',     fr: 'mom',           cat: 'family' },
+  { he: 'אָח',        translit: 'ach',     fr: 'brother',       cat: 'family' },
+  { he: 'אָחוֹת',     translit: 'achot',   fr: 'sister',        cat: 'family' },
+  { he: 'יֶלֶד',      translit: 'yeled',   fr: 'child (boy)',   cat: 'family' },
+  { he: 'יַלְדָּה',   translit: 'yalda',   fr: 'child (girl)',  cat: 'family' },
+  { he: 'סָבָּא',     translit: 'saba',    fr: 'grandfather',   cat: 'family' },
+  { he: 'סָבְתָא',    translit: 'savta',   fr: 'grandmother',   cat: 'family' },
+  { he: 'חָבֵר',      translit: 'chaver',  fr: 'friend (m.)',   cat: 'family' },
+  { he: 'חֲבֵרָה',    translit: 'chavera', fr: 'friend (f.)',   cat: 'family' },
+
+  // Home
+  { he: 'בַּיִת',     translit: 'bayit',    fr: 'house',         cat: 'home' },
+  { he: 'דֶּלֶת',     translit: 'delet',    fr: 'door',          cat: 'home' },
+  { he: 'חַלּוֹן',    translit: 'chalon',   fr: 'window',        cat: 'home' },
+  { he: 'שֻׁלְחָן',   translit: 'shulchan', fr: 'table',         cat: 'home' },
+  { he: 'כִּסֵּא',    translit: 'kise',     fr: 'chair',         cat: 'home' },
+  { he: 'מִטָּה',     translit: 'mita',     fr: 'bed',           cat: 'home' },
+  { he: 'סֵפֶר',      translit: 'sefer',    fr: 'book',          cat: 'home' },
+  { he: 'מַחְשֵׁב',   translit: 'machshev', fr: 'computer',      cat: 'home' },
+
+  // Food
+  { he: 'מַיִם',      translit: 'mayim',    fr: 'water',         cat: 'food' },
+  { he: 'לֶחֶם',      translit: 'lechem',   fr: 'bread',         cat: 'food' },
+  { he: 'גְּבִינָה',  translit: 'gvina',    fr: 'cheese',        cat: 'food' },
+  { he: 'חָלָב',      translit: 'chalav',   fr: 'milk',          cat: 'food' },
+  { he: 'בֵּיצָה',    translit: 'beytza',   fr: 'egg',           cat: 'food' },
+  { he: 'בָּשָׂר',    translit: 'basar',    fr: 'meat',          cat: 'food' },
+  { he: 'דָּג',       translit: 'dag',      fr: 'fish',          cat: 'food' },
+  { he: 'יַיִן',      translit: 'yayin',    fr: 'wine',          cat: 'food' },
+  { he: 'תַּפּוּחַ',  translit: 'tapuach',  fr: 'apple',         cat: 'food' },
+  { he: 'קָפֶה',      translit: 'kafe',     fr: 'coffee',        cat: 'food' },
+
+  // Places
+  { he: 'יְרוּשָׁלַיִם', translit: 'Yerushalayim', fr: 'Jerusalem', cat: 'places' },
+  { he: 'תֵּל אָבִיב',   translit: 'Tel Aviv',     fr: 'Tel Aviv',  cat: 'places' },
+  { he: 'יִשְׂרָאֵל',   translit: 'Yisrael',      fr: 'Israel',     cat: 'places' },
+  { he: 'רְחוֹב',       translit: 'rechov',       fr: 'street',     cat: 'places' },
+  { he: 'עִיר',         translit: 'ir',           fr: 'city',       cat: 'places' },
+  { he: 'חֲנוּת',       translit: 'chanut',       fr: 'shop',       cat: 'places' },
+  { he: 'שׁוּק',        translit: 'shuk',         fr: 'market',     cat: 'places' },
+  { he: 'בֵּית קָפֶה',  translit: 'beit kafe',    fr: 'café',       cat: 'places' },
+
+  // Time
+  { he: 'יוֹם',         translit: 'yom',     fr: 'day',     cat: 'time' },
+  { he: 'לַיְלָה',      translit: 'layla',   fr: 'night',   cat: 'time' },
+  { he: 'שָׁבוּעַ',     translit: 'shavua',  fr: 'week',    cat: 'time' },
+  { he: 'חוֹדֶשׁ',      translit: 'chodesh', fr: 'month',   cat: 'time' },
+  { he: 'שָׁנָה',       translit: 'shana',   fr: 'year',    cat: 'time' },
+  { he: 'שַׁבָּת',      translit: 'shabat',  fr: 'sabbath', cat: 'time' },
+  { he: 'שָׁעָה',       translit: "sha'a",   fr: 'hour',    cat: 'time' }
+];
+
+let activeCat = 'all';
+
+function renderWords() {
+  const list = document.getElementById('word-list');
+  list.innerHTML = '';
+  const filtered = activeCat === 'all' ? WORDS : WORDS.filter(w => w.cat === activeCat);
+  filtered.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn" title="Listen">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+  document.getElementById('cat-title').textContent =
+    activeCat === 'all' ? 'All Words' :
+    activeCat === 'family' ? 'Family' :
+    activeCat === 'home' ? 'Home' :
+    activeCat === 'food' ? 'Food' :
+    activeCat === 'places' ? 'Places' :
+    'Time';
+}
+
+document.querySelectorAll('[data-cat]').forEach(b => {
+  b.addEventListener('click', () => {
+    activeCat = b.dataset.cat;
+    renderWords();
+  });
+});
+
+renderWords();
+
+let quizScore = { correct: 0, total: 0 };
+let currentQuestion = null;
+
+function newQuestion() {
+  const target = WORDS[Math.floor(Math.random() * WORDS.length)];
+  currentQuestion = target;
+
+  let options = [target];
+  while (options.length < 4) {
+    const cand = WORDS[Math.floor(Math.random() * WORDS.length)];
+    if (!options.find(o => o.he === cand.he)) options.push(cand);
+  }
+  options = shuffle(options);
+
+  document.getElementById('quiz-fr').textContent = target.fr;
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.style.fontFamily = "'Frank Ruhl Libre', 'David', serif";
+    btn.style.fontSize = '20px';
+    btn.style.direction = 'rtl';
+    btn.textContent = o.he;
+    btn.onclick = () => answer(o, btn);
+    opts.appendChild(btn);
+  });
+  document.getElementById('feedback').textContent = '';
+}
+
+function answer(option, btn) {
+  quizScore.total++;
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  if (option.he === currentQuestion.he) {
+    quizScore.correct++;
+    btn.classList.add('correct');
+    speak(currentQuestion.he, 0.85);
+    document.getElementById('feedback').textContent =
+      `${currentQuestion.he} (${currentQuestion.translit}) — ${currentQuestion.fr}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-option').forEach(b => {
+      if (b.textContent === currentQuestion.he) b.classList.add('correct');
+    });
+    document.getElementById('feedback').textContent =
+      `Answer: ${currentQuestion.he} (${currentQuestion.translit})`;
+  }
+  document.getElementById('score').textContent = `Score: ${quizScore.correct}/${quizScore.total}`;
+  if (quizScore.total >= 8 && quizScore.correct / quizScore.total >= 0.7) {
+    markLessonDone('words');
+  }
+}
+
+function resetQuiz() {
+  quizScore = { correct: 0, total: 0 };
+  document.getElementById('score').textContent = 'Score: 0/0';
+  newQuestion();
+}
+
+newQuestion();
+
+addExtraVocab('Most Common Adjectives', [
+  { he: 'טוֹב', translit: 'tov', fr: 'good' },
+  { he: 'רַע', translit: 'ra', fr: 'bad' },
+  { he: 'גָּדוֹל', translit: 'gadol', fr: 'big' },
+  { he: 'קָטָן', translit: 'katan', fr: 'small' },
+  { he: 'יָפֶה', translit: 'yafe', fr: 'beautiful' },
+  { he: 'חָדָשׁ', translit: 'chadash', fr: 'new' },
+  { he: 'יָשָׁן', translit: 'yashan', fr: 'old' },
+  { he: 'צָעִיר', translit: 'tza\'ir', fr: 'young' },
+  { he: 'זָקֵן', translit: 'zaken', fr: 'old (person)' },
+  { he: 'חַם', translit: 'cham', fr: 'hot' },
+  { he: 'קַר', translit: 'kar', fr: 'cold' },
+  { he: 'שָׂמֵחַ', translit: 'sameach', fr: 'happy' },
+  { he: 'עָצוּב', translit: 'atzuv', fr: 'sad' },
+  { he: 'עָיֵף', translit: 'ayef', fr: 'tired' },
+  { he: 'רָעֵב', translit: 'ra\'ev', fr: 'hungry' },
+  { he: 'צָמֵא', translit: 'tzame', fr: 'thirsty' }
+]);
+
+addExtraVocab('Connectors That Make You Sound Fluent', [
+  { he: 'אֲבָל', translit: 'aval', fr: 'but' },
+  { he: 'כִּי', translit: 'ki', fr: 'because' },
+  { he: 'לָכֵן', translit: 'lachen', fr: 'therefore' },
+  { he: 'בִּגְלַל', translit: 'biglal', fr: 'because of' },
+  { he: 'אַף עַל פִּי שֶׁ', translit: 'af al pi she', fr: 'although' },
+  { he: 'אִם כִּי', translit: 'im ki', fr: 'even though' },
+  { he: 'אוֹ', translit: 'o', fr: 'or' },
+  { he: 'אוֹ... אוֹ', translit: 'o... o', fr: 'either... or' },
+  { he: 'גַּם וְ-גַּם', translit: 'gam ve-gam', fr: 'both... and' },
+  { he: 'לֹא רַק... אֶלָא גַּם', translit: 'lo rak... ela gam', fr: 'not only... but also' },
+  { he: 'בְּקִצּוּר', translit: 'be-kitzur', fr: 'in short' },
+  { he: 'בִּפְרָט', translit: 'bifrat', fr: 'specifically' },
+  { he: 'לְמָשָׁל', translit: 'le-mashal', fr: 'for example' },
+  { he: 'כְּלוֹמַר', translit: 'klomar', fr: 'that is to say' },
+  { he: 'בְּכָל זֹאת', translit: 'be-chol zot', fr: 'nevertheless' },
+  { he: 'בְּסוֹפוֹ שֶׁל דָּבָר', translit: 'be-sofo shel davar', fr: 'in the end' }
+]);
+
+addExtraVocab('Quantity Words', [
+  { he: 'הַרְבֵּה', translit: 'harbe', fr: 'a lot' },
+  { he: 'מְעַט', translit: 'me\'at', fr: 'a little' },
+  { he: 'קְצָת', translit: 'ktzat', fr: 'a bit' },
+  { he: 'מַסְפִּיק', translit: 'maspik', fr: 'enough' },
+  { he: 'יוֹתֵר מִדַּי', translit: 'yoter miday', fr: 'too much' },
+  { he: 'פָּחוֹת', translit: 'pachot', fr: 'less' },
+  { he: 'יוֹתֵר', translit: 'yoter', fr: 'more' },
+  { he: 'הַכֹּל', translit: 'ha-kol', fr: 'everything' },
+  { he: 'כְּלוּם', translit: 'klum', fr: 'nothing' },
+  { he: 'מַשֶּׁהוּ', translit: 'mashehu', fr: 'something' },
+  { he: 'אַף אֶחָד', translit: 'af echad', fr: 'no one' },
+  { he: 'מִישֶׁהוּ', translit: 'mishehu', fr: 'someone' },
+  { he: 'כָּל אֶחָד', translit: 'kol echad', fr: 'everyone (each one)' },
+  { he: 'רֹב', translit: 'rov', fr: 'most of' },
+  { he: 'קְצָת מִ', translit: 'ktzat mi', fr: 'a few of' }
+]);
+
+addMiniQuiz('Common Words Quiz', [
+  { q: 'How do you say "I don\'t know"?', options: ['אֲנִי לֹא יוֹדֵעַ', 'אֲנִי לֹא רוֹצֶה', 'אֲנִי לֹא יָכוֹל', 'אֲנִי לֹא צָרִיךְ'], answer: 0, explain: 'ani lo yode\'a (m.) / ani lo yoda\'at (f.)' },
+  { q: 'אַף אֶחָד means...', options: ['everyone', 'someone', 'no one', 'anyone'], answer: 2 },
+  { q: 'יוֹתֵר מִדַּי =', options: ['too much', 'a little', 'just enough', 'not enough'], answer: 0 },
+  { q: 'How to say "for example"?', options: ['בְּכָל זֹאת', 'לְמָשָׁל', 'בְּקִצּוּר', 'אֲבָל'], answer: 1 },
+  { q: 'יֵשׁ vs אֵין — pick correctly: "There is no money" =', options: ['יֵשׁ כֶּסֶף', 'אֵין כֶּסֶף', 'הָיָה כֶּסֶף', 'יִהְיֶה כֶּסֶף'], answer: 1, explain: 'eyn = there is not / no' }
+]);
+
+addCulturalText('Top 30 Most Common Hebrew Words (Frequency)', 'Mastering these covers about 50% of any everyday text. Spaced repetition over 7 days = locked in.', [
+  { he: 'הוּא, הִיא, אֲנִי, אַתָּה, אַתְּ', translit: "hu, hi, ani, ata, at", fr: 'he, she, I, you (m), you (f)' },
+  { he: 'אֲנַחְנוּ, אַתֶּם, הֵם', translit: "anachnu, atem, hem", fr: 'we, you (pl), they' },
+  { he: 'יֵשׁ, אֵין', translit: "yesh, eyn", fr: 'there is, there is not' },
+  { he: 'כֵּן, לֹא, אוּלַי', translit: "ken, lo, ulay", fr: 'yes, no, maybe' },
+  { he: 'מָה, מִי, אֵיפֹה, מָתַי, לָמָּה, אֵיךְ', translit: "ma, mi, eyfo, matay, lama, eich", fr: 'what, who, where, when, why, how' },
+  { he: 'גַּם, רַק, כְּבָר', translit: "gam, rak, kvar", fr: 'also, only, already' },
+  { he: 'טוֹב, רַע, יָפֶה, גָּדוֹל, קָטָן', translit: "tov, ra, yafe, gadol, katan", fr: 'good, bad, beautiful, big, small' },
+  { he: 'הָיָה, יֵשׁ, אוֹמֵר, הוֹלֵךְ, רוֹאֶה', translit: "haya, yesh, omer, holech, ro\'e", fr: 'was, there is, says, goes, sees' },
+  { he: 'בַּיִת, אִישׁ, יוֹם, שָׁנָה, יָד, יֶלֶד', translit: "bayit, ish, yom, shana, yad, yeled", fr: 'house, man, day, year, hand, child' },
+  { he: 'עַל, עִם, בְּלִי, בִּגְלַל', translit: "al, im, bli, biglal", fr: 'on, with, without, because' },
+  { he: 'הַיּוֹם, אֶתְמוֹל, מָחָר', translit: "ha-yom, etmol, machar", fr: 'today, yesterday, tomorrow' }
+]);
+</script>
+
+</body>
+</html>

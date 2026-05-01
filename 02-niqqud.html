@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 — Vowels (Niqqud)</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Vowels (Niqqud)</h1>
+    <div class="subtitle">Lesson 02 · ניקוד</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="01-alefbet.html">01</a>
+    <a href="02-niqqud.html" class="active">02</a>
+    <a href="03-common-words.html">03</a>
+    <a href="04-greetings.html">04</a>
+    <a href="05-numbers.html">05</a>
+  </div>
+</header>
+
+<p class="intro">
+  Written Hebrew has only consonants. Vowels are marked by dots and dashes around or below letters — this system is called <em>niqqud</em>. In daily life, Israelis read without niqqud, but it's essential for learning correct pronunciation as a beginner.
+</p>
+
+<h2>The 5 Main Vowels</h2>
+<div class="grid-letters" id="vowels-main"></div>
+
+<h2>Other Vowels</h2>
+<div class="grid-letters" id="vowels-other"></div>
+
+<div class="tip">
+  <strong>Position</strong> — Most niqqudot sit <em>under</em> the letter. Cholam (dot above-left) and Shuruk (vav with dot inside) are exceptions.
+</div>
+
+<div class="tip">
+  <strong>Demo on Bet (ב)</strong> — The same letter Bet takes different sounds depending on niqqud: בָּ (ba), בֶּ (beh), בִּ (bi), בּוֹ (bo), בּוּ (bu).
+</div>
+
+<h2>Demonstration on the Letter Bet</h2>
+<div class="grid-letters" id="bet-demo"></div>
+
+<hr class="section-divider">
+
+<h2>Test Words (read and listen)</h2>
+<div class="word-list" id="test-words"></div>
+
+<footer>
+  Lesson 02 · 10 vowels · <a href="03-common-words.html" style="color:var(--accent)">Next: First Words →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const VOWELS_MAIN = [
+  { he: 'בָּ', name: 'Kamatz', translit: 'a',  sound: 'long A as in "father"' },
+  { he: 'בַּ', name: 'Patach', translit: 'a',  sound: 'short A' },
+  { he: 'בֶּ', name: 'Segol',  translit: 'eh', sound: 'EH as in "bed"' },
+  { he: 'בִּ', name: 'Chirik', translit: 'i',  sound: 'EE as in "see"' },
+  { he: 'בּוֹ', name: 'Cholam', translit: 'o',  sound: 'O as in "go"' }
+];
+
+const VOWELS_OTHER = [
+  { he: 'בֵּ', name: 'Tzere',  translit: 'ay', sound: 'AY as in "say"' },
+  { he: 'בּוּ', name: 'Shuruk', translit: 'u',  sound: 'OO as in "food"' },
+  { he: 'בֻּ', name: 'Kubutz',  translit: 'u',  sound: 'short OO' },
+  { he: 'בְּ', name: 'Sheva',   translit: 'e/∅', sound: 'silent E or very short' },
+  { he: 'בֲ', name: 'Chataf',   translit: 'a',  sound: 'ultra-short A (under gutturals)' }
+];
+
+const BET_DEMO = [
+  { he: 'בָּ',  name: 'BA',  translit: 'ba',  sound: 'Kamatz vowel' },
+  { he: 'בֵּ',  name: 'BAY', translit: 'bay', sound: 'Tzere vowel' },
+  { he: 'בִּ',  name: 'BI',  translit: 'bi',  sound: 'Chirik vowel' },
+  { he: 'בּוֹ', name: 'BO',  translit: 'bo',  sound: 'Cholam vowel' },
+  { he: 'בּוּ', name: 'BU',  translit: 'bu',  sound: 'Shuruk vowel' }
+];
+
+const TEST_WORDS = [
+  { he: 'אַבָּא',   translit: 'aba',    fr: 'dad' },
+  { he: 'אִמָּא',   translit: 'ima',    fr: 'mom' },
+  { he: 'יֶלֶד',    translit: 'yeled',  fr: 'child (boy)' },
+  { he: 'יַלְדָּה', translit: 'yalda',  fr: 'child (girl)' },
+  { he: 'בַּיִת',   translit: 'bayit',  fr: 'house' },
+  { he: 'מַיִם',    translit: 'mayim',  fr: 'water' },
+  { he: 'אוֹר',     translit: 'or',     fr: 'light' },
+  { he: 'שָׁלוֹם',  translit: 'shalom', fr: 'peace / hello' }
+];
+
+function renderVowelGrid(elementId, items) {
+  const grid = document.getElementById(elementId);
+  items.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'letter-card';
+    card.innerHTML = `
+      <div class="he">${v.he}</div>
+      <div class="name">${v.name}</div>
+      <div class="translit">${v.translit}</div>
+      <div class="sound">${v.sound}</div>
+    `;
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      if (card.classList.contains('flipped')) speak(v.he, 0.7);
+    });
+    grid.appendChild(card);
+  });
+}
+
+renderVowelGrid('vowels-main', VOWELS_MAIN);
+renderVowelGrid('vowels-other', VOWELS_OTHER);
+renderVowelGrid('bet-demo', BET_DEMO);
+
+const wordsContainer = document.getElementById('test-words');
+TEST_WORDS.forEach(w => {
+  const row = document.createElement('div');
+  row.className = 'word-row';
+  row.innerHTML = `
+    <div class="he">${w.he}</div>
+    <div class="translit">${w.translit}</div>
+    <div class="fr">${w.fr}</div>
+    <button class="btn icon-btn" title="Listen" aria-label="Listen ${w.he}">▶</button>
+  `;
+  row.querySelector('button').addEventListener('click', () => speak(w.he, 0.8));
+  wordsContainer.appendChild(row);
+});
+
+let viewedAll = false;
+document.querySelectorAll('.letter-card').forEach((c, i, arr) => {
+  c.addEventListener('click', () => {
+    const flipped = document.querySelectorAll('.letter-card.flipped').length;
+    if (flipped >= arr.length * 0.7 && !viewedAll) {
+      viewedAll = true;
+      markLessonDone('niqqud');
+      flashHint('Lesson 02 complete');
+    }
+  });
+});
+
+addExtraVocab('All 10 Niqqud Vowel Marks', [
+  { he: 'בָּ — קָמַץ', translit: 'kamatz (a)', fr: 'a as in "father"' },
+  { he: 'בַּ — פַּתַּח', translit: 'patach (a)', fr: 'a as in "father" (short)' },
+  { he: 'בֶּ — סֶגוֹל', translit: 'segol (e)', fr: 'e as in "bed"' },
+  { he: 'בֵּ — צֵירֶה', translit: 'tzere (ey)', fr: 'ey as in "they"' },
+  { he: 'בִּ — חִירִיק', translit: 'chirik (i)', fr: 'i as in "ski"' },
+  { he: 'בּוֹ — חוֹלָם', translit: 'cholam (o)', fr: 'o as in "boat"' },
+  { he: 'בֻּ — קֻבּוּץ', translit: 'kubutz (u)', fr: 'u as in "boot"' },
+  { he: 'בּוּ — שׁוּרוּק', translit: 'shuruk (u)', fr: 'u as in "boot" (long)' },
+  { he: 'בְּ — שְׁוָא', translit: 'sheva (silent/quick e)', fr: 'half-vowel or silent' },
+  { he: 'דָּגֵשׁ — בּ', translit: 'dagesh', fr: 'dot inside letter (doubles/hardens)' }
+]);
+
+addMiniQuiz('Niqqud Quiz', [
+  { q: 'Which sound does the dot under a letter (kamatz) make?', options: ['"a" (ah)', '"i" (ee)', '"u" (oo)', '"e" (eh)'], answer: 0, explain: 'Kamatz = "ah" sound' },
+  { q: 'Which sound does the 3 dots under (segol) make?', options: ['"a"', '"e"', '"i"', '"o"'], answer: 1, explain: 'Segol = "eh" sound' },
+  { q: 'Modern Israeli Hebrew uses niqqud...', options: ['Always', 'Never', 'Mostly in children\'s books and prayer texts', 'Only in advertisements'], answer: 2 },
+  { q: 'Two-dot vertical sign (sh\'va) =', options: ['"a"', 'Quick "e" or silent', '"u"', '"o"'], answer: 1, explain: 'Sh\'va — fast "e" or silent break' },
+  { q: 'Single dot inside a letter (dagesh) =', options: ['Always silent', 'Doubles or hardens the consonant', 'Means a vowel', 'Decorative'], answer: 1 }
+]);
+</script>
+
+</body>
+</html>

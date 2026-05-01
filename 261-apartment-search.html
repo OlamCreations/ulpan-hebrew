@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>261 — Apartment Search</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Apartment Search — Chipus Dira</h1><div class="subtitle">Lesson 261 · חִפּוּשׂ דִּירָה</div></div><div class="nav"><a href="index.html">Home</a><a href="261-apartment-search.html" class="active">261</a></div></header>
+
+<p class="intro">Israeli apartment search starts on Yad2 (yad2.co.il, the Craigslist of Israel) or Madlan (data-driven). Major Anglo-friendly platforms: Facebook groups (Tel Aviv Apartments, etc), Onmap, Homeless. Tel Aviv 1-bedroom rents: ~5500-9000 NIS/month. Jerusalem: ~4000-7000 NIS. Periphery (Be\'er Sheva, Ashdod): ~2500-4500 NIS. As an oleh, Yad2 is essential — most landlords don\'t speak English. WhatsApp/phone is the standard contact channel.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Yad2 listings are direct and brief: "3 chedarim, 7th floor, sukkah balcony, 6500 NIS." Most landlords self-list rather than use brokers (mathlamut). When you call, expect 30-second pitches; bring questions. Visit ASAP — Israeli rentals get snapped up in days. Brokers (mathlamut) charge a month\'s rent; many olim prefer direct contact. 1-month deposit + 1-month rent + bituach (insurance) standard upfront. Ask: can you read the contract, what bills are included, what\'s the kvish status (pet policy, smoking).</div>
+
+<h2>Search Basics</h2>
+<div class="word-list" id="basics"></div>
+
+<h2>Search Platforms</h2>
+<div class="word-list" id="platforms"></div>
+
+<h2>Apartment Features</h2>
+<div class="word-list" id="features"></div>
+
+<h2>Pricing & Payments</h2>
+<div class="word-list" id="pricing"></div>
+
+<h2>Conversation Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>Calling a Yad2 Listing</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh calls a Tel Aviv landlord about a 2-bedroom listing.</div>
+  <div id="apartment-call"></div>
+</div>
+
+<footer>Lesson 261 · Apartment Search · <a href="262-rental-contract.html" style="color:var(--accent)">Next: Rental Contract →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BASICS = [
+  { he: 'חִפּוּשׂ דִּירָה', translit: 'chipus dira', fr: 'apartment search' },
+  { he: 'דִּירָה', translit: 'dira', fr: 'apartment' },
+  { he: 'בַּיִת', translit: 'bayit', fr: 'house / home' },
+  { he: '3 חֲדָרִים', translit: '3 chedarim', fr: '3-room (= 1BR + living room)' },
+  { he: 'חֶדֶר', translit: 'hadar', fr: 'room' },
+  { he: 'סָלוֹן', translit: 'salon', fr: 'living room' },
+  { he: 'מִטְבָּח', translit: 'mitbach', fr: 'kitchen' },
+  { he: 'שֵׁרוּתִים', translit: 'sherutim', fr: 'bathroom / toilet' },
+  { he: 'מִקְלַחַת', translit: 'miklachat', fr: 'shower' },
+  { he: 'מִרְפֶּסֶת', translit: 'poket / mirpeset', fr: 'balcony' }
+];
+const PLATFORMS = [
+  { he: 'יַד2', translit: 'Yad2', fr: 'Yad2.co.il (largest classifieds)' },
+  { he: 'מַדְלָן', translit: 'Madlan', fr: 'Madlan (data-driven listings)' },
+  { he: 'אוֹנְמַפּ', translit: 'Onmap', fr: 'Onmap (map-based search)' },
+  { he: 'הוֹמְלֶס', translit: 'Homeless', fr: 'Homeless (rentals platform)' },
+  { he: 'קְבוּצוֹת פֵייסְבּוּק', translit: 'kvutzot Facebook', fr: 'Facebook groups (Anglo-friendly)' },
+  { he: 'מְתַוֵּךְ', translit: 'mathlamut / metavech', fr: 'broker / real estate agent' },
+  { he: 'מְתַמְחֵר', translit: 'm\'tzayan', fr: 'pricer / appraiser' },
+  { he: 'בְּגַבַּאי', translit: 'b\'gabai', fr: 'private listing (no broker)' },
+  { he: 'שְׁכִירַת מִשְׁנֶה', translit: 'm\'agen / sublet', fr: 'sublet' },
+  { he: 'הַצָּעָה', translit: 'ma\'arav / hatza\'a', fr: 'offer' }
+];
+const FEATURES = [
+  { he: 'מִרְפֶּסֶת סוּכָּה', translit: 'sukkah balcony', fr: 'large balcony (TLV common)' },
+  { he: 'מַמָּ"ד', translit: 'mamad', fr: 'safe room (mandatory since 1992)' },
+  { he: 'צָפוֹן', translit: 'tzafon', fr: 'north-facing' },
+  { he: 'דָּרוֹם', translit: 'darom', fr: 'south-facing' },
+  { he: 'מִרְפֶּסֶת', translit: 'm\'rapeset', fr: 'terrace' },
+  { he: 'מַחְסָן', translit: 'm\'arov / machsan', fr: 'storage area' },
+  { he: 'כִּוּוּן שֶׁמֶשׁ', translit: 'avshemet / kivun shemesh', fr: 'sun direction' },
+  { he: 'מַעֲלִית', translit: 'm\'arvat / ma\'alit', fr: 'elevator' },
+  { he: 'חֲנִיָּה', translit: 'chaniya', fr: 'parking' },
+  { he: 'מִקְלָט', translit: 'miklat', fr: 'bomb shelter' }
+];
+const PRICING = [
+  { he: 'שְׂכִירוּת', translit: 'sechira', fr: 'rent' },
+  { he: 'מְחִיר', translit: 'mechir', fr: 'price' },
+  { he: 'תַּשְׁלוּם חוֹדְשִׁי', translit: 'tashlum chodshi', fr: 'monthly payment' },
+  { he: 'בִּיטוּחַ', translit: 'bituach', fr: 'insurance' },
+  { he: 'פִּקָּדוֹן', translit: 'sham / pikadon', fr: 'deposit' },
+  { he: 'בְּטֻחָה', translit: 'kavua / b\'tucha', fr: 'security' },
+  { he: 'תַּשְׁלוּם נוֹסָף', translit: 'shilum musaf', fr: 'additional charges' },
+  { he: 'וַעַד בַּיִת', translit: 'va\'ad bayit', fr: 'building committee fee' },
+  { he: 'אַרְנוֹנָה', translit: 'arnona', fr: 'municipal tax' },
+  { he: 'חַשְׁמַל וּמַיִם', translit: 'chashmal+mayim', fr: 'electricity + water' }
+];
+const VOCABULARY = [
+  { he: 'לִסְגוֹר זְמַן', translit: 'l\'sigura zman', fr: 'to book a viewing time' },
+  { he: 'אֶפְשָׁר לִרְאוֹת?', translit: 'efshar lir\'ot', fr: 'can I see (the apartment)?' },
+  { he: 'אֶפְשָׁר לַעֲזוֹר?', translit: 'efshar le-azor', fr: 'can I help?' },
+  { he: 'מָתַי חוֹפְשִׁי?', translit: 'mehad chofesh', fr: 'when is it free?' },
+  { he: 'אֵיךְ זֶה נִרְאֶה?', translit: 'eich m\'tatzem', fr: 'how does it look?' },
+  { he: 'כַּמָּה זֶה עוֹלֶה?', translit: 'kama me-mevatel', fr: 'how much is it?' },
+  { he: 'זוֹ דִּירָה חֲדָשָׁה', translit: 'zo dira hadasha', fr: 'this is a new apartment' },
+  { he: 'אֶפְשָׁר לְשַׁלֵּם בְּהַעֲבָרָה', translit: 'efshar lakhol b\'mavak', fr: 'can I pay by transfer?' },
+  { he: 'תַּשְׁלוּם בִּמְזוּמָּן', translit: 'tashlum b\'mzumanim', fr: 'cash payment' },
+  { he: 'קַבָּלָה', translit: 'kabala', fr: 'receipt' }
+];
+
+const APARTMENT_CALL = [
+  { he: 'יוֹנָאס: שָׁלוֹם, רָאִיתִי אֶת הַמּוֹדָעָה בַּיַד2 לַדִּירָה בִּשְׁלוֹשָׁה חֲדָרִים. עֲדַיִין פְּנוּיָה?', translit: 'yonas: shalom, ra\'iti et ha-moda\'ah ba-yad2 la-dira b\'shlosha chedarim. adayin pnuya?', fr: 'Jonas: Hello, I saw the Yad2 listing for the 3-room apartment. Still available?' },
+  { he: 'בַּעַל הַבַּיִת: כֵּן, פְּנוּיָה. דִּירָה יָפָה, קוֹמָה שְׁבִיעִית, מִרְפֶּסֶת סוּכָּה.', translit: 'ba\'al ha-bayit: ken, pnuya. dira yafa, koma shvi\'it, mirpeset sukkah.', fr: 'Landlord: Yes, available. Nice apartment, 7th floor, sukkah balcony.' },
+  { he: 'יוֹנָאס: כַּמָּה הַשְּׂכִירוּת לְחוֹדֶשׁ?', translit: 'yonas: kama ha-sechira l\'chodesh?', fr: 'Jonas: How much is the monthly rent?' },
+  { he: 'בַּעַל הַבַּיִת: 6500 שֶׁ"ח לְחוֹדֶשׁ. פִּקָּדוֹן חוֹדֶשׁ אֶחָד, וּבִיטוּחַ.', translit: 'ba\'al ha-bayit: 6500 shach l\'chodesh. pikadon chodesh echad, u-bituach.', fr: 'Landlord: 6500 NIS/month. One month deposit, plus insurance.' },
+  { he: 'יוֹנָאס: וְהַחֶשְׁבּוֹנוֹת — חַשְׁמַל, מַיִם, אַרְנוֹנָה — כְּלוּלִים?', translit: 'yonas: v\'ha-cheshbonot — chashmal, mayim, arnona — klulim?', fr: 'Jonas: And the bills — electricity, water, arnona — included?' },
+  { he: 'בַּעַל הַבַּיִת: לֹא, נִפְרָדִים. וַעַד בַּיִת 250 שֶׁ"ח לְחוֹדֶשׁ.', translit: 'ba\'al ha-bayit: lo, nifradim. va\'ad bayit 250 shach l\'chodesh.', fr: 'Landlord: No, separate. Building fee 250 NIS/month.' },
+  { he: 'יוֹנָאס: מָתַי אֶפְשָׁר לִרְאוֹת? אוּלַי הַיּוֹם בַּחֲמֵשׁ?', translit: 'yonas: matai efshar lir\'ot? ulai ha-yom ba-chamesh?', fr: 'Jonas: When can I see it? Maybe today at 5pm?' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('basics', BASICS);
+R('platforms', PLATFORMS);
+R('features', FEATURES);
+R('pricing', PRICING);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('apartment-call', APARTMENT_CALL);
+
+addMiniQuiz('Block 27 · Apartment Search Quiz', [
+  { q: 'Israel\'s largest classifieds platform is...', options: ['Yad2', 'Craigslist', 'Zillow', 'Madlan only'], answer: 0, explain: 'Yad2.co.il is the dominant general classifieds platform.' },
+  { q: 'The Hebrew for "3-bedroom apartment" is...', options: ['3 chedarim', '3 dirot', '3 batim', '3 sherutim'], answer: 0, explain: 'Chedarim = rooms; "3 chedarim" = 3-room apartment (typically 1 bedroom + living room).' },
+  { q: 'A "mamad" is...', options: ['a balcony', 'a safe room', 'a kitchen', 'a bathroom'], answer: 1, explain: 'Mamad = mandatory safe room since 1992 building code.' },
+  { q: 'Tel Aviv 1-bedroom rents typically range...', options: ['~1000 NIS', '~5500-9000 NIS', '~50000 NIS', 'free'], answer: 1, explain: '5500-9000 NIS for typical 1BR in TLV.' },
+  { q: 'Brokers in Israel typically charge...', options: ['no fee', '1 month rent', 'a year rent', 'nothing'], answer: 1, explain: '1-month rent is standard broker fee.' },
+  { q: 'The Hebrew for "broker" is...', options: ['m\'aer', 'mathlamut', 'sham', 'bayit'], answer: 1, explain: 'Mathlamut = real estate broker.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('apartment-search');
+  }
+});
+</script></body></html>

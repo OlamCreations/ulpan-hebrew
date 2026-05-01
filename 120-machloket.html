@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>120 — Machloket & Halachic Decision-Making</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Machloket — How Halacha Is Decided</h1><div class="subtitle">Lesson 120 · מַחֲלוֹקֶת</div></div><div class="nav"><a href="index.html">Home</a><a href="120-machloket.html" class="active">120</a></div></header>
+
+<p class="intro">Halacha isn\'t a fixed code — it\'s a 2000-year argument. Tannaim disagree, Amoraim disagree, medieval poskim disagree, modern poskim still disagree. The Talmud preserves losing opinions on purpose. There are rules for resolving disputes (Halacha follows X), and there are entire categories where the dispute remains active. Knowing the major machlokot lets you navigate Jewish religious life — and gives you the vocabulary for legal reasoning in modern Israeli courts, which import many of these concepts.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Machloket (מַחֲלוֹקֶת) in modern Hebrew means "dispute" in any context — political, legal, scientific. Jewish tradition distinguishes "machloket l\'shem shamayim" (for the sake of heaven, productive) vs "she-lo l\'shem shamayim" (not for heaven, destructive). Pirkei Avot 5:17 names Hillel-Shamai as the model of the first, Korach as the second.</div>
+
+<h2>Halachic Decision Hierarchy</h2>
+<div class="word-list" id="hierarchy"></div>
+
+<h2>Major Halachic Disputes (Famous Machlokot)</h2>
+<div class="word-list" id="disputes"></div>
+
+<h2>Decision Vocabulary</h2>
+<div class="word-list" id="decision"></div>
+
+<h2>Authority & Source Ranking</h2>
+<div class="word-list" id="authority"></div>
+
+<h2>Modern Halachic Authorities</h2>
+<div class="word-list" id="modern"></div>
+
+<hr class="section-divider">
+
+<h2>Hillel & Shamai on a Convert — Talmud Shabbat 31a</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">The most-quoted Talmud story illustrating Hillel and Shamai\'s opposite approaches. A non-Jew comes wanting to convert "while standing on one foot." Shamai pushes him away with a builder\'s ruler; Hillel teaches him the entire Torah in one sentence.</div>
+  <div id="hillel-story"></div>
+</div>
+
+<h2>Pirkei Avot 5:17 — Productive vs Destructive Disputes</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">The classic distinction. Hillel-Shamai is held up as the productive ideal — they argued for centuries but married each other\'s children and remained friends.</div>
+  <div id="machloket-shamayim"></div>
+</div>
+
+<footer>Lesson 120 · Machloket · Block 12 complete · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const HIERARCHY = [
+  { he: 'דְּאוֹרַיְתָא', translit: 'd\'oraita', fr: 'Torah-level (biblical, strictest)' },
+  { he: 'דְּרַבָּנָן', translit: 'd\'rabanan', fr: 'rabbinic (later than Torah, slightly more flexible)' },
+  { he: 'מִנְהָג', translit: 'minhag', fr: 'custom (often community-specific)' },
+  { he: 'הַלָּכָה לְמֹשֶׁה מִסִּינַי', translit: 'halacha l\'Moshe mi-Sinai', fr: 'oral tradition from Sinai (no derivation, but binding)' },
+  { he: 'הֲלָכָה כְּ\\__', translit: 'halacha k\'\\__', fr: 'halacha follows \\__ (resolution formula)' },
+  { he: 'הִלְכְתָא', translit: 'hilkh\'ta', fr: 'the [final] halachic ruling [Aramaic]' },
+  { he: 'מַחֲלוֹקֶת לְהַחְמִיר', translit: 'machloket l\'hachmir', fr: 'dispute on the side of stringency' },
+  { he: 'מַחֲלוֹקֶת לְהָקֵל', translit: 'machloket l\'hakel', fr: 'dispute on the side of leniency' },
+  { he: 'סָפֵק דְּאוֹרַיְתָא לְחֻמְרָא', translit: 'safek d\'oraita l\'chumra', fr: 'Torah doubt → strict (default rule)' },
+  { he: 'סָפֵק דְּרַבָּנָן לְקֻלָּא', translit: 'safek d\'rabanan l\'kula', fr: 'rabbinic doubt → lenient (default rule)' }
+];
+const DISPUTES = [
+  { he: 'בֵּית הִלֵּל וּבֵית שַׁמַּאי', translit: 'Beit Hilel u-Veit Shamai', fr: 'Hillel vs Shamai (~300 disputes, halacha follows Hillel)' },
+  { he: 'אָשְׁכְּנַזִּים וּסְפָרַדִּים', translit: 'Ashkenazim u-S\'faradim', fr: 'Ashkenazi vs Sephardi (kashrut, prayer rite, customs)' },
+  { he: 'קִטְנִיּוֹת בְּפֶסַח', translit: 'kitniyot b\'Pesach', fr: 'kitniyot on Pesach (Ashkenazi forbid, Sephardi allow)' },
+  { he: 'גְּלָט וְלֹא גְּלָט', translit: 'glat ve-lo glat', fr: 'glatt vs non-glatt meat (Sephardi tend lenient)' },
+  { he: 'נוֹסַח אַשְׁכְּנַז וּנוֹסַח סְפָרַד', translit: 'nusach Ashkenaz u-nusach S\'farad', fr: 'Ashkenazi vs "Sefard" prayer rite' },
+  { he: 'מִשְׁעָה / מֵהַחֲצוֹת', translit: 'mi-sha\'a / me-ha-chatzot', fr: 'milk after meat — 6h vs 1h vs 3h' },
+  { he: 'מַתַּן מַעֲשֵׂר', translit: 'matan ma\'aser', fr: 'tithing (10% — does loan to family count?)' },
+  { he: 'תְּפִלִּין שֶׁל רַשִׁ"י וְשֶׁל רַבֵּנוּ תָּם', translit: 't\'filin shel Rashi v\'shel Rabenu Tam', fr: 'Rashi vs Rabbenu Tam tefillin (order of parchments inside)' },
+  { he: 'שְׁמִיטָה — הֶיתֵּר מְכִירָה', translit: 'sh\'mita — heter m\'chira', fr: 'shemita: "sale loophole" (national-religious yes, charedi no)' },
+  { he: 'גִּיּוּר רֶפוֹרְמִי וּקוֹנְסֶרְבָטִיבִי', translit: 'giyur reformi u-konservativi', fr: 'Reform/Conservative conversion (recognized? Israeli debate)' }
+];
+const DECISION = [
+  { he: 'פּוֹסֵק', translit: 'posek', fr: 'halachic decisor (one who rules)' },
+  { he: 'פְּסָק הֲלָכָה', translit: 'p\'sak halacha', fr: 'halachic ruling' },
+  { he: 'שְׁאֵלָה', translit: 'sh\'ela', fr: 'a question to a posek [modern]' },
+  { he: 'תְּשׁוּבָה', translit: 't\'shuva', fr: 'response (responsum) [modern]' },
+  { he: 'שֻׁ"ת', translit: 'sh\'ut', fr: 'sh\'elot u-tshuvot — Q&A literature' },
+  { he: 'הוֹרָאָה', translit: 'hora\'a', fr: 'instruction / ruling [modern]' },
+  { he: 'מָרֵי דְאַתְרָא', translit: 'mara d\'atra', fr: '"master of the place" — local rabbi has authority [Aramaic]' },
+  { he: 'דַּעַת יָחִיד', translit: 'da\'at yachid', fr: 'minority opinion [modern, also legal]' },
+  { he: 'דַּעַת הָרֹב', translit: 'da\'at ha-rov', fr: 'majority opinion' },
+  { he: 'יוֹצֵא יְדֵי חוֹבָתוֹ', translit: 'yotze y\'dei chovato', fr: 'fulfills his obligation [modern legal]' },
+  { he: 'לְכַתְּחִילָּה', translit: 'l\'chatchila', fr: 'ideally / a priori (best practice) [Aramaic, modern]' },
+  { he: 'בְּדִיעֲבַד', translit: 'b\'di\'avad', fr: 'after the fact (still valid even if not ideal) [modern]' }
+];
+const AUTHORITY = [
+  { he: 'תּוֹרָה', translit: 'Torah', fr: '#1 — Torah (Pentateuch), supreme authority' },
+  { he: 'נְבִיאִים', translit: 'N\'vi\'im', fr: '#2 — Prophets' },
+  { he: 'תַּלְמוּד בַּבְלִי', translit: 'Talmud Bavli', fr: '#3 — Babylonian Talmud (most authoritative)' },
+  { he: 'תַּלְמוּד יְרוּשַׁלְמִי', translit: 'Talmud Yerushalmi', fr: '#4 — Jerusalem Talmud (used when Bavli silent)' },
+  { he: 'גְּאוֹנִים', translit: 'Geonim', fr: '#5 — Gaonic period (~600-1000 CE, Babylon)' },
+  { he: 'רִאשׁוֹנִים', translit: 'Rishonim', fr: '#6 — Rishonim (~1000-1500 CE: Rashi, Rambam, Tosafot)' },
+  { he: 'אַחֲרוֹנִים', translit: 'Acharonim', fr: '#7 — Acharonim (~1500 onward)' },
+  { he: 'שֻׁלְחָן עָרוּךְ', translit: 'Shulchan Aruch', fr: '#8 — Shulchan Aruch (1565, the practical code)' },
+  { he: 'הַנּוֹשְׂאֵי כֵלִים', translit: 'ha-nos\'ei kelim', fr: 'commentaries on the Shulchan Aruch (literal: "weapon-bearers")' }
+];
+const MODERN = [
+  { he: 'הָרַב עוֹבַדְיָה יוֹסֵף', translit: 'ha-Rav Ovadia Yosef', fr: 'R. Ovadia Yosef (Sephardi giant, d. 2013) [modern]' },
+  { he: 'הָרַב אֱלִיָּשִׁיב', translit: 'ha-Rav Elyashiv', fr: 'R. Yosef Sholom Elyashiv (charedi posek, d. 2012)' },
+  { he: 'הָרַב פיינשטיין', translit: 'ha-Rav Feinstein', fr: 'R. Moshe Feinstein (American 20c posek, d. 1986)' },
+  { he: 'הָרַב קוּק', translit: 'ha-Rav Kook', fr: 'R. Avraham Yitzchak Kook (1st chief rabbi, mystic)' },
+  { he: 'הָרַב סוֹלוֹבֵייצִ\'יק', translit: 'ha-Rav Soloveichik', fr: 'R. Joseph B. Soloveitchik (Modern Orthodox theology)' },
+  { he: 'הַחֲזוֹן אִישׁ', translit: 'ha-Chazon Ish', fr: 'Chazon Ish (R. Karelitz, ultra-Orthodox model)' },
+  { he: 'הָרַב מאזוז', translit: 'ha-Rav Mazuz', fr: 'R. Meir Mazuz (current Tunisian-Israeli posek)' },
+  { he: 'הָרַב אַבִינֵר', translit: 'ha-Rav Aviner', fr: 'R. Shlomo Aviner (national-religious)' },
+  { he: 'הָרַב גַּנְצְפְרִיד', translit: 'ha-Rav Ganzfried', fr: 'R. Ganzfried (Kitzur Shulchan Aruch — popular abridgment)' },
+  { he: 'הָרַב נחום רבינוביץ\'', translit: 'ha-Rav Rabinovich', fr: 'R. Nachum Rabinovich (Maaleh Adumim, 20-21c)' }
+];
+const HILLEL_STORY = [
+  { he: 'מַעֲשֶׂה בְּגוֹי אֶחָד שֶׁבָּא לִפְנֵי שַׁמַּאי', translit: 'Ma\'ase b\'goy echad she-ba lifnei Shamai', fr: 'It happened once that a non-Jew came before Shammai' },
+  { he: 'אָמַר לוֹ: גַּיְּרֵנִי עַל מְנָת שֶׁתְּלַמְּדֵנִי כָּל הַתּוֹרָה כֻּלָּהּ', translit: 'Amar lo: gayreni al m\'nat she-t\'lamdeni kol ha-Torah kula', fr: 'He said: Convert me, on condition that you teach me the entire Torah' },
+  { he: 'כְּשֶׁאֲנִי עוֹמֵד עַל רֶגֶל אַחַת', translit: 'k\'she-ani omed al regel achat', fr: 'while I stand on one foot' },
+  { he: 'דְּחָפוֹ בְּאַמַּת הַבִּנְיָן שֶׁבְּיָדוֹ', translit: 'D\'chafo b\'amat ha-binyan she-b\'yado', fr: 'He pushed him away with the builder\'s ruler that was in his hand' },
+  { he: 'בָּא לִפְנֵי הִלֵּל — גַּיְּרֵיהּ', translit: 'Ba lifnei Hilel — gayreh', fr: 'He came before Hillel — and Hillel converted him' },
+  { he: 'אָמַר לוֹ: דַּעֲלָךְ סְנֵי לְחַבְרָךְ לָא תַּעֲבֵיד', translit: 'Amar lo: da\'alach s\'nei l\'chavrach la ta\'avid', fr: 'He said to him: That which is hateful to you, do not do to your fellow' },
+  { he: 'זוֹ הִיא כָּל הַתּוֹרָה כֻּלָּהּ — וְאִידָּךְ פֵּרוּשָׁהּ הוּא', translit: 'Zo hi kol ha-Torah kula — ve-idach perusha hu', fr: 'This is the entire Torah — and the rest is its commentary' },
+  { he: 'זִיל גְּמוֹר', translit: 'Zil g\'mor', fr: 'Go and study [Aramaic]' }
+];
+const MACHLOKET_SHAMAYIM = [
+  { he: 'כָּל מַחֲלוֹקֶת שֶׁהִיא לְשֵׁם שָׁמַיִם — סוֹפָהּ לְהִתְקַיֵּם', translit: 'Kol machloket she-hi l\'shem shamayim — sofa l\'hitkayem', fr: 'Every dispute that is for the sake of heaven — its end is that it endures' },
+  { he: 'וְשֶׁאֵינָהּ לְשֵׁם שָׁמַיִם — אֵין סוֹפָהּ לְהִתְקַיֵּם', translit: 've-she-eina l\'shem shamayim — ein sofa l\'hitkayem', fr: 'And one that is not for the sake of heaven — its end is that it does not endure' },
+  { he: 'אֵיזוֹ הִיא מַחֲלוֹקֶת שֶׁהִיא לְשֵׁם שָׁמַיִם?', translit: 'Eizo hi machloket she-hi l\'shem shamayim?', fr: 'Which is a dispute for the sake of heaven?' },
+  { he: 'זוֹ מַחֲלוֹקֶת הִלֵּל וְשַׁמַּאי', translit: 'Zo machloket Hilel ve-Shamai', fr: 'This is the dispute of Hillel and Shammai' },
+  { he: 'וְשֶׁאֵינָהּ לְשֵׁם שָׁמַיִם?', translit: 'Ve-she-eina l\'shem shamayim?', fr: 'And which is not for the sake of heaven?' },
+  { he: 'זוֹ מַחֲלוֹקֶת קֹרַח וְכָל עֲדָתוֹ', translit: 'Zo machloket Korach ve-chol adato', fr: 'This is the dispute of Korach and his entire faction' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('hierarchy', HIERARCHY); R('disputes', DISPUTES); R('decision', DECISION); R('authority', AUTHORITY); R('modern', MODERN);
+renderTextBlock('hillel-story', HILLEL_STORY);
+renderTextBlock('machloket-shamayim', MACHLOKET_SHAMAYIM);
+
+addMiniQuiz('Machloket Quiz', [
+  { q: 'In a dispute between Hillel & Shamai, halacha usually follows...', options: ['Shamai', 'Hillel', 'Whoever is older', 'Always Shamai'], answer: 1, explain: 'Famously, halacha follows Hillel ~95% of the time' },
+  { q: 'דְּאוֹרַיְתָא means...', options: ['Rabbinic', 'Torah-level (biblical)', 'Custom', 'Doubtful'], answer: 1, explain: 'Highest authority level' },
+  { q: 'פּוֹסֵק is...', options: ['A scribe', 'A halachic decisor', 'A teacher', 'A cantor'], answer: 1, explain: 'One who answers halachic questions' },
+  { q: 'שֻׁ"ת literature is...', options: ['Songs', 'Q&A (responsa)', 'Prayers', 'Legal codes'], answer: 1, explain: 'sh\'elot u-tshuvot — questions and answers' },
+  { q: 'A "machloket l\'shem shamayim" is...', options: ['A fight to the death', 'A dispute "for the sake of heaven" (productive)', 'A war', 'An election'], answer: 1, explain: 'Hillel-Shamai is the model' },
+  { q: 'L\'chatchila means...', options: ['After the fact', 'Ideally / a priori', 'Forbidden', 'Required'], answer: 1, explain: 'Best practice. B\'di\'avad = after the fact (still valid).' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('machloket'); } });
+</script></body></html>

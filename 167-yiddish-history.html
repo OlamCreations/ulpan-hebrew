@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>167 — Yiddish History & Geography</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>The Yiddish World — History & Geography</h1><div class="subtitle">Lesson 167 · אֵיירוֹפָּה הַיִּידִישׁ</div></div><div class="nav"><a href="index.html">Home</a><a href="167-yiddish-history.html" class="active">167</a></div></header>
+
+<p class="intro">Yiddish was the everyday language of millions of Jews across Eastern Europe — Vilna, Warsaw, Odessa, Lemberg, Vienna, the shtetls between. Then the Holocaust murdered most of those speakers; Stalin and the Cold War silenced the rest. The 1948-1990 Soviet Aliyah brought Yiddish-Russian Jews to Israel. Knowing this geography is knowing where Israeli Ashkenazi families come from.</p>
+
+<div class="tip"><strong>Cultural note</strong> — When an older Israeli says "I\'m from Tarnopol" or "from Vilna", they mean their family origin — not literally born there. The Yiddish heartland (between today\'s Lithuania, Poland, Ukraine, and Belarus) is where most Ashkenazim trace roots. Today places like Vilnius, Krakow, and Lviv are tourist sites for Israeli families. The Yiddish-speaking world before 1939 had ~11 million speakers; today fewer than 1 million.</div>
+
+<h2>Geographic Heartland</h2>
+<div class="word-list" id="geography"></div>
+
+<h2>Historical Eras</h2>
+<div class="word-list" id="eras"></div>
+
+<h2>Holocaust Vocabulary (Yiddish-rooted)</h2>
+<div class="word-list" id="holocaust"></div>
+
+<h2>Yiddish Writers & Thinkers</h2>
+<div class="word-list" id="writers"></div>
+
+<h2>Movements & Ideologies</h2>
+<div class="word-list" id="movements"></div>
+
+<hr class="section-divider">
+
+<h2>A Family Tree from Vilna</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A grandfather telling his grandson the family story — typical Israeli Ashkenazi narrative. Jewish Eastern Europe → Holocaust → Israel.</div>
+  <div id="family-tree"></div>
+</div>
+
+<footer>Lesson 167 · Yiddish history · <a href="168-yiddish-modern.html">Next →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const GEOGRAPHY = [
+  { he: 'מִזְרַח אֵירוֹפָּה', translit: 'mizrach europa', fr: 'Eastern Europe (Yiddish heartland)' },
+  { he: 'תְּחוּם הַמּוֹשָׁב', translit: 't\'chum ha-moshav', fr: 'Pale of Settlement (Russian Empire 1791-1917)' },
+  { he: 'וִילְנָה', translit: 'vilna', fr: 'Vilnius — "Jerusalem of Lithuania" (rabbinical center)' },
+  { he: 'וַרשָׁה', translit: 'varsha', fr: 'Warsaw (largest pre-war Jewish city)' },
+  { he: 'אוֹדֶסָה', translit: 'odesa', fr: 'Odessa (Yiddish-Russian Jewish port city)' },
+  { he: 'גָלִיצְיָה', translit: 'galitzia', fr: 'Galicia (now SE Poland + W Ukraine)' },
+  { he: 'בֶּסַרַבְּיָה', translit: 'bessarabia', fr: 'Bessarabia (now Moldova)' },
+  { he: 'בּוּקוֹבִינָה', translit: 'bukovina', fr: 'Bukovina (Czernowitz)' },
+  { he: 'שְׁטֶעטֶל', translit: 'shtetl', fr: 'small Jewish town (Yiddish: "little town")' },
+  { he: 'וִוילְנָה גָּדוֹל', translit: 'vilna gadol', fr: 'Vilna Gaon (Elijah ben Solomon, 18th c rabbi)' }
+];
+const ERAS = [
+  { he: 'יְמֵי הַבֵּינַיִם', translit: 'yemei ha-beinayim', fr: 'Middle Ages (Yiddish emerges in Rhineland 9th c)' },
+  { he: 'הַשְׂכָּלָה', translit: 'haskalah', fr: 'Jewish Enlightenment (18-19th c)' },
+  { he: 'תְּחִיַּת הַשָּׂפָה', translit: 't\'chiyat ha-safa', fr: 'Hebrew Revival (vs. Yiddish, 1880-1948)' },
+  { he: 'מַהְפֵּכַת אוֹקְטוֹבֶּר', translit: 'mahpechat october', fr: 'October Revolution (1917, Yiddish briefly thrived)' },
+  { he: 'תְּקוּפַת בֵּין הַמִּלְחָמוֹת', translit: 't\'kufat bein ha-milchamot', fr: 'Interwar period (Yiddish at peak: 1918-1939)' },
+  { he: 'הַשּׁוֹאָה', translit: 'ha-shoah', fr: 'Holocaust (1939-1945, ~6M murdered)' },
+  { he: 'יוֹמָה הַשְּׁחֹרָה', translit: 'yom ha-shchora', fr: '"the Black Day" (Yiddish for catastrophic days)' },
+  { he: 'דִּכּוּי סוֹבְיֶטִי', translit: 'dikuy sovieti', fr: 'Soviet suppression of Yiddish (1948-1953)' },
+  { he: 'הָעֲלִיָּה הַסּוֹבְיֶטִית', translit: 'ha-aliya ha-sovietit', fr: 'Soviet Aliyah (1970s-90s, ~1M)' },
+  { he: 'דּוֹר הַחָלֻוֹף', translit: 'dor ha-chaluf', fr: 'transition generation (last native Yiddish speakers)' }
+];
+const HOLOCAUST = [
+  { he: 'הַשּׁוֹאָה', translit: 'ha-shoah', fr: 'the Holocaust' },
+  { he: 'גֶּטוֹ', translit: 'getto', fr: 'ghetto' },
+  { he: 'מַחֲנֶה רִיכּוּז', translit: 'machane rikuz', fr: 'concentration camp' },
+  { he: 'מַחֲנֶה הַשְׁמָדָה', translit: 'machane ha-shmadah', fr: 'extermination camp' },
+  { he: 'אַוּשְׁוִיץ', translit: 'auschwitz', fr: 'Auschwitz' },
+  { he: 'טְרֶבְּלִינְקָה', translit: 'treblinka', fr: 'Treblinka' },
+  { he: 'מֶרֶד גֶּטוֹ וַרשָׁה', translit: 'mered getto varsha', fr: 'Warsaw Ghetto Uprising (1943)' },
+  { he: 'יוֹם הַזִּכָּרוֹן לַשּׁוֹאָה', translit: 'yom ha-zikaron la-shoah', fr: 'Holocaust Remembrance Day (27 Nisan)' },
+  { he: 'נִיצוֹלִים', translit: 'nitzolim', fr: 'survivors' },
+  { he: 'יָד וָשֵׁם', translit: 'yad vashem', fr: 'Yad Vashem (Holocaust memorial in Jerusalem)' }
+];
+const WRITERS = [
+  { he: 'מֶנְדֶּלֶע מוֹכֵר סְפָרִים', translit: 'mendele moicher sforim', fr: 'Mendele Moicher Sforim (1836-1917, Yiddish founder)' },
+  { he: 'יִצְחָק לֵיבּ פֵּרֶץ', translit: 'yitzchak leib peretz', fr: 'I.L. Peretz (1852-1915, Polish-Yiddish writer)' },
+  { he: 'יִצְחָק בָּשֵׁבִיס זִינְגֵר', translit: 'yitzchak bashevis singer', fr: 'I.B. Singer (Nobel 1978, Yiddish novelist)' },
+  { he: 'אַבְרָהָם סוּצְקֶבֶר', translit: 'avraham sutzkever', fr: 'Avraham Sutzkever (Yiddish poet, Vilna ghetto survivor)' },
+  { he: 'גְּלִיקֶל פוֹן הַמְלִין', translit: 'glikl fun hameln', fr: 'Glikl bas Judah Leib (17th c Yiddish memoirist)' },
+  { he: 'שׁוֹלֶם אַשׁ', translit: 'sholem asch', fr: 'Sholem Asch (Polish-Yiddish-American writer)' },
+  { he: 'שָׁאוּל טשֶׁרְנִיחוֹבְסְקִי', translit: 'shaul tchernichovsky', fr: 'Tchernichovsky (Hebrew-Yiddish poet)' },
+  { he: 'חַיִּים נַחְמָן בְּיָאלִיק', translit: 'chaim nachman bialik', fr: 'Bialik (Hebrew national poet, Yiddish background)' },
+  { he: 'אוּרִי צְבִי גְרִינְבֶּרְג', translit: 'uri zvi greenberg', fr: 'Uri Zvi Greenberg (Yiddish + Hebrew expressionist)' },
+  { he: 'קַדְיָה מוֹלוֹדוֹבְסְקִי', translit: 'kadya molodovsky', fr: 'Kadya Molodovsky (woman Yiddish poet)' }
+];
+const MOVEMENTS = [
+  { he: 'הַשְׂכָּלָה', translit: 'haskalah', fr: 'Jewish Enlightenment' },
+  { he: 'בּוּנְד', translit: 'bund', fr: 'Bund (Jewish socialist labor movement)' },
+  { he: 'יִדִּישׁיזם', translit: 'yiddishism', fr: 'Yiddishism (cultural movement, Yiddish as nation)' },
+  { he: 'תַּרְבּוּת אוֹטוֹנוֹמִית', translit: 'tarbut autonomit', fr: 'cultural autonomy (Bundist concept)' },
+  { he: 'צִיּוֹנוּת', translit: 'tzionut', fr: 'Zionism (rival to Yiddishism — Hebrew-only)' },
+  { he: 'תְּחִיַּת הָעִבְרִית', translit: 't\'chiyat ha-ivrit', fr: 'Hebrew Revival (Ben-Yehuda)' },
+  { he: 'מוּסַר', translit: 'mussar', fr: 'Mussar movement (Lithuanian ethics)' },
+  { he: 'חֲסִידוּת', translit: 'chasidut', fr: 'Hasidism (Baal Shem Tov, Eastern Europe)' },
+  { he: 'מִתְנַגְּדִים', translit: 'mitnagdim', fr: 'Mitnagdim (anti-Hasidic Lithuanian rationalists)' },
+  { he: 'קִיבּוּצִים', translit: 'kibbutzim', fr: 'kibbutz movement (Russian Yiddish-speaking founders)' }
+];
+
+const FAMILY_TREE = {
+  intro: 'Saba (grandfather, 88) telling his grandson Daniel (16) the family story.',
+  lines: [
+    { speaker: 'Saba', he: 'דַנִיֵאל, אֲבָל אַתָּה לֹא יוֹדֵעַ — סָבָא שֶׁלִּי הָיָה מִוִילְנָה.', translit: 'daniel, aval atah lo yode\'a — saba sheli haya me-vilna.', fr: 'Daniel, you don\'t know — my grandfather was from Vilna.' },
+    { speaker: 'Daniel', he: 'אֵיפֹה זֶה?', translit: 'eifo ze?', fr: 'Where is that?' },
+    { speaker: 'Saba', he: 'בְּלִיטָא. "יְרוּשָׁלַיִם דְלִיטָא" קָרְאוּ לָהּ. בֵּית הַמִּדְרָשׁ הַגָּדוֹל הָיָה שָׁם. הוּא לִמֵּד בִּישִׁיבָה אֵצֶל הַגַּ"רָא — הַגָּאוֹן רַבִּי אֵלִיָּהוּ.', translit: 'b\'lita. "yerushalayim d\'lita" kar\'u la. beit ha-midrash ha-gadol haya sham. hu limed bi-yeshiva etzel ha-Gra — ha-gaon rabi eliyahu.', fr: 'In Lithuania. They called it "Jerusalem of Lithuania." The great study hall was there. He studied at a yeshiva of the Gaon — Rabbi Elijah of Vilna.' },
+    { speaker: 'Daniel', he: 'מַה קָרָה לוֹ?', translit: 'ma kara lo?', fr: 'What happened to him?' },
+    { speaker: 'Saba', he: 'הוּא נִרְצַח בַּשּׁוֹאָה. כָּל הַמִשְׁפָּחָה. רַק אַבָּא שֶׁלִּי בָּרַח לְפָלֶשׂ — הוּא הָיָה בֵּן 12, הִתְחַבֵּא בַּיַעֲרוֹת. הִגִּיעַ אַחַר כָּךְ לְצֶרֶץ יִשְׂרָאֵל.', translit: 'hu nirtzach ba-shoah. kol ha-mishpacha. rak abba sheli barach l\'paless — hu haya ben 12, hitchabe ba-ya\'arot. higi\'a achar kach l\'eretz yisrael.', fr: 'He was murdered in the Holocaust. The whole family. Only my father escaped to Poland — he was 12, hid in the forests. He arrived later in the Land of Israel.' },
+    { speaker: 'Daniel', he: 'הוּא דִּבֵּר יִידִישׁ?', translit: 'hu dibbe yiddish?', fr: 'Did he speak Yiddish?' },
+    { speaker: 'Saba', he: 'בְּטָח. בַּבַּיִת תָּמִיד יִידִישׁ. הָעִבְרִית הָיְתָה לִתְפִילָּה. הַיִּידִישׁ הָיְתָה לַחַיִּים.', translit: 'betach. ba-bayit tamid yiddish. ha-ivrit hayta li-tfillah. ha-yiddish hayta la-chayim.', fr: 'Of course. At home always Yiddish. Hebrew was for prayer. Yiddish was for life.' }
+  ]
+};
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('geography', GEOGRAPHY);
+R('eras', ERAS);
+R('holocaust', HOLOCAUST);
+R('writers', WRITERS);
+R('movements', MOVEMENTS);
+
+renderTextBlock('family-tree', FAMILY_TREE.lines.map(l => ({ he: l.he, translit: l.translit, fr: l.speaker ? '[' + l.speaker + '] ' + l.fr : l.fr })));
+
+addMiniQuiz('Yiddish History Quiz', [
+  { q: '"Vilna" was nicknamed...', options: ['"Jerusalem of Lithuania"', '"Polish Tel Aviv"', '"Russian Berlin"', '"Latvian Krakow"'], answer: 0, explain: 'Vilna was the rabbinical and intellectual capital — "Yerushalayim d\'Lita".' },
+  { q: 'How many Yiddish speakers worldwide before WWII?', options: ['~500,000', '~2 million', '~11 million', '~30 million'], answer: 2, explain: '~11 million native speakers — most murdered in the Holocaust.' },
+  { q: 'I.B. Singer won the Nobel Prize in Literature in...', options: ['1948', '1968', '1978', '1988'], answer: 2, explain: 'Isaac Bashevis Singer — Nobel 1978, last great Yiddish novelist.' },
+  { q: 'The "Bund" was...', options: ['A bank', 'Jewish socialist labor movement', 'A type of bread', 'A Hebrew dictionary'], answer: 1, explain: 'Bund — Eastern European Jewish socialist movement, Yiddishist, anti-Zionist.' },
+  { q: 'The largest pre-war Jewish city was...', options: ['Vilna', 'Warsaw', 'Odessa', 'Tel Aviv'], answer: 1, explain: 'Warsaw had ~375,000 Jews before 1939.' },
+  { q: 'Yad Vashem is...', options: ['A Yiddish theatre', 'Holocaust memorial in Jerusalem', 'A neighborhood', 'A poem'], answer: 1, explain: 'Yad Vashem (Hebrew: "memorial and a name") — central Holocaust institution.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('yiddish-history');
+  }
+});
+</script></body></html>

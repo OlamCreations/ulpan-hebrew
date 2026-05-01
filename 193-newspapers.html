@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>193 — Reading Israeli Newspapers</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Reading Israeli Newspapers</h1><div class="subtitle">Lesson 193 · עִתּוֹנוּת</div></div><div class="nav"><a href="index.html">Home</a><a href="193-newspapers.html" class="active">193</a></div></header>
+
+<p class="intro">Israeli newspapers — Haaretz (left-liberal), Yediot Ahronot (centrist mass-circulation), Israel Hayom (Netanyahu-aligned, free), Maariv — set the country's daily intellectual rhythm. Print is dying but online versions are essential reading. Headlines, op-eds, and feature articles use a register that sits between formal and conversational. Reading the news is the single best advanced-Hebrew exercise. After this lesson you can read any major Israeli paper.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Each paper has a distinct voice: Haaretz is ambitious and analytical (subscription-only), Yediot is "the people's paper" (mass), Israel Hayom is right-leaning and free (Sheldon Adelson-funded). The sections are universal: politics (politika), economy (kalkala), sports (sport), culture (tarbut), opinion (de'ot). Israeli journalists use heavy slang, Yiddishisms, and Hebrew puns, making reading them a vocabulary workout.</div>
+
+<h2>Major Newspapers + History</h2>
+<div class="word-list" id="papers"></div>
+
+<h2>Headline Vocabulary</h2>
+<div class="word-list" id="headlines"></div>
+
+<h2>Newspaper Sections</h2>
+<div class="word-list" id="sections"></div>
+
+<h2>Common Journalism Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<h2>Op-Ed & Editorial Vocabulary</h2>
+<div class="word-list" id="opinion"></div>
+
+<hr class="section-divider">
+
+<h2>Decoding a Front-Page Headline</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A real-style front-page Israeli headline broken down phrase by phrase. The sentence-level reading skill.</div>
+  <div id="frontpage"></div>
+</div>
+
+<footer>Lesson 193 · Reading Israeli Newspapers · <a href="194-literature.html" style="color:var(--accent)">Next: Literature →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const PAPERS = [
+  { he: 'הָאָרֶץ', translit: 'haaretz', fr: 'Haaretz — left-liberal, founded 1918, subscription-only, analytical' },
+  { he: 'יְדִיעוֹת אַחֲרוֹנוֹת', translit: 'yediot ahronot', fr: 'Yediot Ahronot — centrist, mass-circulation, founded 1939' },
+  { he: 'יִשְׂרָאֵל הַיּוֹם', translit: 'israel hayom', fr: 'Israel Hayom — right-leaning, free, founded 2007 (Adelson)' },
+  { he: 'מַעֲרִיב', translit: 'maariv', fr: 'Maariv — centrist, founded 1948, smaller circulation today' },
+  { he: 'גְּלוֹבֶּס', translit: 'globes', fr: 'Globes — business daily, financial focus' },
+  { he: 'דֶה מַרְקֶר', translit: 'de marker', fr: 'TheMarker — business supplement of Haaretz' },
+  { he: 'כַּלְכָּלִיסְט', translit: 'calcalist', fr: 'Calcalist — business daily, tech and economy' },
+  { he: 'וַואלָה', translit: 'walla', fr: 'Walla News — major online news portal' },
+  { he: 'חֲדָשׁוֹת עָרוּץ 12', translit: 'chadashot arutz 12', fr: 'Channel 12 News — top TV news (Keshet)' },
+  { he: 'חֲדָשׁוֹת עָרוּץ 13', translit: 'chadashot arutz 13', fr: 'Channel 13 News — Reshet TV news' }
+];
+const HEADLINES = [
+  { he: 'כּוֹתֶרֶת', translit: 'koteret', fr: 'headline' },
+  { he: 'כּוֹתֶרֶת רָאשִׁית', translit: 'koteret rashit', fr: 'main headline (top of page)' },
+  { he: 'כּוֹתֶרֶת מִשְׁנֶה', translit: 'koteret mishneh', fr: 'sub-headline (under main)' },
+  { he: 'כְּפָר', translit: 'kfar', fr: 'caption (under photo)' },
+  { he: 'פְּרָטִים', translit: 'pratim', fr: 'details (often "pratim bifnim" — details inside)' },
+  { he: 'אַכְזָבָה', translit: 'achzava', fr: 'disappointment (common in headlines)' },
+  { he: 'חֲשִׁיבוּת', translit: 'chashivut', fr: 'significance, importance' },
+  { he: 'מַהְפֵּכָה', translit: 'mahapecha', fr: 'revolution (often used loosely)' },
+  { he: 'אֵרוּעִים', translit: 'iruim', fr: 'events (the events of the day)' },
+  { he: 'גִּלּוּי', translit: 'gilui', fr: 'revelation, exposure (investigative term)' }
+];
+const SECTIONS = [
+  { he: 'פּוֹלִיטִיקָה', translit: 'politika', fr: 'politics' },
+  { he: 'כַּלְכָּלָה', translit: 'kalkala', fr: 'economy' },
+  { he: 'סְפּוֹרְט', translit: 'sport', fr: 'sports' },
+  { he: 'תַּרְבּוּת', translit: 'tarbut', fr: 'culture' },
+  { he: 'דֵּעוֹת', translit: 'de\'ot', fr: 'opinion (op-eds)' },
+  { he: 'טֶכֶלֶת', translit: 'techelet', fr: 'technology (slang section name)' },
+  { he: 'בְּרִיאוּת', translit: 'bri\'ut', fr: 'health' },
+  { he: 'חוּץ', translit: 'chutz', fr: 'foreign affairs (chitzonot)' },
+  { he: 'בַּיִת', translit: 'bayit', fr: 'home / lifestyle' },
+  { he: 'אוֹכֶל', translit: 'ochel', fr: 'food' }
+];
+const PHRASES = [
+  { he: 'לְפִי דִּבְרֵי...', translit: 'lefi divrei...', fr: 'according to (the words of)...' },
+  { he: 'בְּקָרוֹב...', translit: 'bekarov...', fr: 'soon... (coming soon)' },
+  { he: 'הוֹדִיעַ הַיּוֹם...', translit: 'hodi\'a hayom...', fr: 'announced today...' },
+  { he: 'נִפְתְּחוּ חֲקִירוֹת...', translit: 'niftachu chakirot...', fr: 'investigations were opened...' },
+  { he: 'לֹא נִמְסַר פִּרְסוּם...', translit: 'lo nimsar pirsum...', fr: 'no comment for publication...' },
+  { he: 'לֹא לְפִרְסוּם', translit: 'lo l\'pirsum', fr: 'off the record (lit. not for publication)' },
+  { he: 'לִפְצִילֵי מַחְתָּךְ', translit: 'liftzilei machtach', fr: 'under examination / being reviewed' },
+  { he: 'לְפִי מְקוֹרוֹת', translit: 'lefi mekorot', fr: 'according to sources' },
+  { he: 'נִמְסַר עַל כָּךְ', translit: 'nimsar al kach', fr: 'it was conveyed about it' },
+  { he: 'לְפִי מָחָר', translit: 'lefi machar', fr: 'as of tomorrow / per tomorrow' }
+];
+const OPINION = [
+  { he: 'מַאֲמָר', translit: 'ma\'amar', fr: 'article' },
+  { he: 'מַאֲמַר דֵּעָה', translit: 'ma\'amar de\'ah', fr: 'op-ed (opinion article)' },
+  { he: 'מַעֲרֶכֶת', translit: 'ma\'arechet', fr: 'editorial board / editorial' },
+  { he: 'קוֹרֵא', translit: 'korei', fr: 'reader (m.)' },
+  { he: 'קוֹרְאִים', translit: 'koreim', fr: 'readers' },
+  { he: 'דֵּעָה אִישִׁית', translit: 'de\'ah ishit', fr: 'personal opinion' },
+  { he: 'בִּקֹּרֶת', translit: 'bikoret', fr: 'review / criticism' },
+  { he: 'פֻּלְמוּס', translit: 'pulmus', fr: 'controversy / heated debate' },
+  { he: 'מִכְתָּב לַמַּעֲרֶכֶת', translit: 'michtav la-ma\'arechet', fr: 'letter to the editor' },
+  { he: 'דַּעַת קָהָל', translit: 'da\'at kahal', fr: 'public opinion' }
+];
+
+const FRONTPAGE = [
+  { he: 'דּוּגְמַת כּוֹתֶרֶת: "רֹאשׁ הַמֶּמְשָׁלָה הוֹדִיעַ הַיּוֹם — לְפִי מְקוֹרוֹת בַּמַּעֲרֶכֶת — עַל פְּתִיחַת חֲקִירָה בָּעֵסֶק הַכַּלְכָּלִי"', translit: 'dugmat koteret: "rosh ha-memshala hodi\'a hayom — lefi mekorot ba-ma\'arechet — al p\'tichat chakira ba-esek ha-kalkali"', fr: 'Sample headline: "The Prime Minister announced today — according to editorial sources — the opening of an investigation into the economic affair"' },
+  { he: 'רֹאשׁ הַמֶּמְשָׁלָה', translit: 'rosh ha-memshala', fr: 'subject: the Prime Minister (smichut: head + the-government)' },
+  { he: 'הוֹדִיעַ הַיּוֹם', translit: 'hodi\'a hayom', fr: 'verb phrase: announced today (past tense, hifil binyan)' },
+  { he: 'לְפִי מְקוֹרוֹת בַּמַּעֲרֶכֶת', translit: 'lefi mekorot ba-ma\'arechet', fr: 'attribution clause: per editorial sources (journalist hedge)' },
+  { he: 'עַל פְּתִיחַת חֲקִירָה', translit: 'al p\'tichat chakira', fr: 'object: about the opening of an investigation (smichut: opening-of investigation)' },
+  { he: 'בָּעֵסֶק הַכַּלְכָּלִי', translit: 'ba-esek ha-kalkali', fr: 'qualifier: in the economic affair (definite + adjective agreement)' },
+  { he: 'מַסְקָנָה: כּוֹתֶרֶת מוֹדֶרְנִית = שֵׁם נוֹשֵׂא + פֹּעַל מָקוֹם זְמָן + מָקוֹר + מִשְׁפָּט מַטָּרָה', translit: 'maskana: koteret modernit = shem nose + po\'al makom z\'man + makor + mishpat matara', fr: 'Lesson: a modern headline = subject noun + verb of place/time + source + purpose clause. Master this pattern, read any paper.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('papers', PAPERS);
+R('headlines', HEADLINES);
+R('sections', SECTIONS);
+R('phrases', PHRASES);
+R('opinion', OPINION);
+
+renderTextBlock('frontpage', FRONTPAGE);
+
+addMiniQuiz('Newspapers Quiz', [
+  { q: 'Which Israeli newspaper is left-liberal, subscription-only, and analytical?', options: ['Israel Hayom', 'Yediot Ahronot', 'Haaretz', 'Maariv'], answer: 2, explain: 'Haaretz is the left-liberal paper of record, subscription-only, founded 1918.' },
+  { q: 'Israel Hayom is known for being...', options: ['Left-wing and paid', 'Right-leaning and free', 'Religious and weekly', 'Business-focused'], answer: 1, explain: 'Israel Hayom is right-leaning, free, Adelson-funded since 2007.' },
+  { q: 'The section called "kalkala" covers...', options: ['Sports', 'Economy', 'Culture', 'Politics'], answer: 1, explain: 'Kalkala = economy. Politika = politics, tarbut = culture, sport = sports.' },
+  { q: 'A journalist saying "lo l\'pirsum" means...', options: ['No publication today', 'Off the record', 'Front page only', 'Anonymous source'], answer: 1, explain: '"Lo l\'pirsum" literally "not for publication" = off the record.' },
+  { q: 'In a headline, "koteret rashit" is the...', options: ['Caption under a photo', 'Sub-headline', 'Main top headline', 'Editorial title'], answer: 2, explain: 'Koteret rashit = main headline. Koteret mishneh = sub-headline.' },
+  { q: '"Lefi mekorot" in journalism means...', options: ['According to Mekorot (water company)', 'According to sources', 'In the springs', 'From origin'], answer: 1, explain: 'In journalism context, "lefi mekorot" = according to sources. Same word as the water company but unrelated meaning.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('newspapers');
+  }
+});
+</script></body></html>

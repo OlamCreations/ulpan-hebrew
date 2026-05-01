@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>227 — Pharmacy: Beit Mirkachat Daily</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Pharmacy — Beit Mirkachat Daily</h1><div class="subtitle">Lesson 227 · בֵּית מִרְקַחַת</div></div><div class="nav"><a href="index.html">Home</a><a href="227-pharmacy.html" class="active">227</a></div></header>
+
+<p class="intro">The Israeli pharmacy is more than prescription pickup — it's a hybrid drugstore + health center. Major chains: Super-Pharm (largest, ~250 stores), Be Pharm (kupa-owned), Pharma Israel. OTC vocabulary: trufot lo m'kashravot (non-prescription medications), vitamines, beauty (yofy), baby care (tinok), first aid (ezra rishona). Pharmacists provide brief consultations free for minor issues. Many stores open Friday afternoon for Shabbat-week shopping.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Super-Pharm is the Israeli equivalent of CVS/Walgreens — full drugstore with pharmacy in back. Be Pharm is more clinical, kupa-affiliated, focuses on prescriptions. For OTC questions ("which painkiller for migraines?"), the rokeach is your first stop — Israel's pharmacists are highly educated and direct. Note: many medications considered prescription elsewhere (codeine, certain antibiotics) require prescriptions in Israel; same goes for melatonin in some forms.</div>
+
+<h2>Pharmacy Chains</h2>
+<div class="word-list" id="chains"></div>
+
+<h2>Over-the-Counter Items</h2>
+<div class="word-list" id="otc"></div>
+
+<h2>Pharmacy Categories</h2>
+<div class="word-list" id="categories"></div>
+
+<h2>Medical Vocabulary</h2>
+<div class="word-list" id="medical"></div>
+
+<h2>Conversation Vocabulary</h2>
+<div class="word-list" id="conversation"></div>
+
+<hr class="section-divider">
+
+<h2>Asking the Pharmacist</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh asks a Super-Pharm pharmacist for help with sore throat.</div>
+  <div id="pharmacy-question"></div>
+</div>
+
+<footer>Lesson 227 · Pharmacy · <a href="228-dental.html" style="color:var(--accent)">Next: Dental →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CHAINS = [
+  { he: 'סוּפֶּר-פַארְם', translit: 'Super-Pharm', fr: 'Super-Pharm (largest chain, ~250 stores)' },
+  { he: 'בִּי פַארְם', translit: 'Be Pharm', fr: 'Be Pharm (kupa-owned)' },
+  { he: 'פַארְמָה יִשְׂרָאֵל', translit: 'Pharma Israel', fr: 'Pharma Israel' },
+  { he: 'בֵּית מִרְקַחַת', translit: 'beit mirkachat', fr: 'pharmacy' },
+  { he: 'בֵּית מִרְקַחַת קוּפָּה', translit: 'beit mirkachat kupa', fr: 'kupa pharmacy' },
+  { he: 'בֵּית מִרְקַחַת שַׁבָּת', translit: 'beit mirkachat Shabbat', fr: 'Shabbat-only pharmacy' },
+  { he: 'בֵּית מִרְקַחַת קָרוֹב לַבַּיִת', translit: 'beit mirkachat krov la-bayit', fr: 'nearby pharmacy' },
+  { he: 'סָר מַסְלוּל', translit: 'Sar Maslul', fr: 'Sar Maslul (specialty pharmacy)' },
+  { he: 'סָר פַארְם', translit: 'Sar Pharm', fr: 'Sar Pharm (chain)' },
+  { he: 'פַארְמָה פְּלוּס', translit: 'Pharma Plus', fr: 'Pharma Plus' }
+];
+const OTC = [
+  { he: 'אַקָמוֹל', translit: 'Acamol', fr: 'Acamol (paracetamol / Tylenol equivalent)' },
+  { he: 'אוֹפְּטָלְגִין', translit: 'Optalgin', fr: 'Optalgin (mild painkiller)' },
+  { he: 'אַדְוִיל / נוּרוֹפֶן', translit: 'Advil / Nurofen', fr: 'Advil / Nurofen (ibuprofen)' },
+  { he: 'תְּרוּפָה לֹא מַקְשְׁרָבוֹת', translit: 'trufa lo m\'kashravot', fr: 'non-prescription medication' },
+  { he: 'וִיטָמִין סִי', translit: 'vitamin C', fr: 'vitamin C' },
+  { he: 'מוּלְטִי-וִיטָמִין', translit: 'multi-vitamin', fr: 'multivitamin' },
+  { he: 'בַּרְזֶל', translit: 'barzel', fr: 'iron supplement' },
+  { he: 'פְּרוֹבִּיוֹטִיקָה', translit: 'probiotika', fr: 'probiotic' },
+  { he: 'מֵלָטוֹנִין', translit: 'melatonin', fr: 'melatonin' },
+  { he: 'מַגְנֵזְיוּם', translit: 'magnesium', fr: 'magnesium' }
+];
+const CATEGORIES = [
+  { he: 'יוֹפִי', translit: 'yofy', fr: 'beauty / cosmetics' },
+  { he: 'קְרֵמִים', translit: 'kremim', fr: 'creams' },
+  { he: 'שַׁמְפּוּ', translit: 'shampu', fr: 'shampoo' },
+  { he: 'פַּרְפוּם', translit: 'perfum', fr: 'perfume' },
+  { he: 'תִּינוֹק', translit: 'tinok', fr: 'baby care' },
+  { he: 'טִיטוּלִים', translit: 'titulim', fr: 'diapers' },
+  { he: 'כִּינוּי', translit: 'kinui', fr: 'toiletries' },
+  { he: 'עֶזְרָה רִאשׁוֹנָה', translit: 'ezra rishona', fr: 'first aid' },
+  { he: 'תַּחְבּוֹשֶׁת', translit: 'techbosheh', fr: 'bandage' },
+  { he: 'מַדְ-חוֹם', translit: 'madatum', fr: 'thermometer' }
+];
+const MEDICAL = [
+  { he: 'תְּרוּפָה קְבוּעָה', translit: 'trufa kvuah', fr: 'regular medication' },
+  { he: 'תְּרוּפָה חֲדָשָׁה', translit: 'trufa hadasha', fr: 'new medication' },
+  { he: 'טִפּוֹת', translit: 'tipot', fr: 'drops' },
+  { he: 'קְרֵמוֹ', translit: 'kremo', fr: 'cream' },
+  { he: 'טִיפּוֹץ', translit: 'tipotz', fr: 'drops / tablets' },
+  { he: 'שִׁעוּל', translit: 'shi\'ul', fr: 'cough' },
+  { he: 'צִנִּים', translit: 'tznim', fr: 'cold' },
+  { he: 'בֶּקִיוּת', translit: 'bekiyut', fr: 'stomach' },
+  { he: 'קָטָר', translit: 'katar', fr: 'catarrh / sinus' },
+  { he: 'זָעֲזָה', translit: 'ze\'aza', fr: 'rash' }
+];
+const CONVERSATION = [
+  { he: 'אוּלַי יֵשׁ', translit: 'ulai yesh', fr: 'do you have' },
+  { he: 'מָה אַתָּה מַמְלִיץ / מַמְלִיצָה', translit: 'ma at-a m\'malitz / molitza', fr: 'what do you (m/f) recommend' },
+  { he: 'כַּמָּה זֶה יוֹצֵא', translit: 'kama ze yotze', fr: 'how much (does it come to)' },
+  { he: 'אֶפְשָׁר לְשַׁלֵּם', translit: 'efshar lashalem', fr: 'can I pay' },
+  { he: 'אֶפְשָׁר בִּמְזוּמָנִים', translit: 'efshar bemzumanim', fr: 'can I pay cash' },
+  { he: 'קַבָּלָה', translit: 'kabala', fr: 'receipt' },
+  { he: 'שָׁפּוֹשַׁר', translit: 'shaposhar', fr: 'free (no charge)' },
+  { he: 'תַּכְשִׁיב תַּשְׁלוּם', translit: 'takhsiv tashlum', fr: 'price tag' },
+  { he: 'תַּכְשִׁיב עִם', translit: 'takhshiv im', fr: 'account / bill with' },
+  { he: 'קְנִיּוֹת', translit: 'kniyot', fr: 'purchases' }
+];
+
+const PHARMACY_QUESTION = [
+  { he: 'יוֹנָאס — שָׁלוֹם, יֵשׁ לִי כְּאֵב גָּרוֹן. אוּלַי יֵשׁ מַשֶּׁהוּ טוֹב?', translit: 'yonas — shalom, yesh li ke\'ev garon. ulai yesh mashehu tov?', fr: 'Jonas — Hi, I have a sore throat. Do you have something good?' },
+  { he: 'רוֹקֵחַ — כֵּן. זֶה כְּאֵב חָזָק אוֹ רַק יֹבֶשׁ?', translit: 'rokeach — ken. ze ke\'ev chazak o rak yovesh?', fr: 'Pharmacist — Yes. Is it strong pain or just dryness?' },
+  { he: 'יוֹנָאס — שְׁנֵיהֶם — גַּם כְּאֵב, גַּם יֹבֶשׁ.', translit: 'yonas — shneihem — gam ke\'ev, gam yovesh.', fr: 'Jonas — Both — pain and dryness.' },
+  { he: 'רוֹקֵחַ — אֲנִי מַמְלִיץ אוֹפְּטָלְגִין לַכְּאֵב, וְסוּכָּרִיוֹת מְצִיצָה לַיּוֹבֶשׁ.', translit: 'rokeach — ani mamlitz Optalgin la-ke\'ev, v\'sukariyot m\'tzitza la-yovesh.', fr: 'Pharmacist — I recommend Optalgin for the pain and lozenges for the dryness.' },
+  { he: 'יוֹנָאס — תּוֹדָה. אֲנִי צָרִיךְ לָלֶכֶת לְרוֹפֵא?', translit: 'yonas — todah. ani tzarich lalechet l\'rofe?', fr: 'Jonas — Thanks. Do I need to see a doctor?' },
+  { he: 'רוֹקֵחַ — חַכֵּה שְׁלוֹשָׁה עַד חֲמִשָּׁה יָמִים. אִם זֶה לֹא עוֹבֵר, חֲזֹר אוֹ לֵךְ לְרוֹפֵא.', translit: 'rokeach — chake shlosha ad chamisha yamim. im ze lo over, chazor o lech l\'rofe.', fr: 'Pharmacist — Wait three to five days. If it doesn\'t pass, come back or see a doctor.' },
+  { he: 'יוֹנָאס — הֵבַנְתִּי. כַּמָּה זֶה יוֹצֵא הַכֹּל?', translit: 'yonas — hevanti. kama ze yotze ha-kol?', fr: 'Jonas — Got it. How much does it come to in total?' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('chains', CHAINS);
+R('otc', OTC);
+R('categories', CATEGORIES);
+R('medical', MEDICAL);
+R('conversation', CONVERSATION);
+
+renderTextBlock('pharmacy-question', PHARMACY_QUESTION);
+
+addMiniQuiz('Block 23 · Pharmacy Quiz', [
+  { q: 'The largest Israeli pharmacy chain is...', options: ['Be Pharm', 'Super-Pharm', 'Pharma Plus', 'Sar Pharm'], answer: 1, explain: 'Super-Pharm has ~250 stores nationwide.' },
+  { q: 'The Israeli equivalent of paracetamol/Tylenol is...', options: ['Advil', 'Acamol', 'Nurofen', 'Optalgin'], answer: 1, explain: 'Acamol is the generic Israeli paracetamol brand.' },
+  { q: '"Trufa lo m\'kashravot" means...', options: ['prescription medication', 'non-prescription medication', 'cosmetics', 'first aid'], answer: 1, explain: 'Literally "non-binding medication" — over-the-counter.' },
+  { q: 'The Israeli ibuprofen brand commonly used is...', options: ['Acamol', 'Nurofen', 'Optalgin', 'aspirin'], answer: 1, explain: 'Nurofen and Advil are both available; Nurofen is the dominant brand name.' },
+  { q: 'Pharmacists in Israel are called...', options: ['rokeach', 'rofe', 'achot', 'mumche'], answer: 0, explain: 'Rokeach (literally "compounder").' },
+  { q: 'To ask "what do you recommend?" you say...', options: ['kama ze yotze', 'ma at molitz/molitza', 'efshar lashalem', 'shalom'], answer: 1, explain: 'Ma at molitz/molitza = what do you (m/f) recommend.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('pharmacy');
+  }
+});
+</script></body></html>

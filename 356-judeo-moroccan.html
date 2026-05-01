@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>356 — Haketia & Judeo-Moroccan Arabic</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Haketia & Judeo-Moroccan Arabic</h1><div class="subtitle">Lesson 356 · שָׂפוֹת יְהוּדֵי מָרוֹקוֹ</div></div><div class="nav"><a href="index.html">Home</a><a href="356-judeo-moroccan.html" class="active">356</a></div></header>
+
+<p class="intro">Moroccan Jewry was never linguistically monolithic. Two ancestral communities coexisted for five centuries — the Toshavim (autochthonous, pre-1492) speaking Judeo-Arabic, and the Megorashim (Spanish exiles after the expulsion) speaking Haketia, a Judeo-Spanish-Arabic creole. Add Berber-Jewish dialects in the Atlas Mountains, French from the 1912 protectorate, and Hebrew loanwords woven through everything. By the 1950s diaspora to Israel, France, Canada, this linguistic universe began collapsing. Today it is endangered. This lesson preserves the core.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Haketia is NOT Ladino. Both descend from Old Spanish, but Haketia (northern Morocco — Tetouan, Tangier, Larache, Asilah) absorbed heavy Moroccan Arabic and Hebrew influence, while Ladino (Salonika, Istanbul, Sarajevo) absorbed Turkish, Greek, and South Slavic. A Tetuani grandmother in Ashdod and a Salonikan grandfather in Bat Yam both speak "Judeo-Spanish" but understand each other only partially. The Toshavim of Fes, Marrakech, Meknes spoke a completely different language — Judeo-Moroccan Arabic, written in Hebrew letters, with its own regional variants.</div>
+
+<h2>Haketia (North Morocco)</h2>
+<div class="word-list" id="haketia"></div>
+
+<h2>Judeo-Moroccan Arabic (Toshavim)</h2>
+<div class="word-list" id="judeoarabic"></div>
+
+<h2>Berber-Jewish Atlas Dialect</h2>
+<div class="word-list" id="berber"></div>
+
+<h2>French Code-Switching</h2>
+<div class="word-list" id="french"></div>
+
+<h2>Hebrew Loanwords & Phrases</h2>
+<div class="word-list" id="hebrew"></div>
+
+<hr class="section-divider">
+
+<h2>The Linguistic Map of Moroccan Jewry</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A geographical and historical sketch of who spoke what, where, and when — the four-language ecosystem that produced Moroccan Jewish culture.</div>
+  <div id="map"></div>
+</div>
+
+<footer>Lesson 356 · Haketia & Judeo-Moroccan · <a href="index.html" style="color:var(--accent)">Back to all lessons →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const HAKETIA = [
+  { he: 'חַכִּתִּיָּה', translit: 'haketia', fr: 'Haketia (the language itself, also Haquitía)' },
+  { he: 'מְגוֹרָשִׁים', translit: 'megorashim', fr: 'expelled (Spanish exiles post-1492)' },
+  { he: 'בּוּאֵינוֹס דִּיאַס', translit: 'buenos dias', fr: 'good morning (Old Spanish base)' },
+  { he: 'אַדְיוֹ קוֹן דְיוֹ', translit: 'adio con dio', fr: 'goodbye, with God (farewell)' },
+  { he: 'מַנְזִיָּה', translit: 'manzia', fr: 'pity, misfortune (from Spanish + Arabic)' },
+  { he: 'הַזָּק יְי שָׁלוֹם', translit: 'hazak ye shalom', fr: 'be strong and at peace (mixed Hebrew greeting)' },
+  { he: 'אֵיל קַל', translit: 'el kal', fr: 'the synagogue (kahal, Hebrew root)' },
+  { he: 'דַרְבּוּקָה', translit: 'darbuka', fr: 'goblet drum (Arabic loan in Haketia)' },
+  { he: 'טֵטוּאָן', translit: 'tetuan', fr: 'Tetouan (Haketia heartland)' },
+  { he: 'קוֹמוֹ אַסְטָאס?', translit: 'komo astas?', fr: 'how are you? (Old Spanish form)' }
+];
+const JUDEOARABIC = [
+  { he: 'תּוֹשָׁבִים', translit: 'toshavim', fr: 'autochthonous (pre-1492 Moroccan Jews)' },
+  { he: 'אַנָא נְתִּי', translit: 'ana nti', fr: 'I am yours (intimate Judeo-Arabic)' },
+  { he: 'לְעַזִּיז', translit: 'l-aziz', fr: 'the dear one (al-aziz, Arabic with Hebrew article echo)' },
+  { he: 'בִּסְמִילְלָאה', translit: 'bismillah', fr: 'in the name of God (used by Jews too)' },
+  { he: 'דָּאר אֵל יְהוּד', translit: 'dar el yhud', fr: 'house of the Jews (the mellah, Jewish quarter)' },
+  { he: 'מֵלָּאח', translit: 'mellah', fr: 'mellah (Jewish quarter, Arabic origin)' },
+  { he: 'שְׁבָּת אֵל כַּבִּיר', translit: 'shabbat el kbir', fr: 'the great Sabbath (mixed Hebrew-Arabic)' },
+  { he: 'עְרֻסָה', translit: 'arusa', fr: 'bride (Arabic, also wedding pastry)' },
+  { he: 'פֵז', translit: 'fez', fr: 'Fes (Toshavim center, oldest community)' },
+  { he: 'מַעְרוּף', translit: 'maaruf', fr: 'kindness, favor (cultural concept)' }
+];
+const BERBER = [
+  { he: 'תַּמַזִיגְ"ת', translit: 'tamazight', fr: 'Berber language (Atlas mountains)' },
+  { he: 'אַזוּל', translit: 'azul', fr: 'hello (Berber greeting, used by Atlas Jews)' },
+  { he: 'אִמַזִיגֵן', translit: 'imazighen', fr: 'the free people (Berber self-name)' },
+  { he: 'תַּפְרַאוּת', translit: 'tafraout', fr: 'Tafraout (Anti-Atlas, Jewish presence)' },
+  { he: 'דְמְנַאת', translit: 'demnat', fr: 'Demnat (largest Atlas Jewish community)' },
+  { he: 'אִגַ"ר', translit: 'igher', fr: 'fortified granary (Atlas Jewish villages)' },
+  { he: 'אַסְגַּ"ס אַמֵגַ"ז', translit: 'asegas amegaz', fr: 'happy new year (Berber)' },
+  { he: 'יְהוּדִים בֶּרְבֶּרִים', translit: 'yehudim berberim', fr: 'Berber Jews (modern Hebrew term)' },
+  { he: 'תְלוּאַת', translit: 'tlouat', fr: 'Telouet (Glaoui kasbah, Jewish trade)' },
+  { he: 'מִי יוֹדֵעַ אֲרַמִית', translit: 'mi yode\'a aramit', fr: 'who knows Aramaic (Berber-Aramaic Pesach song tradition)' }
+];
+const FRENCH = [
+  { he: 'בּוֹנְזׁ"וּר', translit: 'bonjour', fr: 'good morning (post-1912 protectorate)' },
+  { he: 'מֶרְסִי בְּזָאף', translit: 'merci bezaf', fr: 'thanks a lot (French + Arabic mix)' },
+  { he: 'לִיסֶה אַלְיַאנְס', translit: 'lycée alliance', fr: 'Alliance Israelite school (network in Morocco from 1862)' },
+  { he: 'פּרוֹטֶקטוֹרָה', translit: 'protectora', fr: 'protectorate (1912-1956 French rule)' },
+  { he: 'צָפַ"רְצָה אֵל קָרְט', translit: 'safarsa el kart', fr: 'show the card (mixed register)' },
+  { he: 'דָאר אֵל מִינְיוּת', translit: 'dar el minute', fr: 'wait a minute (French in Arabic syntax)' },
+  { he: 'בּוֹן אֲפֵטִי', translit: 'bon appétit', fr: 'enjoy your meal (entered family table)' },
+  { he: 'גַ"מַיין', translit: 'jamais', fr: 'never (used in Haketia conversation)' },
+  { he: 'אַלוֹר?', translit: 'alors?', fr: 'so? (conversational French insert)' },
+  { he: 'סָה וָה?', translit: 'ça va?', fr: 'how are you? (default modern Franco-Moroccan greeting)' }
+];
+const HEBREW = [
+  { he: 'שָׁלוֹם עֲלֵיכֶם', translit: 'shalom aleichem', fr: 'peace upon you (greeting)' },
+  { he: 'עֲלֵיכֶם הַשָּׁלוֹם', translit: 'aleichem ha-shalom', fr: 'and upon you peace (response)' },
+  { he: 'סַלָאם עֲלִיכוּם', translit: 'salam aleikum', fr: 'peace be upon you (Arabic, used by Jews)' },
+  { he: 'וַעֲלִיכוּם אֵסַלָאם', translit: 'wa aleikum es-salam', fr: 'and upon you peace (response)' },
+  { he: 'בָּרוּךְ הַשֵּׁם', translit: 'baruch ha-shem', fr: 'blessed be the Name (constant interjection)' },
+  { he: 'בְּעֶזְרַת הַשֵּׁם', translit: 'b\'ezrat ha-shem', fr: 'with God\'s help' },
+  { he: 'מַזָּל טוֹב', translit: 'mazal tov', fr: 'good fortune, congratulations' },
+  { he: 'תַּפְקֵיד', translit: 'tafkid', fr: 'role, function (Hebrew loanword common)' },
+  { he: 'חָכָם', translit: 'chacham', fr: 'sage, rabbi (used as title in Morocco)' },
+  { he: 'הַגָּדָה שֶׁל פֶּסַח', translit: 'hagada shel pesach', fr: 'Passover Haggadah (often bilingual He-Arabic in Morocco)' }
+];
+
+const MAP = [
+  { he: 'הַצָּפוֹן: טֵטוּאָן, טַנְגֵ\'יר, לָרָאשׁ, אַסִילָה — חַכִּתִּיָּה (יְהוּדֵי-סְפָרַדִּית-עֲרַבִּית)', translit: 'ha-tzafon: tetuan, tangier, larache, asila — haketia (judeo-spanish-arabic)', fr: 'The North: Tetouan, Tangier, Larache, Asilah — Haketia, the creole spoken by descendants of Spanish exiles. Old Castilian base, Moroccan Arabic vocabulary, Hebrew religious terms.' },
+  { he: 'פֵז וּמִקְנֵס: יְהוּדִית-מָרוֹקָאִית קְלָאסִית — שָׂפַת הַתּוֹשָׁבִים, נִכְתֶּבֶת בְּכְתָב עִבְרִי', translit: 'fez u\'meknes: yehudit-marokait klassit — sfat ha-toshavim, nichtevet b\'ktav ivri', fr: 'Fes and Meknes: classical Judeo-Moroccan Arabic — the language of the Toshavim, the autochthonous community present since Roman times. Written in Hebrew script for legal contracts, poetry, Bible translations.' },
+  { he: 'מַרָאקֵשׁ וְאֵסַוִירָה: דִּיאָלֶקְט דְּרוֹמִי, הַשְׁפָּעַת בֶּרְבֶּרִית גְּדוֹלָה, סוֹחֲרֵי יָם בְּמוֹגָדוֹר', translit: 'marrakesh v\'essaouira: dialect dromi, hashpa\'at berberit gdola, socharei yam b\'mogador', fr: 'Marrakech and Essaouira: southern Judeo-Arabic dialect, heavy Berber influence, Atlantic merchant culture in Mogador (Essaouira) trading with Europe.' },
+  { he: 'הָרֵי הָאַטְלָס: כְּפָרִים יְהוּדֵי-בֶּרְבֶּרִים — שִׂיחָה בֶּרְבֶּרִית, תְּפִלָּה עִבְרִית, הַגָּדָה תַּרְגוּם', translit: 'harei ha-atlas: kfarim yehudei-berberim — sicha berberit, tfila ivrit, hagada targum', fr: 'Atlas Mountains: Berber-Jewish villages (Demnat, Telouet, Tafraout, Tinghir) — daily speech in Tamazight, prayer in Hebrew, Haggadah recited in Berber translation. Disappeared by 1970.' },
+  { he: 'אַחֲרֵי 1912: הַצָּרְפָתִית נִכְנֶסֶת — בָּתֵי סֵפֶר אַלְיַאנְס, מִינְהָל, מִסְחָר. הַדּוֹר הַצָּעִיר עוֹבֵר', translit: 'acharei 1912: ha-tzarfatit nichneset — batei sefer alliance, minhal, mischar. ha-dor ha-tza\'ir over', fr: 'After 1912: French enters via the Alliance Israelite Universelle school network, colonial administration, commerce. The young generation shifts to French as the language of upward mobility, leaving Haketia and Judeo-Arabic to grandparents.' },
+  { he: 'אַחֲרֵי 1948-1967: הַעֲלִיָּה — לְיִשְׂרָאֵל, צָרְפַת, קַנָּדָה. הַשָּׂפוֹת מַתְחִילוֹת לְהֵעָלֵם', translit: 'acharei 1948-1967: ha-aliya — l\'yisrael, tzarfat, canada. ha-sfot matchilot l\'he\'alem', fr: 'After 1948-1967: mass aliyah to Israel, emigration to France and Canada. The languages begin disappearing as children of immigrants speak Hebrew, French, English. Less than 5% of Moroccan-Israeli youth today speak Haketia or Judeo-Arabic fluently.' },
+  { he: 'הַיּוֹם: שִׁמּוּר אַקָדֶמִי — אוּנִיבֶרְסִיטַת בַּר-אִילָן, הַמַּכוֹן בֶּן-צְבִי, אַרְכִיּוֹנִים בְּפָּרִיז וּמַדְרִיד', translit: 'hayom: shimur akademi — universitat bar-ilan, ha-machon ben-tzvi, archionim b\'paris u\'madrid', fr: 'Today: academic preservation at Bar-Ilan University, Ben-Zvi Institute (Jerusalem), Inalco (Paris), CSIC (Madrid). Recordings of last native speakers, dictionaries, oral history projects. The languages live in archives more than in homes.' },
+  { he: 'הַחֲשִׁיבוּת: לְהָבִין יְהוּדִים מָרוֹקָאִים בְּיִשְׂרָאֵל זֶה לְהָבִין שֶׁבְּמִשְׁפָּחָה אַחַת יֵשׁ אַרְבַּע שָׂפוֹת אַבָּהוּת', translit: 'ha-chashivut: l\'havin yehudim marokaim b\'yisrael ze l\'havin sheb\'mishpacha achat yesh arba sfot abahut', fr: 'Why it matters: to understand Moroccan Jews in Israel is to understand that within one family, four ancestral languages may sit at the Shabbat table — Haketia from grandmother in Tetouan, Judeo-Arabic from grandfather in Fes, Berber from a great-aunt in the Atlas, French from the Alliance schooling. Hebrew is the bridge that holds them.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('haketia', HAKETIA);
+R('judeoarabic', JUDEOARABIC);
+R('berber', BERBER);
+R('french', FRENCH);
+R('hebrew', HEBREW);
+
+renderTextBlock('map', MAP);
+
+addMiniQuiz('Lesson 356 — Languages of Moroccan Jewry', [
+  { q: 'Haketia is spoken historically in which region of Morocco?', options: ['Atlas Mountains', 'Northern cities (Tetouan, Tangier)', 'Marrakech', 'Sahara'], answer: 1, explain: 'Haketia is the language of the Megorashim — Spanish exiles who settled in the northern coastal cities after 1492.' },
+  { q: 'The Toshavim are...', options: ['Spanish exiles post-1492', 'Autochthonous Moroccan Jews predating the expulsion', 'French colonial Jews', 'Berber converts'], answer: 1, explain: 'Toshavim = "settlers/residents" — the indigenous Moroccan Jewish community present since Roman times, distinct from the post-1492 Spanish arrivals (Megorashim).' },
+  { q: 'Haketia and Ladino are...', options: ['The same language', 'Both Judeo-Spanish but with different substrates (Arabic vs Turkish/Greek)', 'Unrelated', 'Modern inventions'], answer: 1, explain: 'Both descend from Old Spanish, but Haketia absorbed Moroccan Arabic and Hebrew, while Ladino absorbed Ottoman Turkish, Greek, and South Slavic languages.' },
+  { q: 'Judeo-Moroccan Arabic was traditionally written in...', options: ['Arabic script', 'Latin script', 'Hebrew script', 'Berber Tifinagh'], answer: 2, explain: 'Like most Judeo-Arabic varieties (Iraqi, Yemenite, Egyptian), Moroccan Judeo-Arabic was written in Hebrew letters for contracts, poetry, and biblical translations.' },
+  { q: 'French entered Moroccan Jewish life primarily through...', options: ['Forced conversion', 'The Alliance Israelite Universelle schools and the 1912 protectorate', 'Trade with Quebec', 'Religious reform'], answer: 1, explain: 'The Alliance Israelite Universelle school network (from 1862) plus the French protectorate (1912-1956) shifted the young generation toward French as the language of administration and mobility.' },
+  { q: 'When a Moroccan Jew says "salam aleikum" the traditional response is...', options: ['Bonjour', 'Wa aleikum es-salam', 'Shalom', 'Ahlan'], answer: 1, explain: 'The Arabic peace greeting and its response (wa aleikum es-salam) crossed religious boundaries — Jews and Muslims used the same formula, with Hebrew "shalom aleichem" reserved for Jewish-internal contexts.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(356);
+  }
+});
+</script></body></html>

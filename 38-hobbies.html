@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>38 — Hobbies & Leisure</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Hobbies & Leisure</h1><div class="subtitle">Lesson 38 · תחביבים</div></div><div class="nav"><a href="index.html">Home</a><a href="38-hobbies.html" class="active">38</a></div></header>
+
+<p class="intro">Vocabulary for asking and answering "what do you do for fun?" — a key small talk question. Israeli leisure: beach, hikes, board games, photography, gardening, reading, gaming.</p>
+
+<h2>Hobby Categories</h2>
+<div class="word-list" id="categories"></div>
+
+<h2>Reading & Writing</h2>
+<div class="word-list" id="reading"></div>
+
+<h2>Arts & Crafts</h2>
+<div class="word-list" id="arts"></div>
+
+<h2>Games & Puzzles</h2>
+<div class="word-list" id="games"></div>
+
+<h2>Photography & Tech Hobbies</h2>
+<div class="word-list" id="tech"></div>
+
+<h2>Outdoor Hobbies</h2>
+<div class="word-list" id="outdoor"></div>
+
+<h2>Verbs of Leisure</h2>
+<div class="word-list" id="verbs"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 38 · hobbies · <a href="39-pets-animals.html" style="color:var(--accent)">Next: Pets & Animals →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const CATEGORIES = [
+  { he: 'תַּחְבִּיב', translit: 'tachbiv', fr: 'hobby' },
+  { he: 'תַּחְבִּיבִים', translit: 'tachbivim', fr: 'hobbies' },
+  { he: 'פְּנַאי', translit: 'pnai', fr: 'leisure / free time' },
+  { he: 'זְמַן חָפְשִׁי', translit: 'zman chofshi', fr: 'free time' },
+  { he: 'תַּעֲשׂוּקָה', translit: 'ta\'asuka', fr: 'occupation' },
+  { he: 'בִּדּוּר', translit: 'bidur', fr: 'entertainment' }
+];
+const READING = [
+  { he: 'קְרִיאָה', translit: 'kri\'a', fr: 'reading' },
+  { he: 'סֵפֶר', translit: 'sefer', fr: 'book' },
+  { he: 'רוֹמָן', translit: 'roman', fr: 'novel' },
+  { he: 'שִׁירָה', translit: 'shira', fr: 'poetry' },
+  { he: 'עִתּוֹן', translit: 'iton', fr: 'newspaper' },
+  { he: 'מַגָזִין', translit: 'magazin', fr: 'magazine' },
+  { he: 'בְּלוֹג', translit: 'blog', fr: 'blog' },
+  { he: 'כְּתִיבָה', translit: 'ktiva', fr: 'writing' },
+  { he: 'יוֹמָן', translit: 'yoman', fr: 'diary / journal' }
+];
+const ARTS = [
+  { he: 'צִיּוּר', translit: 'tziyur', fr: 'painting / drawing' },
+  { he: 'פִּסּוּל', translit: 'pisul', fr: 'sculpture' },
+  { he: 'גְּרָפִיקָה', translit: 'grafika', fr: 'graphic design' },
+  { he: 'אָמָנוּת', translit: 'amanut', fr: 'art' },
+  { he: 'יְצִירָה', translit: 'yetzira', fr: 'creation / artwork' },
+  { he: 'סְרִיגָה', translit: 'sriga', fr: 'knitting' },
+  { he: 'תְּפִירָה', translit: 'tfira', fr: 'sewing' }
+];
+const GAMES = [
+  { he: 'מִשְׂחָק', translit: 'mischak', fr: 'game' },
+  { he: 'שַׁחְמָט', translit: 'shachmat', fr: 'chess' },
+  { he: 'דַּמְקָה', translit: 'damka', fr: 'checkers' },
+  { he: 'קְלָפִים', translit: 'klafim', fr: 'cards' },
+  { he: 'מִשְׂחַק קוּפְסָה', translit: 'mischak kufsa', fr: 'board game' },
+  { he: 'פָּזֵל', translit: 'pazel', fr: 'puzzle' },
+  { he: 'תַּשְׁבֵּץ', translit: 'tashbetz', fr: 'crossword' }
+];
+const TECH = [
+  { he: 'צִלּוּם', translit: 'tzilum', fr: 'photography' },
+  { he: 'מַצְלֵמָה', translit: 'matzlema', fr: 'camera' },
+  { he: 'גֵּיימִינְג', translit: 'gaming', fr: 'gaming' },
+  { he: 'מִשְׂחַק וִידֵאוֹ', translit: 'mischak video', fr: 'video game' },
+  { he: 'קוֹנְסוֹלָה', translit: 'konsola', fr: 'console' },
+  { he: 'תִּכְנוּת', translit: 'tichnut', fr: 'programming' },
+  { he: 'הַקְלָטַת פּוֹדְקַסְט', translit: 'haklatat podcast', fr: 'podcasting' }
+];
+const OUTDOOR = [
+  { he: 'גַּנָּנוּת', translit: 'gananut', fr: 'gardening' },
+  { he: 'קֶמְפִּינְג', translit: 'kemping', fr: 'camping' },
+  { he: 'תַּצְפִּית', translit: 'tatzpit', fr: 'birdwatching / lookout' },
+  { he: 'דַּיִג', translit: 'dayig', fr: 'fishing' },
+  { he: 'אַסְטְרוֹנוֹמְיָה', translit: 'astronomya', fr: 'astronomy' }
+];
+const VERBS = [
+  { he: 'לִקְרֹא', translit: 'likro', fr: 'to read' },
+  { he: 'לִכְתֹּב', translit: 'lichtov', fr: 'to write' },
+  { he: 'לְצַיֵּר', translit: 'letzayer', fr: 'to draw / paint' },
+  { he: 'לְצַלֵּם', translit: 'letzalem', fr: 'to take photos' },
+  { he: 'לְשַׂחֵק', translit: 'lesachek', fr: 'to play' },
+  { he: 'לֶאֱסֹף', translit: 'le\'esof', fr: 'to collect' },
+  { he: 'לְבַשֵּׁל', translit: 'levashel', fr: 'to cook' },
+  { he: 'לְטַיֵּל', translit: 'letayel', fr: 'to travel / hike' },
+  { he: 'לְנַגֵּן', translit: 'lenagen', fr: 'to play (instrument)' },
+  { he: 'לִשְׁמֹעַ מוּזִיקָה', translit: 'lishmoa muzika', fr: 'to listen to music' }
+];
+const PHRASES = [
+  { he: 'מָה אַתָּה אוֹהֵב לַעֲשׂוֹת בִּזְמַן הַפְּנַאי?', translit: 'ma ata ohev la\'asot bi-zman ha-pnai?', fr: 'what do you like to do in your free time? (m.)' },
+  { he: 'הַתַּחְבִּיב שֶׁלִּי הוּא...', translit: 'ha-tachbiv sheli hu...', fr: 'my hobby is...' },
+  { he: 'אֲנִי אוֹהֵב לִקְרֹא', translit: 'ani ohev likro', fr: 'I love reading (m.)' },
+  { he: 'אֲנִי מְצַלֵּם הַרְבֵּה', translit: 'ani metzalem harbe', fr: 'I take a lot of photos (m.)' },
+  { he: 'אֵין לִי זְמַן לְתַחְבִּיבִים', translit: 'eyn li zman le-tachbivim', fr: "I don't have time for hobbies" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('categories', CATEGORIES); R('reading', READING); R('arts', ARTS); R('games', GAMES); R('tech', TECH); R('outdoor', OUTDOOR); R('verbs', VERBS); R('phrases', PHRASES);
+addExtraVocab('Hobbies — Verbs', [
+  { he: 'לִקְרֹא', translit: 'likro', fr: 'to read' },
+  { he: 'לִכְתֹּב', translit: 'lichtov', fr: 'to write' },
+  { he: 'לְצַיֵּר', translit: 'letzayer', fr: 'to draw / paint' },
+  { he: 'לְבַשֵּׁל', translit: 'levashel', fr: 'to cook' },
+  { he: 'לֶאֱפוֹת', translit: 'le\'efot', fr: 'to bake' },
+  { he: 'לְטַיֵּל', translit: 'letayel', fr: 'to travel / hike' },
+  { he: 'לְצַלֵּם', translit: 'letzalem', fr: 'to photograph' },
+  { he: 'לְנַגֵּן', translit: 'lenagen', fr: 'to play (instrument)' },
+  { he: 'לִשְׂחוֹק', translit: 'lischok', fr: 'to play (game)' },
+  { he: 'לִרְקוֹד', translit: 'lirkod', fr: 'to dance' },
+  { he: 'לָשִׁיר', translit: 'lashir', fr: 'to sing' },
+  { he: 'לַעֲסוֹק בְּ-', translit: 'la\'asok be-', fr: 'to engage in (activity)' }
+]);
+
+addExtraVocab('Hobbies & Leisure', [
+  { he: 'תַּחְבִּיב', translit: 'tachbiv', fr: 'hobby' },
+  { he: 'קְרִיאָה', translit: 'kri\'a', fr: 'reading' },
+  { he: 'כְּתִיבָה', translit: 'ktiva', fr: 'writing' },
+  { he: 'צִיּוּר', translit: 'tziyur', fr: 'painting / drawing' },
+  { he: 'גִּנּוּן', translit: 'ginun', fr: 'gardening' },
+  { he: 'דַּיִג', translit: 'dayig', fr: 'fishing' },
+  { he: 'טִיּוּלִים', translit: 'tiyulim', fr: 'hiking / trips' },
+  { he: 'צִלּוּם', translit: 'tzilum', fr: 'photography' },
+  { he: 'שַׁחְמָט', translit: 'shachmat', fr: 'chess' },
+  { he: 'מִשְׂחֲקֵי קֻפְסָה', translit: 'mischakey kufsa', fr: 'board games' },
+  { he: 'קוֹלְנוֹעַ', translit: 'kolnoa', fr: 'cinema' },
+  { he: 'קוֹנְצֶרְט', translit: 'kontzert', fr: 'concert' },
+  { he: 'טְלֶוִיזְיָה', translit: 'televizya', fr: 'TV' },
+  { he: 'נֶטְפְלִיקְס', translit: 'netflix', fr: 'Netflix' },
+  { he: 'פּוֹדְקַסְט', translit: 'podcast', fr: 'podcast' }
+]);
+
+addMiniQuiz('Hobbies Quiz', [
+  { q: 'תַּחְבִּיב is...', options: ['Mood', 'Hobby', 'Friend', 'Game'], answer: 1 },
+  { q: '"I love hiking" =', options: ['אֲנִי אוֹהֵב טִיּוּלִים', 'אֲנִי אוֹהֵב קְרִיאָה', 'אֲנִי אוֹהֵב צִיּוּר', 'אֲנִי אוֹהֵב שַׁחְמָט'], answer: 0 },
+  { q: 'מָה אַתָּה עוֹשֶׂה בִּזְמַן הַפָּנוּי? means...', options: ['What\'s your job?', 'What do you do in your free time?', 'What did you do?', 'What do you want?'], answer: 1 },
+  { q: 'Most popular Israeli weekend activity:', options: ['Movies', 'Beach + hike', 'Shopping mall', 'Stay home'], answer: 1 },
+  { q: 'A "טִיּוּל" usually involves...', options: ['Cooking', 'Walking/hiking outdoors', 'Reading', 'Video games'], answer: 1 }
+]);
+
+addCulturalText('What Israelis Do on Saturday', 'Shabbat = no work, no commerce in most places. So everyone goes to the same activities. Predictable but joyful.', [
+  { he: 'בַּבֹּקֶר — בֵּית קָפֶה אִם הוּא פָּתוּחַ', translit: "Ba-boker — beit kafe im hu patuach", fr: "Morning — café if it's open" },
+  { he: 'בַּצָּהֳרַיִם — אֲרוּחַת שַׁבָּת מִשְׁפַּחְתִּית', translit: "Ba-tzohorayim — aruchat shabbat mishpachtit", fr: 'Noon — family Shabbat lunch' },
+  { he: 'אַחַר כָּךְ — שֵׁנַת צָהֳרַיִם, חוֹבָה!', translit: "Achar kach — shenat tzohorayim, chova!", fr: 'After — afternoon nap, mandatory!' },
+  { he: 'בָּעֶרֶב — טִיּוּל בַּפַּארְק אוֹ בַּטַּיֶּלֶת', translit: "Ba-erev — tiyul ba-park o ba-tayelet", fr: 'Evening — walk in park or promenade' },
+  { he: 'אוֹ הוֹפָעָה בַּצוּקֶר', translit: "O hofa\'a ba-tzuker", fr: "Or a show at the Tzuker (cultural center)" },
+  { he: 'בְּמוֹצָאֵי שַׁבָּת — קוֹלְנוֹעַ אוֹ פּוּמְפִּיָּה', translit: "Be-motzaei shabbat — kolno\'a o pumpiya", fr: 'Saturday night — cinema or pub' },
+  { he: 'מָחָר עֲבוֹדָה, אֲבָל הָיָה כֵּיף', translit: "Machar avoda, aval haya kef", fr: 'Tomorrow work, but it was fun' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('hobbies'); } });
+</script></body></html>

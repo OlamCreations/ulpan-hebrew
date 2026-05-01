@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>29 — Pa'al Binyan Deep Dive</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Pa'al Binyan Deep Dive</h1>
+    <div class="subtitle">Lesson 29 · בניין פעל</div>
+  </div>
+  <div class="nav"><a href="index.html">Home</a><a href="29-paal-deep.html" class="active">29</a></div>
+</header>
+
+<p class="intro">
+  Pa'al (also called קל / kal, "light") is the most common binyan — about 70% of basic Hebrew verbs use it. Simple, active actions: walk, eat, write, read, open, close, sit, stand. Master this binyan and you understand most of conversational Hebrew.
+</p>
+
+<h2>Pa'al — Conjugation Pattern of לִכְתֹּב (likhtov, "to write")</h2>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 16px;">
+  <h3 style="color: var(--accent); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Present</h3>
+  <div class="word-list" id="present"></div>
+</div>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 16px;">
+  <h3 style="color: var(--accent); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Past</h3>
+  <div class="word-list" id="past"></div>
+</div>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-bottom: 16px;">
+  <h3 style="color: var(--accent); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Future</h3>
+  <div class="word-list" id="future"></div>
+</div>
+
+<h2>30 Common Pa'al Verbs (infinitive form)</h2>
+<div class="word-list" id="verbs"></div>
+
+<hr class="section-divider">
+
+<h2>Example Sentences</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>
+  Lesson 29 · Pa'al deep dive · <a href="30-piel-hitpael.html" style="color:var(--accent)">Next: Pi'el & Hitpa'el →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const PRESENT = [
+  { he: 'כּוֹתֵב',     translit: 'kotev',    fr: 'I/you/he write (m. sg.)' },
+  { he: 'כּוֹתֶבֶת',   translit: 'kotevet',  fr: 'I/you/she write (f. sg.)' },
+  { he: 'כּוֹתְבִים', translit: 'kotvim',   fr: 'we/you/they write (m. pl.)' },
+  { he: 'כּוֹתְבוֹת', translit: 'kotvot',   fr: 'we/you/they write (f. pl.)' }
+];
+
+const PAST = [
+  { he: 'כָּתַבְתִּי',  translit: 'katavti',   fr: 'I wrote' },
+  { he: 'כָּתַבְתָּ',   translit: 'katavta',   fr: 'you wrote (m.)' },
+  { he: 'כָּתַבְתְּ',   translit: 'katavt',    fr: 'you wrote (f.)' },
+  { he: 'כָּתַב',       translit: 'katav',     fr: 'he wrote' },
+  { he: 'כָּתְבָה',     translit: 'katva',     fr: 'she wrote' },
+  { he: 'כָּתַבְנוּ',   translit: 'katavnu',   fr: 'we wrote' },
+  { he: 'כְּתַבְתֶּם',  translit: 'ktavtem',   fr: 'you wrote (m. pl.)' },
+  { he: 'כָּתְבוּ',     translit: 'katvu',     fr: 'they wrote' }
+];
+
+const FUTURE = [
+  { he: 'אֶכְתֹּב',    translit: 'echtov',    fr: 'I will write' },
+  { he: 'תִּכְתֹּב',   translit: 'tichtov',   fr: 'you will write (m.)' },
+  { he: 'תִּכְתְּבִי', translit: 'tichtevi',  fr: 'you will write (f.)' },
+  { he: 'יִכְתֹּב',    translit: 'yichtov',   fr: 'he will write' },
+  { he: 'תִּכְתֹּב',   translit: 'tichtov',   fr: 'she will write' },
+  { he: 'נִכְתֹּב',    translit: 'nichtov',   fr: 'we will write' },
+  { he: 'יִכְתְּבוּ',  translit: 'yichtevu',  fr: 'they will write' }
+];
+
+const VERBS = [
+  { he: 'לִקְרֹא',     translit: 'likro',     fr: 'to read' },
+  { he: 'לִכְתֹּב',    translit: 'lichtov',   fr: 'to write' },
+  { he: 'לֶאֱכֹל',     translit: "le'echol",  fr: 'to eat' },
+  { he: 'לִשְׁתּוֹת',  translit: 'lishtot',   fr: 'to drink' },
+  { he: 'לָלֶכֶת',     translit: 'lalechet',  fr: 'to go / walk' },
+  { he: 'לָבוֹא',      translit: 'lavo',      fr: 'to come' },
+  { he: 'לָקַחַת',     translit: 'lakachat',  fr: 'to take' },
+  { he: 'לָתֵת',       translit: 'latet',     fr: 'to give' },
+  { he: 'לִשְׁמֹעַ',  translit: "lishmo'a",   fr: 'to hear' },
+  { he: 'לִרְאוֹת',    translit: "lir'ot",    fr: 'to see' },
+  { he: 'לָדַעַת',     translit: 'lada\'at',  fr: 'to know' },
+  { he: 'לִגְמֹר',    translit: 'ligmor',    fr: 'to finish' },
+  { he: 'לִפְתֹּחַ',   translit: 'liftoach',  fr: 'to open' },
+  { he: 'לִסְגֹּר',    translit: 'lisgor',    fr: 'to close' },
+  { he: 'לִשְׁכֹּחַ',  translit: 'lishkoach', fr: 'to forget' },
+  { he: 'לִזְכֹּר',    translit: 'lizkor',    fr: 'to remember' },
+  { he: 'לִשְׁאֹל',    translit: "lish'ol",   fr: 'to ask' },
+  { he: 'לַעֲנוֹת',    translit: 'la\'anot',  fr: 'to answer' },
+  { he: 'לִישֹׁן',     translit: 'lishon',    fr: 'to sleep' },
+  { he: 'לָשִׁיר',     translit: 'lashir',    fr: 'to sing' },
+  { he: 'לִרְקֹד',     translit: 'lirkod',    fr: 'to dance' },
+  { he: 'לִצְחֹק',     translit: 'litzchok',  fr: 'to laugh' },
+  { he: 'לִבְכּוֹת',   translit: 'livkot',    fr: 'to cry' },
+  { he: 'לַעֲבֹד',    translit: 'la\'avod',  fr: 'to work' },
+  { he: 'לָנוּחַ',    translit: 'lanuach',   fr: 'to rest' },
+  { he: 'לִקְפֹּץ',    translit: 'likpotz',   fr: 'to jump' },
+  { he: 'לִשְׁכֹּב',   translit: 'lishkav',   fr: 'to lie down' },
+  { he: 'לִקְנוֹת',    translit: 'liknot',    fr: 'to buy' },
+  { he: 'לִמְכֹּר',    translit: 'limkor',    fr: 'to sell' },
+  { he: 'לַחְזֹר',    translit: 'lachzor',   fr: 'to return' }
+];
+
+const PHRASES = [
+  { he: 'אֲנִי קוֹרֵא סֵפֶר',           translit: 'ani kore sefer',           fr: "I'm reading a book (m.)" },
+  { he: 'הִיא יָשְׁנָה טוֹב',            translit: 'hi yashna tov',            fr: 'she slept well' },
+  { he: 'נִשְׁכַּח אֶת זֶה',             translit: 'nishkach et ze',           fr: "let's forget about it" },
+  { he: 'תִּפְתַּח אֶת הַדֶּלֶת',        translit: 'tiftach et ha-delet',      fr: 'open the door (m.)' },
+  { he: 'הוּא קָנָה בַּיִת חָדָשׁ',     translit: 'hu kana bayit chadash',    fr: 'he bought a new house' },
+  { he: 'תִּסְגֹּר אֶת הַחַלּוֹן',       translit: 'tisgor et ha-chalon',      fr: 'close the window (m.)' },
+  { he: 'אֲנִי לֹא זוֹכֵר',               translit: 'ani lo zocher',            fr: "I don't remember (m.)" }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('present', PRESENT);
+renderRows('past', PAST);
+renderRows('future', FUTURE);
+renderRows('verbs', VERBS);
+renderRows('phrases', PHRASES);
+
+addExtraVocab('30 Top Pa\'al Verbs (Infinitives)', [
+  { he: 'לֶאֱכוֹל', translit: 'le\'echol', fr: 'to eat' },
+  { he: 'לִשְׁתּוֹת', translit: 'lishtot', fr: 'to drink' },
+  { he: 'לִכְתֹּב', translit: 'lichtov', fr: 'to write' },
+  { he: 'לִקְרֹא', translit: 'likro', fr: 'to read' },
+  { he: 'לִלְמֹד', translit: 'lilmod', fr: 'to learn' },
+  { he: 'לַעֲבוֹד', translit: 'la\'avod', fr: 'to work' },
+  { he: 'לִשְׁמֹעַ', translit: 'lishmoa', fr: 'to hear' },
+  { he: 'לִרְאוֹת', translit: 'lir\'ot', fr: 'to see' },
+  { he: 'לָשִׁיר', translit: 'lashir', fr: 'to sing' },
+  { he: 'לִמְכֹּר', translit: 'limkor', fr: 'to sell' },
+  { he: 'לִקְנוֹת', translit: 'liknot', fr: 'to buy' },
+  { he: 'לִפְתֹּחַ', translit: 'liftoach', fr: 'to open' },
+  { he: 'לִסְגוֹר', translit: 'lisgor', fr: 'to close' },
+  { he: 'לִשְׁכֹּחַ', translit: 'lishkoach', fr: 'to forget' },
+  { he: 'לִזְכֹּר', translit: 'lizkor', fr: 'to remember' },
+  { he: 'לִשְׁמֹר', translit: 'lishmor', fr: 'to keep / save' },
+  { he: 'לִצְעוֹק', translit: 'litz\'ok', fr: 'to shout' },
+  { he: 'לִבְנוֹת', translit: 'livnot', fr: 'to build' },
+  { he: 'לִכְנוֹס', translit: 'lichnos', fr: 'to gather' },
+  { he: 'לִבְכּוֹת', translit: 'livkot', fr: 'to cry' }
+]);
+
+addMiniQuiz('Pa\'al Deep Quiz', [
+  { q: 'Pa\'al is also called...', options: ['Kal', 'Heavy', 'Active', 'Passive'], answer: 0, explain: 'kal = "light/simple"' },
+  { q: '"Eats" (m.s. present) =', options: ['אוֹכֵל', 'אָכַל', 'יֹאכַל', 'אֱכוֹל'], answer: 0 },
+  { q: '3-letter root pattern in pa\'al present (m.s.):', options: ['o-e (CoCeC)', 'a-a (CaCaC)', 'i-i (CiCiC)', 'a-e (CaCeC)'], answer: 0, explain: 'C1oC2eC3 — like שׁוֹמֵר (shomer)' },
+  { q: 'Past 3rd person sg. m. ending:', options: ['-תִּי', '-תָּ', 'no suffix', '-וּ'], answer: 2, explain: 'הָלַךְ has no suffix for 3rd m.s.' },
+  { q: 'Future "I" prefix in pa\'al =', options: ['א-', 'תּ-', 'י-', 'נ-'], answer: 0 }
+]);
+
+let count = 0;
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('.icon-btn')) { count++; if (count >= 20) markLessonDone('paal'); }
+});
+</script>
+</body>
+</html>

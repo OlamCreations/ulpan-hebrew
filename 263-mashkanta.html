@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>263 — Mashkanta (Israeli Mortgage)</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Mashkanta — Israeli Mortgage</h1><div class="subtitle">Lesson 263 · מַשְׁכַּנְתָּא</div></div><div class="nav"><a href="index.html">Home</a><a href="263-mashkanta.html" class="active">263</a></div></header>
+
+<p class="intro">Mashkanta (mortgage) is regulated by Bank of Israel. The standard structure: down payment (hon atzmi) ~25-30% for a first home (50% for second or investment property), the rest financed over 25-30 years. Israeli mortgages mix multiple tracks (maslulim) — Prime (variable), CPI-linked (m'kushar mad'd), and fixed (kavua) — and most loans are anti-prepayment (no penalty). Top mortgage banks: Bank Leumi, Bank Hapoalim, Mizrahi-Tefahot, Bank Discount.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Mortgage approval relies heavily on income verification. Bank of Israel requires monthly debt service ≤ 30% of income. Most olim have trouble during the first 1-2 years (no Israeli credit history) but become eligible after stable employment. Olim chadashim get specific mortgage tracks via Bank Mizrahi-Tefahot ("oleh chadash" rates). Standard application takes 30-60 days. Israeli mortgages feature high upfront costs: appraisal (~1500 NIS), insurance, registration. Recent trend: 40% of new mortgages by 2023 are CPI-fixed (kavua tzmud).</div>
+
+<h2>Mortgage Basics</h2>
+<div class="word-list" id="basics"></div>
+
+<h2>Mortgage Tracks (Maslulim)</h2>
+<div class="word-list" id="tracks"></div>
+
+<h2>Mortgage Banks</h2>
+<div class="word-list" id="banks"></div>
+
+<h2>Loan Terms</h2>
+<div class="word-list" id="terms"></div>
+
+<h2>Application Process</h2>
+<div class="word-list" id="application"></div>
+
+<hr class="section-divider">
+
+<h2>First Mortgage Meeting</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Olim couple meets a Mizrahi-Tefahot mortgage advisor.</div>
+  <div id="mortgage-meeting"></div>
+</div>
+
+<footer>Lesson 263 · Mashkanta · <a href="264-tlv-periphery.html" style="color:var(--accent)">Next: TLV vs Periphery →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BASICS = [
+  { he: 'מַשְׁכַּנְתָּא', translit: 'mashkanta', fr: 'mortgage' },
+  { he: 'קְנִיַּת דִּירָה', translit: 'kniyat dira', fr: 'apartment purchase' },
+  { he: 'הוֹן עַצְמִי', translit: 'hon atzmi', fr: 'down payment / own equity' },
+  { he: '25-30% הוֹן עַצְמִי', translit: '25-30% hon atzmi', fr: '25-30% down payment' },
+  { he: 'הַלְוָאָה', translit: 'halva\'a', fr: 'loan' },
+  { he: 'תַּשְׁלוּם חוֹדְשִׁי', translit: 'tashlum chodshi', fr: 'monthly payment' },
+  { he: 'רִיבִּית', translit: 'ribit', fr: 'interest' },
+  { he: 'תְּחִילָה', translit: 'tchila', fr: 'principal' },
+  { he: 'שִׁלּוּם', translit: 'shilum', fr: 'payment' },
+  { he: 'תּוֹכְנִית הַלְוָאָה', translit: 'tochnit halvaa', fr: 'loan plan' }
+];
+const TRACKS = [
+  { he: 'פְּרַיְים', translit: 'Prime', fr: 'Prime (variable rate)' },
+  { he: 'קָבוּעַ', translit: 'kavua', fr: 'fixed rate' },
+  { he: 'מְקוּשָּׁר מַדָּ"ד', translit: 'm\'kushar mad\'d', fr: 'CPI-linked' },
+  { he: 'מְקוּשָּׁר מַדָּ"ד קָבוּעַ', translit: 'm\'kushar mad\'d kavua', fr: 'CPI-fixed' },
+  { he: 'מְצוּיָּן', translit: 'm\'tzayan', fr: 'specialty (track)' },
+  { he: 'מַסְלוּל קָבוּעַ נוֹמִינָלִי', translit: 'maslul kavua nominali', fr: 'nominal fixed track' },
+  { he: 'מַסְלוּל פְּרַיְים', translit: 'maslul prime', fr: 'prime variable track' },
+  { he: 'מַסְלוּל מִשְׁתַּנֶּה', translit: 'maslul mishtaneh', fr: 'variable track' },
+  { he: 'מַסְלוּל אִינְדֶקְסָטוֹר', translit: 'maslul indexator', fr: 'CPI-indexed track' },
+  { he: 'קוֹמְבִּינַט מַסְלוּלִים', translit: 'kombinat maslulim', fr: 'mix of tracks' }
+];
+const BANKS = [
+  { he: 'בַּנְק לְאוּמִי', translit: 'Bank Leumi', fr: 'Bank Leumi (largest)' },
+  { he: 'בַּנְק הַפּוֹעֲלִים', translit: 'Bank Hapoalim', fr: 'Bank Hapoalim' },
+  { he: 'מִזְרָחִי-טֶפָחוֹת', translit: 'Mizrahi-Tefahot', fr: 'Mizrahi-Tefahot (oleh-friendly)' },
+  { he: 'בַּנְק דִּיסְקוֹנְט', translit: 'Bank Discount', fr: 'Bank Discount' },
+  { he: 'בַּנְק יִשְׂרָאֵל דִּיסְקוֹנְט', translit: 'Bank Israel Discount', fr: 'Israel Discount Bank' },
+  { he: 'בַּנְק בֵּינְלְאוּמִי רִאשׁוֹן', translit: 'Bank Beinleumi Rishon', fr: 'First International Bank (FIBI)' },
+  { he: 'בַּנְק מֶרְקַנְטִיל', translit: 'Bank Mercantile', fr: 'Mercantile Bank' },
+  { he: 'בַּנְק יָהָב', translit: 'Bank Yahav', fr: 'Bank Yahav (gov employees)' },
+  { he: 'בַּנְק אוֹצָר הַחַיָּל', translit: 'Bank Otsar HaHayal', fr: 'Bank Otsar HaHayal (military)' },
+  { he: 'בַּנְק יִשְׂרָאֵל', translit: 'Bank Yisrael', fr: 'Bank of Israel (regulator)' }
+];
+const TERMS = [
+  { he: '25 שָׁנִים', translit: '25 shanim', fr: '25 years' },
+  { he: '30 שָׁנִים', translit: '30 shanim', fr: '30 years' },
+  { he: 'תְּקוּפַת הַלְוָאָה', translit: 'tkufat halvaa', fr: 'loan period' },
+  { he: 'מְמוּצָּע רִיבִּית', translit: 'm\'mutza ribit', fr: 'average rate' },
+  { he: 'רִיבִּית קְבוּעָה', translit: 'ribit kavua', fr: 'fixed rate' },
+  { he: 'רִיבִּית פְּרַיְים+0.5', translit: 'ribit prime+0.5', fr: 'prime + 0.5%' },
+  { he: 'שִׁלּוּם מוּקְדָם', translit: 'shilum mukdam', fr: 'early prepayment' },
+  { he: 'קְנָס', translit: 'kanas', fr: 'penalty' },
+  { he: 'בִּיטּוּחַ מַשְׁכַּנְתָּא', translit: 'bituach mashkanta', fr: 'mortgage insurance' },
+  { he: 'בִּיטּוּחַ חַיִּים', translit: 'bituach chayim', fr: 'life insurance (for mortgage)' }
+];
+const APPLICATION = [
+  { he: 'בַּקָּשָׁה', translit: 'bakasha', fr: 'application' },
+  { he: 'טוֹפֶס', translit: 'tofes', fr: 'form' },
+  { he: 'תְּעוּדַת זְכָּיוֹן', translit: 'te\'udat zikkayon', fr: 'transcript / certificate of entitlement' },
+  { he: 'פִּנְקְסֵי מִיסִּים', translit: 'pinkasei misim', fr: 'tax records' },
+  { he: 'אִישׁוּר קַבָּלָה', translit: 'aishur kabala', fr: 'approval letter' },
+  { he: 'מִשְׁלָט', translit: 'm\'shlat', fr: 'interview' },
+  { he: 'קְלִיטָה יַצִּיבָה', translit: 'klita yatziva', fr: 'stable employment' },
+  { he: '6 חוֹדְשֵׁי עֲבוֹדָה', translit: '6 chodashei avoda', fr: '6 months on the job' },
+  { he: 'עָרֵב מִשְׁפָּחָה', translit: 'arev mishpacha', fr: 'family guarantor' },
+  { he: 'תְּעוּדַת עוֹלֶה', translit: 'te\'udat oleh', fr: 'oleh card' }
+];
+
+const MORTGAGE_MEETING = [
+  { he: 'יוֹעֶצֶת — שָׁלוֹם, שִׁבְתּוּ. בּוֹאוּ נִתְחִיל. מָה הַהַכְנָסָה הַחוֹדְשִׁית הַמְּשׁוּתֶּפֶת שֶׁלָּכֶם?', translit: 'yo\'etzet — shalom, shvu. bo\'u nitchil. ma ha-hachnasa ha-chodshit ha-m\'shutefet shelachem?', fr: 'Advisor — Hello, please sit. Let\'s start. What is your combined monthly income?' },
+  { he: 'יוֹנָאס — בְּעֵרֶךְ 25 אֶלֶף שֶׁ"ח לְחוֹדֶשׁ, שְׁנֵינוּ יַחַד.', translit: 'yonas — b\'erech 25 elef shach l\'chodesh, shneinu yachad.', fr: 'Jonas — Roughly 25K NIS per month, the two of us together.' },
+  { he: 'יוֹעֶצֶת — יָפֶה. בַּנְק יִשְׂרָאֵל מַגְבִּיל אֶת הַתַּשְׁלוּם הַחוֹדְשִׁי לְ-30%, אָז הַמַּקְסִימוּם שֶׁלָּכֶם הוּא כ-7,500 שֶׁ"ח לְחוֹדֶשׁ. כַּמָּה הוֹן עַצְמִי יֵשׁ לָכֶם?', translit: 'yo\'etzet — yafe. bank yisrael magbil et ha-tashlum ha-chodshi l\'30%, az ha-maximum shelachem hu k\'7,500 shach l\'chodesh. kama hon atzmi yesh lachem?', fr: 'Advisor — Good. Bank of Israel caps the monthly payment at 30%, so your maximum is about 7,500 NIS per month. How much down payment do you have?' },
+  { he: 'יוֹנָאס — 600 אֶלֶף שֶׁ"ח, חִסָּכוֹן מִצָּרְפַת.', translit: 'yonas — 600 elef shach, chisachon mi-tzarfat.', fr: 'Jonas — 600K NIS, savings from France.' },
+  { he: 'יוֹעֶצֶת — מְצוּיָּן. עִם 25-30% הוֹן עַצְמִי, אַתֶּם יְכוֹלִים לִקְנוֹת דִּירָה עַד 1.5 מִילְיוֹן שֶׁ"ח. הַהַלְוָאָה תִּהְיֶה כ-1.05 מִילְיוֹן עַל 28 שָׁנִים.', translit: 'yo\'etzet — m\'tzuyan. im 25-30% hon atzmi, atem yecholim liknot dira ad 1.5 milyon shach. ha-halva\'a tihye k\'1.05 milyon al 28 shanim.', fr: 'Advisor — Excellent. With 25-30% down, you can buy up to 1.5M NIS. The loan will be about 1.05M over 28 years.' },
+  { he: 'יוֹנָאס — אֵיזֶה מַסְלוּלִים אַתְּ מְמַלִּיצָה?', translit: 'yonas — eize maslulim at m\'malitza?', fr: 'Jonas — Which tracks do you recommend?' },
+  { he: 'יוֹעֶצֶת — קוֹמְבִּינַט קְלָאסִי לְעוֹלִים: 50% פְּרַיְים (גָּמִישׁ), 30% מְקוּשָּׁר מַדָּ"ד קָבוּעַ (יַצִּיב לַעֲרִיכָה), 20% נוֹמִינָלִי קָבוּעַ (חוֹסֵם רִיבִּית). זֶה מְאַזֵּן סִיכּוּן.', translit: 'yo\'etzet — kombinat klasi l\'olim: 50% prime (gamish), 30% m\'kushar mad\'d kavua (yatziv la-arichah), 20% nominali kavua (chosem ribit). ze m\'azen sikun.', fr: 'Advisor — Classic combo for olim: 50% Prime (flexible), 30% CPI-fixed (stable for the long run), 20% nominal-fixed (caps interest). It balances risk.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('basics', BASICS);
+R('tracks', TRACKS);
+R('banks', BANKS);
+R('terms', TERMS);
+R('application', APPLICATION);
+
+renderTextBlock('mortgage-meeting', MORTGAGE_MEETING);
+
+addMiniQuiz('Block 27 · Mashkanta Quiz', [
+  { q: 'The Hebrew for mortgage is...', options: ['mashkanta', 'sechira', 'arnona', 'dira'], answer: 0, explain: 'mashkanta = mortgage.' },
+  { q: 'Standard down payment for first-home is roughly...', options: ['10%', '25-30%', '50%', '100%'], answer: 1, explain: '25-30% down for first-time buyers (50% for second/investment).' },
+  { q: 'Bank of Israel debt-to-income limit is...', options: ['10%', '30%', '50%', '100%'], answer: 1, explain: 'Monthly debt service is capped at 30% of income.' },
+  { q: 'The oleh-friendly mortgage bank often cited is...', options: ['Bank Leumi', 'Mizrahi-Tefahot', 'Discount', 'Yahav'], answer: 1, explain: 'Mizrahi-Tefahot has specific olim chadashim rates.' },
+  { q: 'Israeli mortgages typically have how many tracks/maslulim...', options: ['1', '3-4 standard mix', '0', '50'], answer: 1, explain: 'Mortgages are typically split across 3-4 maslulim (Prime, CPI-linked, fixed).' },
+  { q: 'Standard mortgage term in Israel is...', options: ['5 years', '25-30 years', '100 years', '1 year'], answer: 1, explain: '25-30 years is standard.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('mashkanta');
+  }
+});
+</script></body></html>

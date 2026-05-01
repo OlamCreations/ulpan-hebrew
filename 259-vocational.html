@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>259 — Vocational & Professional Education</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Vocational & Professional — Trades, Tech, Certificates</h1><div class="subtitle">Lesson 259 · הַכְשָׁרָה מָקְצוֹעִית</div></div><div class="nav"><a href="index.html">Home</a><a href="259-vocational.html" class="active">259</a></div></header>
+
+<p class="intro">Israeli vocational education is robust: technical high schools (tichon technologi), 2-year colleges (mishaltiyot), professional certifications (machshiv), and tech bootcamps (Hack-IL, Cyberbit, ITC, Coding Academy, App-Sage). Hand-on trades: chashmalim (electricians), chashmalim mam'siyim (industrial electricians), nagarim (carpenters), bnaim (builders), tankaim (mechanics). High-demand certifications: AWS, Microsoft, Israeli IDF Tech specialties post-discharge. Funded options: Misrad HaKlita scholarships for olim, IDF post-discharge programs.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Vocational education is socially less prestigious than university but increasingly respected — Israeli tech industry hires hundreds of bootcamp graduates each year. Anglo olim often skip university and go directly to coding bootcamp or AWS certification. Cyberbit (cybersecurity training, ex-Cyber Reason) is industry-leading. The IDF discharge bonus (4,000-15,000 NIS) often funds first vocational training. Female olim find specific scholarship programs through MASA, ZIONESS, EZRA, plus IDF reservist tracks.</div>
+
+<h2>Vocational Schools</h2>
+<div class="word-list" id="schools"></div>
+
+<h2>Trade Vocabulary</h2>
+<div class="word-list" id="trades"></div>
+
+<h2>Certifications</h2>
+<div class="word-list" id="certifications"></div>
+
+<h2>Funding & Programs</h2>
+<div class="word-list" id="funding"></div>
+
+<h2>Career Vocabulary</h2>
+<div class="word-list" id="vocabulary"></div>
+
+<hr class="section-divider">
+
+<h2>Coding Bootcamp Application</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">Yonas considers ITC bootcamp vs university for tech career.</div>
+  <div id="bootcamp-decision"></div>
+</div>
+
+<footer>Lesson 259 · Vocational · <a href="260-education-summary.html" style="color:var(--accent)">Next: Block 26 Summary →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const SCHOOLS = [
+  { he: 'תִּיכוֹן טֶכְנוֹלוֹגִי', translit: 'tichon technologi', fr: 'technical high school' },
+  { he: 'מִכְלָלוֹת', translit: 'mishaltiyot', fr: '2-year college' },
+  { he: 'בֵּית סֵפֶר מִקְצוֹעִי', translit: 'beit sefer mikzo\'i', fr: 'vocational school' },
+  { he: 'מַכְשִׁיר', translit: 'machshiv', fr: 'certification' },
+  { he: 'הַאק-IL', translit: 'Hack-IL', fr: 'bootcamp (Hack-IL)' },
+  { he: 'סַייבֶּרְבִּיט', translit: 'Cyberbit', fr: 'cyber training (Cyberbit)' },
+  { he: 'ITC', translit: 'ITC', fr: 'Israel Tech Challenge' },
+  { he: 'קוֹדִינְג אָקָדֶמִי', translit: 'Coding Academy', fr: 'Coding Academy' },
+  { he: 'אַפְּלְסִידְאֶקְס', translit: 'AppleseedX', fr: 'AppleseedX bootcamp' },
+  { he: 'בְּנֵי עֲקִיבָא', translit: 'Bnei Akiva', fr: 'Bnei Akiva schools (religious vocational)' }
+];
+const TRADES = [
+  { he: 'חַשְׁמַל', translit: 'chashmal', fr: 'electrician' },
+  { he: 'חַשְׁמַלִּית/חַשְׁמַלִּים', translit: 'chashmalit/chashmalim', fr: 'electricians' },
+  { he: 'נַגָּר', translit: 'nagar', fr: 'carpenter' },
+  { he: 'בַּנַּאי', translit: 'banah', fr: 'builder' },
+  { he: 'מְתַקֵּן', translit: 'm\'tken', fr: 'mechanic' },
+  { he: 'מְהַנְדֵּס מֵכָנִיקָה', translit: 'mahandes mecanike', fr: 'mechanical engineer' },
+  { he: 'מְעַר מִשְׁטָרָה', translit: 'm\'aer mishtara', fr: 'cop' },
+  { he: 'מְפַקֶּדֶת', translit: 'm\'fakdet', fr: 'officer' },
+  { he: 'טַנְקַאי', translit: 'tankai', fr: 'mechanic (vehicle)' },
+  { he: 'בַּנָּא', translit: 'bana', fr: 'potter' }
+];
+const CERTIFICATIONS = [
+  { he: 'מַכְשִׁיר', translit: 'machshiv', fr: 'certification (general)' },
+  { he: 'AWS', translit: 'AWS', fr: 'AWS (cloud)' },
+  { he: 'מַייקְרוֹסוֹפְט אָזוּר', translit: 'Microsoft Azure', fr: 'Microsoft Azure' },
+  { he: 'סִיסְקוֹ CCNA', translit: 'Cisco CCNA', fr: 'Cisco CCNA' },
+  { he: 'CompTIA', translit: 'CompTIA', fr: 'CompTIA' },
+  { he: 'PMP', translit: 'PMP', fr: 'Project Management (PMP)' },
+  { he: 'CIA', translit: 'CIA', fr: 'Cybersecurity (CIA)' },
+  { he: 'CFA', translit: 'CFA', fr: 'CFA (finance)' },
+  { he: 'רִישְׁיוֹן נְדָל"ן', translit: 'rishyon nadlan', fr: 'real-estate license' },
+  { he: 'רִישְׁיוֹן רוֹאֵה חֶשְׁבּוֹן', translit: 'rishyon ro\'eh cheshbon', fr: 'accountant license' }
+];
+const FUNDING = [
+  { he: 'מִנְחָה שֶׁל קְלִיטָה', translit: 'minha shel klita', fr: 'oleh allowance' },
+  { he: 'מִשְׂרָד הַקְּלִיטָה', translit: 'Misrad HaKlita', fr: 'Aliyah Ministry funding' },
+  { he: 'קָבוּעַ הַשִּׁחְרוּר', translit: 'kavua hashichrur', fr: 'IDF discharge benefit' },
+  { he: 'מַסָּ"ע', translit: 'MASA', fr: 'MASA (Anglo gap year)' },
+  { he: 'זִיוֹנֵס', translit: 'ZIONESS', fr: 'ZIONESS' },
+  { he: 'מִנְחָה', translit: 'minha', fr: 'scholarship' },
+  { he: 'הַצְדָּקָה', translit: 'hatzdaka', fr: 'credit' },
+  { he: 'קֶרֶן', translit: 'keren', fr: 'foundation' },
+  { he: 'תָּכְנִית', translit: 'tochnit', fr: 'program' },
+  { he: 'קוֹהוֹרְט', translit: 'kohort', fr: 'cohort' }
+];
+const VOCABULARY = [
+  { he: 'כָּבוֹד חִינּוּךְ', translit: 'kavod chinuch', fr: 'educational respect' },
+  { he: 'מִקְצוֹעַ', translit: 'miktzo\'a', fr: 'profession' },
+  { he: 'מְפַקֶּדֶת', translit: 'mefakdet', fr: 'manager' },
+  { he: 'מְרַכֵּז', translit: 'm\'rakez', fr: 'coordinator' },
+  { he: 'שְׁמוּרָה', translit: 'shmurah', fr: 'training' },
+  { he: 'עוֹבֶדֶת', translit: 'ovedet', fr: 'worker (female)' },
+  { he: 'עוֹבֵד', translit: 'oved', fr: 'worker' },
+  { he: 'מְהַנְדֵּס', translit: 'mahandes', fr: 'engineer' },
+  { he: 'פָּקִיד', translit: 'pakid', fr: 'clerk' },
+  { he: 'מְלַקֵּהַ', translit: 'm\'lakeh', fr: 'purchasing manager' }
+];
+
+const BOOTCAMP_DECISION = [
+  { he: 'מַדְרִיךְ — שָׁלוֹם יוֹנָאס. מָה הַמַּטָּרָה שֶׁלְּךָ בַּקַּרְיֶירָה?', translit: 'madrich — shalom yonas. ma ha-matarah shelcha ba-karyera?', fr: 'Counselor — Hello Yonas. What\'s your career goal?' },
+  { he: 'יוֹנָאס — אֲנִי רוֹצֶה לִהְיוֹת מְתַכְנֵת. תּוֹכְנָה אוֹ סַייבֶּר.', translit: 'yonas — ani rotzeh lihyot m\'tachnet. tochna o cyber.', fr: 'Yonas — I want to be a programmer. Software or cyber.' },
+  { he: 'מַדְרִיךְ — יֵשׁ לְךָ שְׁתֵּי אֶפְשָׁרוּיוֹת: אוּנִיבֶרְסִיטָה שָׁלוֹשׁ שָׁנִים, אוֹ ITC בּוּטְקֶמְפּ שִׁשָּׁה חוֹדָשִׁים, כ-15 אֶלֶף דּוֹלָר.', translit: 'madrich — yesh lecha shtei efshruyot: universita shalosh shanim, o ITC bootcamp shisha chodashim, k-15 elef dolar.', fr: 'Counselor — You have two options: 3-year university, or ITC bootcamp 6 months, ~$15K.' },
+  { he: 'יוֹנָאס — מָה אֲחוּז הַקַּבָּלָה לְ-ITC?', translit: 'yonas — ma achuz ha-kabalah l-ITC?', fr: 'Yonas — What\'s the acceptance rate at ITC?' },
+  { he: 'מַדְרִיךְ — בְּעֵרֶךְ שְׁלוֹשִׁים אֲחוּזִים. מַבְחָן מָתֵמָטִי וּרֵאיוֹן טֶכְנִי.', translit: 'madrich — b\'erech shloshim achuzim. mavchan matemati u-ra\'ayon techni.', fr: 'Counselor — Around 30%. Math test and technical interview.' },
+  { he: 'יוֹנָאס — וְשִׁיבּוּץ בָּעֲבוֹדָה אַחֲרֵי הַבּוּטְקֶמְפּ?', translit: 'yonas — v\'shibutz ba-avoda acharei ha-bootcamp?', fr: 'Yonas — And job placement after the bootcamp?' },
+  { he: 'מַדְרִיךְ — תִּשְׁעִים וַחֲמִשָּׁה אֲחוּזִים מוֹצְאִים עֲבוֹדָה תּוֹךְ שִׁשָּׁה חוֹדָשִׁים. אֲנִי מַמְלִיץ לְהַגִּישׁ מוּעֲמָדוּת.', translit: 'madrich — tishim va-chamisha achuzim motz\'im avoda toch shisha chodashim. ani mamlitz l\'hagish mu\'amadut.', fr: 'Counselor — 95% find work within 6 months. I recommend you apply.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('schools', SCHOOLS);
+R('trades', TRADES);
+R('certifications', CERTIFICATIONS);
+R('funding', FUNDING);
+R('vocabulary', VOCABULARY);
+
+renderTextBlock('bootcamp-decision', BOOTCAMP_DECISION);
+
+addMiniQuiz('Block 26 · Vocational Quiz', [
+  { q: 'Israeli vocational education includes...', options: ['only universities', 'technical high schools, 2-year colleges, bootcamps', 'only IDF', 'nothing'], answer: 1, explain: 'Full ecosystem of trade schools, certifications, bootcamps.' },
+  { q: 'The Israeli cyber-bootcamp leader is...', options: ['Hack-IL', 'Cyberbit', 'Aleph', 'ITC'], answer: 1, explain: 'Cyberbit (formerly part of Cyber Reason) is the cybersecurity training leader.' },
+  { q: 'The 6-month coding bootcamp is best known as...', options: ['Hack-IL', 'ITC', 'Cyberbit', 'Aleph'], answer: 1, explain: 'ITC = Israel Tech Challenge, well-known bootcamp.' },
+  { q: 'Hebrew for "vocational school" is...', options: ['tichon technologi', 'beit sefer mikzo\'i', 'Yeshivat Hesder', 'kfar'], answer: 1, explain: 'Literally "professional school."' },
+  { q: 'The Hebrew for "electrician" is...', options: ['chashmal', 'nagar', 'banah', 'tankai'], answer: 0, explain: 'Chashmal = electric/electrician.' },
+  { q: 'IDF discharge bonus typically funds...', options: ['vacation', 'first vocational training or rent', 'car', 'nothing'], answer: 1, explain: '4-15K NIS often used for retraining or starting up.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('vocational');
+  }
+});
+</script></body></html>

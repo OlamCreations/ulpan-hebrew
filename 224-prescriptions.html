@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>224 — Prescriptions</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Prescriptions — Reading and Filling</h1><div class="subtitle">Lesson 224 · מִרְשָׁמִים</div></div><div class="nav"><a href="index.html">Home</a><a href="224-prescriptions.html" class="active">224</a></div></header>
+
+<p class="intro">Israeli prescriptions (mirsham) are mostly digital — issued by your doctor through the kupa system, automatically synced to participating pharmacies. Pick up at any kupa-affiliated pharmacy or partnered chain (Super-Pharm, Be Pharm). Generic medications are heavily subsidized; brand-name medications often require copay. The "Sal HaBriut" (basic medications basket) is updated annually by the Ministry of Health — what's in vs. out determines coverage.</p>
+
+<div class="tip"><strong>Cultural note</strong> — The "Sal HaBriut update" each January is national news in Israel; patient advocacy groups lobby for new drugs to be included, and decisions can mean life-or-death for chronic conditions. As an oleh, your initial 6-12 months of subsidized coverage covers most basic medications, but specialty drugs (cancer, rare diseases) may need supplemental insurance. Israeli pharmacists (rokeach) are highly trained; they can answer detailed questions about interactions, dosage, alternatives.</div>
+
+<h2 id="prescription">Prescription Basics</h2>
+<div class="word-list" id="prescription-list"></div>
+
+<h2 id="dosage">Dosage Vocabulary</h2>
+<div class="word-list" id="dosage-list"></div>
+
+<h2 id="medication-types">Medication Types</h2>
+<div class="word-list" id="medication-types-list"></div>
+
+<h2 id="pickup">At the Pharmacy</h2>
+<div class="word-list" id="pickup-list"></div>
+
+<h2 id="vocabulary">Conversation Vocabulary</h2>
+<div class="word-list" id="vocabulary-list"></div>
+
+<hr class="section-divider">
+
+<h2 id="pharmacy-visit">An Oleh at Super-Pharm</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh picks up his first Israeli prescription.</div>
+  <div id="pharmacy-visit-block"></div>
+</div>
+
+<footer>Lesson 224 · Prescriptions · <a href="225-mental-health.html" style="color:var(--accent)">Next: Mental Health →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const PRESCRIPTION = [
+  { he: 'מִרְשָׁם', translit: 'mirsham', fr: 'prescription' },
+  { he: 'מִרְשָׁם דִּיגִיטָלִי', translit: 'mirsham digitali', fr: 'digital prescription' },
+  { he: 'מְסֻמָּךְ', translit: 'm\'sumach', fr: 'authorized' },
+  { he: 'תְּרוּפָה', translit: 'trufa', fr: 'medication' },
+  { he: 'תְּרוּפָה גֶּנֶרִית', translit: 'trufa generit', fr: 'generic medication' },
+  { he: 'תְּרוּפָה מוּתֶגֶת', translit: 'trufa mutag', fr: 'brand-name medication' },
+  { he: 'יַצְרָן', translit: 'm\'pek tzva', fr: 'manufacturer' },
+  { he: 'קַפְּסוּלָה', translit: 'kapsula', fr: 'capsule' },
+  { he: 'כַּדּוּר', translit: 'kadur', fr: 'pill' },
+  { he: 'מִשְׁחָה', translit: 'm\'shach', fr: 'cream' }
+];
+const DOSAGE = [
+  { he: 'מִינוּן', translit: 'minon', fr: 'dosage' },
+  { he: '3 פְּעָמִים בַּיּוֹם', translit: '3 pa\'amim ba-yom', fr: '3 times a day' },
+  { he: 'פַּעַם בַּיּוֹם', translit: '1 pa\'am ba-yom', fr: 'once daily' },
+  { he: 'בּוֹקֶר', translit: 'boker', fr: 'morning' },
+  { he: 'עֶרֶב', translit: 'erev', fr: 'evening' },
+  { he: 'אַחֲרֵי אֲרוּחַת בּוֹקֶר', translit: 'achrei aruchat boker', fr: 'after breakfast' },
+  { he: 'לִפְנֵי אֲרוּחַת צָהֳרַיִם', translit: 'lifnei aruchat tzohorayim', fr: 'before lunch' },
+  { he: 'לֹא לִשְׁתּוֹת עִם', translit: 'lo lashtot im', fr: 'don\'t take with' },
+  { he: 'עִם אֲרוּחָה', translit: 'im aruchat', fr: 'with meal' },
+  { he: '7 יָמִים', translit: '7 yamim', fr: '7 days' }
+];
+const MEDICATION_TYPES = [
+  { he: 'אַנְטִיבְּיוֹטִיקָה', translit: 'antibiotik', fr: 'antibiotic' },
+  { he: 'מְשַׁכֵּךְ כְּאֵבִים', translit: 'm\'shakech ke\'evim', fr: 'painkiller' },
+  { he: 'נוֹגֵד דַּלֶּקֶת', translit: 'nogedo daleket', fr: 'anti-inflammatory' },
+  { he: 'סְטָטִין', translit: 's\'tatin', fr: 'statin' },
+  { he: 'אִינְסוּלִין', translit: 'insulin', fr: 'insulin' },
+  { he: 'חִיסּוּן', translit: 'bituach', fr: 'vaccine' },
+  { he: 'סִירוֹפ לְשִׁעוּל', translit: 'sirop le-shi\'ul', fr: 'cough syrup' },
+  { he: 'מַשְׁאֵף', translit: 'anlika', fr: 'inhaler' },
+  { he: 'טִיפּוֹת', translit: 'tipot', fr: 'drops' },
+  { he: 'נֵרוֹת', translit: 'preti', fr: 'suppositories' }
+];
+const PICKUP = [
+  { he: 'בֵּית מִרְקַחַת', translit: 'beit mirkachat', fr: 'pharmacy' },
+  { he: 'סוּפֶּר־פַארְם', translit: 'Super-Pharm', fr: 'Super-Pharm (major chain)' },
+  { he: 'בִּי פַארְם', translit: 'Be Pharm', fr: 'Be Pharm (kupa-owned)' },
+  { he: 'רוֹקֵחַ', translit: 'rokeach', fr: 'pharmacist' },
+  { he: 'תַּשְׁלוּם', translit: 'tashlum', fr: 'payment' },
+  { he: 'הִשְׁתַּתְּפוּת עַצְמִית', translit: 'hishtatfut atzmit', fr: 'copay' },
+  { he: 'קַבָּלָה', translit: 'kabala', fr: 'receipt' },
+  { he: 'מְשׁוּמָּר בַּקֵרוּר', translit: 'm\'shumar', fr: 'refrigerated' },
+  { he: 'בִּיטוּחַ מַשְׁלִים', translit: 'bituach mashlim', fr: 'supplemental insurance covers' },
+  { he: 'מִרְשָׁם בְּעוֹצְמָה', translit: 'mirsham b\'otzma', fr: 'prescription strength' }
+];
+const VOCABULARY = [
+  { he: 'יֵשׁ לִי מִרְשָׁם', translit: 'yesh li mirsham', fr: 'I have a prescription' },
+  { he: 'אֵיךְ לוֹקְחִים אֶת זֶה?', translit: 'eich loktim et ze', fr: 'how to take this' },
+  { he: 'אֶפְשָׁר לִפְגֹּשׁ?', translit: 'efshar lifgosh', fr: 'any side effects' },
+  { he: 'עָלוּל לְהָאֱכִיל', translit: 'aluy l\'achol', fr: 'causes drowsiness' },
+  { he: 'יֵשׁ תְּנָאִים?', translit: 'yesh tnayim', fr: 'any conditions' },
+  { he: 'כַּמָּה זֶה יוֹצֵא?', translit: 'kama ze yotze', fr: 'how much' },
+  { he: 'מְבוּטָּחִים', translit: 'm\'avchanim', fr: 'insured' },
+  { he: 'בְּתַשְׁלוּם מָלֵא', translit: 'b\'tashlum male', fr: 'full payment' },
+  { he: 'בְּתַשְׁלוּם מָלֵא בַּסַּל', translit: 'b\'tashlum male b\'sal', fr: 'full price within basket' },
+  { he: 'לֹא מְסוּבְסָד', translit: 'lo m\'kuchsav', fr: 'not subsidized' }
+];
+
+const PHARMACY_VISIT = [
+  { he: 'רוֹקֵחַ: שָׁלוֹם, אֵיךְ אֲנִי יָכוֹל לַעֲזוֹר?', translit: 'rokeach: shalom, eich ani yachol la\'azor?', fr: 'Pharmacist: Hello, how can I help?' },
+  { he: 'יוֹנָאס: שָׁלוֹם, יֵשׁ לִי מִרְשָׁם דִּיגִיטָלִי. הִנֵּה תְּעוּדַת קוּפָּה וּתְעוּדַת זֶהוּת.', translit: 'yonas: shalom, yesh li mirsham digitali. hine teudat kupa u-teudat zehut.', fr: 'Jonas: Hello, I have a digital prescription. Here\'s my kupa card and ID.' },
+  { he: 'רוֹקֵחַ: רֶגַע, אֲנִי בּוֹדֵק בַּמַעֲרֶכֶת... כֵּן, רָאִיתִי. אַנְטִיבְּיוֹטִיקָה לְ-7 יָמִים.', translit: 'rokeach: rega, ani bodek ba-ma\'arechet... ken, ra\'iti. antibiotik l\'-7 yamim.', fr: 'Pharmacist: One moment, I\'m checking the system... yes, I see it. Antibiotic for 7 days.' },
+  { he: 'רוֹקֵחַ: 3 פְּעָמִים בַּיּוֹם, אַחֲרֵי כָּל אֲרוּחָה. חָשׁוּב לְסַיֵּים אֶת כָּל הַקוֹרְס גַּם אִם אַתָּה מַרְגִּישׁ טוֹב.', translit: 'rokeach: 3 pa\'amim ba-yom, achrei kol arucha. chashuv l\'sayem et kol ha-kors gam im atah margish tov.', fr: 'Pharmacist: 3 times a day, after each meal. Important to finish the full course even if you feel better.' },
+  { he: 'יוֹנָאס: יֵשׁ תּוֹפְעוֹת לְוַאי?', translit: 'yonas: yesh tofa\'ot levai?', fr: 'Jonas: Are there side effects?' },
+  { he: 'רוֹקֵחַ: לִפְעָמִים כְּאֵב בֶּטֶן. אִם זֶה חָזָק — חֲזוֹר אֵלַי. סַ"ה 12 שֶׁ"ח, מְבוּטָּח בַּסַּל.', translit: 'rokeach: lif\'amim ke\'ev beten. im ze chazak — chazor elai. sach hakol 12 shach, m\'avtach ba-sal.', fr: 'Pharmacist: Sometimes stomach ache. If it\'s strong — come back to me. Total 12 NIS, covered in the basket.' },
+  { he: 'יוֹנָאס: תּוֹדָה רַבָּה. יוֹם טוֹב.', translit: 'yonas: todah raba. yom tov.', fr: 'Jonas: Thank you very much. Good day.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('prescription-list', PRESCRIPTION);
+R('dosage-list', DOSAGE);
+R('medication-types-list', MEDICATION_TYPES);
+R('pickup-list', PICKUP);
+R('vocabulary-list', VOCABULARY);
+
+renderTextBlock('pharmacy-visit-block', PHARMACY_VISIT);
+
+addMiniQuiz('Block 23 · Prescriptions Quiz', [
+  { q: 'The Hebrew word for prescription is...', options: ['mirsham', 'hafnaya', 'heshbonit', 'kabala'], answer: 0, explain: 'mirsham = the formal medical prescription.' },
+  { q: 'The "Sal HaBriut" is...', options: ['a salad', 'the basket of subsidized medications and treatments', 'a hospital', 'a hospital floor'], answer: 1, explain: 'Literally "health basket" — the legally-mandated coverage list.' },
+  { q: 'The major Israeli pharmacy chain is...', options: ['Tnuva', 'Super-Pharm', 'Strauss', 'IKEA'], answer: 1, explain: 'Super-Pharm is the dominant chain; Be Pharm is the kupa-owned alternative.' },
+  { q: '"Pa\'amayim ba-yom" means...', options: ['twice a day', 'twice a year', '2 km', '2 boys'], answer: 0, explain: '2 times per day — common dosing instruction.' },
+  { q: 'A pharmacist in Hebrew is...', options: ['rofe', 'rokeach', 'achot', 'mumche'], answer: 1, explain: 'rokeach = pharmacist (literally "compounder/mixer").' },
+  { q: 'Prescriptions are mostly...', options: ['paper-only', 'digital and synced to kupa system', 'by phone only', 'mailed'], answer: 1, explain: 'Israel has fully digital prescription infrastructure.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('prescriptions');
+  }
+});
+</script></body></html>

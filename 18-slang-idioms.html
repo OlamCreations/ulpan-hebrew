@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>18 — Slang & Idioms</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Slang & Idioms</h1>
+    <div class="subtitle">Lesson 18 · ביטויים יומיומיים</div>
+  </div>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="17-banking-admin.html">17</a>
+    <a href="18-slang-idioms.html" class="active">18</a>
+    <a href="19-holidays-culture.html">19</a>
+  </div>
+</header>
+
+<p class="intro">
+  Spoken Israeli Hebrew is full of borrowings — from Arabic, Yiddish, English, Russian. Learning these is the difference between "I speak Hebrew" and "I'm in the flow". Without them you miss 30% of street conversations.
+</p>
+
+<h2>10 Essential Arabic Words in Hebrew</h2>
+
+<div class="tip">
+  <strong>Arabic influence</strong> — Many Arabic words have entered everyday Hebrew, especially among younger speakers. You'll hear them constantly.
+</div>
+
+<div class="word-list" id="arabic"></div>
+
+<h2>Yiddish Words in Hebrew</h2>
+
+<div class="tip">
+  <strong>Yiddish influence</strong> — Ashkenazi Jews brought their lexicon. Mostly in colloquial speech, humor, terms of endearment.
+</div>
+
+<div class="word-list" id="yiddish"></div>
+
+<h2>Everyday Expressions</h2>
+<div class="word-list" id="everyday"></div>
+
+<h2>Reactions & Emotions</h2>
+<div class="word-list" id="reactions"></div>
+
+<h2>Surprise / Disagreement</h2>
+<div class="word-list" id="surprise"></div>
+
+<h2>Positive Expressions</h2>
+<div class="word-list" id="positive"></div>
+
+<h2>Negative / Complaints</h2>
+<div class="word-list" id="negative"></div>
+
+<h2>Internet & Youth Slang</h2>
+<div class="word-list" id="slang"></div>
+
+<hr class="section-divider">
+
+<h2>Mini Street Dialogue</h2>
+
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div id="dialogue"></div>
+  <button class="btn btn-primary" style="margin-top: 16px;" onclick="playDialogue()">Play dialogue</button>
+</div>
+
+<footer>
+  Lesson 18 · Israeli slang · <a href="19-holidays-culture.html" style="color:var(--accent)">Next: Jewish Holidays →</a>
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const ARABIC = [
+  { he: 'סַבַּבָּה',   translit: 'sababa',  fr: 'cool / OK / awesome' },
+  { he: 'יַלָּה',       translit: 'yalla',   fr: "let's go! / hurry up!" },
+  { he: 'וָואלָּה',    translit: 'walla',   fr: 'really? / I swear / wow' },
+  { he: 'אַחְלָה',     translit: 'achla',   fr: 'great / the best' },
+  { he: 'מַבְּסוּט',   translit: 'mabsut',  fr: 'happy / satisfied' },
+  { he: 'חַ\'בִּיבִּי', translit: 'habibi',  fr: 'my friend / darling' },
+  { he: 'מַ\'נְיָאק',  translit: 'manyak',  fr: 'jerk / asshole (common insult)' },
+  { he: 'דּוּגְרִי',   translit: 'dugri',   fr: 'straight up / blunt' },
+  { he: 'יָאנִי',      translit: 'yaani',   fr: 'I mean / kinda / so to speak' },
+  { he: 'חְ\'לָאס',    translit: 'chlas',   fr: 'enough / done / stop' }
+];
+
+const YIDDISH = [
+  { he: 'שְׁמֶנְדְּרִיק', translit: 'shmendrik', fr: 'idiot / fool (affectionate)' },
+  { he: 'נֶבֶּעךְ',       translit: 'nebech',     fr: 'poor thing (with sympathy)' },
+  { he: 'חוּצְפָּה',      translit: 'chutzpa',    fr: 'audacity / nerve' },
+  { he: 'נוּ',             translit: 'nu',         fr: 'so? / well? / come on' },
+  { he: 'שׁלִימָאזֶל',    translit: 'shlimazel',  fr: 'chronically unlucky person' },
+  { he: 'נַחְעֲסְ',        translit: 'naches',     fr: 'parental pride / joyful satisfaction' },
+  { he: 'שָׁלוּם זָכָר',  translit: 'shalom zachar', fr: 'celebration for a baby boy' }
+];
+
+const EVERYDAY = [
+  { he: 'מַה נִּשְׁמָע?',         translit: 'ma nishma?',       fr: "what's up? (lit. \"what's heard\")" },
+  { he: 'מַה הַמַּצָּב?',         translit: 'ma ha-matzav?',    fr: 'how\'s it going?' },
+  { he: 'הַכֹּל בְּסֵדֶר',         translit: 'ha-kol beseder',   fr: 'all good' },
+  { he: 'בְּכֵיף',                translit: 'be-keyf',          fr: 'with pleasure' },
+  { he: 'יוֹפִי',                  translit: 'yofi',             fr: 'great / well done' },
+  { he: 'בֶּאֱמֶת?',               translit: "be'emet?",         fr: 'really?' },
+  { he: 'בְּדִיּוּק',              translit: 'bediyuk',          fr: 'exactly' },
+  { he: 'אֵין בְּעָיָה',           translit: 'eyn be\'aya',      fr: 'no problem' },
+  { he: 'תַּכְלֶס',                translit: 'tachles',          fr: 'bottom line / really' },
+  { he: 'בִּירוּשָׁלַיִם זֶה כָּכָה', translit: 'bi-Yerushalayim ze kacha', fr: "in Jerusalem that's how it is" }
+];
+
+const REACTIONS = [
+  { he: 'אֵיזֶה כֵּיף!',           translit: 'eyze keyf!',           fr: 'how nice!' },
+  { he: 'מַמָּשׁ!',                translit: 'mamash!',              fr: 'really! / totally!' },
+  { he: 'אֵין דְּבָרִים כָּאֵלֶּה', translit: 'eyn dvarim ka\'eyle', fr: "there's nothing like it (excellent!)" },
+  { he: 'חָבָל עַל הַזְּמָן',     translit: 'chaval al ha-zman',     fr: 'amazing (lit. "a waste of time")' },
+  { he: 'מָה אִכְפַּת לְךָ?',      translit: 'ma ichpat lecha?',      fr: "what do you care? (m.)" },
+  { he: 'לֹא נוֹרָא',              translit: 'lo nora',               fr: 'not a big deal' }
+];
+
+const SURPRISE = [
+  { he: 'אֵיךְ?!',                translit: 'eich?!',           fr: 'how?! (disbelief)' },
+  { he: 'מָה?!',                   translit: 'ma?!',             fr: 'what?!' },
+  { he: 'דַּוְקָא',                translit: 'davka',            fr: 'precisely / on the contrary / on purpose' },
+  { he: 'נוּ בֶּאֱמֶת',            translit: "nu be'emet",       fr: 'come on / seriously?' },
+  { he: 'מָה פִּתְאוֹם?',         translit: 'ma pitom?',        fr: 'no way / since when?' },
+  { he: 'אֲבוֹי',                  translit: 'avoy',             fr: 'oh dear' },
+  { he: 'עָזְבוּ אוֹתִי',         translit: 'azvu oti',         fr: 'leave me alone' }
+];
+
+const POSITIVE = [
+  { he: 'מַזָּל טוֹב',           translit: 'mazal tov',         fr: 'congratulations / good luck' },
+  { he: 'בְּהַצְלָחָה',          translit: 'behatzlacha',       fr: 'good luck (before a challenge)' },
+  { he: 'בָּרוּךְ הַשֵּׁם',      translit: 'baruch hashem',     fr: 'thank God (very common)' },
+  { he: 'בְּעֶזְרַת הַשֵּׁם',    translit: 'be\'ezrat hashem',  fr: "with God's help" },
+  { he: 'בִּשְׁעָה טוֹבָה',      translit: "be-sha'a tova",     fr: 'in due time / at a good hour' },
+  { he: 'מְצוּיָּן',              translit: 'metzuyan',          fr: 'excellent' },
+  { he: 'עָבוֹדָה יָפָה',        translit: 'avoda yafa',        fr: 'nice work' },
+  { he: 'כָּל הַכָּבוֹד',         translit: 'kol ha-kavod',      fr: 'well done / hats off' }
+];
+
+const NEGATIVE = [
+  { he: 'בָּלָאגָן',               translit: 'balagan',           fr: 'mess / chaos' },
+  { he: 'נוּדְנִיק',                translit: 'nudnik',            fr: 'pest / annoying person' },
+  { he: 'אִי אֶפְשָׁר!',           translit: 'i efshar!',         fr: 'no way! / impossible!' },
+  { he: 'תַּעֲזֹב',                translit: 'ta\'azov',          fr: 'drop it (m.)' },
+  { he: 'תַּפְסִיק',               translit: 'tafsik',            fr: 'stop (m.)' },
+  { he: 'מָה אַתָּה רוֹצֶה מִמֶּנִּי?', translit: 'ma ata rotze mimeni?', fr: 'what do you want from me? (m.)' }
+];
+
+const SLANG = [
+  { he: 'גַּזְלָן',           translit: 'gazlan',         fr: 'thief / scammer' },
+  { he: 'פְּסִיכִי',           translit: 'psychi',         fr: 'crazy / insane' },
+  { he: 'תּוֹתָח',            translit: 'totach',         fr: 'star / champ (lit. "cannon")' },
+  { he: 'גָּזָר',              translit: 'gazar',          fr: 'crushed it (youth slang)' },
+  { he: 'אַחְלָה הַקְטָה',     translit: 'achla hakta',    fr: 'super stylish' },
+  { he: 'הוֹלֵךְ עַל זֶה',     translit: 'holech al ze',   fr: "I'll go for it (m.)" },
+  { he: 'חָבַט',               translit: 'chavat',         fr: 'killed it' },
+  { he: 'לְזוֹל',              translit: 'lezol',          fr: 'to grab a drink' }
+];
+
+const DIALOGUE = [
+  { speaker: 'A', he: 'יַלָּה אַחִי, מַה נִּשְׁמָע?',           translit: 'Yalla achi, ma nishma?',           fr: "Yo bro, what's up?" },
+  { speaker: 'B', he: 'סַבַּבָּה, בְּכֵיף. וְאַתָּה?',          translit: 'Sababa, be-keyf. Ve-ata?',         fr: "Cool, chill. And you?" },
+  { speaker: 'A', he: 'גַּם סַבַּבָּה. בָּא לְךָ קָפֶה?',        translit: 'Gam sababa. Ba lecha kafe?',       fr: 'Also cool. Want a coffee?' },
+  { speaker: 'B', he: 'וָואלָּה, לָמָּה לֹא! יַלָּה.',           translit: 'Walla, lama lo! Yalla.',           fr: "Sure, why not! Let's go." },
+  { speaker: 'A', he: 'יֵשׁ מָקוֹם אַחְלָה לְיַד הָעִיר.',       translit: 'Yesh makom achla leyad ha-ir.',    fr: "There's a great place near the city." },
+  { speaker: 'B', he: 'תַּכְלֶס, אֲנִי לֹא מַכִּיר. סַבַּבָּה, יַלָּה.', translit: "Tachles, ani lo makir. Sababa, yalla.", fr: "Honestly, I don't know it. Cool, let's go." }
+];
+
+function renderRows(elementId, items) {
+  const list = document.getElementById(elementId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <div class="he">${w.he}</div>
+      <div class="translit">${w.translit}</div>
+      <div class="fr">${w.fr}</div>
+      <button class="btn icon-btn">▶</button>
+    `;
+    row.querySelector('button').addEventListener('click', () => speak(w.he, 0.85));
+    list.appendChild(row);
+  });
+}
+
+renderRows('arabic', ARABIC);
+renderRows('yiddish', YIDDISH);
+renderRows('everyday', EVERYDAY);
+renderRows('reactions', REACTIONS);
+renderRows('surprise', SURPRISE);
+renderRows('positive', POSITIVE);
+renderRows('negative', NEGATIVE);
+renderRows('slang', SLANG);
+
+const dialogueEl = document.getElementById('dialogue');
+DIALOGUE.forEach(line => {
+  const el = document.createElement('div');
+  el.style.cssText = 'padding: 10px 0; border-bottom: 1px solid var(--border);';
+  el.innerHTML = `
+    <div style="display: flex; gap: 16px; align-items: baseline;">
+      <span style="color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px;">${line.speaker}</span>
+      <div style="flex: 1;">
+        <div class="he" style="font-family: 'Frank Ruhl Libre', serif; font-size: 22px; direction: rtl; text-align: right;">${line.he}</div>
+        <div style="font-size: 13px; color: var(--text-dim); font-style: italic; margin-top: 4px;">${line.translit}</div>
+        <div style="font-size: 14px; margin-top: 4px;">${line.fr}</div>
+      </div>
+    </div>
+  `;
+  dialogueEl.appendChild(el);
+});
+
+async function playDialogue() {
+  for (const line of DIALOGUE) {
+    speak(line.he, 0.8);
+    await new Promise(r => setTimeout(r, 2400));
+  }
+  markLessonDone('idioms');
+}
+
+addExtraVocab('Common Idioms (Phrases)', [
+  { he: 'דָּבָר רִאשׁוֹן', translit: 'davar rishon', fr: 'first thing / first of all' },
+  { he: 'בֶּאֱמֶת ובְתָמִים', translit: 'be-emet u-vetamim', fr: 'truly and honestly' },
+  { he: 'בָּסוֹף', translit: 'ba-sof', fr: 'in the end' },
+  { he: 'מֵאָז וְעַד הַיּוֹם', translit: 'me-az ve-ad ha-yom', fr: 'from then until today' },
+  { he: 'בְּמִקְרֶה הַטּוֹב', translit: 'be-mikre ha-tov', fr: 'in the best case' },
+  { he: 'בְּמִקְרֶה הַרַע', translit: 'be-mikre ha-ra', fr: 'in the worst case' },
+  { he: 'אֶחָד עַל אֶחָד', translit: 'echad al echad', fr: 'one on one' },
+  { he: 'אַף אֶחָד', translit: 'af echad', fr: 'no one' },
+  { he: 'כָּל אֶחָד', translit: 'kol echad', fr: 'everyone' },
+  { he: 'כָּל הַכָּבוֹד', translit: 'kol ha-kavod', fr: 'all the respect / well done' },
+  { he: 'מַזָּל טוֹב', translit: 'mazal tov', fr: 'congratulations / good luck' },
+  { he: 'בְּהַצְלָחָה', translit: 'be-hatzlacha', fr: 'good luck (in advance)' }
+]);
+
+addExtraVocab('Slang Words You\'ll Hear All Day', [
+  { he: 'סָבָבָה', translit: 'sababa', fr: 'cool / great (Arabic origin)' },
+  { he: 'מַגְנִיב', translit: 'magniv', fr: 'awesome' },
+  { he: 'אַחְלָה', translit: 'achla', fr: 'awesome (Arabic)' },
+  { he: 'מַמָּשׁ', translit: 'mamash', fr: 'really / totally' },
+  { he: 'יַאלָה בַּיי', translit: 'yalla bye', fr: 'OK bye (Arabic+English)' },
+  { he: 'דַּי כְּבָר', translit: 'day kvar', fr: 'enough already' },
+  { he: 'בָּלָגַן', translit: 'balagan', fr: 'mess (Russian origin)' },
+  { he: 'פָאדִיחָה', translit: 'fadicha', fr: 'embarrassment (Arabic)' },
+  { he: 'בְּחַיֶּיךָ', translit: 'be-chayecha', fr: 'on your life / really? (m.)' },
+  { he: 'אֵיזֶה כֵּיף', translit: 'eyze kef', fr: 'what fun!' },
+  { he: 'אֵיזֶה בּוֹמְבָּה', translit: 'eyze bomba', fr: 'what a hit / amazing' },
+  { he: 'תּוֹתָח', translit: 'totach', fr: 'cannon = boss / ace' },
+  { he: 'אֵיזֶה תּוֹתָח אַתָּה', translit: 'eyze totach ata', fr: 'you\'re the man (m.)' },
+  { he: 'יֵשׁ!', translit: 'yesh!', fr: 'yes! (celebration)' },
+  { he: 'הַבְנָה', translit: 'havana', fr: 'understood (replaces "ok")' },
+  { he: 'נֵכַף', translit: 'nechaf', fr: 'no way / can\'t handle' },
+  { he: 'דָּפוּק', translit: 'dafuk', fr: 'screwed up / broken' },
+  { he: 'מָבָסּוּט', translit: 'mabsut', fr: 'happy / satisfied (Arabic)' }
+]);
+
+addExtraVocab('Texting Slang & Abbreviations', [
+  { he: 'בְּסֵדֶר → בס\'\'ד', translit: 'beseder → b.s.d', fr: 'OK shortened' },
+  { he: 'תּוֹדָה → תוד', translit: 'toda → tod', fr: 'thanks shortened' },
+  { he: 'אַ\'\'כ', translit: 'a.ch.', fr: 'achar kach (afterward)' },
+  { he: 'בעז\'\'ה', translit: 'b.\'.h.', fr: 'be-ezrat ha-shem (God willing)' },
+  { he: 'נ"ב', translit: 'n.v.', fr: 'P.S. (note bene)' },
+  { he: 'ב"ה', translit: 'b.h.', fr: 'baruch ha-shem (thank God)' },
+  { he: 'בלי"נ', translit: 'b.l.n.', fr: 'bli neder (without vowing)' },
+  { he: 'תחליפ"ב', translit: 't.ch.l.f.b.', fr: 'tachlif: switch / replace' }
+]);
+
+addMiniQuiz('Slang Quiz', [
+  { q: 'סָבָבָה means...', options: ['terrible', 'cool', 'sad', 'lost'], answer: 1 },
+  { q: 'A friend says "אֵיזֶה בָּלָגַן" — context?', options: ['Quiet', 'Chaos', 'Beautiful', 'Funny'], answer: 1, explain: 'balagan = mess (Russian origin)' },
+  { q: 'You did something well — friend says...', options: ['פָאדִיחָה', 'אֵיזֶה תּוֹתָח אַתָּה', 'דָּפוּק', 'יוֹם הוּלֶדֶת'], answer: 1, explain: 'totach (cannon) = ace, top performer' },
+  { q: 'יַאלָה means...', options: ['Slow down', 'Let\'s go / hurry up', 'I love you', 'Goodbye'], answer: 1, explain: 'Arabic origin, used by all Israelis' },
+  { q: 'מָבָסּוּט means...', options: ['Sleepy', 'Hungry', 'Happy/satisfied', 'Confused'], answer: 2 }
+]);
+
+addCulturalText('Real Israeli Slang Conversation (street-level)', 'How young Israelis actually talk. None of this is in the textbook.', [
+  { he: 'אָח שֶׁלִּי, מָה הַסִּפּוּר?', translit: "Ach sheli, ma ha-sipur?", fr: "Bro, what's the deal?" },
+  { he: 'סַבָּבָה אֵגוֹזִים, יָצָא לִי בּוֹנוּס', translit: "Sababa egozim, yatza li bonus", fr: "Awesome (lit. cool nuts), I got a bonus" },
+  { he: 'וָואלָה? יָאלָה תָּזִיז אוֹתִי', translit: "Walla? Yalla tezeez oti", fr: "Really? Yalla, hook me up" },
+  { he: 'אֵיזֶה כֵּיף שֶׁבָּאתָ אַחִי', translit: "Eyze kef she-bata achi", fr: "What a joy you came, brother" },
+  { he: 'תְּגַמְגֵּם פָּחוֹת, תְּדַבֵּר טַחְטֵיק', translit: "Tegamgem pachot, tedaber tachteyk", fr: "Stutter less, talk straight" },
+  { he: 'אַתָּה לֹא נוֹרְמָלִי, חָבִיבִי', translit: "Ata lo normali, chabibi", fr: "You're insane, my friend" },
+  { he: 'דָּפוּק עַל כָּל הָרֹאשׁ', translit: "Dafuk al kol ha-rosh", fr: "Totally screwed in the head" },
+  { he: 'יוּעַ זִיוּן, נְעוּלִים אִתְּךָ', translit: "Yu\'a ziyun, ne\'ulim itcha", fr: "Damn, locked in with you (= we got your back)" }
+]);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>40 — Cooking & Recipes</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Cooking & Recipes</h1><div class="subtitle">Lesson 40 · בישול</div></div><div class="nav"><a href="index.html">Home</a><a href="40-cooking.html" class="active">40</a></div></header>
+
+<p class="intro">Israeli cuisine is a Mediterranean fusion: Mizrahi, Yemeni, Moroccan, Eastern European, Levantine. Vocabulary for cooking at home, reading recipes, and talking about food.</p>
+
+<h2>Kitchen Tools</h2>
+<div class="word-list" id="tools"></div>
+
+<h2>Cooking Verbs</h2>
+<div class="word-list" id="verbs"></div>
+
+<h2>Spices & Herbs</h2>
+<div class="word-list" id="spices"></div>
+
+<h2>Measurements</h2>
+<div class="word-list" id="measure"></div>
+
+<h2>Cooking Methods</h2>
+<div class="word-list" id="methods"></div>
+
+<h2>Recipe Vocabulary</h2>
+<div class="word-list" id="recipe"></div>
+
+<h2>Iconic Israeli Dishes</h2>
+<div class="word-list" id="dishes"></div>
+
+<hr class="section-divider">
+<h2>Cooking Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 40 · cooking · <a href="index.html" style="color:var(--accent)">Block 4 done — back to home</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const TOOLS = [
+  { he: 'סִיר', translit: 'sir', fr: 'pot' },
+  { he: 'מַחֲבַת', translit: 'machavat', fr: 'frying pan' },
+  { he: 'תַּבְנִית', translit: 'tavnit', fr: 'baking dish / pan' },
+  { he: 'סַכִּין', translit: 'sakin', fr: 'knife' },
+  { he: 'מַזְלֵג', translit: 'mazleg', fr: 'fork' },
+  { he: 'כַּף', translit: 'kaf', fr: 'spoon' },
+  { he: 'קַעֲרָה', translit: 'ka\'ara', fr: 'bowl' },
+  { he: 'מַגֶּשֶׁת', translit: 'mageshet', fr: 'tray' },
+  { he: 'קוֹלֵט', translit: 'kolet', fr: 'strainer' },
+  { he: 'מַטְחַנָה', translit: 'matchana', fr: 'grater / grinder' },
+  { he: 'מִיקְסֶר', translit: 'mixer', fr: 'mixer / blender' }
+];
+const VERBS = [
+  { he: 'לְבַשֵּׁל', translit: 'levashel', fr: 'to cook' },
+  { he: 'לֶאֱפוֹת', translit: 'le\'efot', fr: 'to bake' },
+  { he: 'לְטַגֵּן', translit: 'letagen', fr: 'to fry' },
+  { he: 'לִצְלוֹת', translit: 'litzlot', fr: 'to grill / roast' },
+  { he: 'לְהַרְתִּיחַ', translit: 'lehartiach', fr: 'to boil' },
+  { he: 'לְקַצֵּץ', translit: 'lekatzetz', fr: 'to chop' },
+  { he: 'לִפְרֹס', translit: 'lifros', fr: 'to slice' },
+  { he: 'לְעַרְבֵּב', translit: 'le\'arbev', fr: 'to mix' },
+  { he: 'לְהַמְלִיחַ', translit: 'lehamliach', fr: 'to salt' },
+  { he: 'לְתַבֵּל', translit: 'letabel', fr: 'to season' },
+  { he: 'לִטְעֹם', translit: 'lit\'om', fr: 'to taste' }
+];
+const SPICES = [
+  { he: 'מֶלַח', translit: 'melach', fr: 'salt' },
+  { he: 'פִּלְפֵּל', translit: 'pilpel', fr: 'pepper' },
+  { he: 'סֻכָּר', translit: 'sukar', fr: 'sugar' },
+  { he: 'שֶׁמֶן', translit: 'shemen', fr: 'oil' },
+  { he: 'שֶׁמֶן זַיִת', translit: 'shemen zayit', fr: 'olive oil' },
+  { he: 'חֹמֶץ', translit: 'chometz', fr: 'vinegar' },
+  { he: 'כּוּסְבָּרָה', translit: 'kusbara', fr: 'cilantro / coriander' },
+  { he: 'פֶּטְרוֹזִילְיָה', translit: 'petrozilya', fr: 'parsley' },
+  { he: 'נַעֲנַע', translit: 'na\'ana', fr: 'mint' },
+  { he: 'זַעֲתָר', translit: 'za\'atar', fr: 'za\'atar (spice mix)' },
+  { he: 'זַעְפְּרָן', translit: 'za\'afran', fr: 'saffron' },
+  { he: 'כַּמּוֹן', translit: 'kamon', fr: 'cumin' },
+  { he: 'פַּפְּרִיקָה', translit: 'paprika', fr: 'paprika' }
+];
+const MEASURE = [
+  { he: 'כַּפִּית', translit: 'kapit', fr: 'teaspoon' },
+  { he: 'כַּף', translit: 'kaf', fr: 'tablespoon' },
+  { he: 'כּוֹס', translit: 'kos', fr: 'cup' },
+  { he: 'גְּרַם', translit: 'gram', fr: 'gram' },
+  { he: 'קִילוֹ', translit: 'kilo', fr: 'kilo' },
+  { he: 'מִ"ל', translit: 'mil', fr: 'ml' },
+  { he: 'לִיטֶר', translit: 'liter', fr: 'liter' },
+  { he: 'קוּב', translit: 'kuv', fr: 'cube' },
+  { he: 'פְּרוּסָה', translit: 'prusa', fr: 'slice' },
+  { he: 'קְצַת', translit: 'ktzat', fr: 'a little' },
+  { he: 'הַרְבֵּה', translit: 'harbe', fr: 'a lot' }
+];
+const METHODS = [
+  { he: 'אָפוּי', translit: 'afuy', fr: 'baked' },
+  { he: 'מְבֻשָּׁל', translit: 'mevushal', fr: 'cooked' },
+  { he: 'מְטֻגָּן', translit: 'metugan', fr: 'fried' },
+  { he: 'צָלוּי', translit: 'tzaluy', fr: 'roasted / grilled' },
+  { he: 'מְאֻדֶּה', translit: 'me\'ude', fr: 'steamed' },
+  { he: 'גָּלָם', translit: 'galam', fr: 'raw' },
+  { he: 'טָרִי', translit: 'tari', fr: 'fresh' },
+  { he: 'קָפוּא', translit: 'kafu', fr: 'frozen' }
+];
+const RECIPE = [
+  { he: 'מִתְכּוֹן', translit: 'mitkon', fr: 'recipe' },
+  { he: 'מַרְכִּיב', translit: 'markiv', fr: 'ingredient' },
+  { he: 'הוֹרָאוֹת', translit: 'hora\'ot', fr: 'instructions' },
+  { he: 'שָׁלָב', translit: 'shalav', fr: 'step / stage' },
+  { he: 'הַכָּנָה', translit: 'hachana', fr: 'preparation' },
+  { he: 'הַגָּשָׁה', translit: 'hagasha', fr: 'serving / presentation' },
+  { he: 'מָנָה', translit: 'mana', fr: 'portion' },
+  { he: 'טָעִים', translit: 'ta\'im', fr: 'tasty' },
+  { he: 'מָתוֹק', translit: 'matok', fr: 'sweet' },
+  { he: 'חָרִיף', translit: 'charif', fr: 'spicy' },
+  { he: 'מָלוּחַ', translit: 'maluach', fr: 'salty' },
+  { he: 'חָמוּץ', translit: 'chamutz', fr: 'sour' },
+  { he: 'מַר', translit: 'mar', fr: 'bitter' }
+];
+const DISHES = [
+  { he: 'סָלָט יִשְׂרְאֵלִי', translit: 'salat yisraeli', fr: 'Israeli salad (cucumber + tomato)' },
+  { he: 'חוּמוּס', translit: 'hummus', fr: 'hummus' },
+  { he: 'פָלָאפֶל', translit: 'falafel', fr: 'falafel' },
+  { he: 'שַׁקְשׁוּקָה', translit: 'shakshuka', fr: 'shakshuka' },
+  { he: 'סָבִיחְ', translit: 'sabich', fr: 'sabich' },
+  { he: 'שׁוֹקוֹלָד', translit: 'shokolad', fr: 'chocolate' },
+  { he: 'עוּגָה', translit: 'uga', fr: 'cake' },
+  { he: 'עוּגִיּוֹת', translit: 'ugiyot', fr: 'cookies' },
+  { he: 'מָרָק עוֹף', translit: 'marak of', fr: 'chicken soup' },
+  { he: 'גִּפִילְטֶע פִישׁ', translit: 'gefilte fish', fr: 'gefilte fish (Ashkenazi)' }
+];
+const PHRASES = [
+  { he: 'אֲנִי מְבַשֵּׁל', translit: 'ani mevashel', fr: "I'm cooking (m.)" },
+  { he: 'יֵשׁ לְךָ מִתְכּוֹן?', translit: 'yesh lecha mitkon?', fr: 'do you have a recipe? (m.)' },
+  { he: 'תְּעַרְבֵּב טוֹב', translit: 'te\'arbev tov', fr: 'mix well (m.)' },
+  { he: 'שִׂים בַּתַּנּוּר 30 דַּקּוֹת', translit: 'sim ba-tanur 30 dakot', fr: 'put in oven for 30 min (m.)' },
+  { he: 'זֶה טָעִים מְאֹד', translit: 'ze ta\'im me\'od', fr: 'this is very tasty' },
+  { he: 'תּוֹסִיף קְצַת מֶלַח', translit: 'tosif ktzat melach', fr: 'add a bit of salt (m.)' }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('tools', TOOLS); R('verbs', VERBS); R('spices', SPICES); R('measure', MEASURE); R('methods', METHODS); R('recipe', RECIPE); R('dishes', DISHES); R('phrases', PHRASES);
+addExtraVocab('Kitchen Tools & Containers', [
+  { he: 'סִיר', translit: 'sir', fr: 'pot' },
+  { he: 'מַחֲבַת', translit: 'machavat', fr: 'pan / skillet' },
+  { he: 'תַּבְנִית', translit: 'tavnit', fr: 'baking pan / mold' },
+  { he: 'סַכִּין', translit: 'sakin', fr: 'knife' },
+  { he: 'מַזְלֵג', translit: 'mazleg', fr: 'fork' },
+  { he: 'כַּף', translit: 'kaf', fr: 'spoon' },
+  { he: 'כַּפִּית', translit: 'kapit', fr: 'teaspoon' },
+  { he: 'צַלַּחַת', translit: 'tzalachat', fr: 'plate' },
+  { he: 'קְעָרָה', translit: 'ke\'ara', fr: 'bowl' },
+  { he: 'כּוֹס', translit: 'kos', fr: 'cup / glass' },
+  { he: 'תַּנּוּר', translit: 'tanur', fr: 'oven' },
+  { he: 'מִיקְרוֹגַל', translit: 'mikrogal', fr: 'microwave' },
+  { he: 'מְקָרֵר', translit: 'mekarer', fr: 'fridge' },
+  { he: 'מַקְפִּיא', translit: 'makpi', fr: 'freezer' },
+  { he: 'מְעַרְבֵּל', translit: 'me\'arbel', fr: 'mixer / blender' }
+]);
+
+addExtraVocab('Cooking Verbs You\'ll See in Recipes', [
+  { he: 'לְבַשֵּׁל', translit: 'levashel', fr: 'to cook' },
+  { he: 'לְטַגֵּן', translit: 'letagen', fr: 'to fry' },
+  { he: 'לֶאֱפוֹת', translit: 'le\'efot', fr: 'to bake' },
+  { he: 'לִצְלוֹת', translit: 'litzlot', fr: 'to grill / roast' },
+  { he: 'לְבַשֵּׁל בְּקִיטוֹר', translit: 'levashel be-kitor', fr: 'to steam' },
+  { he: 'לַחְתֹּךְ', translit: 'lachtoch', fr: 'to cut' },
+  { he: 'לִקְצֹץ', translit: 'liktzotz', fr: 'to chop' },
+  { he: 'לְעַרְבֵּב', translit: 'le\'arbev', fr: 'to mix' },
+  { he: 'לְקַלֵּף', translit: 'lekalef', fr: 'to peel' },
+  { he: 'לִשְׁטוֹף', translit: 'lishtof', fr: 'to wash' },
+  { he: 'לְחַמֵּם', translit: 'lechamem', fr: 'to heat' },
+  { he: 'לְקָרֵר', translit: 'lekarer', fr: 'to cool' },
+  { he: 'לְהַקְפִּיא', translit: 'lehakpi', fr: 'to freeze' },
+  { he: 'לְהַפְשִׁיר', translit: 'lehafshir', fr: 'to thaw' },
+  { he: 'לְתַבֵּל', translit: 'letabel', fr: 'to season' },
+  { he: 'לִטְעוֹם', translit: 'lit\'om', fr: 'to taste' }
+]);
+
+addMiniQuiz('Cooking Quiz', [
+  { q: 'לְטַגֵּן means...', options: ['to bake', 'to fry', 'to boil', 'to grill'], answer: 1 },
+  { q: '"Heat the oil" =', options: ['חַמֵּם אֶת הַשֶּׁמֶן', 'קָרֵר אֶת הַשֶּׁמֶן', 'שְׁפוֹךְ אֶת הַשֶּׁמֶן', 'בַּשֵּׁל בַּשֶּׁמֶן'], answer: 0 },
+  { q: 'A "מַתְכּוֹן" is...', options: ['Spice', 'Recipe', 'Dish', 'Pan'], answer: 1, explain: 'matkon = recipe' },
+  { q: 'Most Israeli kitchens have what spice mix?', options: ['Cinnamon', 'Za\'atar', 'Curry powder', 'Italian herbs'], answer: 1, explain: 'Za\'atar = thyme/sumac/sesame mix' },
+  { q: 'לִקְצֹץ פֶּטְרוֹזִילְיָה means...', options: ['Cook spinach', 'Chop parsley', 'Wash mint', 'Buy basil'], answer: 1 }
+]);
+
+addCulturalText('Shakshuka Recipe — Real Hebrew Steps', 'The most famous Israeli breakfast. Originally Tunisian, adopted by everyone. Each family has its own version.', [
+  { he: 'מַצְרָכִים: 6 בֵּיצִים, 1 בָּצָל גָּדוֹל, 4 עַגְבָנִיּוֹת', translit: "Matzrachim: 6 beytzim, 1 batzal gadol, 4 agvaniyot", fr: 'Ingredients: 6 eggs, 1 large onion, 4 tomatoes' },
+  { he: '2 פִּלְפְּלִים, שׁוּם, פַּפְּרִיקָה, כַּמּוֹן, מֶלַח', translit: "2 pilpelim, shum, paprika, kamun, melach", fr: '2 peppers, garlic, paprika, cumin, salt' },
+  { he: '1. לַחְתֹּךְ אֶת הַבָּצָל וְלִיטַגֵּן בְּשֶׁמֶן', translit: "1. Lachtoch et ha-batzal ve-litagen be-shemen", fr: '1. Cut the onion and fry in oil' },
+  { he: '2. לְהוֹסִיף שׁוּם וּפִלְפְּלִים, לְהַמְשִׁיךְ 5 דַּקּוֹת', translit: "2. Lehosif shum u-filpelim, lehamshich 5 dakot", fr: '2. Add garlic and peppers, continue 5 minutes' },
+  { he: '3. לְהוֹסִיף עַגְבָנִיּוֹת קְצוּצוֹת וְהַתְּבָלִים', translit: "3. Lehosif agvaniyot ktzutzot ve-ha-tvalim", fr: '3. Add chopped tomatoes and the spices' },
+  { he: '4. לְבַשֵּׁל 15 דַּקּוֹת עַד שֶׁהַרֹּטֶב מַסְמִיךְ', translit: "4. Levashel 15 dakot ad she-ha-rotev masmich", fr: '4. Cook 15 minutes until the sauce thickens' },
+  { he: '5. לִשְׁבּוֹר אֶת הַבֵּיצִים לְתוֹךְ הַתַּעֲרוֹבֶת', translit: "5. Lishbor et ha-beytzim le-toch ha-ta\'arovet", fr: '5. Crack the eggs into the mixture' },
+  { he: '6. לְכַסּוֹת וּלְבַשֵּׁל 5-7 דַּקּוֹת עַל אֵשׁ קְטַנָּה', translit: "6. Lechasot u-levashel 5-7 dakot al esh ktana", fr: '6. Cover and cook 5-7 minutes on low heat' },
+  { he: '7. לְהַגִּישׁ עִם פִּתָּה חַמָּה. בְּתֵאָבוֹן!', translit: "7. Lehagish im pita chama. Bi-te\'avon!", fr: '7. Serve with hot pita. Bon appetit!' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('cooking'); } });
+</script></body></html>

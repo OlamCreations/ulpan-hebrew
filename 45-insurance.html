@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>45 — Insurance & Claims</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Insurance & Claims</h1><div class="subtitle">Lesson 45 · ביטוח</div></div><div class="nav"><a href="index.html">Home</a><a href="45-insurance.html" class="active">45</a></div></header>
+
+<p class="intro">Israelis carry many insurance types: bituach briut (health, mandatory), bituach rechev (auto), bituach dira (apartment), bituach chayim (life), bituach mashlim (supplemental health). Vocabulary for buying, claiming, and disputing.</p>
+
+<h2>Insurance Types</h2>
+<div class="word-list" id="types"></div>
+
+<h2>Policy Vocabulary</h2>
+<div class="word-list" id="policy"></div>
+
+<h2>Claims</h2>
+<div class="word-list" id="claims"></div>
+
+<h2>Auto Insurance Specific</h2>
+<div class="word-list" id="auto"></div>
+
+<h2>Health Insurance Specific</h2>
+<div class="word-list" id="health"></div>
+
+<h2>Companies (major Israeli insurers)</h2>
+<div class="word-list" id="companies"></div>
+
+<hr class="section-divider">
+<h2>Phrases</h2>
+<div class="word-list" id="phrases"></div>
+
+<footer>Lesson 45 · insurance · <a href="46-legal-basics.html" style="color:var(--accent)">Next: Legal Basics →</a></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+const TYPES = [
+  { he: 'בִּטּוּחַ', translit: 'bituach', fr: 'insurance' },
+  { he: 'בִּטּוּחַ בְּרִיאוּת', translit: 'bituach briut', fr: 'health insurance' },
+  { he: 'בִּטּוּחַ מַשְׁלִים', translit: 'bituach mashlim', fr: 'supplemental health' },
+  { he: 'בִּטּוּחַ פְּרָטִי', translit: 'bituach prati', fr: 'private insurance' },
+  { he: 'בִּטּוּחַ רֶכֶב', translit: 'bituach rechev', fr: 'auto insurance' },
+  { he: 'בִּטּוּחַ חוֹבָה', translit: 'bituach chova', fr: 'mandatory (3rd party) auto' },
+  { he: 'בִּטּוּחַ מַקִּיף', translit: 'bituach makif', fr: 'comprehensive auto' },
+  { he: 'בִּטּוּחַ צַד שְׁלִישִׁי', translit: 'bituach tzad shlishi', fr: 'third-party' },
+  { he: 'בִּטּוּחַ דִּירָה', translit: 'bituach dira', fr: 'apartment insurance' },
+  { he: 'בִּטּוּחַ תֵּכוּלָה', translit: 'bituach techula', fr: 'contents insurance' },
+  { he: 'בִּטּוּחַ חַיִּים', translit: 'bituach chayim', fr: 'life insurance' },
+  { he: 'בִּטּוּחַ נְסִיעוֹת', translit: 'bituach nesiyot', fr: 'travel insurance' }
+];
+const POLICY = [
+  { he: 'פּוֹלִיסָה', translit: 'polisa', fr: 'policy' },
+  { he: 'פְּרֶמְיָה', translit: 'premya', fr: 'premium' },
+  { he: 'הִשְׁתַּתְּפוּת עַצְמִית', translit: 'hishtatfut atzmit', fr: 'co-pay / deductible' },
+  { he: 'תְּקוּפַת בִּטּוּחַ', translit: 'tkufat bituach', fr: 'coverage period' },
+  { he: 'כִּסּוּי', translit: 'kisuy', fr: 'coverage' },
+  { he: 'גְּבוּל אַחְרָיוּת', translit: 'gvul achrayut', fr: 'liability limit' },
+  { he: 'חִדּוּשׁ פּוֹלִיסָה', translit: 'chidush polisa', fr: 'policy renewal' },
+  { he: 'בִּטּוּל פּוֹלִיסָה', translit: 'bitul polisa', fr: 'policy cancellation' }
+];
+const CLAIMS = [
+  { he: 'תְּבִיעָה', translit: 'tvi\'a', fr: 'claim' },
+  { he: 'הַגָּשַׁת תְּבִיעָה', translit: 'hagashat tvi\'a', fr: 'filing a claim' },
+  { he: 'אֵרוּעַ', translit: 'eyru\'a', fr: 'event / incident' },
+  { he: 'נֵזֶק', translit: 'nezek', fr: 'damage' },
+  { he: 'פִּצּוּי', translit: 'pitzuy', fr: 'compensation' },
+  { he: 'פֶּסַק דִּין', translit: 'psak din', fr: 'verdict / judgment' },
+  { he: 'שַׁמַּאי', translit: 'shamai', fr: 'assessor / claims adjuster' },
+  { he: 'דוֹחַ אֵרוּעַ', translit: 'doach eyru\'a', fr: 'incident report' }
+];
+const AUTO = [
+  { he: 'תְּאוּנַת דְּרָכִים', translit: 'te\'unat drachim', fr: 'traffic accident' },
+  { he: 'נֵזֶק רֶכֶב', translit: 'nezek rechev', fr: 'vehicle damage' },
+  { he: 'גֵּרוּר', translit: 'gerur', fr: 'tow truck service' },
+  { he: 'אִישׁוּר רֶכֶב', translit: 'ishur rechev', fr: 'vehicle confirmation' },
+  { he: 'רִישׁוּי רֶכֶב', translit: 'rishuy rechev', fr: 'vehicle license' },
+  { he: 'הָרִיעַ נְשָׁמָה', translit: 'haria neshama', fr: 'severe injury' },
+  { he: 'בְּלִי תְּאוּנָה', translit: 'bli te\'una', fr: 'no accidents (record)' }
+];
+const HEALTH = [
+  { he: 'קוּפַּת חוֹלִים', translit: 'kupat cholim', fr: 'health fund' },
+  { he: 'תַּשְׁלוּם בִּטּוּחַ', translit: 'tashlum bituach', fr: 'insurance payment' },
+  { he: 'תַּקְנוֹן', translit: 'taknon', fr: 'regulations' },
+  { he: 'חוֹלֶה כְּרוֹנִי', translit: 'chole kroni', fr: 'chronic patient' },
+  { he: 'תַּחְלוּא', translit: 'tachlu\'', fr: 'illness / sickness' },
+  { he: 'בִּטּוּחַ חוּ"ל', translit: 'bituach chul', fr: 'overseas insurance' }
+];
+const COMPANIES = [
+  { he: 'הַרְאֵל', translit: 'Harel', fr: 'Harel Insurance' },
+  { he: 'מְנוֹרָה', translit: 'Menora', fr: 'Menora' },
+  { he: 'הַפֵנִיקְס', translit: 'Ha-Phoenix', fr: 'The Phoenix' },
+  { he: 'מִגְדָּל', translit: 'Migdal', fr: 'Migdal' },
+  { he: 'כְּלָל', translit: 'Klal', fr: 'Clal' },
+  { he: 'הַכְּשַׁרָה', translit: 'Hahasharah', fr: 'Hahasharah' }
+];
+const PHRASES = [
+  { he: 'אֲנִי רוֹצֶה לְהַגִּישׁ תְּבִיעָה', translit: 'ani rotze lehagish tvi\'a', fr: 'I want to file a claim (m.)' },
+  { he: 'מַהוּ הַכִּסּוּי שֶׁלִּי?', translit: 'mahu ha-kisuy sheli?', fr: 'what is my coverage?' },
+  { he: 'מָה גֹּבַהּ הַפְּרֶמְיָה?', translit: 'ma gova ha-premya?', fr: 'what\'s the premium amount?' },
+  { he: 'הָיָה לִי אֵרוּעַ אֶתְמוֹל', translit: 'haya li eyru\'a etmol', fr: 'I had an incident yesterday' },
+  { he: 'אֲנִי לֹא מְבַטָּח', translit: 'ani lo mevutach', fr: "I'm not insured (m.)" }
+];
+function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
+R('types', TYPES); R('policy', POLICY); R('claims', CLAIMS); R('auto', AUTO); R('health', HEALTH); R('companies', COMPANIES); R('phrases', PHRASES);
+addExtraVocab('Health Insurance Specifics', [
+  { he: 'קֻפַּת חוֹלִים', translit: 'kupat cholim', fr: 'health fund' },
+  { he: 'כְּלָלִית', translit: 'klalit', fr: 'Klalit (largest fund)' },
+  { he: 'מַכַּבִּי', translit: 'maccabi', fr: 'Maccabi fund' },
+  { he: 'מְאֻחֶדֶת', translit: 'me\'uchedet', fr: 'Meuhedet fund' },
+  { he: 'לְאֻמִּית', translit: 'le\'umit', fr: 'Leumit fund' },
+  { he: 'בִּטּוּחַ מַשְׁלִים', translit: 'bituach mashlim', fr: 'supplementary insurance' },
+  { he: 'בִּטּוּחַ סִיעוּדִי', translit: 'bituach si\'udi', fr: 'long-term care insurance' },
+  { he: 'סַל בְּרִיאוּת', translit: 'sal bri\'ut', fr: 'health basket (covered services)' },
+  { he: 'תְּרוּפוֹת בְּסַל', translit: 'trufot ba-sal', fr: 'meds in basket' },
+  { he: 'הִשְׁתַּתְּפוּת בִּתְרוּפָה', translit: 'hishtatfut bi-trufa', fr: 'medication co-pay' },
+  { he: 'הַפְנָיָה', translit: 'hafnaya', fr: 'referral (to specialist)' },
+  { he: 'תּוֹר לְרוֹפֵא', translit: 'tor le-rofe', fr: 'doctor appointment' }
+]);
+
+addExtraVocab('Insurance Vocabulary', [
+  { he: 'בִּטּוּחַ', translit: 'bituach', fr: 'insurance' },
+  { he: 'בִּטּוּחַ בְּרִיאוּת', translit: 'bituach bri\'ut', fr: 'health insurance' },
+  { he: 'בִּטּוּחַ רֶכֶב', translit: 'bituach rechev', fr: 'auto insurance' },
+  { he: 'בִּטּוּחַ דִּירָה', translit: 'bituach dira', fr: 'home insurance' },
+  { he: 'בִּטּוּחַ חַיִּים', translit: 'bituach chayim', fr: 'life insurance' },
+  { he: 'פּוֹלִיסָה', translit: 'polisa', fr: 'policy' },
+  { he: 'פְּרֶמְיָה', translit: 'premya', fr: 'premium' },
+  { he: 'הִשְׁתַּתְּפוּת עַצְמִית', translit: 'hishtatfut atzmit', fr: 'deductible' },
+  { he: 'תְּבִיעָה', translit: 'tvi\'a', fr: 'claim' },
+  { he: 'נֵזֶק', translit: 'nezek', fr: 'damage' },
+  { he: 'תְּאוּנָה', translit: 'te\'una', fr: 'accident' },
+  { he: 'גְּנֵיבָה', translit: 'gneyva', fr: 'theft' },
+  { he: 'שַׁמַּאי', translit: 'shamay', fr: 'assessor' },
+  { he: 'חוֹבָה', translit: 'chova', fr: 'mandatory (insurance)' },
+  { he: 'מַקִּיף', translit: 'makif', fr: 'comprehensive' },
+  { he: 'צַד גִּ', translit: 'tzad gimel', fr: 'third party' }
+]);
+
+addMiniQuiz('Insurance Quiz', [
+  { q: 'Israel mandates which auto insurance?', options: ['Comprehensive', 'Third-party only', 'בִּטּוּחַ חוֹבָה', 'No requirement'], answer: 2, explain: 'Bituach chova covers personal injury — required by law' },
+  { q: '"Deductible" =', options: ['פְּרֶמְיָה', 'הִשְׁתַּתְּפוּת עַצְמִית', 'נֵזֶק', 'תְּבִיעָה'], answer: 1 },
+  { q: 'After accident, send photos via...', options: ['Fax', 'WhatsApp typically', 'Letter', 'Visit office'], answer: 1 },
+  { q: 'Travel insurance is also called...', options: ['בִּטּוּחַ אֶזְרָחִי', 'בִּטּוּחַ נְסִיעוֹת', 'בִּטּוּחַ עֲבוֹדָה', 'בִּטּוּחַ בְּרִיאוּת'], answer: 1, explain: 'bituach nesi\'ot' },
+  { q: 'How much do Israelis pay for life insurance per month average?', options: ['~50 NIS', '~150-300 NIS', '~1000 NIS', 'Free with bank'], answer: 1 }
+]);
+
+addCulturalText('Filing an Auto Insurance Claim', "After a fender-bender. The 'agent' on the line, the questions, the bureaucracy.", [
+  { he: 'נְצִיג: שָׁלוֹם, חֲבַרַת הַבִּטּוּחַ. מַה קָּרָה?', translit: "Netzig: Shalom, chavarat ha-bituach. Ma kara?", fr: 'Rep: Hello, insurance company. What happened?' },
+  { he: 'אַתָּה: הָיְתָה לִי תְּאוּנָה קַלָּה. הָרֶכֶב שֶׁלִּי נִפְגַּע בַּחֲנִיָּה', translit: "Ata: Hayta li te\'una kala. Ha-rechev sheli nifga ba-chaniya", fr: 'You: Had a minor accident. My car was hit in the parking lot' },
+  { he: 'נְצִיג: יֵשׁ צַד שֵׁנִי?', translit: "Netzig: Yesh tzad sheni?", fr: 'Rep: Is there another party?' },
+  { he: 'אַתָּה: כֵּן, הוּא הִשְׁאִיר פֶּתֶק עִם מִסְפַּר טֶלֶפוֹן', translit: "Ata: Ken, hu hish\'ir petek im mispar telefon", fr: 'You: Yes, he left a note with phone number' },
+  { he: 'נְצִיג: יֵשׁ דּוּחַ מִשְּׁטָרָה?', translit: "Netzig: Yesh duach mi-shtara?", fr: 'Rep: Is there a police report?' },
+  { he: 'אַתָּה: לֹא, נֵזֶק קַל בִּלְבָד', translit: "Ata: Lo, nezek kal bi-lvad", fr: 'You: No, only minor damage' },
+  { he: 'נְצִיג: שְׁלַח לִי תְּמוּנוֹת בְּ-וואטסאפ ל-03-1234567', translit: "Netzig: Shlach li tmunot be-WhatsApp le-03-1234567", fr: 'Rep: Send me photos via WhatsApp to 03-1234567' },
+  { he: 'נְצִיג: שַׁמַּאי יִצוֹר אִתְּךָ קֶשֶׁר תּוֹךְ 48 שָׁעוֹת', translit: "Netzig: Shamay yitzor itcha kesher toch 48 sha\'ot", fr: 'Rep: An assessor will contact you within 48 hours' },
+  { he: 'אַתָּה: יֵשׁ הִשְׁתַּתְּפוּת עַצְמִית?', translit: "Ata: Yesh hishtatfut atzmit?", fr: 'You: Is there a deductible?' },
+  { he: 'נְצִיג: כֵּן, 750 שֶׁקֶל', translit: "Netzig: Ken, 750 shekel", fr: 'Rep: Yes, 750 NIS' }
+]);
+
+let c = 0; document.body.addEventListener('click', e => { if (e.target.closest('.icon-btn')) { c++; if (c >= 15) markLessonDone('insurance'); } });
+</script></body></html>

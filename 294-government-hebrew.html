@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>294 — Government Hebrew</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Government Hebrew — Forms, Notices, Bureaucracy</h1><div class="subtitle">Lesson 294 · עִבְרִית מֶמְשַׁלְתִּית</div></div><div class="nav"><a href="index.html">Home</a><a href="294-government-hebrew.html" class="active">294</a></div></header>
+
+<p class="intro">Israeli government Hebrew is its own dialect — dense, passive, archaic in places, riddled with acronyms. Every oleh meets it: Bituach Leumi forms, Misrad HaPnim notices, Mas Hachnasa letters, court summonses. At B2 you can read most government correspondence, fill standard forms (Tofes 17, Tofes 101, Tofes 1301), and decode the rights/obligations sections. The portal gov.il consolidates most processes online.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Government Hebrew prefers passive constructions ("ייגבה תשלום" — "payment will be collected") over active. Formal vocabulary often uses Aramaic-derived legal terms ("בכפוף ל" — subject to, "לאלתר" — immediately). Many forms still mix Hebrew terminology with English loanwords ("דוח" doch but also "form 17"). Reading old kupa or iriya letters is harder than current ones — bureaucratic Hebrew has been simplified post-2010.</div>
+
+<h2 id="ministries">Ministries</h2>
+<div class="word-list" id="ministries-list"></div>
+
+<h2 id="forms">Common Forms</h2>
+<div class="word-list" id="forms-list"></div>
+
+<h2 id="phrases">Bureaucratic Phrases</h2>
+<div class="word-list" id="phrases-list"></div>
+
+<h2 id="rights">Rights & Obligations</h2>
+<div class="word-list" id="rights-list"></div>
+
+<h2 id="vocab">Government Vocabulary</h2>
+<div class="word-list" id="vocab-list"></div>
+
+<hr class="section-divider">
+
+<h2>Reading a Misrad HaPnim Notice</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">An oleh deciphers a notice about te\'udat zehut renewal.</div>
+  <div id="notice"></div>
+</div>
+
+<footer>Lesson 294 · Government Hebrew · <a href="295-legal-hebrew.html" style="color:var(--accent)">Next: Legal Hebrew →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const MINISTRIES = [
+  { he: 'מִשְׂרַד הַפְּנִים', translit: 'Misrad HaPnim', fr: 'Ministry of Interior' },
+  { he: 'מִשְׂרַד הַחוּץ', translit: 'Misrad HaChutz', fr: 'Ministry of Foreign Affairs' },
+  { he: 'מִשְׂרַד הָאוֹצָר', translit: 'Misrad HaOtzar', fr: 'Ministry of Finance' },
+  { he: 'מִשְׂרַד הַבִּטָּחוֹן', translit: 'Misrad HaBitachon', fr: 'Ministry of Defense' },
+  { he: 'מִשְׂרַד הַבְּרִיאוּת', translit: 'Misrad HaBriut', fr: 'Ministry of Health' },
+  { he: 'מִשְׂרַד הַחִנּוּךְ', translit: 'Misrad HaChinuch', fr: 'Ministry of Education' },
+  { he: 'מִשְׂרַד הָעֲלִיָּה וְהַקְּלִיטָה', translit: 'Misrad HaAliyah v\'haKlita', fr: 'Aliyah Ministry' },
+  { he: 'מִשְׂרַד הָעֲבוֹדָה', translit: 'Misrad HaAvoda', fr: 'Ministry of Labor' },
+  { he: 'מִשְׂרַד הַמִּשְׁפָּטִים', translit: 'Misrad HaMishpatim', fr: 'Ministry of Justice' },
+  { he: 'מִשְׂרַד הַתַּחְבּוּרָה', translit: 'Misrad HaTachbura', fr: 'Ministry of Transportation' }
+];
+const FORMS = [
+  { he: 'טֹפֶס 17', translit: 'Tofes 17', fr: 'Form 17 (kupa hospitalization)' },
+  { he: 'טֹפֶס 101', translit: 'Tofes 101', fr: 'Form 101 (employee tax data)' },
+  { he: 'טֹפֶס 1301', translit: 'Tofes 1301', fr: 'Form 1301 (annual tax return)' },
+  { he: 'בַּקָּשַׁת תְּעוּדַת זֶהוּת', translit: 'bakashat te\'udat zehut', fr: 'ID card application' },
+  { he: 'בַּקָּשַׁת דַּרְכּוֹן', translit: 'bakashat darkon', fr: 'passport application' },
+  { he: 'תַּצְהִיר', translit: 'tatzhir', fr: 'sworn affidavit' },
+  { he: 'יִפּוּי כֹּחַ', translit: 'yipui koach', fr: 'power of attorney' },
+  { he: 'דּוּ"חַ שָׁנְתִי', translit: 'duach shnati', fr: 'annual report' },
+  { he: 'בַּקָּשַׁת אִשּׁוּר', translit: 'bakashat ishur', fr: 'request for approval' },
+  { he: 'הַצְהָרַת הוֹן', translit: 'hatzharat hon', fr: 'declaration of capital' }
+];
+const PHRASES = [
+  { he: 'בִּכְפוּף לְ', translit: 'b\'chafuf l\'', fr: 'subject to' },
+  { he: 'לְאַלְתַּר', translit: 'l\'altar', fr: 'immediately' },
+  { he: 'עַל-פִּי הַחֹק', translit: 'al-pi ha-chok', fr: 'according to law' },
+  { he: 'בְּהֶתְאֵם לַתַּקָּנוֹת', translit: 'b\'hetem la-takanot', fr: 'in accordance with regulations' },
+  { he: 'יִיגָּבֶה תַּשְׁלוּם', translit: 'yigaveh tashlum', fr: 'payment will be collected' },
+  { he: 'יָחוּל קְנָס', translit: 'yachul knas', fr: 'a fine will apply' },
+  { he: 'יִשָּׁלַח דַּרֵישָׁה', translit: 'yishalach dareisha', fr: 'a demand will be sent' },
+  { he: 'בִּתְקוּפָה הַקְּצוּבָה', translit: 'bitkufa ha-ktzuva', fr: 'within the allotted period' },
+  { he: 'מִיָּד עִם קַבָּלַת הַהוֹדָעָה', translit: 'miyad im kabalat ha-hoda\'a', fr: 'immediately upon receipt of the notice' },
+  { he: 'נִתָּן לְעַרְעֵר', translit: 'nitan l\'ar\'er', fr: 'subject to appeal' }
+];
+const RIGHTS = [
+  { he: 'זְכוּת', translit: 'zchut', fr: 'right' },
+  { he: 'חוֹבָה', translit: 'chova', fr: 'obligation' },
+  { he: 'הַזְּכוּת לְעַרְעֵר', translit: 'ha-zchut l\'ar\'er', fr: 'right to appeal' },
+  { he: 'הַזְּכוּת לִשְׁתִיקָה', translit: 'ha-zchut l\'shtika', fr: 'right to silence' },
+  { he: 'הַזְּכוּת לְיִיצוּג', translit: 'ha-zchut l\'yitzug', fr: 'right to representation' },
+  { he: 'חוֹבַת דִּוּוּחַ', translit: 'chovat divuach', fr: 'duty to report' },
+  { he: 'חוֹבַת תַּשְׁלוּם', translit: 'chovat tashlum', fr: 'duty to pay' },
+  { he: 'פָּטוּר מִחוֹבַת תַּשְׁלוּם', translit: 'patur mi-chovat tashlum', fr: 'exempt from payment' },
+  { he: 'הַעֲנָקַת הַטָּבָה', translit: 'ha\'anakat hatava', fr: 'granting of benefit' },
+  { he: 'שְׁלִילַת זְכוּת', translit: 'shlilat zchut', fr: 'denial of right' }
+];
+const VOCAB = [
+  { he: 'הוֹדָעָה', translit: 'hoda\'a', fr: 'notice' },
+  { he: 'הַחְלָטָה', translit: 'hachlata', fr: 'decision' },
+  { he: 'תַּקָּנָה', translit: 'takana', fr: 'regulation' },
+  { he: 'חֹק', translit: 'chok', fr: 'law' },
+  { he: 'תְּאוּם', translit: 'te\'um', fr: 'coordination' },
+  { he: 'יְצִיגוּת', translit: 'yetzigut', fr: 'representation' },
+  { he: 'אִשּׁוּר', translit: 'ishur', fr: 'approval / confirmation' },
+  { he: 'אִשּׁוּר מַעֲמָד', translit: 'ishur ma\'amad', fr: 'status confirmation' },
+  { he: 'מַעֲמָד אֶזְרָחִי', translit: 'ma\'amad ezrachi', fr: 'civil status' },
+  { he: 'גוֹף מֶמְשַׁלְתִּי', translit: 'guf memshalti', fr: 'government body' }
+];
+const NOTICE = [
+  { he: 'לִכְבוֹד מַר נִפְתָּלִי', translit: 'lichvod mar Nephtali', fr: 'To Mr. Nephtali' },
+  { he: 'הַנְּדוֹן: חִדּוּשׁ תְּעוּדַת זֶהוּת', translit: 'ha-nadon: chidush te\'udat zehut', fr: 'Subject: ID card renewal' },
+  { he: 'הִנְּךָ נִדְרָשׁ לְהִתְיַצֵּב בְּמִשְׂרָד הַפְּנִים', translit: 'hin\'cha nidrash l\'hityatzev b\'Misrad HaPnim', fr: 'You are required to appear at the Interior Ministry' },
+  { he: 'בְּתוֹךְ 30 יוֹם מִיּוֹם קַבָּלַת הוֹדָעָה זוֹ', translit: 'b\'toch 30 yom mi-yom kabalat hoda\'a zo', fr: 'Within 30 days of receiving this notice' },
+  { he: 'יֵשׁ לְהָבִיא תַּצְלוּם עָדְכָּנִי וְאִשּׁוּר מְגוּרִים', translit: 'yesh l\'havi tatzlum idkani v\'ishur megurim', fr: 'Bring an updated photo and proof of residence' },
+  { he: 'אִי-הֵיעָנוּת תְּגַרֵר קְנָס', translit: 'i-he\'anut t\'garer knas', fr: 'Non-appearance will result in a fine' },
+  { he: 'בִּכְבוֹד רַב, מִשְׂרַד הַפְּנִים', translit: 'b\'kavod rav, Misrad HaPnim', fr: 'With great respect, Interior Ministry' }
+];
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('ministries-list', MINISTRIES);
+R('forms-list', FORMS);
+R('phrases-list', PHRASES);
+R('rights-list', RIGHTS);
+R('vocab-list', VOCAB);
+renderTextBlock('notice', NOTICE);
+addMiniQuiz('Block 30 · Government Hebrew Quiz', [
+  { q: 'Government Hebrew prefers...', options: ['active voice', 'passive constructions', 'imperative', 'slang'], answer: 1, explain: '"yigaveh tashlum" — payment will be collected (passive).' },
+  { q: 'The Interior Ministry in Hebrew is...', options: ['Misrad HaChutz', 'Misrad HaPnim', 'Misrad HaOtzar', 'Misrad HaBitachon'], answer: 1, explain: 'pnim = inside / interior.' },
+  { q: 'Tofes 17 is used for...', options: ['tax return', 'kupa hospitalization authorization', 'driver\'s license', 'passport'], answer: 1, explain: 'Tofes 17 = kupa hospitalization/imaging authorization.' },
+  { q: '"L\'altar" in legal Hebrew means...', options: ['within a year', 'immediately', 'never', 'maybe'], answer: 1, explain: 'l\'altar = immediately, urgently.' },
+  { q: 'The Israeli e-government portal is...', options: ['gov.il', 'misrad.com', 'israel.gov', 'bituach.co.il'], answer: 0, explain: 'gov.il consolidates most government services.' },
+  { q: '"B\'chafuf l\'" means...', options: ['subject to', 'in addition to', 'instead of', 'because'], answer: 0, explain: 'b\'chafuf l\' = subject to, conditional on.' }
+]);
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone('government-hebrew');
+  }
+});
+</script></body></html>
