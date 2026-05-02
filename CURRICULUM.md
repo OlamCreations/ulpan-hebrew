@@ -631,6 +631,61 @@ Hebrew literary tradition from Haskalah revival through Bialik and Agnon to cont
 429. Reading Vocabulary — krichah · perek · roman · sifriya · keren · Steimatzky · Tzomet Sfarim
 430. Block 43 Summary — Haskalah → Bialik → Agnon → big three → contemporary → prizes
 
+## BLOCK 44 — Visual Arts & Museums (431-440) — DONE
+
+Israeli visual culture: Bezalel founding, painters from Rubin to Lavie, sculpture from Melnikov to Karavan, the two flagship museums, photography from Capa to Adi Nes, Florentin street art, Judaica craft, working art vocabulary.
+
+431. Bezalel Academy — Schatz 1906 · Yemenite filigree · Ardon Bauhaus reform · Mt. Scopus campus · alumni
+432. Israeli Painters — Rubin · Ticho · Gutman · Ofakim Hadashim 1948 · Want of Matter · Lavie school
+433. Modern Sculpture — Melnikov 1934 lion · Danziger Nimrod 1939 · Karavan land art · Kadishman · Tumarkin
+434. Israel Museum — 1965 Givat Ram · Shrine of Book · Second Temple model · Billy Rose Garden · Judaica wing
+435. Tel Aviv Museum — Dizengoff 1932 · Independence Hall · Amir Wing 2011 Cohen · Rubinstein · Hostage Square
+436. Photography — Capa 1948 · Rubinger Kotel paratroopers 1967 · Bar-Am Magnum · Adi Nes Last Supper
+437. Street Art — Florentin · Know Hope · Dede Bandaid · Klone · Souza · post-Oct-7 hostage walls
+438. Judaica & Craft — Hanukkiyot · ketubot · Yemenite filigree · Stieglitz Studio · Cardo silver shops
+439. Art Vocabulary — materials · genres · institutional · critical · auction (Tiroche) · wall-text reading
+440. Block 44 Summary — Bezalel → painters → sculpture → museums → photo → street → craft → 7 names
+
+## BLOCK 45 — Architecture (441-450) — DONE
+
+The country\'s built environment: Bauhaus White City UNESCO 2003, Jerusalem stone Mandate code 1918, Israeli brutalism, Safdie\'s international career, daily-life typology, the boulevard, Yad Vashem complex, four-tradition religious architecture, deep working vocabulary.
+
+441. Bauhaus & White City — UNESCO 2003 · Dizengoff Circle 1934 Averbuch · Engel House Rechter · Liebling conservation
+442. Jerusalem Stone — Storrs 1918 mandate · Meleke / mizzi yahudi · Mendelsohn Schocken · Karmi-Melamede Supreme Court
+443. Israeli Brutalism — Knesset 1966 · Yaski Soroka · Hecker Spiral · Mansfeld Israel Museum · Karavan Negev Brigade
+444. Safdie & Contemporary — Habitat 67 · Yad Vashem 2005 prism · Mamilla 2007 · Marina Bay Sands · Karmi-Melamede · Pitsou Kedem
+445. Typology — synagogue (Sephardi vs Ashkenazi) · sukkah · mamad 1992 code · 4-room apt · kibbutz / moshav / yishuv
+446. Tel Aviv Boulevard — Rothschild 1910 · Ben-Gurion · Chen · kiosk · matkot · scooters · Kaplan protests
+447. Yad Vashem Complex — 1953 law · Hall of Remembrance 1961 · Safdie 2005 prism · Children\'s Memorial 1976 · Righteous Avenue
+448. Religious Architecture — Hurva · Al-Aqsa · Dome of the Rock · Holy Sepulchre · Bahá\'í · Druze khalwa · Karaite · Samaritan
+449. Architecture Vocabulary — drawings + scales · materials · site · planning · TAMA 38 · pinui-binui · tofes 4 · tender
+450. Block 45 Summary — Bauhaus → stone → brutalism → Safdie → typology → boulevards → Yad Vashem → 7 essential names
+
+## BLOCK 46 — Israeli Dance (451-460) — DONE
+
+Israel\'s dance world: Batsheva + Gaga, Inbal Yemenite roots, Suzanne Dellal as flagship venue, folk dance + classical ballet + contemporary independents, training pipeline, working vocabulary.
+
+451. Batsheva Dance Company — 1964 Rothschild + Graham · Naharin 1990-2018 · Anaphaza/Echad Mi Yodea · Decadance · Suzanne Dellal home
+452. Gaga & Naharin — sensation cues · no mirrors · People + Dancers tracks · 40 countries · Mr. Gaga 2015
+453. Inbal & Yemenite Roots — Sara Levi-Tanai 1949 · Israel Prize 1973 · Yemenite ritual · Diwan · Bikurei Ha\'Itim
+454. Suzanne Dellal Center — 1989 · Neve Tzedek 1887 · 4 halls · International Exposure · Curtain Up
+455. Folk Dance / Rikudei Am — Gurit Kadman · Dalia Festival 1944 · Hora Agadati 1924 · Mayim Mayim 1937 · harkadah · Karmiel
+456. Classical Ballet — Israel Ballet 1968 Yampolsky/Markman · Vaganova method · Soviet aliyah · Swan Lake/Coppélia
+457. Contemporary Companies — Vertigo Wertheim 1992 · KCDC Ga\'aton · Yasmeen Godder · Inbal Pinto/Pollak Oyster
+458. Dance Training — Telma Yellin · Jerusalem Academy · Bat-Dor · KCDC Dance Village · IDF Excellent Artist
+459. Dance Vocabulary — body parts · class commands · review register · programme texts · improvisation
+460. Block 46 Summary — Batsheva → Gaga → Inbal → Suzanne Dellal → folk → ballet → contemporary → training → 7 names
+
+## BLOCK 47 — Music Venues & Concert Life (461-470) — IN PROGRESS (paused at 465)
+
+Israeli concert venues from the IPO\'s flagship hall to the rock club basements and outdoor amphitheaters. Built 5/10 lessons; paused per user request. Lessons 466-470 still to be built (festivals, conservatories, ticketing, summary).
+
+461. Bronfman / Mann & IPO — Heichal HaTarbut 1957 · IPO Huberman 1936 · Mehta 50yr · Lahav Shani
+462. Jerusalem Theatre — Talbiya 1971 · Sherover/Henry Crown · JSO · Chamber Festival · Israel Festival 1961
+463. Tzavta & Alternative — 1968 Ibn Gvirol basement · 250 seats · singer-songwriter · jazz · zemer
+464. Barby & Rock Venues — Barby 1992 · Zappa 2002 · Mashina · HaYehudim · Hangar 11 · door / sound vocab
+465. Outdoor & Amphitheaters — Caesarea · Sultan\'s Pool · Park HaYarkon · Masada Opera · regional
+
 ## UI: Light Mode (added 2026-04-30)
 
 - Toggle in header (index.html) and floating-controls (lessons), keyboard shortcut **T**
@@ -695,3 +750,7 @@ After completing all 100 lessons, a learner should have:
 | 41 — Israeli Cinema | Done | 401-410 |
 | 42 — Israeli Theatre | Done | 411-420 |
 | 43 — Hebrew Literature | Done | 421-430 |
+| 44 — Visual Arts & Museums | Done | 431-440 |
+| 45 — Architecture | Done | 441-450 |
+| 46 — Israeli Dance | Done | 451-460 |
+| 47 — Music Venues & Concert Life | In progress (5/10) | 461-465 |

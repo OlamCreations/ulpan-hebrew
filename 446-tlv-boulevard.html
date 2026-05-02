@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>446 — The Tel Aviv Boulevard</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>The Tel Aviv Boulevard — Sderot</h1><div class="subtitle">Lesson 446 · שְׁדֵרוֹת תֵּל-אָבִיב</div></div><div class="nav"><a href="index.html">Home</a><a href="446-tlv-boulevard.html" class="active">446</a></div></header>
+
+<p class="intro">A "sderah" — a tree-lined median boulevard with pedestrian path, benches, dog-walking, kiosks, and adjacent café streets — is Tel Aviv\'s defining urban form. Rothschild was the first (1910); Ben-Gurion, Chen, Nordau, and Weizmann followed; Habima Square + Sderot Sha\'ul HaMelech anchor the museum quarter. The sderah is more than a street: it is an ecology of bench culture, electric scooters, baby strollers, Friday-morning brunch, and political demonstration. This lesson covers the named boulevards, the typical bench-life vocabulary, and the rhythm of a Friday on Rothschild.</p>
+
+<div class="tip"><strong>Cultural note</strong> — A boulevard kiosk (kiosk hasderah) is a Tel Aviv institution. You can buy iced coffee, freshly squeezed orange juice, a Magnum, beer, cigarettes, and lottery tickets — all from the same window. Some have become serious bars (kiosk Heskaria on Sderot Ben-Gurion). Saturday-morning matkot (beach paddleball) sounds drift inland; afternoon ride-share scooters take over by 6pm.</div>
+
+<h2>Major Boulevards</h2>
+<div class="word-list" id="boulevards"></div>
+
+<h2>Bench Life Vocabulary</h2>
+<div class="word-list" id="bench"></div>
+
+<h2>Boulevard Kiosks</h2>
+<div class="word-list" id="kiosk"></div>
+
+<h2>Sderot Politics</h2>
+<div class="word-list" id="politics"></div>
+
+<h2>Pedestrians, Cyclists, Scooters</h2>
+<div class="word-list" id="users"></div>
+
+<hr class="section-divider">
+
+<h2>Friday Morning on Rothschild</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short reading: a typical 9-11am Friday on Rothschild Boulevard — coffee, dogs, scooters, a demonstration ribbon, and the rhythm Tel Avivians actually live.</div>
+  <div id="reading"></div>
+</div>
+
+<footer>Lesson 446 · The Tel Aviv Boulevard · <a href="447-yad-vashem-complex.html" style="color:var(--accent)">Next: Yad Vashem complex →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BOULEVARDS = [
+  { he: 'שְׁדֵרָה', translit: 'sderah', fr: 'boulevard — tree-lined median street, distinctive TLV form' },
+  { he: 'שְׁדֵרוֹת רוֹטְשִׁילְד', translit: 'sderot rotshild', fr: 'Rothschild Boulevard — first TLV boulevard, 1910, central spine' },
+  { he: 'שְׁדֵרַת בֶּן-גוּרְיוֹן', translit: 'sderat ben gurion', fr: 'Ben-Gurion Boulevard — modernist apartment-lined, north TLV' },
+  { he: 'שְׁדֵרוֹת חֵן', translit: 'sderot chen', fr: 'Chen Boulevard — quieter, residential, near Habima' },
+  { he: 'שְׁדֵרוֹת נוֹרְדָּאוּ', translit: 'sderot nord\'au', fr: 'Nordau Boulevard — north TLV, family-residential' },
+  { he: 'שְׁדֵרוֹת וַייצְמַן', translit: 'sderot vaytsman', fr: 'Weizmann Boulevard — Givatayim/TLV border, broader' },
+  { he: 'שְׁדֵרוֹת יְהוּדָה הַלֵּוִי', translit: 'sderot yehudah ha-levi', fr: 'Yehuda HaLevi — short, mixed boulevard' },
+  { he: 'שְׁדֵרוֹת שָׁאוּל הַמֶּלֶךְ', translit: 'sderot sha\'ul ha-melech', fr: 'Sha\'ul HaMelech Boulevard — museum quarter, TAMA address' },
+  { he: 'מְצוּלֵעַת', translit: 'm\'tzula\'at', fr: 'pentagonal — Rothschild\'s footprint shape' },
+  { he: 'הַסֵּפֶק הַטִּיבְעִי שֶׁל הָעִיר', translit: 'ha-sefek ha-tiv\'i shel ha-ir', fr: 'the city\'s natural artery — what the boulevard is for the urban body' }
+];
+const BENCH = [
+  { he: 'סַפְסָל', translit: 'safsal', fr: 'bench' },
+  { he: 'יָשַׁב עַל הַסַּפְסָל', translit: 'yashav al ha-safsal', fr: 'sit on the bench' },
+  { he: 'מַעֲגַל הַסַּפְסָל', translit: 'ma\'agal ha-safsal', fr: 'bench circle — group of regulars on a single bench' },
+  { he: 'אֲפֻדַּת תַּחְבּוּרָה', translit: 'afudat tachburah', fr: 'transport vest — common at boulevard volunteer events' },
+  { he: 'שִׂיחַת בּוֹקֶר', translit: 'sichat boker', fr: 'morning conversation — typical bench activity' },
+  { he: 'גַּם הַחָתוּל', translit: 'gam ha-chatul', fr: '"the cat too" — phrase about the boulevard\'s feral cat colony' },
+  { he: 'בֵּיצַת קֶרֶט', translit: 'beitzat keret', fr: 'a Keret-egg moment — Etgar Keret\'s short-story TLV reference' },
+  { he: 'אִישׁ קָשִׁישׁ', translit: 'ish kashish', fr: 'an old man — typical morning bench occupant' },
+  { he: 'אַטָה הָעָגָלָה', translit: 'atah ha-agalah', fr: 'pram traffic — heavy on Friday mornings' },
+  { he: 'מַטְקוֹת', translit: 'matkot', fr: 'beach paddleball — sound drifting from beach onto the boulevard' }
+];
+const KIOSK = [
+  { he: 'קִיוֹסְק', translit: 'kiosk', fr: 'kiosk' },
+  { he: 'קַפֶּה קַר', translit: 'kafe kar', fr: 'iced coffee — kiosk staple' },
+  { he: 'מִיץ תַּפּוּזִים סָחוּט', translit: 'mitz tapuzim sachut', fr: 'fresh-squeezed orange juice' },
+  { he: 'מַגְנוּם', translit: 'magnum', fr: 'Magnum (the ice cream brand)' },
+  { he: 'בִּירָה', translit: 'birah', fr: 'beer' },
+  { he: 'סִיגַרְיוֹת', translit: 'sigaryot', fr: 'cigarettes' },
+  { he: 'לוֹטוֹ', translit: 'loto', fr: 'lottery ticket' },
+  { he: 'קִיוֹסְק חֵיסְקַרְיָה', translit: 'kiosk cheskaryah', fr: 'Kiosk Heskaria — famous boulevard bar-kiosk hybrid' },
+  { he: 'תַּחֲנַת אוֹפַנַּיִם', translit: 'tachanat ofanayim', fr: 'tel-o-fun bike station — boulevard staple' },
+  { he: 'נְקוּדַּת מִפְגָּשׁ', translit: 'nikudat mifgash', fr: 'meeting point — local lingo for "by the kiosk"' }
+];
+const POLITICS = [
+  { he: 'הַפְגָּנָה', translit: 'hafganah', fr: 'demonstration' },
+  { he: 'הַסַּף שֶׁל קַפְלַן', translit: 'ha-saf shel kaplan', fr: 'Kaplan threshold — central protest location near TAMA' },
+  { he: 'מִצְעָד', translit: 'mitz\'ad', fr: 'march / parade' },
+  { he: 'אַחְוָה', translit: 'achvah', fr: 'fellowship — common protest-banner word' },
+  { he: 'בְּרִית', translit: 'b\'rit', fr: 'covenant — appearing on protest signs' },
+  { he: 'דֶּגֶל', translit: 'degel', fr: 'flag' },
+  { he: 'דֶּגֶל לְבַן-כָּחֹל', translit: 'degel lavan kachol', fr: 'blue-and-white flag — Israeli national, used in protests' },
+  { he: 'מִשְׁמַר חוֹפְשִׁי', translit: 'mishmar chofshi', fr: 'free-vigil — open-mic protest format' },
+  { he: 'הַגַּחַל הַחֲבֵרוּתִי', translit: 'ha-gachal ha-chaverut', fr: 'social ember — bench-as-political-meeting trope' },
+  { he: 'דֶּגֶל הַחֲטוּפִים', translit: 'degel ha-chatufim', fr: 'hostage flag — yellow ribbon used since Oct 7' }
+];
+const USERS = [
+  { he: 'הוֹלֵךְ-רֶגֶל', translit: 'holech-regel', fr: 'pedestrian' },
+  { he: 'אוֹפַנּוֹעַ', translit: 'ofano\'a', fr: 'motorbike' },
+  { he: 'אוֹפַנַּיִם חַשְׁמַלִּים', translit: 'ofanayim chashmaliyim', fr: 'electric bike — boulevard menace' },
+  { he: 'קוֹרְקִינֶט חַשְׁמַלִּי', translit: 'korkinet chashmali', fr: 'electric scooter' },
+  { he: 'תֵּל-אוֹ-פוּן', translit: 'tel o fun', fr: 'Tel-O-Fun — TLV bike-share' },
+  { he: 'הַטוֹסֵר', translit: 'ha-toser', fr: 'jogger — boulevard regular' },
+  { he: 'אִשָּׁה עָם כֶּלֶב', translit: 'ishah im kelev', fr: 'woman with dog — boulevard staple' },
+  { he: 'גּוּז עָגוּל', translit: 'guz agul', fr: '"round-shaped strut" — a slow ride' },
+  { he: 'נֵס', translit: 'nes', fr: 'banner / flag' },
+  { he: 'תַּקַּר', translit: 'takar', fr: 'puncture / flat tire' }
+];
+
+const READING = [
+  { he: 'יוֹם שִׁשִּׁי 9:30. רוֹטְשִׁילְד מַתְעוֹרֶרֶת. הַקַּפֶּה הָרִאשׁוֹן מַגִּיעַ מִכְּכָּרוֹן בָּ-12 — לָאטֶה עַל קֶרַח. הָרֵיחַ אִיטַלְקִי.', translit: 'yom shishi tesha sh\'loshim. rotshild mit\'oreret. ha-kafeh ha-rishon magia mi-kikaron b\'sh\'tem-esreh — late al kerach. ha-reach italki.', fr: 'Friday 9:30. Rothschild wakes up. The first coffee comes from the kiosk at 12 — iced latte. The smell is Italian.' },
+  { he: 'הַסַּפְסָל הָרִאשׁוֹן: זוּג קְשִׁישׁ, שָׁלוֹשׁ עִיתּוֹנִים. הַסַּפְסָל הַשֵּׁנִי: בָּחוּר עַל קוֹרְקִינֶט, שׂוֹחֵחַ בָּעִבְרִית-אַנְגְּלִית-עַרְבִית עַל הַטֶּלֶפוֹן.', translit: 'ha-safsal ha-rishon: zug kashish, shalosh itonim. ha-safsal ha-sheni: bachur al korkinet, sochaiach ba-ivrit-anglit-aravit al ha-telefon.', fr: 'First bench: an elderly couple, three newspapers. Second bench: a guy on a scooter, talking on the phone in Hebrew-English-Arabic.' },
+  { he: 'אִשָּׁה עִם שָׁלוֹשׁ כְּלָבִים עוֹבֶרֶת. אַחֲרֶיהָ — אַבָּא עִם עֲגָלָה. אַחֲרָיו — נֵס שֶׁל הַחֲטוּפִים. כֻּלָּם זוֹרְמִים בְּאוֹתוֹ קֶצֶב.', translit: 'ishah im shalosh k\'lavim overet. acharei\'ha — aba im agalah. acharav — nes shel ha-chatufim. kulam zormim b\'oto ketzev.', fr: 'A woman with three dogs passes. After her — a father with a stroller. After him — a hostage flag. All flowing at the same pace.' },
+  { he: 'בַּקִּיוֹסְק חֵיסְקַרְיָה הַטּוֹעֵם הַקַּל הָרִאשׁוֹן: מוֹחִיטוֹ. עוֹד לֹא 11. אֲבָל זֶה תֵּל-אָבִיב. הַסּוֹף-שָׁבוּעַ מַתְחִיל מֻקְדָּם.', translit: 'ba-kiosk cheskaryah ha-to\'em ha-kal ha-rishon: mochito. od lo achat-esreh. aval zeh tel aviv. ha-sof-shavua matchil mukdam.', fr: 'At Kiosk Heskaria the first easy taste: mojito. Not yet 11. But this is Tel Aviv. The weekend starts early.' },
+  { he: 'שׁוֹמֵעַ אֶת הַמַּטְקוֹת מִכִּיוּן הַחוֹף. רוּחַ מַעֲרָבִית מְבִיאָה אֶת הַמְּלַחוּת. הָעֵצִים יוֹשְׁבִים יָפֶה. הַבְּרֵיכָה בְּכִכַּר דִּיזֶנְגוֹף שׁוֹמַעַת מֵרָחוֹק.', translit: 'shomea et ha-matkot mi-kivun ha-chof. ruach ma\'aravit m\'vi\'ah et ha-m\'lachut. ha-etzim yoshvim yafeh. ha-b\'reichah b\'kikar dizengof shoma\'at me-rachok.', fr: 'You hear the matkot from the beach. A western breeze brings the salt. The trees sit nicely. The Dizengoff Square pool is heard from afar.' },
+  { he: 'מַסְקָנָה: הַשְּׁדֵרָה הִיא לֹא רְחוֹב. הִיא אוּלַם פּוּמְבִּי. כָּל אֶחָד יָכוֹל לֵשֵׁב כָּאן בְּלִי לִקְנוֹת — וְלָכֵן זֶה הַמָּקוֹם הַכִי דֶּמוֹקְרָטִי בָּעִיר.', translit: 'maskanah: ha-sderah hi lo r\'chov. hi ulam pumbi. kol echad yachol leshev kan b\'li liknot — v\'lachen zeh ha-makom ha-chi demokrati ba-ir.', fr: 'Conclusion: the boulevard is not a street. It is a public hall. Anyone can sit here without buying — which is why it is the most democratic place in the city.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('boulevards', BOULEVARDS);
+R('bench', BENCH);
+R('kiosk', KIOSK);
+R('politics', POLITICS);
+R('users', USERS);
+
+renderTextBlock('reading', READING);
+
+addMiniQuiz('Tel Aviv Boulevard Quiz', [
+  { q: 'Tel Aviv\'s first boulevard, opened in 1910, is...', options: ['Sderot Ben-Gurion', 'Sderot Rothschild', 'Sderot Chen', 'Sderot Sha\'ul HaMelech'], answer: 1, explain: 'Rothschild Boulevard was Tel Aviv\'s founding spine, laid out in 1910 with the city itself.' },
+  { q: 'A boulevard "kiosk" sells...', options: ['Only newspapers', 'Coffee, juice, ice cream, beer, cigarettes, lottery — and sometimes is a bar', 'Only flowers', 'Only fish'], answer: 1, explain: 'The boulevard kiosk is a multi-purpose institution; some have become full bars (e.g. Kiosk Heskaria).' },
+  { q: 'TAMA — the museum quarter\'s home boulevard — runs along...', options: ['Sderot Rothschild', 'Sderot Sha\'ul HaMelech', 'Sderot Ben-Gurion', 'Sderot Chen'], answer: 1, explain: 'Sderot Sha\'ul HaMelech is the address of the Tel Aviv Museum of Art and the Habima quarter.' },
+  { q: '"Tel-O-Fun" stations on the boulevards are...', options: ['Phone booths', 'Bike-share docks', 'Information kiosks', 'Public toilets'], answer: 1, explain: 'Tel-O-Fun is the city\'s bike-share, with docks along all major boulevards.' },
+  { q: 'The "Kaplan threshold" became famous since 2023 as...', options: ['A boulevard café', 'A central protest location near TAMA', 'A Bauhaus tour stop', 'A new kiosk'], answer: 1, explain: 'Kaplan Street and the area between TAMA and the Defense Ministry have hosted Israel\'s largest demonstrations.' },
+  { q: 'What is one defining sound on a TLV boulevard on Saturday morning?', options: ['Church bells', 'Matkot (beach paddleball) drifting from the beach', 'Truck deliveries', 'Trains'], answer: 1, explain: 'The slap of matkot from the beach is the iconic Saturday-morning audio backdrop along the boulevards.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(446);
+  }
+});
+</script></body></html>

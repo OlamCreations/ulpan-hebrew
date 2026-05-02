@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>462 — Jerusalem Theatre</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>The Jerusalem Theatre</h1><div class="subtitle">Lesson 462 · תֵּיאַטְרוֹן יְרוּשָׁלַיִם</div></div><div class="nav"><a href="index.html">Home</a><a href="462-jerusalem-theatre.html" class="active">462</a></div></header>
+
+<p class="intro">The Jerusalem Theatre, opened in 1971 in Talbiya, houses six halls under one roof — Sherover (auditorium), Henry Crown (recital), Rebecca Crown (chamber), Uzrad, Cinematheque hall, and the Khan in nearby Liberty Bell Park. It hosts the Jerusalem Symphony Orchestra (JSO), the Israel Festival, the Jerusalem Chamber Music Festival, and a steady programme of touring international ensembles. This lesson covers the building, the JSO, the chamber-music festival, and how Jerusalem\'s music week differs from Tel Aviv\'s.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Jerusalem\'s classical music scene is smaller and more politically heterogeneous than Tel Aviv\'s. The same hall hosts a Druze qanun ensemble on a Tuesday, a Schubert lieder recital on Thursday, and a Yiddish-cabaret programme on Saturday. The Jerusalem Chamber Music Festival in September is the country\'s most internationally respected chamber event; Elena Bashkirova (Daniel Barenboim\'s wife) directs it.</div>
+
+<h2>The Building & Halls</h2>
+<div class="word-list" id="building"></div>
+
+<h2>Jerusalem Symphony Orchestra (JSO)</h2>
+<div class="word-list" id="jso"></div>
+
+<h2>Jerusalem Chamber Music Festival</h2>
+<div class="word-list" id="chamber"></div>
+
+<h2>Israel Festival</h2>
+<div class="word-list" id="israel-festival"></div>
+
+<h2>Jerusalem vs Tel Aviv Audience</h2>
+<div class="word-list" id="jerusalem-tlv"></div>
+
+<hr class="section-divider">
+
+<h2>Jerusalem Music Week in September</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short reading: a typical concert week during the September Jerusalem Chamber Music Festival — the venues, the format, the international guests, and what it feels like to walk between halls.</div>
+  <div id="week"></div>
+</div>
+
+<footer>Lesson 462 · Jerusalem Theatre · <a href="463-tzavta.html" style="color:var(--accent)">Next: Tzavta & alternative →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const BUILDING = [
+  { he: 'תֵּיאַטְרוֹן יְרוּשָׁלַיִם', translit: 'te\'atron yerushalayim', fr: 'Jerusalem Theatre' },
+  { he: '1971', translit: 'elef tesha me\'ot shiv\'im v\'echad', fr: '1971 — opening year' },
+  { he: 'טַלְבִּיָּה', translit: 'talbyah', fr: 'Talbiya — Jerusalem neighbourhood housing the theatre' },
+  { he: 'אוּלַם שֶׁרוֹבֶר', translit: 'ulam sherover', fr: 'Sherover Auditorium — main hall, 950 seats' },
+  { he: 'אוּלַם הֶנְרִי קְרַאוּן', translit: 'ulam henri kraun', fr: 'Henry Crown Hall — recital, 750 seats' },
+  { he: 'אוּלַם רֶבֶּקָה קְרַאוּן', translit: 'ulam rebekah kraun', fr: 'Rebecca Crown Hall — chamber, 470 seats' },
+  { he: 'אוּלָם אוּזְרָד', translit: 'ulam uzrad', fr: 'Uzrad Hall — small recital, 200 seats' },
+  { he: 'הַסִּינֵמָתֵיק', translit: 'ha-sinemateik', fr: 'the Cinematheque — Jerusalem Cinematheque, separate but allied' },
+  { he: 'תֵּיאַטְרוֹן הַחָאן', translit: 'te\'atron ha-chan', fr: 'Khan Theatre — Liberty Bell Park, allied venue' },
+  { he: 'יָאקוֹב רֶכְטֶר', translit: 'ya\'akov rechter', fr: 'Yaakov Rechter — architect (also Bronfman renovation)' }
+];
+const JSO = [
+  { he: 'תָּזְמֹרֶת סִימְפוֹנִית יְרוּשָׁלַיִם', translit: 'tizmoret simfonit yerushalayim', fr: 'Jerusalem Symphony Orchestra (JSO)' },
+  { he: '1936', translit: 'elef tesha me\'ot sh\'loshim v\'shesh', fr: '1936 — JSO founding (as Palestine Broadcasting Orchestra)' },
+  { he: 'קוֹל יִשְׂרָאֵל', translit: 'kol yisra\'el', fr: 'Kol Yisrael — original radio orchestra parent' },
+  { he: 'תָּזְמֹרֶת רֶשׁוּת הַשִּׁדּוּר', translit: 'tizmoret rashut ha-shidur', fr: 'Israel Broadcasting Authority Orchestra — historic name' },
+  { he: 'מַעֲבָר מֵהָרַדְיוֹ', translit: 'ma\'avar me-ha-radyo', fr: 'shift from radio — JSO became concert-first 1970s' },
+  { he: 'גֶ\'רֶמִי רוֹהְרֶר', translit: 'jeremi rorer', fr: 'Jeremy Rohrer — historic guest conductor' },
+  { he: 'פְּרוֹדוּקְצְיָה רַדְיוֹפוֹנִית', translit: 'produktzyah radyofonit', fr: 'radio production — JSO\'s historic dual role' },
+  { he: 'מוּזִיקָה יִשְׂרְאֵלִית חֲדָשָׁה', translit: 'muzikah yisre\'elit chadashah', fr: 'new Israeli music — JSO programmes more than IPO' },
+  { he: 'מַעֲנָק לְמַלְחִינִים', translit: 'ma\'anak l\'malchinim', fr: 'composer grant — JSO commissioning programme' },
+  { he: 'תָּזְמֹרֶת בָּרוֹק', translit: 'tizmoret barok', fr: 'baroque orchestra — sometimes inside JSO programming' }
+];
+const CHAMBER = [
+  { he: 'פֶסְטִיבָל הַמּוּזִיקָה הַקַּמֶּרִית', translit: 'festival ha-muzikah ha-kamerit', fr: 'Jerusalem Chamber Music Festival — September annually' },
+  { he: 'אֶלֶנָה בָּשְׁקִירוֹבָה', translit: 'elenah bash\'kirovah', fr: 'Elena Bashkirova — festival artistic director' },
+  { he: 'דָּנִיֵאל בָּרֶנְבּוֹים', translit: 'daniel barenboim', fr: 'Daniel Barenboim — Bashkirova\'s husband, festival regular' },
+  { he: 'מוּזִיקָה קַמֶּרִית', translit: 'muzikah kamerit', fr: 'chamber music' },
+  { he: 'רְבִיעִיָּה לִכְלֵי מֵיתָר', translit: 'r\'vi\'iyah li-k\'lei meitar', fr: 'string quartet' },
+  { he: 'שְׁלִישִׁיָּה לִפְּסַנְתֵּר', translit: 'sh\'lishiyah li-p\'santer', fr: 'piano trio' },
+  { he: 'דּוּעֶט', translit: 'duet', fr: 'duo' },
+  { he: 'רְבִיעִיָּה אֶמֶרְסוֹן', translit: 'r\'vi\'iyah emerson', fr: 'Emerson Quartet — historic festival guest' },
+  { he: 'גוֹתַם רוֹסְקוֹסְקִי', translit: 'gotam rosko\'ski', fr: 'Gotham / Rosko\'ski — typical international names' },
+  { he: 'הוֹפָעוֹת בּוֹקֶר', translit: 'hofa\'ot boker', fr: 'morning concerts — common festival format' }
+];
+const ISRAEL_FESTIVAL = [
+  { he: 'פֶסְטִיבָל יִשְׂרָאֵל', translit: 'festival yisra\'el', fr: 'Israel Festival — annual May/June multi-arts festival' },
+  { he: '1961', translit: 'elef tesha me\'ot shishim v\'echad', fr: '1961 — Israel Festival founding' },
+  { he: 'תֵּיאַטְרוֹן בֵּינלְאוּמִי', translit: 'te\'atron beinl\'umi', fr: 'international theatre — festival anchor' },
+  { he: 'מָחוֹל אַוָנְגַ\'אַרְד', translit: 'machol avangard', fr: 'avant-garde dance — festival programming' },
+  { he: 'מוּזִיקָה בֵּינלְאוּמִית', translit: 'muzikah beinl\'umit', fr: 'international music' },
+  { he: 'מוּזִיקָה אֶתְנִית', translit: 'muzikah etnit', fr: 'world / ethnic music' },
+  { he: 'תֵּיאַטְרוֹן רְחוֹב', translit: 'te\'atron r\'chov', fr: 'street theatre' },
+  { he: 'יָרִיחוֹ הָעַתִּיקָה', translit: 'yericho ha-atikah', fr: 'old Jericho — site sometimes used for festival' },
+  { he: 'יוֹם הַסְטוּדֶנְט הַחוֹפְשִׁי', translit: 'yom ha-student ha-chofshi', fr: 'free student day — festival outreach' },
+  { he: 'תָּכְנִית הַתִּיכוֹן', translit: 'tochnit ha-tichon', fr: 'high-school programme — festival outreach' }
+];
+const JERUSALEM_TLV = [
+  { he: 'יְרוּשָׁלַיִם תַּרְבּוּתִית', translit: 'yerushalayim tarbutit', fr: 'cultural Jerusalem — slower, more religious' },
+  { he: 'תֵּל-אָבִיב חִילּוֹנִית', translit: 'tel aviv chilonit', fr: 'secular Tel Aviv' },
+  { he: 'קַהָל מוּשְׁבָע', translit: 'kahal mushba', fr: 'committed audience — typical Jerusalem cohort' },
+  { he: 'דָּתִיִּים בַּקַּהָל', translit: 'datiyim ba-kahal', fr: 'religious in the audience — common in Jerusalem' },
+  { he: 'מָנּוּי לֹא מַעֲבִיר', translit: 'manuy lo ma\'avir', fr: 'subscription does not transfer — Jerusalem-specific custom' },
+  { he: 'מָקוֹם קָבוּעַ עִם הַשָּׁכֵן', translit: 'makom kavua im ha-shachen', fr: 'fixed seat with neighbour — multi-decade pattern' },
+  { he: 'תַּחֲנַת מָנּוּי', translit: 'tachanat manuy', fr: 'subscription station — multi-series options' },
+  { he: 'תָּכְנִיָּה מַחְמִירָה', translit: 'tochniyah machmirah', fr: 'demanding programme — Jerusalem audiences appreciate' },
+  { he: 'יוֹם רְבִיעִי בָּעֶרֶב', translit: 'yom r\'vi\'i ba-erev', fr: 'Wednesday evening — popular Jerusalem concert slot' },
+  { he: 'יוֹם חַמִּישִׁי בְּ-11', translit: 'yom chamishi b\'achat-esreh', fr: 'Thursday at 11 — Jerusalem morning recital tradition' }
+];
+
+const WEEK = [
+  { he: 'יוֹם רְאשׁוֹן, 14 בְּסֶפְּטֶמְבֶּר. הַפֶסְטִיבָל הַקַּמֶּרִי הַ-26. אַתָּה נִכְנָס לְאוּלַם הֶנְרִי קְרַאוּן.', translit: 'yom rishon, arba\'ah-asar b\'september. ha-festival ha-kameri ha-esrim v\'shesh. atah nichnas l\'ulam henri kraun.', fr: 'Sunday, 14 September. The 26th Chamber Music Festival. You enter the Henry Crown Hall.' },
+  { he: 'בָּרֶנְבּוֹים מְנַגֵּן עִם רְבִיעִיָּה צְעִירָה. שׁוּמַן, פְּסַנְתֵּר וְכַמַּת מֵיתַר. הַחֶדֶר שׁוֹתֵק.', translit: 'barenboim m\'nagen im r\'vi\'iyah tz\'irah. shuman, p\'santer v\'kamat meitar. ha-cheder shotek.', fr: 'Barenboim plays with a young quartet. Schumann, piano and string quartet. The hall is silent.' },
+  { he: 'בְּיוֹם שֵׁנִי בְּ-11 בַּבּוֹקֶר — דּוּעֶט גֶ\'רֶמִי דֶנְק וּ-בָּשְׁקִירוֹבָה. שׁוּבֶּרְט. הַקַּהָל בָּחוּץ עִם קָפֶה.', translit: 'b\'yom sheni b\'achat-esreh ba-boker — duet jeremi denk u-bash\'kirovah. shubert. ha-kahal ba-chutz im kafeh.', fr: 'Monday at 11 am — Jeremy Denk and Bashkirova in duo. Schubert. The audience is outside with coffee.' },
+  { he: 'יוֹם שְׁלִישִׁי בָּעֶרֶב — קוֹנְצֶ\'רְט בְּיַחַד עִם תָּזְמֹרֶת סִימְפוֹנִית יְרוּשָׁלַיִם. הַסּוֹלִיסְט הוּא יוּג\'ָה וָאנְג, הַסִּינִית הַצְּעִירָה.', translit: 'yom sh\'lishi ba-erev — kontzhert b\'yachad im tizmoret simfonit yerushalayim. ha-solist hu yuja vang, ha-sinit ha-tz\'irah.', fr: 'Tuesday evening — concert together with the JSO. The soloist is Yuja Wang, the young Chinese pianist.' },
+  { he: 'בְּ-22:30 — חֲצוֹת מוּזִיקָה בָּלֵילָה. אוֹלַם רֶבֶּקָה קְרַאוּן, פּוֹר 100. סְקוֹל עַל הַבָּמָה. בָּךְ אֵרוּעַ אֲרֻכָּה.', translit: 'b\'esrim u-shtayim sh\'loshim — chatzot muzikah ba-laylah. ulam rebekah kraun, por me\'ah. skol al ha-bamah. bach eru\'a arukah.', fr: '10:30 pm — midnight music. Rebecca Crown Hall, perhaps 100 people. Just a cellist on stage. A long Bach event.' },
+  { he: 'יוֹם שִׁשִּׁי בַּבּוֹקֶר. סִיוּם. כֻּלָּם בָּאוּלַם שֶׁרוֹבֶר. תָּזְמֹרֶת חֲדָשָׁה שֶׁל יְרוּשָׁלַיִם, מַהְלֶר. הַשָּׁמַיִם נוֹפְלִים.', translit: 'yom shishi ba-boker. siyum. kulam ba-ulam sherover. tizmoret chadashah shel yerushalayim, mahler. ha-shamayim noflim.', fr: 'Friday morning. The closing. Everyone in the Sherover Auditorium. The Jerusalem New Orchestra, Mahler. The skies fall.' },
+  { he: 'מַסְקָנָה: יְרוּשָׁלַיִם הִיא לֹא הָעוֹתֶק שֶׁל תֵּל-אָבִיב. הִיא מָקוֹם שֶׁלָּהּ — שֶׁבּוֹ הַמּוּזִיקָה לֹא צוֹעֶקֶת, אֶלָּא לוֹחֶשֶׁת.', translit: 'maskanah: yerushalayim hi lo ha-otek shel tel aviv. hi makom shelah — she-bo ha-muzikah lo tzo\'eket, ela locheshet.', fr: 'Conclusion: Jerusalem is not a copy of Tel Aviv. It is its own place — where music does not shout, but whispers.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('building', BUILDING);
+R('jso', JSO);
+R('chamber', CHAMBER);
+R('israel-festival', ISRAEL_FESTIVAL);
+R('jerusalem-tlv', JERUSALEM_TLV);
+
+renderTextBlock('week', WEEK);
+
+addMiniQuiz('Jerusalem Theatre Quiz', [
+  { q: 'The Jerusalem Theatre opened in...', options: ['1948', '1957', '1971', '1989'], answer: 2, explain: 'The Jerusalem Theatre opened in 1971 in the Talbiya neighbourhood, designed by Yaakov Rechter.' },
+  { q: 'The main hall in the Jerusalem Theatre is the...', options: ['Sherover Auditorium (~950 seats)', 'Khan Theatre', 'Cinematheque hall', 'Uzrad Hall'], answer: 0, explain: 'Sherover Auditorium is the flagship 950-seat hall; Henry Crown Hall is the 750-seat recital space.' },
+  { q: 'The Jerusalem Symphony Orchestra (JSO) was founded in...', options: ['1936 (as Palestine Broadcasting Orchestra)', '1948', '1971', '1990'], answer: 0, explain: 'The JSO has its roots in the 1936 Palestine Broadcasting Orchestra at Kol Yisrael radio.' },
+  { q: 'The Jerusalem Chamber Music Festival is directed by...', options: ['Daniel Barenboim', 'Elena Bashkirova', 'Lahav Shani', 'Zubin Mehta'], answer: 1, explain: 'Elena Bashkirova (married to Daniel Barenboim) is artistic director of the September chamber-music festival.' },
+  { q: 'The Israel Festival was founded in...', options: ['1948', '1961', '1971', '1989'], answer: 1, explain: 'The Israel Festival, the country\'s major multi-arts annual gathering, was founded in 1961.' },
+  { q: 'A typical Jerusalem morning recital slot is...', options: ['7 am Sunday', '11 am Thursday', '4 pm Friday', '11 pm Saturday'], answer: 1, explain: 'Thursday at 11 am is a long-established Jerusalem chamber-music slot — many subscribers retired or part-time.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(462);
+  }
+});
+</script></body></html>

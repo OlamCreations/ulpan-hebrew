@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>439 — Art Vocabulary in Depth</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Art Vocabulary in Depth</h1><div class="subtitle">Lesson 439 · אוֹצַר מִלִּים שֶׁל אָמָנוּת</div></div><div class="nav"><a href="index.html">Home</a><a href="439-art-vocabulary.html" class="active">439</a></div></header>
+
+<p class="intro">This is the deep vocabulary lesson for navigating Israeli art professionally — gallery wall texts, auction catalogues, museum tours, art-school crit sessions, Haaretz arts pages. We cover the technical vocabulary (medium, technique, support), institutional vocabulary (gallery, auction, biennial), critical vocabulary (figurative vs abstract, conceptual, installation), and price-and-buying vocabulary you need at Sotheby\'s Tel Aviv or Tiroche Auction House.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Israeli art collectors often cluster in two groups: tech-money in Tel Aviv (collecting contemporary, internationally-shown artists) and traditional families with multi-generational links to Bezalel-style work. Hebrew vocabulary covers both registers — knowing them lets you read a Tiroche sale catalogue and a Helena Rubinstein Pavilion wall text in the same afternoon.</div>
+
+<h2>Materials & Techniques</h2>
+<div class="word-list" id="materials"></div>
+
+<h2>Genres & Movements</h2>
+<div class="word-list" id="genres"></div>
+
+<h2>Institutional Vocabulary</h2>
+<div class="word-list" id="institutional"></div>
+
+<h2>Critical & Theory Terms</h2>
+<div class="word-list" id="critical"></div>
+
+<h2>Auction & Pricing</h2>
+<div class="word-list" id="auction"></div>
+
+<hr class="section-divider">
+
+<h2>Reading a Wall Text</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short reading: a typical contemporary-art wall text in Hebrew, sentence-by-sentence, with translations and notes — the language of a museum label.</div>
+  <div id="walltext"></div>
+</div>
+
+<footer>Lesson 439 · Art Vocabulary · <a href="440-block-44-summary.html" style="color:var(--accent)">Next: Block 44 summary →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const MATERIALS = [
+  { he: 'בַּד', translit: 'bad', fr: 'canvas — primary painting support' },
+  { he: 'נְיָר', translit: 'n\'yar', fr: 'paper — drawing/print support' },
+  { he: 'עֵץ', translit: 'etz', fr: 'wood — panel painting / sculpture material' },
+  { he: 'דִּיקְט', translit: 'dikt', fr: 'plywood — common Want-of-Matter support' },
+  { he: 'בֶּטוֹן', translit: 'beton', fr: 'concrete — sculpture / installation material' },
+  { he: 'צֶבַע שֶׁמֶן', translit: 'tzeva shemen', fr: 'oil paint' },
+  { he: 'אַקְרִילִיק', translit: 'akrilik', fr: 'acrylic paint' },
+  { he: 'דְּיוֹ', translit: 'd\'yo', fr: 'ink' },
+  { he: 'גַּבְשׁוּשׁ', translit: 'gavshush', fr: 'gouache' },
+  { he: 'פֶּחָם', translit: 'pecham', fr: 'charcoal — drawing medium' },
+  { he: 'גִּרְפִיט', translit: 'grafit', fr: 'graphite — pencil drawing' },
+  { he: 'הֶדְפֵּס', translit: 'hedpes', fr: 'print — generic etching/lithograph' },
+  { he: 'תַּחֲרִיט', translit: 'tachrit', fr: 'etching' },
+  { he: 'לִיתּוֹגְרָפְיָה', translit: 'litografyah', fr: 'lithograph' },
+  { he: 'הֶדְפֵּס מָסַ"ך', translit: 'hedpes masach', fr: 'silkscreen / serigraph' },
+  { he: 'וִידֵאוֹ', translit: 'video', fr: 'video — single-channel medium' }
+];
+const GENRES = [
+  { he: 'דְיוֹקָן', translit: 'd\'yokan', fr: 'portrait' },
+  { he: 'נוֹף', translit: 'nof', fr: 'landscape' },
+  { he: 'טֶבַע דּוֹמֵם', translit: 'teva domem', fr: 'still life' },
+  { he: 'אַבְּסְטְרַקְט', translit: 'abstrakt', fr: 'abstract' },
+  { he: 'פִיגוּרָטִיבִי', translit: 'figurativi', fr: 'figurative' },
+  { he: 'מוֹדֶרְנִיזְם', translit: 'modernizm', fr: 'modernism' },
+  { he: 'פּוֹסְט-מוֹדֶרְנִיזְם', translit: 'post-modernizm', fr: 'postmodernism' },
+  { he: 'פּוֹפ אַרְט', translit: 'pop art', fr: 'Pop Art' },
+  { he: 'מִינִימָלִיזְם', translit: 'minimalizm', fr: 'minimalism' },
+  { he: 'אָמָנוּת קוֹנְצֶפְּטוּאָלִית', translit: 'omanut kontzeptu\'alit', fr: 'conceptual art' },
+  { he: 'מִתְקָן', translit: 'mitkan', fr: 'installation' },
+  { he: 'פֶּרְפוֹרְמָאנְס', translit: 'performance', fr: 'performance art' },
+  { he: 'אָמָנוּת מַסְכִּית', translit: 'omanut maskit', fr: 'kinetic / mediated art' },
+  { he: 'אָמָנוּת חַדְשָׁה (NFT)', translit: 'omanut chadshah', fr: 'new media / NFT-based art' },
+  { he: 'גְּרָפִיטִי', translit: 'grafiti', fr: 'graffiti' },
+  { he: 'מוּרָאל', translit: 'mural', fr: 'mural' }
+];
+const INSTITUTIONAL = [
+  { he: 'מוּזֵיאוֹן', translit: 'muzeyon', fr: 'museum' },
+  { he: 'גַלֶרְיָה', translit: 'galeryah', fr: 'gallery' },
+  { he: 'תַּעֲרוּכָה', translit: 'ta\'aruchah', fr: 'exhibition' },
+  { he: 'תַּעֲרוּכַת יָחִיד', translit: 'ta\'aruchat yachid', fr: 'solo exhibition' },
+  { he: 'תַּעֲרוּכַת קְבוּצָה', translit: 'ta\'aruchat k\'vutzah', fr: 'group exhibition' },
+  { he: 'בֵּינוֹלִי', translit: 'beinoli', fr: 'biennial' },
+  { he: 'בֵּינוֹלֶה וֵנֶצְיָה', translit: 'beinole venetzya', fr: 'Venice Biennale — Israeli pavilion' },
+  { he: 'בֵּינוֹלֶה יְרוּשָׁלַיִם', translit: 'beinole yerushalayim', fr: 'Jerusalem Biennale — Jewish-art biennial' },
+  { he: 'אוֹסֶף', translit: 'osef', fr: 'collection' },
+  { he: 'אוֹסֵף', translit: 'osef', fr: 'collector — same word' },
+  { he: 'מוּזֵיאַל', translit: 'muzeyal', fr: 'museum-grade quality' },
+  { he: 'קַטָלוֹג', translit: 'katalog', fr: 'catalogue' },
+  { he: 'קוּרָאטוֹר', translit: 'kurator', fr: 'curator' },
+  { he: 'מוֹרֶה דֶּרֶךְ', translit: 'moreh derech', fr: 'docent / guide' },
+  { he: 'בֵּית הַמְּכִירוֹת', translit: 'beit ha-m\'chirot', fr: 'auction house' },
+  { he: 'מַעֲבָדָה', translit: 'ma\'avadah', fr: 'studio / workshop / lab' }
+];
+const CRITICAL = [
+  { he: 'יְצִירָה', translit: 'y\'tzirah', fr: 'work / artwork' },
+  { he: 'יוֹצֵר', translit: 'yotzer', fr: 'creator / artist (m.)' },
+  { he: 'יוֹצֶרֶת', translit: 'yotzeret', fr: 'creator / artist (f.)' },
+  { he: 'אָמָן', translit: 'oman', fr: 'artist (m.) — alternative term' },
+  { he: 'אָמָנִית', translit: 'omanit', fr: 'artist (f.)' },
+  { he: 'מַסָּה', translit: 'masah', fr: 'mass / volume — sculptural concept' },
+  { he: 'הָאַרְכִיוֹן', translit: 'ha-archiyon', fr: 'the archive — recurring theory framework' },
+  { he: 'זִיכָּרוֹן קוֹלֶקְטִיבִי', translit: 'zikaron kolektivi', fr: 'collective memory — central Israeli-art trope' },
+  { he: 'זִהוּת', translit: 'z\'hut', fr: 'identity — major recurring subject (Mizrahi, queer, ethnic)' },
+  { he: 'מַרְחָב', translit: 'merchav', fr: 'space — architectural / phenomenological category' },
+  { he: 'אֶנֵרְגְיָה', translit: 'energyah', fr: 'energy — common in painting reviews' },
+  { he: 'נוֹכְחוּת', translit: 'noch\'chut', fr: 'presence — sculptural / installation criterion' },
+  { he: 'אִינְטֶרְפְּרֶטַצְיָה', translit: 'interpretatzyah', fr: 'interpretation' },
+  { he: 'הֶקְשֵׁר', translit: 'hekesher', fr: 'context — wall-text staple word' },
+  { he: 'בִּקֹּרֶת', translit: 'bikoret', fr: 'criticism / review' },
+  { he: 'תֵּאוֹרְיָה', translit: 'te\'oryah', fr: 'theory' }
+];
+const AUCTION = [
+  { he: 'מְכִירָה פּוּמְבִּית', translit: 'm\'chirah pumbit', fr: 'public auction' },
+  { he: 'בֵּית הַמְּכִירוֹת תִּירוֹשׁ', translit: 'beit ha-m\'chirot tirosh', fr: 'Tiroche Auction House — major Israeli house' },
+  { he: 'סוֹתֶ׳בִּיס', translit: 'sotebis', fr: 'Sotheby\'s — international house, runs Israeli sales' },
+  { he: 'קְרִיסְטִיס', translit: 'kristis', fr: 'Christie\'s — international house' },
+  { he: 'הַעֲרָכָה', translit: 'ha\'arachah', fr: 'estimate' },
+  { he: 'מְחִיר פְּתִיחָה', translit: 'm\'chir p\'tichah', fr: 'opening price' },
+  { he: 'מַטְבֵּעָה', translit: 'matbe\'ah', fr: 'bid (the verb form)' },
+  { he: 'מַצִּיעַ', translit: 'matzi\'a', fr: 'bidder' },
+  { he: 'פַטִּישׁ', translit: 'patish', fr: 'gavel' },
+  { he: 'מָכוּר', translit: 'machur', fr: 'sold' },
+  { he: 'הָעֳבַר', translit: 'ho\'avar', fr: 'passed (failed to sell)' },
+  { he: 'עַמְלַת בֵּית הַמְּכִירוֹת', translit: 'amlat beit ha-m\'chirot', fr: 'auction-house premium / commission' },
+  { he: 'פְּרוֹבֶנַנְס', translit: 'provenance', fr: 'provenance' },
+  { he: 'תְּעוּדַת אֲמִיתוּת', translit: 't\'udat amitut', fr: 'certificate of authenticity' },
+  { he: 'מַחְזוֹר מְכִירָה', translit: 'machzor m\'chirah', fr: 'auction round / sale season' },
+  { he: 'שִׂיאֵי שׁוּק', translit: 'si\'ei shuk', fr: 'market record — top result' }
+];
+
+const WALLTEXT = [
+  { he: 'אָמָנוּת חֲזוּתִית, סְדַנָה אִישִׁית, אַקְרִילִיק עַל בַּד, 200×180 ס"מ, 2018, אוֹסַף הָאָמָן.', translit: 'omanut chazutit, s\'danah ishit, akrilik al bad, matayim al me\'ah u-sh\'monim sentimeter, alpayim sh\'mone-esreh, osef ha-oman.', fr: 'Visual art, personal studio, acrylic on canvas, 200×180 cm, 2018, artist\'s collection.' },
+  { he: 'הַיְּצִירָה הַזֹּאת בּוֹחֶנֶת אֶת הַיַּחַס בֵּין זִיכָּרוֹן פְּרָטִי וְזִיכָּרוֹן קוֹלֶקְטִיבִי לְאַחַר הָאֵרוּעִים שֶׁל יָמֵינוּ.', translit: 'ha-y\'tzirah ha-zot bochenet et ha-yachas bein zikaron p\'rati v\'zikaron kolektivi l\'achar ha-eru\'im shel yameinu.', fr: 'This work examines the relationship between private and collective memory in the wake of recent events.' },
+  { he: 'הָאָמָן עוֹבֵד בְּשִׁכְבוֹת. כָּל שִׁכְבָה מוֹחֶקֶת חֵלֶק מֵהַשִּׁכְבָה הַקּוֹדֶמֶת — תְּהָלִיךְ שֶׁל אַרְכִיוּן וְהַעֲלָמָה.', translit: 'ha-oman oved b\'shichvot. kol shichvah mocheket chelek me-ha-shichvah ha-kodemet — t\'halich shel archi\'un v\'ha\'alamah.', fr: 'The artist works in layers. Each layer erases part of the previous one — a process of archiving and disappearance.' },
+  { he: 'הַתּוֹצָאָה הִיא דְּמוּת מוּכָּרֶת אַךְ קָשָׁה לְזִהוּי, שֶׁמַּצִּיגָה אֶת הָעַיֶּפֶת שֶׁל הָעֵדוּת בָּעִדָן הַדִּיגִיטָלִי.', translit: 'ha-totza\'ah hi d\'mut mukeret ach kashah l\'zihui, she-matzigah et ha-ayefet shel ha-edut ba-idan ha-digitali.', fr: 'The result is a familiar yet hard-to-identify figure, presenting the exhaustion of testimony in the digital age.' },
+  { he: 'הַיְּצִירָה הוֹצְגָה בְּמוּזֵיאוֹן תֵּל-אָבִיב לְאָמָנוּת בִּתְעֲרוּכַת יָחִיד שֶׁל הָאָמָן ב-2019.', translit: 'ha-y\'tzirah hotz\'gah b\'muzeyon tel aviv l\'omanut bi-t\'aruchat yachid shel ha-oman b\'2019.', fr: 'The work was shown at the Tel Aviv Museum of Art in the artist\'s 2019 solo exhibition.' },
+  { he: 'הַעֲרָכַת בֵּית הַמְּכִירוֹת תִּירוֹשׁ: 80,000-120,000 שֶׁקֶל. מְחִיר פְּתִיחָה: 60,000.', translit: 'ha\'arachat beit ha-m\'chirot tirosh: sh\'monim elef-me\'ah esrim elef shekel. m\'chir p\'tichah: shishim elef.', fr: 'Tiroche estimate: 80,000-120,000 shekels. Opening price: 60,000.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('materials', MATERIALS);
+R('genres', GENRES);
+R('institutional', INSTITUTIONAL);
+R('critical', CRITICAL);
+R('auction', AUCTION);
+
+renderTextBlock('walltext', WALLTEXT);
+
+addMiniQuiz('Art Vocabulary Quiz', [
+  { q: 'The Hebrew word "yotzeret" means...', options: ['curator (f.)', 'artist / creator (f.)', 'critic (f.)', 'gallerist (f.)'], answer: 1, explain: 'Yotzer (m.) / yotzeret (f.) = creator / artist. Note: "oman / omanit" is the alternative form.' },
+  { q: '"Ta\'aruchat yachid" means...', options: ['Group exhibition', 'Solo exhibition', 'Retrospective', 'Travelling exhibition'], answer: 1, explain: 'Ta\'aruchat yachid = "exhibition of one" = solo show. Group show = ta\'aruchat k\'vutzah.' },
+  { q: 'A "kurator" is...', options: ['A gallery owner', 'A curator', 'A collector', 'A docent'], answer: 1, explain: 'Kurator is the borrowed Hebrew term for curator; the writer of wall texts and exhibition concepts.' },
+  { q: 'Tiroche is best known as...', options: ['A Bezalel design studio', 'An auction house', 'A Tel Aviv gallery', 'A Yemenite silver shop'], answer: 1, explain: 'Tiroche is the leading Israeli auction house; runs major sales of Israeli & international art.' },
+  { q: '"Hedpes masach" means...', options: ['Etching', 'Silkscreen', 'Lithograph', 'Watercolor'], answer: 1, explain: 'Hedpes masach = silkscreen/serigraphy (literally "screen print"). Tachrit = etching, litografyah = lithograph.' },
+  { q: 'The Israeli pavilion at the "Beinole Venetzya" appears...', options: ['Every year', 'Every two years', 'Every five years', 'Only on invitation'], answer: 1, explain: 'The Venice Biennale (beinoli = biennial) runs every two years; Israel has a permanent pavilion in the Giardini.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(439);
+  }
+});
+</script></body></html>

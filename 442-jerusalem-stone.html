@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>442 — Jerusalem Stone</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Jerusalem Stone & The Mandate Code</h1><div class="subtitle">Lesson 442 · אֶבֶן יְרוּשָׁלַיִם</div></div><div class="nav"><a href="index.html">Home</a><a href="442-jerusalem-stone.html" class="active">442</a></div></header>
+
+<p class="intro">Every building in Jerusalem must be clad in local limestone. This is not folklore — it is law. The British Mandate Governor Sir Ronald Storrs imposed it in 1918, and the rule has been preserved ever since by Israeli planning authorities. Walking through Jerusalem you are walking through a single architectural fact: the cream-yellow Meleke limestone that turns gold in evening light. This lesson covers the stone itself, the mandate code, the lineage of architects who worked under it (Mendelsohn, Geddes, Safdie), and the stone vocabulary you need on a building site.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Look closely at any Jerusalem façade and you can read its decade: rough-cut tovzah from 1920s-30s buildings, smooth machine-cut massor from 1990s towers, dark "honeyed" mizzi yahudi on prestige projects. A stone-mason in Beit Shemesh can identify a quarry by the colour and grain. Most quarries today are in the West Bank, around Hebron and Bethlehem, an industry employing thousands of Palestinian workers.</div>
+
+<h2>The Stone Itself</h2>
+<div class="word-list" id="stone"></div>
+
+<h2>The Mandate Code & Storrs</h2>
+<div class="word-list" id="mandate"></div>
+
+<h2>Architects Under the Code</h2>
+<div class="word-list" id="architects"></div>
+
+<h2>Quarries & Industry</h2>
+<div class="word-list" id="industry"></div>
+
+<h2>Cutting & Cladding Vocabulary</h2>
+<div class="word-list" id="vocab"></div>
+
+<hr class="section-divider">
+
+<h2>A Conversation at the Stone Yard</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short reading: a contractor and a stone-yard owner near Beit Shemesh discuss a Jerusalem residential job — type, finish, supply chain, price.</div>
+  <div id="convo"></div>
+</div>
+
+<footer>Lesson 442 · Jerusalem Stone · <a href="443-brutalism.html" style="color:var(--accent)">Next: Israeli brutalism →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const STONE = [
+  { he: 'אֶבֶן יְרוּשָׁלַיִם', translit: 'even yerushalayim', fr: 'Jerusalem stone — local limestone, mandatory cladding' },
+  { he: 'גִּיר', translit: 'gir', fr: 'limestone — geological category' },
+  { he: 'מַלְכִּי', translit: 'malki', fr: 'Meleke — soft cream-yellow Jerusalem limestone, used for the Kotel' },
+  { he: 'מִיזִּי יְהוּדִי', translit: 'mizi yehudi', fr: 'mizzi yahudi — denser, golden-honey Jerusalem limestone' },
+  { he: 'מִיזִּי חִילוּ', translit: 'mizi chilu', fr: 'mizzi hilu — sweeter pinkish-white limestone' },
+  { he: 'מַסּוֹר', translit: 'masor', fr: 'machine-cut — smooth contemporary finish' },
+  { he: 'תוֹבְזָה', translit: 'tovzah', fr: 'tovzah — rough-cut, hand-quarried look, common pre-1948' },
+  { he: 'מְפֻסָּל', translit: 'm\'fusal', fr: 'sculpted / carved — hand-finished surface' },
+  { he: 'בָּטָקְקְ', translit: 'batak', fr: 'split-face — irregular natural-cleft surface' },
+  { he: 'שָׁבוּ', translit: 'shabu', fr: 'shabu — fine "rocked" finish, traditional masonry detail' }
+];
+const MANDATE = [
+  { he: 'הַמַּנְדָּט הַבְּרִיטִי', translit: 'ha-mandat ha-briti', fr: 'British Mandate — 1920-1948 ruled Palestine' },
+  { he: 'רוֹנַלְד סְטוֹרְס', translit: 'ronald stors', fr: 'Sir Ronald Storrs — Mandate Governor of Jerusalem 1917-26' },
+  { he: '1918', translit: 'elef tesha me\'ot sh\'monah-esreh', fr: '1918 — Storrs\'s decree mandating Jerusalem-stone cladding' },
+  { he: 'תַּקָּנָה עִירוֹנִית', translit: 'takanah ironit', fr: 'municipal regulation — preserved since the Mandate' },
+  { he: 'חוֹק הַתִּכְנוּן וְהַבְּנִיָּה', translit: 'chok ha-tichnun v\'ha-b\'niyah', fr: 'Planning and Building Law — Israeli framework that perpetuates the rule' },
+  { he: 'תָּכְנִית מִתְאָר יְרוּשָׁלַיִם', translit: 'tochnit mit\'ar yerushalayim', fr: 'Jerusalem Master Plan — codifies stone cladding' },
+  { he: 'פַּטְרִיק גֶדֶס', translit: 'patrik gedes', fr: 'Patrick Geddes (1854-1932), Mandate-era city planner' },
+  { he: 'תָּכְנִית גֶדֶס', translit: 'tochnit gedes', fr: 'Geddes Plan — 1925 Jerusalem and Tel Aviv planning frameworks' },
+  { he: 'בִּנְיַן צִיבּוּרִי', translit: 'binyan tziburi', fr: 'public building — also covered by the stone rule' },
+  { he: 'חֲרִיגָה', translit: 'charigah', fr: 'exception — almost never granted' }
+];
+const ARCHITECTS = [
+  { he: 'אֶרִיךְ מֶנְדֶלְסוֹן', translit: 'erich mendelson', fr: 'Erich Mendelsohn (1887-1953), Schocken Library, Hadassah Hospital' },
+  { he: 'בֵּית שׁוֹקֶן', translit: 'beit shoken', fr: 'Schocken Library (1936) — Mendelsohn, key Mandate-era stone work' },
+  { he: 'הַדַּסָּה הַר הַצּוֹפִים', translit: 'hadasah har ha-tzofim', fr: 'Hadassah Mount Scopus Hospital — Mendelsohn 1939' },
+  { he: 'מֹשֶׁה סַפְדִי', translit: 'moshe safdi', fr: 'Moshe Safdie (b. 1938) — Mamilla Mall, Yad Vashem, Sephardi Heritage Center' },
+  { he: 'דַּב כַּרְמִי', translit: 'dav karmi', fr: 'Dov Karmi — modernist who also worked in Jerusalem stone' },
+  { he: 'אַל מַנְסְפֵלְד', translit: 'al mansfeld', fr: 'Al Mansfeld — designed Israel Museum (1965) using stone' },
+  { he: 'רָם כַּרְמִי', translit: 'ram karmi', fr: 'Ram Karmi (1931-2013), Supreme Court of Israel — stone-faced 1992' },
+  { he: 'בֵּית הַמִּשְׁפָּט הָעֶלְיוֹן', translit: 'beit ha-mishpat ha-elyon', fr: 'Supreme Court — Karmi-Melamede 1992, masterpiece in stone' },
+  { he: 'גַ\'ק לִיבּוֹסְקִינְד', translit: 'jak liboskind', fr: 'Daniel Libeskind — Israeli museum competitions, mixed views' },
+  { he: 'הָאַרְכִיטֶקְט הַיְּרוּשַׁלְמִי', translit: 'ha-architekt ha-yerushalmi', fr: 'the Jerusalem architect — generic term for stone-trained design' }
+];
+const INDUSTRY = [
+  { he: 'מַחְצָבָה', translit: 'machtzavah', fr: 'quarry' },
+  { he: 'בֵּית שֶׁמֶשׁ', translit: 'beit shemesh', fr: 'Beit Shemesh — major centre for stone yards near Jerusalem' },
+  { he: 'חֶבְרוֹן', translit: 'chevron', fr: 'Hebron — main quarry hub for Jerusalem stone (West Bank)' },
+  { he: 'בֵּית-לֶחֶם', translit: 'beit lechem', fr: 'Bethlehem — secondary quarry zone' },
+  { he: 'אֲבָנַי', translit: 'avanai', fr: 'stone-mason / stone-cutter' },
+  { he: 'נוֹסַף קַבְּלָנוּת', translit: 'nosaf kablanut', fr: 'subcontractor — cladding labour structure' },
+  { he: 'לוּחַ אֶבֶן', translit: 'luach even', fr: 'stone slab / cladding panel' },
+  { he: 'מַשַּׁאית אֶבֶן', translit: 'masa\'it even', fr: 'stone truck — daily delivery on construction sites' },
+  { he: 'תַּעֲשִׂיָּה פָלֶסְטִינִית', translit: 'ta\'asiyah falestinit', fr: 'Palestinian industry — main quarry workforce' },
+  { he: 'יֹקֶר תּוֹסֶפֶת', translit: 'yoker tosefet', fr: 'extra cost — typical 5-15% premium for stone cladding' }
+];
+const VOCAB = [
+  { he: 'חֲלָקָה', translit: 'chalakah', fr: 'cladding (the panel layer)' },
+  { he: 'שִׁכּוּב אֶבֶן', translit: 'shikuv even', fr: 'stone laying / installation' },
+  { he: 'מַחְבְּרָה', translit: 'machb\'rah', fr: 'anchor — metal fastener for cladding' },
+  { he: 'גָּגוֹן אֶבֶן', translit: 'gagon even', fr: 'stone parapet / coping' },
+  { he: 'סַף', translit: 'saf', fr: 'sill — window / door bottom in stone' },
+  { he: 'מִשְׁקוֹף', translit: 'mishkof', fr: 'lintel — top window / door beam, often stone' },
+  { he: 'גְּדֵר אֶבֶן', translit: 'g\'der even', fr: 'stone wall (free-standing)' },
+  { he: 'קִיר חוּצוֹת', translit: 'kir chutzot', fr: 'exterior wall' },
+  { he: 'גִּימוּר', translit: 'gimur', fr: 'finish (the surface treatment)' },
+  { he: 'דִּיוּק יָמֶנִי', translit: 'diyuk yameni', fr: 'right-side precision — stone-laying jargon for plumb-true' }
+];
+
+const CONVO = [
+  { he: 'קַבְּלָן: שָׁלוֹם, אֲנִי בּוֹנֶה דּוּפְּלֶקְס בִּשְׁכוּנַת הַמּוֹשָׁבָה הַגֶּרְמָנִית. צָרִיךְ אֶבֶן יְרוּשָׁלַיִם.', translit: 'kablan: shalom, ani boneh dupleks bi-sh\'chunat ha-moshavah ha-germanit. tzarich even yerushalayim.', fr: 'Contractor: Hi, I\'m building a duplex in the German Colony. I need Jerusalem stone.' },
+  { he: 'בַּעַל מַחְצָבָה: אֵיזֶה גִּימוּר אַתָּה רוֹצֶה — מַסּוֹר אוֹ תוֹבְזָה?', translit: 'ba\'al machtzavah: eizeh gimur atah rotzeh — masor o tovzah?', fr: 'Quarry owner: What finish do you want — machine-cut or rough-cut?' },
+  { he: 'קַבְּלָן: מַסּוֹר עַל הַחֲזִית, תוֹבְזָה עַל הַגָּדֵר.', translit: 'kablan: masor al ha-chazit, tovzah al ha-gader.', fr: 'Contractor: Machine-cut on the façade, rough-cut on the wall.' },
+  { he: 'בַּעַל מַחְצָבָה: אֵיזֶה אֶבֶן — מַלְכִּי אוֹ מִיזִּי יְהוּדִי?', translit: 'ba\'al machtzavah: eizeh even — malki o mizi yehudi?', fr: 'Quarry owner: Which stone — Meleke or mizzi yahudi?' },
+  { he: 'קַבְּלָן: אֲנִי מַעֲדִיף מִיזִּי יְהוּדִי. הַזָּהָב הוּא יוֹתֵר חַם בָּעֶרֶב.', translit: 'kablan: ani ma\'adif mizi yehudi. ha-zahav hu yoter cham ba-erev.', fr: 'Contractor: I prefer mizzi yahudi. The gold tone is warmer in the evening.' },
+  { he: 'בַּעַל מַחְצָבָה: 350 שֶׁקֶל לְמ"ר, מִשְּׁלוֹחַ מֵחֶבְרוֹן. שְׁלוֹשָׁה שָׁבוּעוֹת אַסְפָּקָה.', translit: 'ba\'al machtzavah: sh\'losh me\'ot va-chamishim shekel l\'meter merubaim, mish\'loach me-chevron. sh\'loshah shavu\'ot aspakah.', fr: 'Quarry owner: 350 shekels per square metre, delivery from Hebron. Three weeks supply time.' },
+  { he: 'קַבְּלָן: וְאִם הָעֲבוֹדָה בְּחֵבֶּב הַחוֹרֶף?', translit: 'kablan: v\'im ha-avodah b\'cha\'ev ha-choref?', fr: 'Contractor: And if the work is during winter?' },
+  { he: 'בַּעַל מַחְצָבָה: שִׁכּוּב אֶבֶן בָּחוֹרֶף הוּא בָּעֲיָה — צָרִיךְ לְהַגֵּן עַל הַטִּיט. אֲבָל הָאֶבֶן עַצְמָהּ לֹא נִפְגַּעַת.', translit: 'ba\'al machtzavah: shikuv even ba-choref hu ba\'ayah — tzarich l\'hagen al ha-tit. aval ha-even atzmah lo nifga\'at.', fr: 'Quarry owner: Stone laying in winter is a problem — you have to protect the mortar. But the stone itself isn\'t damaged.' },
+  { he: 'קַבְּלָן: סַגוּר. שׁוֹלֵחַ לָךְ אֶת הַתּוֹכְנִיָּה הָעֶרֶב.', translit: 'kablan: sagur. sholeach lach et ha-tochniyah ha-erev.', fr: 'Contractor: Done. I\'ll send you the plans tonight.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('stone', STONE);
+R('mandate', MANDATE);
+R('architects', ARCHITECTS);
+R('industry', INDUSTRY);
+R('vocab', VOCAB);
+
+renderTextBlock('convo', CONVO);
+
+addMiniQuiz('Jerusalem Stone Quiz', [
+  { q: 'Jerusalem-stone cladding is mandatory because of...', options: ['Religious law', 'A 1918 Mandate decree by Ronald Storrs', 'Knesset legislation 1948', 'A UNESCO ruling'], answer: 1, explain: 'Sir Ronald Storrs, British Mandate Governor of Jerusalem, mandated stone cladding in 1918; the rule has been preserved by Israeli planning law ever since.' },
+  { q: '"Meleke" (malki) limestone is...', options: ['Dark grey basalt', 'Soft cream-yellow Jerusalem stone, used for the Kotel', 'Hebron marble', 'Sandstone from Eilat'], answer: 1, explain: 'Meleke is the soft cream-yellow limestone used in the Western Wall and many historic Jerusalem buildings.' },
+  { q: 'Erich Mendelsohn designed which Jerusalem landmark?', options: ['Israel Museum', 'Schocken Library / Hadassah Mount Scopus', 'Mamilla Mall', 'Supreme Court'], answer: 1, explain: 'Mendelsohn designed the 1936 Schocken Library and the 1939 Hadassah Hospital on Mount Scopus.' },
+  { q: 'The Israeli Supreme Court (1992) was designed by...', options: ['Moshe Safdie', 'Ada and Ram Karmi-Melamede', 'Daniel Libeskind', 'Erich Mendelsohn'], answer: 1, explain: 'Ada Karmi-Melamede and Ram Karmi designed the stone-clad Supreme Court of Israel, completed in 1992.' },
+  { q: 'Most Jerusalem-stone quarries today are located in...', options: ['The Galilee', 'Hebron and Bethlehem area', 'The Negev', 'Eilat'], answer: 1, explain: 'The vast majority of working Jerusalem-stone quarries are around Hebron and Bethlehem in the West Bank.' },
+  { q: '"Tovzah" finish refers to...', options: ['Smooth machine-cut surface', 'Rough-cut quarry surface, common pre-1948', 'Polished marble', 'Sandblasted finish'], answer: 1, explain: 'Tovzah is rough hand-quarried finish; masor is smooth machine-cut. Common pre-1948 buildings show tovzah on the façade.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(442);
+  }
+});
+</script></body></html>

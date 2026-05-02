@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>445 — Building Typology</title><script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<a href="index.html" class="back">← Back to lessons</a>
+<header><div><h1>Building Typology — Synagogue, Sukkah, Apartment</h1><div class="subtitle">Lesson 445 · טִיפּוֹלוֹגְיוֹת בְּנִיָּה</div></div><div class="nav"><a href="index.html">Home</a><a href="445-typology.html" class="active">445</a></div></header>
+
+<p class="intro">Israeli everyday architecture has its own typology — building shapes that recur because of religion, climate, and family. The synagogue (Sephardi vs Ashkenazi, modern egalitarian), the sukkah on the balcony (a temporary autumn structure), the standard apartment (3-room, 4-room, mamad shelter), the kibbutz courtyard, the Mizrahi-style holiday house, and the corner kiosk. This lesson maps the recurring shapes of daily life, with the Hebrew vocabulary you need to live in any of them.</p>
+
+<div class="tip"><strong>Cultural note</strong> — Every Israeli apartment built since 1992 must include a "mamad" — a reinforced-concrete safe room with a steel blast door, designed for chemical, biological, and missile attack. Once primarily used as a storage room or guest bedroom, since October 7, 2023, mamad use has changed: missile alarms now drive families inside it 30-60 seconds before impact. Knowing where the mamad is in any apartment is basic spatial literacy here.</div>
+
+<h2>The Synagogue Type</h2>
+<div class="word-list" id="synagogue"></div>
+
+<h2>The Sukkah & Balcony</h2>
+<div class="word-list" id="sukkah"></div>
+
+<h2>The Standard Apartment</h2>
+<div class="word-list" id="apartment"></div>
+
+<h2>The Mamad (Safe Room)</h2>
+<div class="word-list" id="mamad"></div>
+
+<h2>Kibbutz, Moshav, Yishuv</h2>
+<div class="word-list" id="rural"></div>
+
+<hr class="section-divider">
+
+<h2>Reading an Apartment Listing</h2>
+<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 16px;">
+  <div style="color: var(--text-dim); margin-bottom: 16px; font-size: 14px;">A short reading: a typical Yad2 apartment listing in Hebrew, sentence by sentence — what each phrase actually means at the door of a viewing.</div>
+  <div id="listing"></div>
+</div>
+
+<footer>Lesson 445 · Building Typology · <a href="446-tlv-boulevard.html" style="color:var(--accent)">Next: Tel Aviv Boulevard →</a></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const SYNAGOGUE = [
+  { he: 'בֵּית כְּנֶסֶת', translit: 'beit knesset', fr: 'synagogue (literally "house of assembly")' },
+  { he: 'אָרוֹן קֹדֶשׁ', translit: 'aron kodesh', fr: 'Holy Ark — wall cabinet for Torah scrolls' },
+  { he: 'בִּימָה', translit: 'bimah', fr: 'bimah — central reading platform' },
+  { he: 'מִזְרָח', translit: 'mizrach', fr: 'east — the wall facing Jerusalem' },
+  { he: 'עֶזְרַת נָשִׁים', translit: 'ezrat nashim', fr: 'women\'s gallery — separate seating area' },
+  { he: 'מְחִיצָה', translit: 'm\'chitzah', fr: 'partition — gender separation in Orthodox synagogues' },
+  { he: 'בֵּית כְּנֶסֶת סְפָרַדִּי', translit: 'beit knesset s\'faradi', fr: 'Sephardi synagogue — bimah in centre, surrounding seats' },
+  { he: 'בֵּית כְּנֶסֶת אַשְׁכְּנַזִּי', translit: 'beit knesset ashk\'nazi', fr: 'Ashkenazi synagogue — bimah front-and-centre, rows facing east' },
+  { he: 'בֵּית כְּנֶסֶת רֵפוֹרְמִי', translit: 'beit knesset reformi', fr: 'Reform synagogue — egalitarian, mixed seating' },
+  { he: 'נֵר תָּמִיד', translit: 'ner tamid', fr: 'eternal lamp — above the Holy Ark' }
+];
+const SUKKAH = [
+  { he: 'סֻכָּה', translit: 'sukah', fr: 'sukkah — temporary autumn structure for Sukkot' },
+  { he: 'סְכָךְ', translit: 's\'chach', fr: 's\'chach — open roof of palm fronds, must allow stars to be seen' },
+  { he: 'דֹּפֶן', translit: 'dofen', fr: 'wall — at least 3 walls required' },
+  { he: 'אוּשְׁפִּיזִין', translit: 'ushpizin', fr: 'ushpizin — the seven biblical guests welcomed each Sukkot night' },
+  { he: 'מִרְפֶּסֶת', translit: 'mirpeset', fr: 'balcony — typical sukkah location in apartments' },
+  { he: 'גַּג סֻכָּה נִפְתַּח', translit: 'gag sukah niftach', fr: 'pergola roof — fixed slats that open for Sukkot' },
+  { he: 'סִיפְרָה לִיפְּדָה', translit: 'sifrah lifdah', fr: 'sukkah-decor frame — pre-made kit common in Israel' },
+  { he: 'אַרְבָּעָה מִינִים', translit: 'arba\'ah minim', fr: 'four species — etrog, lulav, hadas, aravah' },
+  { he: 'קוֹמַת גַּג', translit: 'komat gag', fr: 'roof level — many apartments have a roof unit + sukkah' },
+  { he: 'קַבְלָנֵי סֻכּוֹת', translit: 'kablanei sukot', fr: 'sukkah contractors — temporary trade for the holiday' }
+];
+const APARTMENT = [
+  { he: 'דִּירָה', translit: 'dirah', fr: 'apartment' },
+  { he: 'דִּירַת 3 חֲדָרִים', translit: 'dirat sh\'loshah chadarim', fr: '3-room apt = 1 bedroom + 1 living + 1 small (Israeli measurement)' },
+  { he: 'דִּירַת 4 חֲדָרִים', translit: 'dirat arba chadarim', fr: '4-room apt = 2 bedrooms + 1 living + 1 small' },
+  { he: 'סָלוֹן', translit: 'salon', fr: 'salon = living room (counts as 1 of the rooms)' },
+  { he: 'מִטְבָּח', translit: 'mitbach', fr: 'kitchen' },
+  { he: 'מִקְלַחַת', translit: 'miklachat', fr: 'shower / bathroom' },
+  { he: 'שֵׁרוּתִים', translit: 'sherutim', fr: 'toilet (separate from shower in many older apts)' },
+  { he: 'מְקָרֵר', translit: 'm\'karer', fr: 'fridge' },
+  { he: 'מוּעֲדוֹן הַדִּיָרִים', translit: 'mu\'adon ha-diyarim', fr: 'tenants\' club room — common in newer towers' },
+  { he: 'גַּן מְשֻׁתָּף', translit: 'gan m\'shutaf', fr: 'shared garden' }
+];
+const MAMAD = [
+  { he: 'מָמָ"ד', translit: 'mamad', fr: 'mamad — reinforced safe room (since 1992 building code)' },
+  { he: 'דֶּלֶת מָמָ"ד', translit: 'delet mamad', fr: 'mamad door — steel blast door' },
+  { he: 'תְּקָרָה מַטוֹסְקְרֶבֶת', translit: 't\'karah matoskerevet', fr: 'reinforced ceiling' },
+  { he: 'אֲזַעֲקָה', translit: 'aza\'akah', fr: 'siren / alarm' },
+  { he: 'צֶבַע אָדֹם', translit: 'tzeva adom', fr: '"red colour" — rocket-warning siren protocol' },
+  { he: 'עָשָׂר שְׁנִיוֹת', translit: 'eser sh\'niyot', fr: '10 seconds — Gaza-envelope warning time' },
+  { he: 'דֶּקַע מִיגוּן', translit: 'deka migun', fr: 'shelter floor — full-floor mamad in older buildings' },
+  { he: 'מָמָ"ק', translit: 'mamak', fr: 'mamak — reinforced floor (institutional version)' },
+  { he: 'מִקְלָט צִיבּוּרִי', translit: 'miklat tziburi', fr: 'public shelter — neighbourhood underground bunker' },
+  { he: 'מָסַ"ך מָגֵן', translit: 'masach magen', fr: 'protective screen / window' }
+];
+const RURAL = [
+  { he: 'קִיבּוּץ', translit: 'kibutz', fr: 'kibbutz — collective rural settlement' },
+  { he: 'מוֹשָׁב', translit: 'moshav', fr: 'moshav — cooperative village, individual plots' },
+  { he: 'יִשּׁוּב', translit: 'yishuv', fr: 'yishuv — generic settlement / community' },
+  { he: 'חַדַּר אוֹכֶל', translit: 'chadar ochel', fr: 'kibbutz dining hall — central building' },
+  { he: 'חַצַר הַקִּיבּוּץ', translit: 'chatzar ha-kibutz', fr: 'kibbutz courtyard — green-space spine' },
+  { he: 'בֵּית יְלָדִים', translit: 'beit y\'ladim', fr: 'children\'s house — historic kibbutz form, now mostly closed' },
+  { he: 'אֻלָם תַּרְבּוּת', translit: 'ulam tarbut', fr: 'culture hall — kibbutz performance and meeting space' },
+  { he: 'בֵּית מַזְכִּיר', translit: 'beit mazkir', fr: 'secretariat building — kibbutz administrative centre' },
+  { he: 'בֵּית הִתְיַשְּׁבוּת', translit: 'beit hityashvut', fr: 'settlement house — early-Zionist hostel form' },
+  { he: 'מוֹשָׁב מָגוּר', translit: 'moshav magur', fr: 'religious moshav — synagogue at the centre' }
+];
+
+const LISTING = [
+  { he: 'דִּירָה 4 חֲדָרִים, רְחוֹב בָּלְפוּר 23, תֵּל-אָבִיב.', translit: 'dirah arba chadarim, r\'chov balfur esrim v\'sh\'losh, tel aviv.', fr: '4-room apartment, 23 Balfour Street, Tel Aviv.' },
+  { he: '90 מ"ר, קוֹמָה 3 מִתּוֹךְ 4, בְּלִי מַעֲלִית. שִׁפּוּצָה לִפְנֵי 5 שָׁנִים.', translit: 'tish\'im meter, komah sh\'losh mi-toch arba, b\'li ma\'alit. shiputzah lifnei chamesh shanim.', fr: '90 sq.m., 3rd floor of 4, no elevator. Renovated 5 years ago.' },
+  { he: 'מִרְפֶּסֶת מִזְרָחִית. סָלוֹן רָחָב. מִטְבָּח חָדָשׁ. מָמָ"ד עַם דֶּלֶת חֲדִישָׁה.', translit: 'mirpeset mizrachit. salon rachav. mitbach chadash. mamad im delet chadishah.', fr: 'East-facing balcony. Wide living room. New kitchen. Mamad with new door.' },
+  { he: 'חֲנִיָּה מְסֻדֶּרֶת. גַּן מְשֻׁתָּף קָטָן. וַעַד בַּיִת 350 שֶׁקֶל לְחֹדֶשׁ.', translit: 'chaniyah m\'sudaret. gan m\'shutaf katan. va\'ad bayit sh\'losh me\'ot va-chamishim shekel l\'chodesh.', fr: 'Reserved parking. Small shared garden. Building committee 350 shekels per month.' },
+  { he: 'אַרְנוֹנָה דּוּ-חָדְשִׁית כָּ-700 שֶׁקֶל. בִּנְיָן בָּאוּהַאוּז שָׁמוּר, רַשַׁ"י לְשִׁמּוּר.', translit: 'arnonah du-chodshit k\'sh\'va me\'ot shekel. binyan bauhaus shamur, rashi l\'shimur.', fr: 'Bi-monthly arnona ~700 shekels. Conserved Bauhaus building, listed for preservation.' },
+  { he: 'מְחִיר מְבֻקָּשׁ: 4.2 מִילְיוֹן שֶׁקֶל. גָּמִישׁ.', translit: 'm\'chir m\'vukash: arba\'ah n\'kudah sh\'tayim milyon shekel. gamish.', fr: 'Asking price: 4.2 million shekels. Flexible.' },
+  { he: 'תַּרְגוּם פְּשׁוּט: דִּירָה יָקָרָה אֲבָל סוֹלִידִית, צָרִיךְ לִשְׁאֹל אִם יֵשׁ אוֹפְצְיַת תָּמָ"א 38.', translit: 'targum pashut: dirah y\'karah aval solidit, tzarich lish\'ol im yesh optzyat tama 38.', fr: 'Plain translation: an expensive but solid apartment; ask whether there\'s a TAMA 38 option.' }
+];
+
+function R(id, items) {
+  const root = document.getElementById(id);
+  if (!root) return;
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = '<div class="he" data-he="' + item.he + '">' + item.he + '</div><button class="icon-btn" data-text="' + item.he + '">▶</button><div class="translit">' + item.translit + '</div><div class="fr">' + item.fr + '</div>';
+    root.appendChild(row);
+  });
+}
+R('synagogue', SYNAGOGUE);
+R('sukkah', SUKKAH);
+R('apartment', APARTMENT);
+R('mamad', MAMAD);
+R('rural', RURAL);
+
+renderTextBlock('listing', LISTING);
+
+addMiniQuiz('Building Typology Quiz', [
+  { q: 'In a Sephardi synagogue, the bimah is...', options: ['At the front', 'In the centre, with seats around it', 'Outside the building', 'Always at the back'], answer: 1, explain: 'Sephardi synagogues place the bimah in the middle with seats facing inward; Ashkenazi synagogues place it in front, rows facing east.' },
+  { q: 'A "3-room apartment" in Israel typically means...', options: ['3 bedrooms', '1 bedroom + 1 living + 1 small (counts the salon)', '3 floors', '3 bathrooms'], answer: 1, explain: 'Israeli room-counting includes the salon; a 3-room apartment is roughly 1 bedroom + living room + small / dining alcove.' },
+  { q: 'A "mamad" is...', options: ['A balcony', 'A reinforced safe room (since 1992 code)', 'A kosher kitchen', 'A Sukkot canopy'], answer: 1, explain: 'Mamad = merchav mugan dirati, a reinforced concrete + steel-blast-door safe room required by Israeli building code since 1992.' },
+  { q: 'On a sukkah roof, the s\'chach must...', options: ['Be sealed plastic', 'Allow you to see stars through it', 'Be at least 4 metres tall', 'Always be palm fronds only'], answer: 1, explain: 'S\'chach must be loose enough that one can see stars through it at night; symbolic of the temporary nature of the structure.' },
+  { q: 'Three required walls of a sukkah are called...', options: ['Mizrachim', 'Dofen (sg. dofen)', 'Sukkot', 'Mamadim'], answer: 1, explain: 'Each wall is a "dofen"; Halacha requires at least three of them with specific dimensional rules.' },
+  { q: 'The kibbutz courtyard is centred on...', options: ['The synagogue', 'The dining hall (chadar ochel)', 'The mamad', 'The factory'], answer: 1, explain: 'The kibbutz dining hall (chadar ochel) is historically the social and architectural centre of the settlement.' }
+]);
+
+let c = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.icon-btn')) {
+    c++;
+    if (c >= 15) markLessonDone(445);
+  }
+});
+</script></body></html>
