@@ -243,7 +243,7 @@ The Yiddish layer beneath modern Hebrew: loanwords, emotional register, haredi m
 
 ## BLOCK 18 — Water, Sanitation, Irrigation, Agriculture (171-180) — DONE
 
-Direct alignment with Jonas's BTS GEMEAU credential, KKL formation post-aliyah, and Hemp of Negev pilot trajectory. Career-grade technical Hebrew for water/agri sector.
+Direct alignment with David's BTS GEMEAU credential, KKL formation post-aliyah, and Hemp of Negev pilot trajectory. Career-grade technical Hebrew for water/agri sector.
 
 171. Water Cycle & Sources — aquifers · Kinneret · climate · BTS GEMEAU vocabulary
 172. Mekorot & National Water Carrier — state company · jobs · regulators · interview
