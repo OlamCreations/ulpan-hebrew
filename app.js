@@ -99,24 +99,37 @@ function chunkText(text, max) {
   if (cur) out.push(cur);
   return out;
 }
-// StreamElements TTS — free, CORS-friendly, supports Carmit (Hebrew, he-IL).
-// Used in place of translate.google.com/translate_tts which lost reliable
-// cross-origin playback on modern browsers (CORB / autoplay policy).
+// StreamElements TTS — free, supports Carmit (Hebrew, he-IL). Reuses a single
+// Audio element across calls; a fresh `new Audio()` per click breaks the
+// user-gesture context on Safari/iOS and triggers autoplay-policy rejection.
+// No `crossOrigin` — plain <audio> playback doesn't need CORS, and setting
+// it forces a preflight that the StreamElements CDN rejects.
+function getCloudAudio() {
+  if (!cloudAudio) {
+    cloudAudio = new Audio();
+    cloudAudio.preload = 'auto';
+  }
+  return cloudAudio;
+}
+
 function playCloudChunks(chunks) {
   primeAudioContext();
+  const audio = getCloudAudio();
   return chunks.reduce((p, chunk) => p.then(() => new Promise(resolve => {
-    const url = `https://api.streamelements.com/kappa/v2/speech?voice=Carmit&text=${encodeURIComponent(chunk)}`;
-    cloudAudio = new Audio(url);
-    cloudAudio.crossOrigin = 'anonymous';
-    cloudAudio.onended = resolve;
-    cloudAudio.onerror = () => {
-      flashHint('Hebrew audio unavailable. Install an OS voice — see banner — or click the 🔊 Forvo link.');
+    audio.onended = null;
+    audio.onerror = null;
+    audio.src = `https://api.streamelements.com/kappa/v2/speech?voice=Carmit&text=${encodeURIComponent(chunk)}`;
+    audio.onended = resolve;
+    audio.onerror = () => {
+      console.warn('[ulpan-hebrew] cloud TTS error', audio.error);
+      flashHint('Hebrew audio unavailable here. Install an OS voice (banner) or use the 🔊 Forvo link.');
       resolve();
     };
-    const playPromise = cloudAudio.play();
+    const playPromise = audio.play();
     if (playPromise && playPromise.catch) {
-      playPromise.catch(() => {
-        flashHint('Audio still arming. Tap ▶ once more — it will play from now on.');
+      playPromise.catch(err => {
+        console.warn('[ulpan-hebrew] play() rejected', err && err.name);
+        flashHint('Browser blocked audio. Click anywhere on the page first, then tap ▶ again.');
         resolve();
       });
     }
