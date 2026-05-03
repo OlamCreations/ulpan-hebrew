@@ -168,20 +168,71 @@ function forvoLink(hebrewText) {
   return `https://forvo.com/word/${encodeURIComponent(cleaned)}/#he`;
 }
 
+function detectOS() {
+  const ua = navigator.userAgent;
+  const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+  if (/Mac|iPhone|iPad|iPod/.test(ua) || /Mac/i.test(platform)) return 'mac';
+  if (/Windows|Win32|Win64/.test(ua) || /Win/i.test(platform)) return 'windows';
+  if (/Linux/.test(ua)) return 'linux';
+  return 'other';
+}
+
 function showVoiceBanner() {
   if (document.getElementById('voice-banner')) return;
+  const os = detectOS();
+  const winOpen = os === 'windows' ? ' open' : '';
+  const macOpen = os === 'mac' ? ' open' : '';
   const banner = document.createElement('div');
   banner.id = 'voice-banner';
   banner.className = 'voice-banner';
   banner.innerHTML = `
-    <div class="voice-banner-text">
-      <strong>No Hebrew voice detected on your system.</strong>
-      Inline audio uses an online fallback (StreamElements, Carmit voice). For faster, offline, higher-quality playback install a system Hebrew voice:
-      <a href="https://support.microsoft.com/en-us/windows/download-languages-and-voices-for-narrator-tts-and-speech-recognition-d2503ad3-ad42-4d3b-b3d2-0ae599cc939e" target="_blank">Windows</a> ·
-      <a href="https://support.apple.com/guide/mac-help/change-the-voice-your-mac-uses-to-speak-text-mchlp2290/mac" target="_blank">Mac</a>.
-      The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings) — use it if cloud audio is blocked by your browser.
+    <div class="voice-banner-inner">
+      <div class="voice-banner-head">
+        <div class="voice-banner-title">🔊 Install a Hebrew voice for instant offline audio</div>
+        <button class="voice-banner-close" aria-label="Dismiss">×</button>
+      </div>
+      <div class="voice-banner-sub">
+        Without a system voice, the page uses a slow online fallback that some browsers block.
+        Install once — the page detects it automatically on next refresh.
+      </div>
+
+      <details class="voice-banner-os"${winOpen}>
+        <summary><span class="os-icon">🪟</span> Windows 10 / 11 — Microsoft Asaf voice</summary>
+        <ol class="voice-banner-steps">
+          <li>Open <strong>Settings</strong> (Win + I) → <strong>Time &amp; language</strong> → <strong>Language &amp; region</strong>.</li>
+          <li>Click <strong>Add a language</strong>, type <em>Hebrew</em>, select <strong>עברית (Hebrew)</strong>, click <strong>Next</strong>.</li>
+          <li>In <em>Optional language features</em>, tick <strong>Speech</strong>. (You can untick the others.) Click <strong>Install</strong>.</li>
+          <li>Wait ~50 MB download. Then go to <strong>Settings → Accessibility → Narrator → Add natural voices</strong> and add <strong>Microsoft Asaf</strong> if shown.</li>
+          <li>Restart your browser, then hard-refresh this page (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>).</li>
+        </ol>
+        <div class="voice-banner-verify">
+          Verify in PowerShell:
+          <pre>Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).GetInstalledVoices() | % { $_.VoiceInfo.Name + ' — ' + $_.VoiceInfo.Culture }</pre>
+          You should see <code>Microsoft Asaf — he-IL</code>.
+        </div>
+        <a class="voice-banner-link" href="https://support.microsoft.com/en-us/windows/download-languages-and-voices-for-narrator-tts-and-speech-recognition-d2503ad3-ad42-4d3b-b3d2-0ae599cc939e" target="_blank" rel="noopener">Microsoft documentation →</a>
+      </details>
+
+      <details class="voice-banner-os"${macOpen}>
+        <summary><span class="os-icon"></span> macOS — Carmit voice</summary>
+        <ol class="voice-banner-steps">
+          <li>Open <strong>System Settings</strong> → <strong>Accessibility</strong> → <strong>Spoken Content</strong>.</li>
+          <li>Click the <strong>System voice</strong> dropdown → <strong>Manage Voices…</strong></li>
+          <li>Scroll to <strong>Hebrew</strong> → tick <strong>Carmit</strong> (or <strong>Carmit (Premium)</strong> for the high-quality version, ~50 MB).</li>
+          <li>Wait for download to finish. Set system voice back to your usual one (Carmit only needs to be installed, not active).</li>
+          <li>Restart your browser, then hard-refresh this page (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>).</li>
+        </ol>
+        <div class="voice-banner-verify">
+          Verify in Terminal: <pre>say -v '?' | grep -i hebrew</pre>
+          You should see <code>Carmit  he_IL</code>.
+        </div>
+        <a class="voice-banner-link" href="https://support.apple.com/guide/mac-help/change-the-voice-your-mac-uses-to-speak-text-mchlp2290/mac" target="_blank" rel="noopener">Apple documentation →</a>
+      </details>
+
+      <div class="voice-banner-foot">
+        Skip install? The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings) — works on every browser without setup.
+      </div>
     </div>
-    <button class="voice-banner-close" aria-label="Dismiss">×</button>
   `;
   document.body.insertBefore(banner, document.body.firstChild);
   banner.querySelector('.voice-banner-close').addEventListener('click', () => {
