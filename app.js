@@ -99,16 +99,26 @@ function chunkText(text, max) {
   if (cur) out.push(cur);
   return out;
 }
+// StreamElements TTS — free, CORS-friendly, supports Carmit (Hebrew, he-IL).
+// Used in place of translate.google.com/translate_tts which lost reliable
+// cross-origin playback on modern browsers (CORB / autoplay policy).
 function playCloudChunks(chunks) {
   primeAudioContext();
   return chunks.reduce((p, chunk) => p.then(() => new Promise(resolve => {
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=iw&client=tw-ob`;
+    const url = `https://api.streamelements.com/kappa/v2/speech?voice=Carmit&text=${encodeURIComponent(chunk)}`;
     cloudAudio = new Audio(url);
+    cloudAudio.crossOrigin = 'anonymous';
     cloudAudio.onended = resolve;
-    cloudAudio.onerror = () => { flashHint('Hebrew audio unavailable. Install an OS voice — see banner — or use the 🔊 Forvo link.'); resolve(); };
+    cloudAudio.onerror = () => {
+      flashHint('Hebrew audio unavailable. Install an OS voice — see banner — or click the 🔊 Forvo link.');
+      resolve();
+    };
     const playPromise = cloudAudio.play();
     if (playPromise && playPromise.catch) {
-      playPromise.catch(() => { flashHint('Tap ▶ again — first audio gets armed by your click.'); resolve(); });
+      playPromise.catch(() => {
+        flashHint('Audio still arming. Tap ▶ once more — it will play from now on.');
+        resolve();
+      });
     }
   })), Promise.resolve());
 }
