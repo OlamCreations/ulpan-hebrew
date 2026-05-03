@@ -34,6 +34,29 @@ function speak(text, rate = 0.85) {
 
 let cloudAudio = null;
 let audioDB = null;
+let audioPrimed = false;
+
+// Prime the HTML5 Audio context on the very first user gesture anywhere on the
+// page. Without this, browsers (Chrome strict autoplay, Safari, Firefox)
+// reject audio.play() promises silently when called from a deeper async path.
+function primeAudioContext() {
+  if (audioPrimed) return;
+  audioPrimed = true;
+  try {
+    const silent = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+    silent.volume = 0.01;
+    const p = silent.play();
+    if (p && p.catch) p.catch(() => {});
+  } catch (e) {}
+  if ('speechSynthesis' in window) {
+    try {
+      const u = new SpeechSynthesisUtterance('');
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+}
+document.addEventListener('pointerdown', primeAudioContext, { capture: true });
+document.addEventListener('keydown', primeAudioContext, { capture: true });
 function getAudioDB() {
   if (audioDB) return Promise.resolve(audioDB);
   return new Promise((resolve, reject) => {
@@ -77,10 +100,7 @@ function chunkText(text, max) {
   return out;
 }
 function playCloudChunks(chunks) {
-  // Synchronous chain — keeps Audio.play() inside the user-gesture call stack
-  // so the browser autoplay policy doesn't block. Skipping fetch() entirely
-  // because translate.google.com has no CORS headers (would just throw and
-  // burn the gesture window).
+  primeAudioContext();
   return chunks.reduce((p, chunk) => p.then(() => new Promise(resolve => {
     const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=iw&client=tw-ob`;
     cloudAudio = new Audio(url);
@@ -88,7 +108,7 @@ function playCloudChunks(chunks) {
     cloudAudio.onerror = () => { flashHint('Hebrew audio unavailable. Install an OS voice — see banner — or use the 🔊 Forvo link.'); resolve(); };
     const playPromise = cloudAudio.play();
     if (playPromise && playPromise.catch) {
-      playPromise.catch(() => { flashHint('Tap ▶ again — browser blocked the first audio. Subsequent plays will work.'); resolve(); });
+      playPromise.catch(() => { flashHint('Tap ▶ again — first audio gets armed by your click.'); resolve(); });
     }
   })), Promise.resolve());
 }
