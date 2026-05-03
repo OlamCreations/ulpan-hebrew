@@ -76,31 +76,21 @@ function chunkText(text, max) {
   if (cur) out.push(cur);
   return out;
 }
-async function playCloudChunks(chunks) {
-  for (const chunk of chunks) {
-    await new Promise(async (resolve) => {
-      const cacheKey = 'tts:' + chunk;
-      let blob = await getCachedAudio(cacheKey);
-      let url;
-      if (blob) {
-        url = URL.createObjectURL(blob);
-      } else {
-        url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=iw&client=tw-ob`;
-        try {
-          const r = await fetch(url, { mode: 'cors' });
-          if (r.ok) {
-            const b = await r.blob();
-            setCachedAudio(cacheKey, b);
-            url = URL.createObjectURL(b);
-          }
-        } catch (e) { /* CORS may block fetch but Audio element still plays */ }
-      }
-      cloudAudio = new Audio(url);
-      cloudAudio.onended = () => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); resolve(); };
-      cloudAudio.onerror = () => { flashHint('Audio failed. Install Hebrew voice — see banner.'); resolve(); };
-      cloudAudio.play().catch(() => { flashHint('Audio blocked. Click again to allow.'); resolve(); });
-    });
-  }
+function playCloudChunks(chunks) {
+  // Synchronous chain — keeps Audio.play() inside the user-gesture call stack
+  // so the browser autoplay policy doesn't block. Skipping fetch() entirely
+  // because translate.google.com has no CORS headers (would just throw and
+  // burn the gesture window).
+  return chunks.reduce((p, chunk) => p.then(() => new Promise(resolve => {
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=iw&client=tw-ob`;
+    cloudAudio = new Audio(url);
+    cloudAudio.onended = resolve;
+    cloudAudio.onerror = () => { flashHint('Hebrew audio unavailable. Install an OS voice — see banner — or use the 🔊 Forvo link.'); resolve(); };
+    const playPromise = cloudAudio.play();
+    if (playPromise && playPromise.catch) {
+      playPromise.catch(() => { flashHint('Tap ▶ again — browser blocked the first audio. Subsequent plays will work.'); resolve(); });
+    }
+  })), Promise.resolve());
 }
 
 function stripNiqqud(text) {
