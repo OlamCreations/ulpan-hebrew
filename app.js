@@ -112,28 +112,51 @@ function getCloudAudio() {
   return cloudAudio;
 }
 
+function ttsURL(text) {
+  return `https://api.streamelements.com/kappa/v2/speech?voice=Carmit&text=${encodeURIComponent(text)}`;
+}
+
+function loadAndPlay(audio, url, label) {
+  return new Promise(resolve => {
+    audio.onended = null;
+    audio.onerror = null;
+    audio.src = url;
+    audio.onended = resolve;
+    audio.onerror = () => {
+      console.warn('[ulpan-hebrew] tts onerror', label, audio.error);
+      flashHint('Hebrew audio unavailable. Install an OS voice (banner) or click the 🔊 Forvo link.');
+      resolve();
+    };
+    try {
+      const p = audio.play();
+      if (p && p.catch) {
+        p.catch(err => {
+          console.warn('[ulpan-hebrew] play() rejected', label, err && err.name, err && err.message);
+          flashHint('Browser blocked audio. Tap ▶ once and then again — gesture context now armed.');
+          resolve();
+        });
+      }
+    } catch (e) {
+      console.warn('[ulpan-hebrew] play() threw', e);
+      resolve();
+    }
+  });
+}
+
+// Plays cloud TTS. The first chunk MUST execute synchronously inside the
+// user-gesture call stack — wrapping it in chunks.reduce(...).then() defers
+// the first play() to a microtask and modern browsers reject it as autoplay.
 function playCloudChunks(chunks) {
   primeAudioContext();
   const audio = getCloudAudio();
-  return chunks.reduce((p, chunk) => p.then(() => new Promise(resolve => {
-    audio.onended = null;
-    audio.onerror = null;
-    audio.src = `https://api.streamelements.com/kappa/v2/speech?voice=Carmit&text=${encodeURIComponent(chunk)}`;
-    audio.onended = resolve;
-    audio.onerror = () => {
-      console.warn('[ulpan-hebrew] cloud TTS error', audio.error);
-      flashHint('Hebrew audio unavailable here. Install an OS voice (banner) or use the 🔊 Forvo link.');
-      resolve();
-    };
-    const playPromise = audio.play();
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(err => {
-        console.warn('[ulpan-hebrew] play() rejected', err && err.name);
-        flashHint('Browser blocked audio. Click anywhere on the page first, then tap ▶ again.');
-        resolve();
-      });
-    }
-  })), Promise.resolve());
+  if (chunks.length === 0) return Promise.resolve();
+  // First chunk: synchronous, preserves the click gesture
+  let chain = loadAndPlay(audio, ttsURL(chunks[0]), 'chunk0');
+  for (let i = 1; i < chunks.length; i++) {
+    const c = chunks[i];
+    chain = chain.then(() => loadAndPlay(audio, ttsURL(c), 'chunk' + i));
+  }
+  return chain;
 }
 
 function stripNiqqud(text) {
