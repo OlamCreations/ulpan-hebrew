@@ -175,11 +175,11 @@ function showVoiceBanner() {
   banner.className = 'voice-banner';
   banner.innerHTML = `
     <div class="voice-banner-text">
-      <strong>Audio uses online fallback.</strong>
-      Sound works via Google Translate TTS (online). For faster, offline, higher-quality audio install a Hebrew voice:
+      <strong>No Hebrew voice detected on your system.</strong>
+      Inline audio uses an online fallback (StreamElements, Carmit voice). For faster, offline, higher-quality playback install a system Hebrew voice:
       <a href="https://support.microsoft.com/en-us/windows/download-languages-and-voices-for-narrator-tts-and-speech-recognition-d2503ad3-ad42-4d3b-b3d2-0ae599cc939e" target="_blank">Windows</a> ·
       <a href="https://support.apple.com/guide/mac-help/change-the-voice-your-mac-uses-to-speak-text-mchlp2290/mac" target="_blank">Mac</a>.
-      The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings) as backup.
+      The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings) — use it if cloud audio is blocked by your browser.
     </div>
     <button class="voice-banner-close" aria-label="Dismiss">×</button>
   `;
