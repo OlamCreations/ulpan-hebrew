@@ -18,38 +18,44 @@ function hasHebrewVoice() {
   return pickHebrewVoice() !== null;
 }
 
-function speakWithSynthesis(text, rate) {
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'he-IL';
-  u.rate = rate;
-  const v = pickHebrewVoice();
-  if (v) u.voice = v;
-  speechSynthesis.speak(u);
-  return Promise.resolve();
+// Try Web Speech API first regardless of getVoices() — Chrome can speak via
+// the OS Hebrew engine (Microsoft Asaf, Carmit) even when the voice isn't yet
+// listed in getVoices(). We detect silent failure via a 600ms watchdog and
+// fall back to cloud TTS only when the engine truly didn't speak.
+function tryWebSpeech(text, rate) {
+  return new Promise((resolve, reject) => {
+    if (!('speechSynthesis' in window)) return reject(new Error('no-api'));
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'he-IL';
+    u.rate = rate;
+    const v = pickHebrewVoice();
+    if (v) u.voice = v;
+
+    let settled = false;
+    const finish = (ok, why) => {
+      if (settled) return;
+      settled = true;
+      if (ok) resolve();
+      else { console.warn('[ulpan-hebrew] webspeech failed:', why); reject(new Error(why)); }
+    };
+    u.onend = () => finish(true);
+    u.onerror = e => finish(false, 'error:' + (e && e.error));
+    u.onstart = () => { /* engine is producing audio — keep waiting */ };
+
+    speechSynthesis.speak(u);
+
+    // Watchdog: if after 600ms nothing started, the engine failed silently
+    setTimeout(() => {
+      if (!settled && !speechSynthesis.speaking && !speechSynthesis.pending) {
+        finish(false, 'silent');
+      }
+    }, 600);
+  });
 }
 
 function speak(text, rate = 0.85) {
-  if ('speechSynthesis' in window) {
-    if (hasHebrewVoice()) return speakWithSynthesis(text, rate);
-    // Voices may not be loaded yet on first call — wait briefly before
-    // falling back to cloud TTS. Chrome populates getVoices() asynchronously.
-    const voices = speechSynthesis.getVoices();
-    if (voices.length === 0) {
-      return new Promise(resolve => {
-        let done = false;
-        const finish = () => {
-          if (done) return;
-          done = true;
-          if (hasHebrewVoice()) speakWithSynthesis(text, rate).then(resolve);
-          else speakViaCloudTTS(text).then(resolve);
-        };
-        speechSynthesis.addEventListener('voiceschanged', finish, { once: true });
-        setTimeout(finish, 800);
-      });
-    }
-  }
-  return speakViaCloudTTS(text);
+  return tryWebSpeech(text, rate).catch(() => speakViaCloudTTS(text));
 }
 
 let cloudAudio = null;
