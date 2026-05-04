@@ -18,16 +18,36 @@ function hasHebrewVoice() {
   return pickHebrewVoice() !== null;
 }
 
+function speakWithSynthesis(text, rate) {
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'he-IL';
+  u.rate = rate;
+  const v = pickHebrewVoice();
+  if (v) u.voice = v;
+  speechSynthesis.speak(u);
+  return Promise.resolve();
+}
+
 function speak(text, rate = 0.85) {
-  if ('speechSynthesis' in window && hasHebrewVoice()) {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'he-IL';
-    u.rate = rate;
-    const v = pickHebrewVoice();
-    if (v) u.voice = v;
-    speechSynthesis.speak(u);
-    return Promise.resolve();
+  if ('speechSynthesis' in window) {
+    if (hasHebrewVoice()) return speakWithSynthesis(text, rate);
+    // Voices may not be loaded yet on first call — wait briefly before
+    // falling back to cloud TTS. Chrome populates getVoices() asynchronously.
+    const voices = speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      return new Promise(resolve => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          if (hasHebrewVoice()) speakWithSynthesis(text, rate).then(resolve);
+          else speakViaCloudTTS(text).then(resolve);
+        };
+        speechSynthesis.addEventListener('voiceschanged', finish, { once: true });
+        setTimeout(finish, 800);
+      });
+    }
   }
   return speakViaCloudTTS(text);
 }
