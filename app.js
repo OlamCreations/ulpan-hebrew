@@ -54,8 +54,23 @@ function tryWebSpeech(text, rate) {
   });
 }
 
+let cloudWarned = false;
 function speak(text, rate = 0.85) {
-  return tryWebSpeech(text, rate).catch(() => speakViaCloudTTS(text));
+  return tryWebSpeech(text, rate).catch(() => {
+    // If we genuinely have no Hebrew voice loaded in Chrome, the cloud
+    // fallback (Google translate_tts) is also blocked by CORB on most
+    // browsers in 2026. Tell the user the truth instead of looping retries.
+    const voices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
+    const hasHe = voices.some(v => v.lang && v.lang.startsWith('he'));
+    if (!hasHe) {
+      if (!cloudWarned) {
+        cloudWarned = true;
+        flashHint('No Hebrew voice loaded in Chrome. Fully quit Chrome (kill all chrome.exe in Task Manager) and reopen — Microsoft Asaf will then be detected.');
+      }
+      return Promise.resolve();
+    }
+    return speakViaCloudTTS(text);
+  });
 }
 
 let cloudAudio = null;
