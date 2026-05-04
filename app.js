@@ -133,7 +133,9 @@ function getCloudAudio() {
 }
 
 function ttsURL(text) {
-  return `https://api.streamelements.com/kappa/v2/speech?voice=Carmit&text=${encodeURIComponent(text)}`;
+  // Google Translate TTS — public, supports Hebrew (tl=iw), no auth.
+  // No CORS headers but plain <audio> playback doesn't need CORS.
+  return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=iw&client=tw-ob`;
 }
 
 function loadAndPlay(audio, url, label) {
