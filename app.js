@@ -1,17 +1,42 @@
 const HEBREW_VOICE_PREFS = ['Microsoft Asaf', 'Carmit', 'Asaf', 'he-IL'];
+const MALE_PATTERNS = /asaf|male|david|microsoft.*hebrew.*male/i;
+const FEMALE_PATTERNS = /carmit|hila|female|microsoft.*hebrew.*female|רינה|riny|stella/i;
 
 let cachedVoice = null;
 let voiceCheckDone = false;
+
+function getVoiceGenderPref() {
+  try { return localStorage.getItem('voice-gender') || 'auto'; }
+  catch (e) { return 'auto'; }
+}
+
+function setVoiceGenderPref(pref) {
+  try { localStorage.setItem('voice-gender', pref); } catch (e) {}
+  cachedVoice = null;  // force re-pick on next call
+}
 
 function pickHebrewVoice() {
   if (cachedVoice) return cachedVoice;
   if (!('speechSynthesis' in window)) return null;
   const voices = speechSynthesis.getVoices();
-  for (const pref of HEBREW_VOICE_PREFS) {
-    const v = voices.find(v => v.name.includes(pref) || v.lang.startsWith('he'));
+  const heVoices = voices.filter(v => v.lang && v.lang.startsWith('he'));
+  if (!heVoices.length) return null;
+
+  const pref = getVoiceGenderPref();
+  if (pref === 'male') {
+    const male = heVoices.find(v => MALE_PATTERNS.test(v.name));
+    if (male) { cachedVoice = male; return male; }
+  } else if (pref === 'female') {
+    const female = heVoices.find(v => FEMALE_PATTERNS.test(v.name));
+    if (female) { cachedVoice = female; return female; }
+  }
+  // Auto / fallback
+  for (const p of HEBREW_VOICE_PREFS) {
+    const v = heVoices.find(v => v.name.includes(p));
     if (v) { cachedVoice = v; return v; }
   }
-  return null;
+  cachedVoice = heVoices[0];
+  return cachedVoice;
 }
 
 function hasHebrewVoice() {
@@ -22,7 +47,10 @@ function hasHebrewVoice() {
 // the OS Hebrew engine (Microsoft Asaf, Carmit) even when the voice isn't yet
 // listed in getVoices(). We detect silent failure via a 600ms watchdog and
 // fall back to cloud TTS only when the engine truly didn't speak.
+// Track if web speech actually started so we don't double-up with cloud TTS.
+let webSpeechStartedRecently = false;
 function tryWebSpeech(text, rate) {
+  webSpeechStartedRecently = false;
   return new Promise((resolve, reject) => {
     if (!('speechSynthesis' in window)) return reject(new Error('no-api'));
     speechSynthesis.cancel();
@@ -41,7 +69,7 @@ function tryWebSpeech(text, rate) {
     };
     u.onend = () => finish(true);
     u.onerror = e => finish(false, 'error:' + (e && e.error));
-    u.onstart = () => { /* engine is producing audio — keep waiting */ };
+    u.onstart = () => { webSpeechStartedRecently = true; /* engine producing audio */ };
 
     speechSynthesis.speak(u);
 
@@ -56,10 +84,15 @@ function tryWebSpeech(text, rate) {
 
 let cloudWarned = false;
 function speak(text, rate = 0.85) {
+  // Always cancel any prior audio + speech to avoid doubled voices
+  if (cloudAudio) { try { cloudAudio.pause(); } catch (e) {} cloudAudio = null; }
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+
   return tryWebSpeech(text, rate).catch(() => {
-    // If we genuinely have no Hebrew voice loaded in Chrome, the cloud
-    // fallback (Google translate_tts) is also blocked by CORB on most
-    // browsers in 2026. Tell the user the truth instead of looping retries.
+    // If web speech actually started speaking before erroring, DO NOT fall back
+    // to cloud TTS — that's the cause of the doubled (male+female) playback.
+    if (webSpeechStartedRecently) return Promise.resolve();
+
     const voices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
     const hasHe = voices.some(v => v.lang && v.lang.startsWith('he'));
     if (!hasHe) {
@@ -98,6 +131,34 @@ function primeAudioContext() {
 }
 document.addEventListener('pointerdown', primeAudioContext, { capture: true });
 document.addEventListener('keydown', primeAudioContext, { capture: true });
+
+// Global delegated handler for word-row play buttons.
+// Catches both app.js-rendered and lesson-inline-rendered (mastery lessons)
+// buttons that aren't wired up by their lesson's own scripts.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.word-row button.icon-btn, .tb-row button.icon-btn');
+  if (!btn) return;
+  if (btn.classList.contains('srs-btn')) return;
+  // Don't fire twice if the lesson already wired its own handler — but since
+  // most lesson handlers stopPropagation, we'd already be skipped by then.
+  e.preventDefault();
+  e.stopPropagation();
+  let text = btn.getAttribute('data-text') || btn.dataset.text;
+  if (!text) {
+    const row = btn.closest('.word-row, .tb-row');
+    const heEl = row && row.querySelector('.he, .tb-he');
+    text = (heEl && (heEl.dataset.he || heEl.textContent || '')).trim();
+  }
+  if (text) {
+    btn.classList.add('playing');
+    const clear = () => btn.classList.remove('playing');
+    try { speak(text, 0.85); } finally {
+      // Heuristic timeout: speak() is async; ~180ms per Hebrew word is a safe upper bound
+      const ms = Math.max(900, Math.min(4500, text.length * 110));
+      setTimeout(clear, ms);
+    }
+  }
+}, { capture: true });  // capture phase so we win over inline handlers that stopPropagation
 function getAudioDB() {
   if (audioDB) return Promise.resolve(audioDB);
   return new Promise((resolve, reject) => {
@@ -658,6 +719,7 @@ function injectFloatingControls() {
     <button class="fc-btn" id="fc-hide-all" title="Hide all translit & translation (H)">Hide all</button>
     <button class="fc-btn" id="fc-theme" title="Toggle light/dark (T)">${getThemeIcon()}</button>
     <button class="fc-btn" id="fc-listen-all" title="Listen to all words (L)">▶ Listen all</button>
+    <button class="fc-btn" id="fc-voice" title="Choose voice (Male / Female / Auto)" data-pref="${getVoiceGenderPref()}">${getVoiceGenderPref() === 'female' ? '♀ Female' : getVoiceGenderPref() === 'male' ? '♂ Male' : '♂ Auto'}</button>
     <button class="fc-btn" id="fc-print" title="Printable view (P)">🖨 Print</button>
     <button class="fc-btn" id="fc-add-sr" title="Add every word in this lesson to SRS (A)">＋ Add all</button>
     <button class="fc-btn" id="fc-srs" title="Spaced repetition review (S)">📚 SRS<span id="fc-srs-count" class="fc-badge"></span></button>
@@ -668,6 +730,21 @@ function injectFloatingControls() {
   document.getElementById('fc-hide-all').addEventListener('click', () => revealAll(false));
   document.getElementById('fc-theme').addEventListener('click', () => toggleTheme());
   document.getElementById('fc-listen-all').addEventListener('click', () => listenAllWords());
+  document.getElementById('fc-voice').addEventListener('click', e => {
+    // Cycle: auto -> male -> female -> auto
+    const cur = getVoiceGenderPref();
+    const next = cur === 'auto' ? 'male' : cur === 'male' ? 'female' : 'auto';
+    setVoiceGenderPref(next);
+    const btn = e.target.closest('button');
+    btn.textContent = (next === 'female' ? '♀ Female' : next === 'male' ? '♂ Male' : '♂ Auto');
+    btn.dataset.pref = next;
+    flashHint('Voice: ' + (next === 'auto' ? 'auto-detect' : next));
+    // Audible test — use a Hebrew word from the current page if available,
+    // otherwise a universal greeting so the user immediately hears the new voice.
+    const heEl = document.querySelector('.word-row .he, .tb-he, .verses-grid .he');
+    const testWord = (heEl && heEl.textContent.trim()) || 'שָׁלוֹם';
+    setTimeout(() => speak(testWord, 0.85), 100);
+  });
   document.getElementById('fc-print').addEventListener('click', () => printableView());
   document.getElementById('fc-add-sr').addEventListener('click', () => { addAllToSRS(lesson); injectPerCardSRS(); refreshSRSCount(); });
   document.getElementById('fc-srs').addEventListener('click', () => openSRSReview());

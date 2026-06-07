@@ -6,10 +6,10 @@
   --text: #e5e5e5;
   --text-dim: #888;
   --text-faint: #555;
-  --accent: #10b981;
-  --accent-dim: #065f46;
+  --accent: #4A9EDB;
+  --accent-dim: #003356;
   --error: #ef4444;
-  --success: #10b981;
+  --success: #4A9EDB;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -231,6 +231,14 @@ h2 {
   gap: 32px;
   transition: background 0.15s;
 }
+/* Force consistent column positions regardless of HTML source order.
+   Some lessons (mastery section, batch-generated) put the play button
+   between .he and .translit — these rules push the buttons to the end. */
+.word-row .icon-btn { grid-column: 5; justify-self: end; }
+.word-row .srs-btn { grid-column: 4; justify-self: end; }
+.word-row .he { grid-column: 1; }
+.word-row .translit { grid-column: 2; }
+.word-row .fr { grid-column: 3; }
 
 .srs-btn {
   width: 30px;
@@ -401,14 +409,54 @@ html.light .srs-btn.active { color: #fff; }
 
 .btn:hover { border-color: var(--accent); color: var(--accent); }
 
-.btn.icon-btn {
-  width: 36px;
-  height: 36px;
+/* Universal round play button — applies to both `<button class="btn icon-btn">`
+   (early lessons) AND `<button class="icon-btn">` (mastery lessons + Tanakh).
+   Exclude .srs-btn which has its own round style. */
+button.icon-btn:not(.srs-btn) {
+  width: 40px;
+  height: 40px;
   padding: 0;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 0;                /* hide ▶ unicode */
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
 }
+button.icon-btn:not(.srs-btn)::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M8 5v14l11-7z'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M8 5v14l11-7z'/></svg>") no-repeat center / contain;
+  margin-left: 2px;            /* optical centering — triangle has visual weight on right */
+}
+button.icon-btn:not(.srs-btn):hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+button.icon-btn:not(.srs-btn):active { transform: scale(0.95); }
+button.icon-btn:not(.srs-btn).playing {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  animation: pulse-play 1.2s ease-in-out infinite;
+}
+@keyframes pulse-play {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 158, 219, 0.5); }
+  50%      { box-shadow: 0 0 0 6px rgba(74, 158, 219, 0); }
+}
+html.light button.icon-btn:not(.srs-btn):hover,
+html.light button.icon-btn:not(.srs-btn).playing { color: #fff; }
 
 .btn-primary {
   background: var(--accent);
@@ -795,7 +843,7 @@ body.no-niqqud [style*="direction: rtl"] {
 .ex-option { background: var(--bg-card-hover); border: 1px solid var(--border); color: var(--text); padding: 14px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.15s; text-align: center; }
 .ex-option:hover:not(:disabled) { border-color: var(--accent); background: var(--bg-card); }
 .ex-option:disabled { cursor: not-allowed; opacity: 0.6; }
-.ex-option.correct { background: rgba(16,185,129,0.15); border-color: var(--accent); color: var(--accent); opacity: 1; }
+.ex-option.correct { background: rgba(0, 113, 185,0.15); border-color: var(--accent); color: var(--accent); opacity: 1; }
 .ex-option.wrong { background: rgba(239,68,68,0.15); border-color: var(--error); color: var(--error); opacity: 1; }
 .ex-feedback { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text-dim); min-height: 20px; }
 
@@ -815,7 +863,7 @@ body.no-niqqud [style*="direction: rtl"] {
 .memory-card.flipped .memory-back { transform: rotateY(180deg); }
 .memory-card.flipped .memory-front { transform: rotateY(360deg); }
 .memory-card.matched { opacity: 0.4; pointer-events: none; }
-.memory-card.matched .memory-front { background: rgba(16,185,129,0.2); color: var(--accent); }
+.memory-card.matched .memory-front { background: rgba(0, 113, 185,0.2); color: var(--accent); }
 
 @media (max-width: 600px) {
   .ex-options { grid-template-columns: 1fr; }
@@ -862,7 +910,7 @@ body.no-niqqud [style*="direction: rtl"] {
 
 /* ============ Word Tokens (clickable Hebrew words) ============ */
 .word-token { cursor: pointer; padding: 0 2px; border-radius: 3px; transition: background 0.15s, color 0.15s; }
-.word-token:hover { background: rgba(16,185,129,0.2); color: var(--accent); }
+.word-token:hover { background: rgba(0, 113, 185,0.2); color: var(--accent); }
 
 /* ============ SR Heatmap (index) ============ */
 .streak-heatmap { display: grid; grid-template-columns: repeat(13, 1fr); gap: 3px; margin-top: 12px; }
@@ -878,17 +926,17 @@ html.light {
   --text: #1a1a1a;
   --text-dim: #525252;
   --text-faint: #a3a3a3;
-  --accent: #047857;
-  --accent-dim: #d1fae5;
+  --accent: #0071B9;
+  --accent-dim: #d0e7f4;
   --error: #dc2626;
-  --success: #047857;
+  --success: #0071B9;
 }
 
 html.light .lesson-card:hover { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06); }
 html.light .word-row { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); }
-html.light .quiz-option.correct { background: #d1fae5; color: #065f46; border-color: #047857; }
+html.light .quiz-option.correct { background: #d0e7f4; color: #003356; border-color: #0071B9; }
 html.light .quiz-option.wrong { background: #fee2e2; color: #991b1b; border-color: #dc2626; }
-html.light .ex-option.correct { background: #d1fae5; color: #065f46; border-color: #047857; }
+html.light .ex-option.correct { background: #d0e7f4; color: #003356; border-color: #0071B9; }
 html.light .ex-option.wrong { background: #fee2e2; color: #991b1b; border-color: #dc2626; }
 html.light .btn-primary { color: #fff; }
 html.light .btn-primary:hover { background: transparent; color: var(--accent); }
@@ -962,4 +1010,323 @@ html.light .srs-overlay { background: rgba(0,0,0,0.35); }
 @media (max-width: 600px) {
   .srs-he { font-size: 44px; }
   .srs-grade { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* =====================================================================
+ * MOBILE RESPONSIVE — universal, applies to all 498 lesson + index pages
+ * Uses html-prefixed selectors to beat inline !important overrides in
+ * prayer/shabbat/songs pages.
+ * ===================================================================== */
+
+/* =====================================================================
+ * VERSES GRID — row-major RTL (better for printing long songs/tehilim,
+ * less vertical scrolling than column-major). Overrides any inline
+ * column-count rules in prayer/song pages.
+ * ===================================================================== */
+html .verses-grid {
+  column-count: unset !important;
+  column-gap: unset !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 18px !important;
+  direction: rtl !important;
+}
+html .verses-grid .verse {
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+/* Print: 2 columns, tight gap, avoid splitting verses */
+@media print {
+  html .verses-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  html .verses-grid .verse {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+/* Tablet — 2-column verses, narrower hero, smaller padding */
+@media (max-width: 1024px) {
+  .container { max-width: 100%; padding: 18px 20px; box-sizing: border-box; }
+  html .verses-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .hero-row { grid-template-columns: 1fr !important; }
+  .hero-cta { width: 100%; }
+  .mini-stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important; }
+  .tehilim-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important; }
+  .lessons { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important; }
+}
+
+/* Mobile — single column, larger Hebrew, condensed layout */
+@media (max-width: 700px) {
+  body { font-size: 15px; -webkit-text-size-adjust: 100%; }
+  .container { padding: 14px 12px; }
+
+  /* HEADERS / TITLES */
+  header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  header h1, .container > h1 { font-size: 22px !important; line-height: 1.2 !important; }
+  h1 { font-size: 22px !important; line-height: 1.2 !important; }
+  h2 { font-size: 18px !important; line-height: 1.25 !important; }
+  h3 { font-size: 15px !important; }
+  .subtitle { font-size: 12px !important; line-height: 1.4 !important; }
+  .nav { font-size: 13px !important; gap: 10px !important; flex-wrap: wrap; }
+
+  /* VERSES GRID (prayer/shabbat/songs/tehilim) — single column, beats inline overrides */
+  html .verses-grid { grid-template-columns: 1fr !important; gap: 8px !important; direction: ltr !important; }
+  html .verses-grid .verse { padding: 12px 14px !important; margin-bottom: 0 !important; direction: rtl; break-inside: avoid; }
+  html .verses-grid .stich { direction: ltr !important; }
+  html .verses-grid .stich > * { direction: rtl; }
+  html .verses-grid .stich-words { gap: 10px 14px !important; }
+  html .verses-grid .word { min-width: 40px !important; }
+  html .verses-grid .word .he { font-size: 22px !important; line-height: 1.25 !important; margin-bottom: 2px !important; }
+  html .verses-grid .word .tr { font-size: 12px !important; }
+  html .verses-grid .word .fr { font-size: 11px !important; line-height: 1.3 !important; }
+  html .verses-grid .stich-translation { font-size: 14px !important; padding: 6px 10px !important; }
+  html .verses-grid .verse-num { font-size: 10px !important; letter-spacing: 1px !important; }
+  html .verses-grid .stich-chords { font-size: 12px !important; padding: 4px 8px !important; }
+
+  /* INTRO + LESSON + ABOUT CARDS */
+  .t-intro, .chant-tip, .pardes-card { padding: 16px 14px !important; font-size: 14px !important; line-height: 1.55 !important; }
+  .chant-tip h3, .pardes-card h3 { font-size: 13px !important; margin-bottom: 10px !important; }
+  .chant-tip ul { padding-left: 18px !important; }
+  .chant-tip li { font-size: 13px !important; line-height: 1.5 !important; margin-bottom: 8px !important; }
+  .pardes-card p { font-size: 13px !important; line-height: 1.55 !important; }
+  .pardes-card .pardes-level { padding: 14px 12px !important; margin-bottom: 12px !important; }
+  .pardes-card .pardes-intro { font-size: 13px !important; }
+
+  /* FOOTER */
+  footer { font-size: 12px !important; padding: 16px 0 !important; }
+
+  /* CHORDS (songs pages — tuning, voicings) */
+  .t-chord { padding: 12px !important; }
+  .t-chord .tuning-row { flex-wrap: wrap !important; gap: 8px !important; }
+  .t-chord .progression { font-size: 13px !important; flex-wrap: wrap !important; }
+  .active-voicings { padding: 12px !important; }
+  .voicings-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important; gap: 8px !important; }
+  .voicing-card { padding: 8px !important; }
+  .voicing-card svg { max-width: 100%; height: auto; }
+  .voicing-name { font-size: 12px !important; }
+
+  /* INDEX — hero, stats, action bar, search, chip nav, cards */
+  .hero-row { padding: 16px 18px !important; gap: 12px !important; }
+  .hero-title { font-size: 18px !important; }
+  .hero-sub { font-size: 12px !important; }
+  .hero-cta { padding: 12px 18px !important; font-size: 14px !important; }
+  .mini-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+  .mini-stat { padding: 10px 12px !important; }
+  .mini-stat .val { font-size: 16px !important; }
+  .mini-stat .lbl { font-size: 9px !important; }
+  .action-bar { gap: 6px !important; }
+  .action-bar button, .action-bar a { font-size: 12px !important; padding: 8px 12px !important; }
+  .search-bar { font-size: 14px !important; padding: 10px 14px !important; }
+  .cat-nav { padding: 8px 0 !important; }
+  .cat-chip { font-size: 11px !important; padding: 5px 10px !important; }
+  .cat-chip .ico { font-size: 12px !important; }
+  .mega-cat { margin: 20px 0 16px !important; }
+  .mega-cat-header { flex-wrap: wrap !important; gap: 8px !important; }
+  .mega-cat-icon { font-size: 22px !important; }
+  .mega-cat-title { font-size: 17px !important; }
+  .mega-cat-stat { font-size: 11px !important; }
+  .mega-cat-bar { min-width: 60px !important; }
+
+  /* TEHILIM/PRAYER/SONG CARDS GRID */
+  .tehilim-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
+  .tehilim-card { padding: 14px 16px !important; }
+  .tehilim-card .ps { font-size: 11px !important; }
+  .tehilim-card .he { font-size: 20px !important; }
+  .tehilim-card .ti { font-size: 12px !important; }
+
+  /* CLASSIC LESSON CARDS (Foundations and other lesson categories) */
+  .lessons { grid-template-columns: 1fr !important; gap: 8px !important; }
+  .lesson-card { padding: 14px 16px !important; }
+  .lesson-card .num { font-size: 11px !important; }
+  .lesson-card .title-fr { font-size: 15px !important; }
+  .lesson-card .title-he { font-size: 18px !important; }
+  .lesson-card .meta { font-size: 11px !important; }
+
+  /* WORD ROWS (used in classic lesson pages) */
+  .word-row { font-size: 14px !important; padding: 10px 12px !important; }
+  .word-row .he { font-size: 22px !important; }
+  .word-row .translit { font-size: 12px !important; }
+  .word-row .fr { font-size: 13px !important; }
+
+  /* EXERCISES */
+  .ex-input { font-size: 16px !important; padding: 10px 12px !important; }
+  .ex-tabs { flex-wrap: wrap !important; gap: 6px !important; }
+
+  /* SRS REVIEW */
+  .srs-card { padding: 22px 18px !important; min-height: 360px !important; }
+}
+
+/* Very narrow phones (< 380px) */
+@media (max-width: 380px) {
+  .container { padding: 10px 8px; }
+  html .verses-grid .word .he { font-size: 20px !important; }
+  .mini-stats { grid-template-columns: 1fr 1fr !important; }
+  header h1, .container > h1, h1 { font-size: 20px !important; }
+}
+
+/* =====================================================================
+ * Prayer/Shabbat verse cards — verse-num title ALWAYS at top of card,
+ * never overlapping Hebrew, never separated by a column break.
+ * Uses html-prefixed selectors to beat inline !important in prayer pages.
+ * ===================================================================== */
+html .verses-grid .verse {
+  display: flex !important;
+  flex-direction: column !important;
+  break-inside: avoid !important;
+  -webkit-column-break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+html .verses-grid .verse-num {
+  order: -1 !important;
+  flex: 0 0 auto !important;
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  break-after: avoid !important;
+  -webkit-column-break-after: avoid !important;
+  page-break-after: avoid !important;
+  text-align: right !important;  /* RTL: title aligns with Hebrew on the right edge */
+  direction: ltr !important;     /* but the label itself is Latin */
+  font-size: 10px !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  color: var(--text-faint) !important;
+  opacity: 0.7 !important;
+  font-weight: 600 !important;
+}
+
+/* =====================================================================
+ * CUSTOM SCROLLBARS — matches app aesthetic (emerald accent, themed)
+ * Works in Chrome/Safari/Edge/Opera (webkit-*) + Firefox (scrollbar-*).
+ * ===================================================================== */
+
+/* Firefox + modern CSS — body, html, all scrollable elements */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*:hover {
+  scrollbar-color: var(--accent) transparent;
+}
+
+/* WebKit — track, thumb, corner */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.15s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Horizontal scrollbar specifically on the sticky chip nav */
+.cat-nav::-webkit-scrollbar {
+  height: 6px;
+}
+.cat-nav::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+.cat-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Tehilim/prayer/song card grids — when overflowing on tablet */
+.tehilim-grid::-webkit-scrollbar,
+.lessons::-webkit-scrollbar {
+  height: 8px;
+}
+
+/* Light mode adjustment — thumbs a touch darker for visibility on bright bg */
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #047857;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+html.light * {
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+html.light *:hover {
+  scrollbar-color: #047857 transparent;
+}
+
+/* Mobile: hide scrollbars in horizontal-overflow containers (cat-nav)
+   since touch users scroll by swipe. Keep vertical scrollbars visible. */
+@media (max-width: 700px) {
+  .cat-nav::-webkit-scrollbar { display: none; }
+  .cat-nav { scrollbar-width: none; }
+}
+
+/* ============================================================
+   Cursive track (ktav yad) — Culmus KtavYadCLM, GPL+FontException
+   ============================================================ */
+@font-face {
+  font-family: 'KtavYad';
+  src: url('KtavYadCLM-MediumItalic.ttf') format('truetype');
+  font-display: swap;
+}
+.ktav { font-family: 'KtavYad', cursive; direction: rtl; }
+
+/* print <-> cursive comparison grid */
+.cur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin: 18px 0; }
+.cur-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px 12px 14px; text-align: center; cursor: pointer; transition: all 0.18s;
+  position: relative;
+}
+.cur-card:hover { border-color: var(--accent); background: var(--bg-card-hover); transform: translateY(-2px); }
+.cur-card .cc-cursive { font-family: 'KtavYad', cursive; direction: rtl; font-size: 58px; line-height: 1; color: var(--text); margin-bottom: 6px; }
+.cur-card .cc-print { font-family: 'Frank Ruhl Libre', 'David', serif; direction: rtl; font-size: 26px; color: var(--text-dim); margin-bottom: 8px; }
+.cur-card .cc-name { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.3px; }
+.cur-card .cc-translit { font-size: 12px; color: var(--accent); font-family: ui-monospace, monospace; margin-top: 2px; }
+.cur-card .cc-hint { font-size: 11px; color: var(--text-dim); margin-top: 8px; line-height: 1.35; min-height: 30px; }
+.cur-card .cc-listen { position: absolute; top: 8px; left: 8px; font-size: 13px; opacity: 0; transition: opacity 0.18s; }
+.cur-card:hover .cc-listen { opacity: 0.6; }
+
+/* big cursive quiz prompt */
+.cur-quiz-glyph { font-family: 'KtavYad', cursive; direction: rtl; font-size: 110px; line-height: 1.1; text-align: center; color: var(--text); margin: 8px 0 4px; }
+
+/* reading drill: tap a handwritten word to reveal print + meaning */
+.cur-read { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+.cur-read-row {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; align-items: center; gap: 12px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; cursor: pointer;
+}
+.cur-read-row:hover { border-color: var(--accent); }
+.cur-read-row .crr-cursive { font-family: 'KtavYad', cursive; direction: rtl; font-size: 40px; line-height: 1; color: var(--text); }
+.cur-read-row .crr-print, .cur-read-row .crr-fr { color: var(--text-dim); opacity: 0; transition: opacity 0.2s; }
+.cur-read-row.revealed .crr-print, .cur-read-row.revealed .crr-fr { opacity: 1; }
+.cur-read-row .crr-print { font-family: 'Frank Ruhl Libre', 'David', serif; direction: rtl; font-size: 24px; color: var(--text); }
+.cur-read-row .crr-fr { font-size: 14px; }
+@media (max-width: 700px) {
+  .cur-read-row { grid-template-columns: 1fr auto; }
+  .cur-read-row .crr-print, .cur-read-row .crr-fr { font-size: 18px; }
 }

@@ -1,5 +1,7 @@
 # Hebrew Course — Next Session Prompt (Lessons 101-200, Block 11+)
 
+> **FAIT 2026-06-07** — le **track morphologie générative** est livré : 8 leçons `morpho-001..008-en.html` (racines / binyanim / mishkalim, méthode "בהצלחה"), liées depuis `index.html` (`#cat-morpho`) et documentées dans `CURRICULUM.md` (section "TRANSVERSAL TRACK — Morphology"). Rendu vérifié headless (0 erreur JS, word-lists + quiz + exercices auto OK). Spec d'origine : `MORPHOLOGIE-TRACK.md`.
+
 Copy-paste this entire block as the first message in a fresh Claude Code session.
 
 ---
@@ -8,7 +10,7 @@ Copy-paste this entire block as the first message in a fresh Claude Code session
 
 I'm continuing a Hebrew self-study course I've been building.
 
-**Project root:** `C:/dev/projects/admin/alyah/ulpan/hebrew-beginner/`
+**Project root:** `C:/dev/projects/ulpan-hebrew/` (the live repo — 510+ lesson HTML files, `app.js`, `index.html`, `CURRICULUM.md`. The old `admin/alyah/ulpan/hebrew-beginner/` path is a stale mirror, do not write there.)
 
 **Current state (sealed and validated):**
 - 100 lessons (`01-alefbet.html` through `100-final-test.html`) covering CEFR A1 → B1

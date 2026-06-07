@@ -686,6 +686,19 @@ Israeli concert venues from the IPO\'s flagship hall to the rock club basements 
 464. Barby & Rock Venues — Barby 1992 · Zappa 2002 · Mashina · HaYehudim · Hangar 11 · door / sound vocab
 465. Outdoor & Amphitheaters — Caesarea · Sultan\'s Pool · Park HaYarkon · Masada Opera · regional
 
+## TRANSVERSAL TRACK — Morphology (added 2026-06-07) — DONE
+
+Cross-cutting mini-course, not part of the numbered sequence. Teaches the *generative machine* of Hebrew — root (shoresh) + pattern (binyan / mishkal) — so a learner decodes and derives unseen words instead of memorizing them one by one. The "method of בהצלחה": decompose → isolate the mould → snowball 3-4 examples. Files `morpho-001..008-en.html`, linked from `index.html` (`#cat-morpho`). Complements the sequential binyanim lessons 28-30, which teach the same patterns inside the A1→B1 progression; this track is the decoding reflex, taught as one block.
+
+M1. The Root System (shoresh) — triconsonantal roots, word families (k-t-v, l-m-d, sh-m-r, a-k-l)
+M2. Pa'al & Nif'al — simple active and its passive / middle twin
+M3. Pi'el & Pu'al — intensive active and its passive · the _i_u_ action-noun
+M4. Hif'il & Huf'al — the causative · the הַ_ָ_ָה noun factory (full בהצלחה decode)
+M5. Hitpa'el — reflexive / reciprocal / becoming · sibilant metathesis (st / sht / zd / tzt)
+M6. Verbal Nouns by Binyan — the generative shem-pe'ula table · reverse-engineer verb from noun
+M7. Mishkalim — noun moulds for person / place / tool / abstract idea
+M8. Decoding Workshop — the 4-step protocol: unknown word → strip → root → mould → meaning
+
 ## UI: Light Mode (added 2026-04-30)
 
 - Toggle in header (index.html) and floating-controls (lessons), keyboard shortcut **T**
