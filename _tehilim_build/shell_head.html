@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 1 — אַשְׁרֵי הָאִישׁ</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="style.css?v=tehilim1">
+<style>
+  /* Tehilim — chant-friendly verse layout */
+  .t-intro {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 28px;
+    margin-bottom: 24px;
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .t-intro strong { color: var(--text); }
+
+  .t-chord {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-dim);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 32px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .t-chord .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .t-chord .label {
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: -apple-system, 'Inter', sans-serif;
+  }
+  .t-chord .progression {
+    color: var(--text);
+    font-size: 16px;
+    letter-spacing: 2px;
+    line-height: 1.6;
+  }
+  .t-chord .meta-line { font-size: 12px; margin-top: 8px; color: var(--text-faint); font-family: -apple-system, 'Inter', sans-serif; }
+  .t-chord .tuning-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 12px;
+  }
+  .t-chord .tuning-row .tuning-label {
+    color: var(--accent);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .t-chord .tuning-row select, .t-chord .tuning-row input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+  }
+  .t-chord .tuning-row select:hover, .t-chord .tuning-row select:focus,
+  .t-chord .tuning-row input:hover, .t-chord .tuning-row input:focus { border-color: var(--accent); }
+  .t-chord .tuning-row input { width: 130px; cursor: text; }
+  .t-chord .tuning-row .tuning-current {
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-left: auto;
+  }
+
+  .t-tuning {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  .t-tuning .tuning-label {
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .t-tuning select, .t-tuning input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .t-tuning select:hover, .t-tuning input:hover, .t-tuning select:focus, .t-tuning input:focus {
+    border-color: var(--accent);
+  }
+  .t-tuning input { width: 160px; cursor: text; }
+  .t-tuning .tuning-current {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-left: auto;
+  }
+
+  .link-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .link-btn:hover { color: var(--accent); }
+
+  /* Active voicings panel */
+  .active-voicings {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 32px;
+  }
+  .active-voicings .av-title {
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .active-voicings .av-hint {
+    color: var(--text-faint);
+    font-size: 11px;
+    margin-top: 12px;
+    font-style: italic;
+  }
+  .voicings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  .voicing-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 8px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .voicing-card:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+  .voicing-card .voicing-name {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+  }
+  .voicing-card .voicing-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 110px;
+  }
+  .voicing-card .voicing-diagram svg { max-width: 110px; height: auto; }
+  .voicing-card .voicing-label {
+    color: var(--text-dim);
+    font-size: 10px;
+    margin-top: 4px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .voicing-card .voicing-empty {
+    color: var(--text-faint);
+    font-size: 10px;
+    padding: 32px 4px;
+  }
+  .voicing-card { position: relative; }
+  .voicing-unpin {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0 0 1px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    opacity: 0;
+    z-index: 2;
+  }
+  .voicing-card:hover .voicing-unpin { opacity: 1; }
+  .voicing-unpin:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+  /* ★ pin star inside popup */
+  .chord-tooltip .tt-pin {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+  .chord-tooltip .tt-pin:hover { color: #fbbf24; border-color: #fbbf24; }
+  .chord-tooltip .tt-pin.pinned { color: #fbbf24; border-color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+
+  /* Print styles — print EVERYTHING (full HTML page), just recolor for paper */
+  @media print {
+    @page { margin: 10mm; }
+    body { background: #fff !important; color: #000 !important; padding: 0 !important; font-size: 11pt; }
+    .container { max-width: 100% !important; padding: 0 !important; }
+    /* Hide only truly UI-only chrome that has no value on paper */
+    .chord-tooltip, #print-btn { display: none !important; }
+    .back { display: none !important; }
+    /* Recolor cards/blocks to white-on-black-text */
+    .t-intro, .t-chord, .active-voicings, .verse, .voicing-card, .chant-tip {
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #aaa !important;
+      box-shadow: none !important;
+      page-break-inside: avoid;
+    }
+    .verse, .active-voicings, .voicing-card { page-break-inside: avoid; }
+    .verse { margin-bottom: 14px; padding: 14px 16px; }
+    .verse-num { color: #000 !important; border-color: #000 !important; background: #f0f0f0 !important; }
+    .verse-full { color: #000 !important; border-color: #888 !important; }
+    .word .he { color: #000 !important; }
+    .word .tr { color: #444 !important; }
+    .word .tr b { color: #000 !important; }
+    .word .fr { color: #555 !important; }
+    .stich-translation { color: #444 !important; border-color: #888 !important; }
+    .verse-summary { background: #f7f7f7 !important; border-color: #888 !important; color: #000 !important; }
+    .verse-summary strong { color: #000 !important; }
+    .label, .av-title, .voicing-name, .verse-num, .tuning-label, .meta-line, .chant-tip h3 { color: #000 !important; }
+    .meta-line, .av-hint, .chant-tip { color: #333 !important; }
+    .chant-tip ul li { color: #000 !important; }
+    .tuning-row select, .tuning-row input { background: #fff !important; color: #000 !important; border-color: #888 !important; }
+    .progression { color: #000 !important; }
+    .progression .chord { color: #000 !important; border-bottom: 1px dotted #444; background: transparent !important; }
+    /* Voicing-card unpin × not useful on paper */
+    .voicing-unpin { display: none !important; }
+    /* Convert green SVG elements to black/grey for print */
+    svg text { fill: #000 !important; }
+    svg line { stroke: #555 !important; }
+    svg rect[fill="#4A9EDB"], svg rect[fill="#ccc"] { fill: #444 !important; }
+    svg circle[fill="#4A9EDB"] { fill: #000 !important; stroke: #000 !important; }
+    svg circle[stroke="#4A9EDB"] { stroke: #000 !important; }
+    h1 { color: #000 !important; font-size: 18pt; }
+    .subtitle { color: #444 !important; }
+    a { color: #000 !important; text-decoration: none !important; }
+    header { border-bottom: 1px solid #000 !important; }
+    .nav { display: none !important; }
+  }
+
+  .verse {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px 28px 26px;
+    margin-bottom: 28px;
+  }
+  .verse-num {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent-dim);
+    border-radius: 50px;
+    padding: 4px 12px;
+    margin-bottom: 18px;
+  }
+
+  .verse-full {
+    font-family: 'Frank Ruhl Libre', 'David', 'David CLM', serif;
+    direction: rtl;
+    font-size: 30px;
+    line-height: 1.7;
+    text-align: right;
+    color: var(--text);
+    margin-bottom: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .stich {
+    margin-bottom: 22px;
+  }
+  .stich:last-of-type { margin-bottom: 14px; }
+
+  .stich-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px 28px;
+    direction: rtl;
+    margin-bottom: 10px;
+  }
+
+  .word {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    direction: rtl;
+    min-width: 40px;
+  }
+  .word .he {
+    font-family: 'Frank Ruhl Libre', 'David', serif;
+    font-size: 30px;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 4px;
+    direction: rtl;
+  }
+  .word .tr {
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+    direction: ltr;
+    margin-bottom: 4px;
+  }
+  .word .tr b { color: #fff; font-weight: 700; }
+  html.light .word .tr b { color: #000; }
+  .word .fr {
+    font-size: 13px;
+    color: var(--text-dim);
+    direction: ltr;
+    font-style: italic;
+    line-height: 1.3;
+    max-width: 130px;
+  }
+
+  .stich-translation {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-style: italic;
+    padding-right: 12px;
+    border-right: 2px solid var(--accent-dim);
+    margin-top: 14px;
+    line-height: 1.5;
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: plaintext;
+  }
+
+  .verse-summary {
+    background: rgba(74, 158, 219, 0.05);
+    border-right: 3px solid var(--accent);
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    border-radius: 4px 0 0 4px;
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: plaintext;
+  }
+  .verse-summary strong { color: var(--accent); }
+
+  .chant-tip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 28px;
+    margin-top: 32px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+  .chant-tip h3 { color: var(--text); margin-bottom: 12px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+  .chant-tip ul { padding-left: 22px; margin-top: 10px; }
+  .chant-tip li { margin-bottom: 6px; }
+
+  /* Chord hover tooltips with fretboard diagram */
+  .chord {
+    cursor: help;
+    color: var(--accent);
+    border-bottom: 1px dotted var(--accent-dim);
+    font-weight: 700;
+    padding: 0 2px;
+    transition: all 0.15s;
+  }
+  .chord:hover {
+    color: #fff;
+    background: rgba(74, 158, 219, 0.18);
+    border-bottom-color: var(--accent);
+    border-radius: 3px;
+  }
+  html.light .chord:hover { color: #000; }
+
+  .chord-tooltip {
+    position: absolute;
+    background: #0a0a0a;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 14px 10px;
+    z-index: 1000;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(74, 158, 219, 0.15);
+    font-family: -apple-system, 'Inter', sans-serif;
+    pointer-events: auto;
+    width: 240px;
+    box-sizing: border-box;
+  }
+  html.light .chord-tooltip { background: #fff; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18); }
+  .chord-tooltip .tt-name {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chord-tooltip svg { display: block; margin: 0 auto; }
+  .chord-tooltip .tt-fretboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  .chord-tooltip .tt-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .chord-tooltip .tt-arrow {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 0 2px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-family: -apple-system, 'Inter', sans-serif;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .chord-tooltip .tt-arrow:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+  .chord-tooltip .tt-arrow:active { transform: scale(0.92); }
+  .chord-tooltip .tt-pos {
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    flex-grow: 1;
+    text-align: center;
+  }
+  .chord-tooltip .tt-dots {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .chord-tooltip .tt-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .chord-tooltip .tt-dot:hover { background: var(--text-dim); }
+  .chord-tooltip .tt-dot.active { background: var(--accent); }
+
+  /* Tuning bar inside tooltip */
+  .chord-tooltip .tt-tuning {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .chord-tooltip .tt-tuning select {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 11px;
+    outline: none;
+    cursor: pointer;
+  }
+  .chord-tooltip .tt-tuning select:hover, .chord-tooltip .tt-tuning select:focus {
+    border-color: var(--accent);
+  }
+  .chord-tooltip .tt-tuning input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--accent-dim);
+    color: var(--text);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 11px;
+    outline: none;
+  }
+  .chord-tooltip .tt-tuning input:focus { border-color: var(--accent); }
+  .chord-tooltip .tt-tuning .tt-tuning-label {
+    color: var(--accent);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* Action buttons row */
+  .chord-tooltip .tt-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .chord-tooltip .tt-action-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 11px;
+    transition: all 0.15s;
+  }
+  .chord-tooltip .tt-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .chord-tooltip .tt-action-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(74, 158, 219, 0.1); }
+
+  /* Custom voicing form */
+  .chord-tooltip .tt-add-form {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chord-tooltip .tt-add-form input {
+    background: var(--bg);
+    border: 1px solid var(--accent-dim);
+    color: var(--text);
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+  .chord-tooltip .tt-add-form input:focus { border-color: var(--accent); }
+  .chord-tooltip .tt-add-form .tt-form-label {
+    color: var(--text-faint);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+  .chord-tooltip .tt-add-form .tt-form-buttons {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .chord-tooltip .tt-add-form button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 11px;
+    transition: all 0.15s;
+  }
+  .chord-tooltip .tt-add-form button.save { color: var(--accent); border-color: var(--accent); }
+  .chord-tooltip .tt-add-form button:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  /* Custom voicing badge in name */
+  .chord-tooltip .tt-name .tt-custom-badge {
+    color: #fbbf24;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+  .chord-tooltip .tt-delete-btn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 6px;
+    margin-top: 4px;
+    border-radius: 3px;
+    text-align: center;
+    width: 100%;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+  .chord-tooltip .tt-delete-btn:hover { opacity: 1; background: rgba(239, 68, 68, 0.1); }
+
+  /* Harmonic panel */
+  .chord-tooltip .tt-harm-panel {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chord-tooltip .tt-harm-tabs {
+    display: flex;
+    gap: 3px;
+  }
+  .chord-tooltip .tt-harm-tab {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    padding: 4px 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 10px;
+    transition: all 0.15s;
+  }
+  .chord-tooltip .tt-harm-tab:hover { color: var(--accent); border-color: var(--accent-dim); }
+  .chord-tooltip .tt-harm-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(74, 158, 219, 0.1); }
+  .chord-tooltip .tt-harm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .chord-tooltip .tt-harm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 11px;
+    transition: all 0.15s;
+    text-align: left;
+  }
+  .chord-tooltip .tt-harm-item:hover { background: rgba(74, 158, 219, 0.1); border-color: var(--accent); }
+  .chord-tooltip .tt-harm-item .h-chord {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .chord-tooltip .tt-harm-item .h-label {
+    color: var(--text-faint);
+    font-size: 10px;
+  }
+
+  /* Wider tooltip for popup-tuning UI */
+  .chord-tooltip { width: 280px; }
+
+  /* Close X button */
+  .chord-tooltip .tt-close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 0 1px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    z-index: 2;
+  }
+  .chord-tooltip .tt-close:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+  /* Interactive fretboard editor */
+  .fret-editor {
+    margin: 10px auto 0;
+    user-select: none;
+  }
+  .fret-editor svg { cursor: pointer; }
+  .fret-editor .edit-cell rect { fill: transparent; transition: fill 0.1s; }
+  .fret-editor .edit-cell:hover rect { fill: rgba(74, 158, 219, 0.15); }
+  .fret-editor .edit-toggle rect { transition: fill 0.1s; }
+  .fret-editor .edit-toggle:hover rect { fill: rgba(74, 158, 219, 0.2); }
+  .fret-editor .edit-toggle.active rect { fill: var(--accent); }
+
+  @media (max-width: 600px) {
+    .verse-full { font-size: 24px; }
+    .word .he { font-size: 24px; }
+    .stich-words { gap: 16px 18px; }
+  }
+
+  /* Compact one-screen layout — verses in 3 RTL columns, no full Hebrew block, no per-verse summary (moved to PARDES card) */
+  .verse-full { display: none; }
+
+  .verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+  .verses-grid .verse-summary { display: none; }  /* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+  /* Verse number: tiny absolute marker in top-left corner — zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .verses-grid .stich { margin-bottom: 10px; }
+  .verses-grid .stich:last-of-type { margin-bottom: 4px; }
+  .verses-grid .stich-words {
+    gap: 8px 12px;
+    margin-bottom: 6px;
+  }
+  .verses-grid .word { min-width: 32px; }
+  .verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  .verses-grid .word .tr {
+    font-size: 11px;
+    margin-bottom: 2px;
+    letter-spacing: 0.2px;
+  }
+  .verses-grid .word .fr {
+    font-size: 11px;
+    line-height: 1.25;
+    max-width: 100px;
+  }
+  .verses-grid .stich-translation {
+    font-size: 12px;
+    line-height: 1.4;
+    padding-right: 8px;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+  @media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+
+  /* PARDES analysis card */
+  .pardes-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 30px;
+    margin-top: 28px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+  .pardes-card > h3 {
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .pardes-card .pardes-intro {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-faint);
+    margin-bottom: 20px;
+  }
+  .pardes-level {
+    border-left: 2px solid var(--accent-dim);
+    padding-left: 14px;
+    margin-bottom: 18px;
+    text-align: justify;
+    direction: ltr;
+    unicode-bidi: plaintext;
+  }
+  .pardes-level:last-child { margin-bottom: 0; }
+  .pardes-level h4 {
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .pardes-level p { margin: 0; }
+  .pardes-level strong { color: var(--text); }
+  .pardes-level em { color: var(--text); font-style: italic; }
+</style>
