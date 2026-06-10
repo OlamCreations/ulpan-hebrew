@@ -1436,3 +1436,20 @@ function addMiniQuiz(title, questions) {
     root.appendChild(block);
   });
 }
+
+// --- PWA bootstrap: injects manifest + icons + registers the service worker on every page ---
+(function () {
+  try {
+    var head = document.head;
+    function addOnce(sel, make) { if (!document.querySelector(sel)) head.appendChild(make()); }
+    addOnce('link[rel="manifest"]', function () { var l = document.createElement('link'); l.rel = 'manifest'; l.href = 'manifest.json'; return l; });
+    addOnce('meta[name="theme-color"]', function () { var m = document.createElement('meta'); m.name = 'theme-color'; m.content = '#0a0a0a'; return m; });
+    addOnce('link[rel="apple-touch-icon"]', function () { var a = document.createElement('link'); a.rel = 'apple-touch-icon'; a.href = 'icon-192.png'; return a; });
+    addOnce('meta[name="apple-mobile-web-app-capable"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-capable'; m.content = 'yes'; return m; });
+    addOnce('meta[name="apple-mobile-web-app-status-bar-style"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-status-bar-style'; m.content = 'black-translucent'; return m; });
+    addOnce('meta[name="apple-mobile-web-app-title"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-title'; m.content = 'Ulpan'; return m; });
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    }
+  } catch (e) {}
+})();
