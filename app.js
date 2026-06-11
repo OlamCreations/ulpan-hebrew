@@ -604,6 +604,34 @@ function refreshSRSCount() {
   badge.className = 'fc-badge' + (due > 0 ? ' fc-badge-due' : '');
 }
 
+// Make an overlay modal keyboard-accessible: focus in, trap Tab, Escape to close,
+// restore focus on close. Shared by SRS, shortcuts and the home quiz overlays.
+function makeModalAccessible(modal, dialog) {
+  dialog = dialog || modal.querySelector('[role="dialog"]') || modal.firstElementChild || modal;
+  try {
+    if (!dialog.getAttribute('role')) dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    if (!dialog.hasAttribute('tabindex')) dialog.setAttribute('tabindex', '-1');
+  } catch (e) {}
+  const prev = document.activeElement;
+  const focusables = () => Array.from(dialog.querySelectorAll(
+    'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])'
+  )).filter(el => el.offsetParent !== null);
+  setTimeout(() => { const f = focusables(); (f[0] || dialog).focus(); }, 0);
+  modal.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); modal.remove(); return; }
+    if (e.key === 'Tab') {
+      const items = focusables(); if (!items.length) { e.preventDefault(); return; }
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  const origRemove = modal.remove.bind(modal);
+  modal.remove = function () { origRemove(); try { prev && prev.focus && prev.focus(); } catch (e) {} };
+  return modal;
+}
+
 function openSRSReview() {
   const existing = document.getElementById('srs-modal');
   if (existing) existing.remove();
@@ -613,6 +641,7 @@ function openSRSReview() {
   modal.id = 'srs-modal';
   modal.innerHTML = `<div class="srs-overlay"></div><div class="srs-card" role="dialog" aria-label="SRS review"></div>`;
   document.body.appendChild(modal);
+  makeModalAccessible(modal, modal.querySelector('.srs-card'));
   modal.querySelector('.srs-overlay').addEventListener('click', () => modal.remove());
 
   const cardEl = modal.querySelector('.srs-card');
@@ -716,8 +745,8 @@ function openSRSReview() {
 
 /* ---------- Theme (light/dark) ---------- */
 function getCurrentTheme() {
-  // Dark is the primary brand mode — new visitors (no stored pref) get dark.
-  return localStorage.getItem('theme') || 'dark';
+  // Light is the default for new visitors (Jonas's call); dark is opt-in via toggle.
+  return localStorage.getItem('theme') || 'light';
 }
 function applyTheme(theme) {
   if (theme === 'light') document.documentElement.classList.add('light');
@@ -847,6 +876,7 @@ function showShortcutsHelp() {
   </div>`;
   m.addEventListener('click', e => { if (e.target === m) m.remove(); });
   document.body.appendChild(m);
+  makeModalAccessible(m);
 }
 
 async function listenAllWords() {
