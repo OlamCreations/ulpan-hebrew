@@ -34,6 +34,9 @@
    transition: background .15s, color .15s;
  }
  #no-sound-link:hover { background: var(--accent); color: #fff; }
+ .quicksay-section { max-width: 720px; margin: 0 auto 22px; padding: 0 20px; }
+ .quicksay-label { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+ .quicksay-kbd { font-size: 11px; color: var(--text-faint); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; }
  .hero-cta {
  background: var(--accent); color: #000; border: none;
  padding: 14px 24px; border-radius: 8px;
@@ -361,6 +364,12 @@
  </div>
  <button id="header-theme-toggle" class="theme-toggle" title="Toggle light/dark mode" onclick="toggleTheme()"> Light</button>
 </header>
+
+<!-- QUICK-SAY: type English, get Hebrew + transliteration (offline-first) -->
+<div class="quicksay-section">
+  <div class="quicksay-label">🗣 Say it in Hebrew <span class="quicksay-kbd">press /</span></div>
+  <div id="qs-mount"></div>
+</div>
 
 <!-- HERO: continue card (Today's recommendation) -->
 <div class="hero-row" id="daily-goal">
@@ -2421,7 +2430,7 @@
  <a href="160-idf-summary.html" class="lesson-card" data-lesson="idf-summary"><div class="num">160</div><div class="title-fr">IDF Summary</div><div class="title-he">סיכום צה"ל</div><div class="meta">5 roles · 10 values · 3-generation conversation</div><div class="progress-dot"></div></a>
 </div>
 
-<h2 id="cat-communities">Yiddish Layer (161-170)</h2>
+<h2>Yiddish Layer (161-170)</h2>
 <div class="lessons">
  <a href="161-yiddish-layer.html" class="lesson-card" data-lesson="yiddish-layer"><div class="num">161</div><div class="title-fr">Yiddish Loanwords</div><div class="title-he">שכבת יידיש</div><div class="meta">Balagan shlep chutzpah nu café conversation</div><div class="progress-dot"></div></a>
  <a href="162-yiddish-emotion.html" class="lesson-card" data-lesson="yiddish-emotion"><div class="num">162</div><div class="title-fr">Emotional Register</div><div class="title-he">רגש ביידיש</div><div class="meta">Naches nebbech sarcasm endearment phone call</div><div class="progress-dot"></div></a>
@@ -2575,7 +2584,7 @@
  <a href="270-housing-summary.html" class="lesson-card" data-lesson="housing-summary"><div class="num">270</div><div class="title-fr">Block 27 Summary</div><div class="title-he">סיכום נדל"ן</div><div class="meta">10 terms institutions prices pairs</div><div class="progress-dot"></div></a>
 </div>
 
-<h2>Diaspora & Aliyah Process (271-280)</h2>
+<h2 id="cat-communities">Diaspora & Aliyah Process (271-280)</h2>
 <div class="lessons">
  <a href="271-us-jews.html" class="lesson-card" data-lesson="us-jews"><div class="num">271</div><div class="title-fr">US Jews</div><div class="title-he">יהודים אמריקאים</div><div class="meta">6.3M NBN Modi'in Anglo capital · 4K/yr</div><div class="progress-dot"></div></a>
  <a href="272-french-jews.html" class="lesson-card" data-lesson="french-jews"><div class="num">272</div><div class="title-fr">French Jews</div><div class="title-he">יהודים צרפתים</div><div class="meta">440K Sephardi-Mizrahi Netanya · 2015 surge</div><div class="progress-dot"></div></a>
@@ -2956,6 +2965,8 @@
 </div>
 
 <script src="app.js?v=1777900000000"></script>
+<script src="quicksay.js?v=1777900000000"></script>
+<script>QuickSay.mount('qs-mount');</script>
 <script>
  const done = getLessonProgress();
  let firstNotDone = null;
@@ -2980,20 +2991,54 @@
  'cat-prayers':'🕊️','cat-shabbat':'🕯️','cat-tehilim':'📖','cat-roots':'🌳',
  'cat-songs':'♫','cat-cursive':'✍️','cat-morpho':'⚙️','cat-start':'✦',
  'cat-grammar':'אב','cat-life':'🏠','cat-society':'👥','cat-religion':'✡️',
- 'cat-specialty':'🧩','cat-cuisine':'🍽️','cat-idf':'🎖️','cat-communities':'🗣️',
+ 'cat-specialty':'🧩','cat-cuisine':'🍽️','cat-idf':'🎖️','cat-communities':'🌍',
  'cat-mastery':'🏆','cat-arts':'🎬'
+ };
+ // Keyword -> icon fallback for the auto-id'd topic blocks (id-less h2).
+ const ICON_KW = [
+ ['water','💧'],['sanitation','💧'],['irrigation','💧'],['agriculture','🌱'],
+ ['yiddish','🗣️'],['arabic','☪️'],['arab','☪️'],['survival','🧭'],['modern world','🌐'],
+ ['bible','📜'],['talmud','📚'],['halacha','📚'],['politic','🏛️'],['economy','💼'],['business','💼'],
+ ['health','⚕️'],['sport','⚽'],['music','🎵'],['education','🎓'],['real estate','🏘️'],['housing','🏘️'],
+ ['religious zionism','✡️'],['hi-tech','💻'],['startup','💻'],['cinema','🎬'],['theatre','🎭'],
+ ['literature','✒️'],['visual arts','🎨'],['architecture','🏛️'],['dance','💃'],['venue','🎤'],
+ ['ethiopian','🌍'],['french','🇫🇷'],['persian','🌍'],['iranian','🌍'],['iraqi','🌍'],['yemenite','🌍'],
+ ['moroccan','🌍'],['tunisian','🌍'],['ladino','🌍'],['spanish','🌍'],['bukharan','🌍'],['american','🌎'],
+ ['russian','🌍'],['diaspora','🌍'],['mastery','🏆'],['integration','🏆']
+ ];
+ const iconFor = (c) => {
+ if (CAT_IC[c.id]) return CAT_IC[c.id];
+ const t = ((c.head && c.head.textContent) || '').toLowerCase();
+ for (const [kw, ic] of ICON_KW) if (t.indexOf(kw) !== -1) return ic;
+ return '•';
  };
  const containerEl = document.querySelector('.container');
  const lessonDone = done; // from getLessonProgress() above
- // Build category list in DOM order (mega sections + h2[id^=cat-])
+ // Build category list in DOM order. EVERY <h2> (and every mega section) is its
+ // own category boundary — id-less h2 get a slug id so each topic is a separate
+ // collapsible block. Only .lessons divs are collected as members, so trailing
+ // content (dashboard, footer) is never swallowed into the last category.
  const catList = [];
  let curCat = null;
+ const usedIds = new Set();
+ const slugId = (txt) => {
+ let base = 'cat-' + txt.toLowerCase().replace(/\([^)]*\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+ let id = base, n = 2;
+ while (usedIds.has(id)) { id = base + '-' + (n++); }
+ return id;
+ };
  Array.from(containerEl.children).forEach(el => {
  const isMega = el.matches && el.matches('section.mega-cat');
- const isH2 = el.tagName === 'H2' && el.id && el.id.indexOf('cat-') === 0;
- if (isMega) { curCat = { id: el.id, type: 'mega', root: el }; catList.push(curCat); }
- else if (isH2) { curCat = { id: el.id, type: 'h2', head: el, members: [] }; catList.push(curCat); }
- else if (curCat && curCat.type === 'h2') { curCat.members.push(el); }
+ const isH2 = el.tagName === 'H2';
+ if (isMega) { usedIds.add(el.id); curCat = { id: el.id, type: 'mega', root: el }; catList.push(curCat); }
+ else if (isH2) {
+ const id = (el.id && el.id.indexOf('cat-') === 0) ? el.id : slugId(el.textContent);
+ if (!el.id) el.id = id;
+ usedIds.add(id);
+ curCat = { id: id, type: 'h2', head: el, members: [] }; catList.push(curCat);
+ }
+ else if (curCat && curCat.type === 'h2' && el.classList && el.classList.contains('lessons')) { curCat.members.push(el); }
+ else { curCat = null; }
  });
  // Normalize mega-cats: collapse body, decorate header
  catList.filter(c => c.type === 'mega').forEach(c => {
@@ -3003,7 +3048,7 @@
  Array.from(sec.children).forEach(ch => { if (ch !== header) body.appendChild(ch); });
  sec.appendChild(body);
  header.classList.add('cat-head');
- const ic = document.createElement('span'); ic.className = 'cat-ic'; ic.textContent = CAT_IC[c.id] || '•';
+ const ic = document.createElement('span'); ic.className = 'cat-ic'; ic.textContent = iconFor(c);
  header.insertBefore(ic, header.firstChild);
  const chev = document.createElement('span'); chev.className = 'cat-chevron'; chev.textContent = '▾';
  header.appendChild(chev);
@@ -3018,7 +3063,7 @@
  const pct = total ? Math.round(dc / total * 100) : 0;
  const block = document.createElement('section'); block.className = 'cat-block'; block.id = c.id;
  const head = document.createElement('div'); head.className = 'cat-head';
- head.innerHTML = '<span class="cat-ic">' + (CAT_IC[c.id] || '•') + '</span>'
+ head.innerHTML = '<span class="cat-ic">' + iconFor(c) + '</span>'
  + '<h2 class="cat-h2title">' + c.head.textContent.replace(/\s*\(\d+[-–]\d+\)\s*$/, '') + '</h2>'
  + '<div class="mega-cat-bar"><div class="mega-cat-bar-fill" style="width:' + pct + '%"></div></div>'
  + '<span class="cat-count">' + (dc ? dc + '/' : '') + total + '</span>'
