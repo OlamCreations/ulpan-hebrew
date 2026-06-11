@@ -114,6 +114,40 @@
       });
   }
 
+  // --- Romanization: Google's own romanization for Hebrew is unreliable (drops vowels:
+  // "ifo" for איפה, "lech" for לך). We instead vocalize the Hebrew with Dicta Nakdan
+  // (adds niqqud) and transliterate it ourselves (translit.js) → "eifo", "lecha".
+  const NAKDAN_URL = 'https://nakdan-u1-0.loadbalancer.dicta.org.il/api';
+  const isHebrew = s => /[֐-׿]/.test(s || '');
+
+  function vocalize(text, signal) {
+    if (!isHebrew(text)) return Promise.resolve(null);
+    const body = { task: 'nakdan', data: text, genre: 'modern', addmorph: false,
+      keepqq: false, nodageshdefault: false, patachma: false, keepmetagim: true };
+    return fetch(NAKDAN_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body), signal: signal
+    })
+      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(toks => {
+        if (!Array.isArray(toks)) return null;
+        let out = '';
+        for (const t of toks) {
+          if (t && t.sep) out += (t.word || '');
+          else if (t && Array.isArray(t.options) && t.options.length) out += t.options[0];
+          else if (t && t.word) out += t.word;
+        }
+        return out.trim() || null;
+      });
+  }
+
+  function romanize(hebrew, signal) {
+    if (!window.Translit) return Promise.resolve(null);
+    return vocalize(hebrew, signal)
+      .then(voc => (voc ? (window.Translit.transliterate(voc) || null) : null))
+      .catch(() => null);
+  }
+
   function translateOnline(q) {
     const key = q.toLowerCase();
     if (transCache.has(key)) return Promise.resolve(transCache.get(key));
@@ -124,7 +158,12 @@
       .catch(() => null)
       .then(res => res || fetchMyMemory(q, sig).catch(() => null));
     return withTimeout(run, 8000, () => { try { onlineAbort.abort(); } catch (e) {} })
-      .then(res => { if (res) transCache.set(key, res); return res; });
+      .then(res => {
+        if (!res) return null;
+        // Replace Google's romanization with our niqqud-based one (fall back to Google's if it fails).
+        return withTimeout(romanize(res.he, sig), 6000, null)
+          .then(tr => { if (tr) res.tr = tr; transCache.set(key, res); return res; });
+      });
   }
 
   function wirePlay(container) {
