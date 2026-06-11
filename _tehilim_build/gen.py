@@ -123,7 +123,6 @@ def build(psalm, lang):
             .replace('<title>Tehilim 1 — אַשְׁרֵי הָאִישׁ</title>',
                      f'<title>Tehilim {n} — {incipit}</title>'))
     verses = "\n\n\n".join(render_verse(v) for v in psalm["verses"])
-    chant_li = "\n".join(f'    <li>{li}</li>' for li in psalm["chant_li"][lang])
     tuning = TUNING_OPTS.format(opt_half=c["opt_half"], opt_full=c["opt_full"], opt_custom=c["opt_custom"])
     body = f'''<body><div class="container">
 
@@ -170,13 +169,6 @@ def build(psalm, lang):
 {verses}
 </div><!-- /.verses-grid -->
 
-
-<div class="chant-tip">
-  <h3>{c["chant_h3"]}</h3>
-  <ul>
-{chant_li}
-  </ul>
-</div>
 
 <div class="pardes-card">
   <h3>{c["pardes_h3"]}</h3>
