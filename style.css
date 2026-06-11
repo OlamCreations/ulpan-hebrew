@@ -5,7 +5,7 @@
   --border: #262626;
   --text: #e5e5e5;
   --text-dim: #888;
-  --text-faint: #555;
+  --text-faint: #767676;
   --accent: #4A9EDB;
   --accent-dim: #003356;
   --error: #ef4444;
@@ -25,6 +25,8 @@ body {
   padding: 88px 20px 32px;
   font-size: 17px;
 }
+/* Home has no fixed floating-controls bar, so reclaim the reserved top space. */
+body.home { padding-top: 26px; }
 
 .container { max-width: 960px; margin: 0 auto; }
 
@@ -925,7 +927,7 @@ html.light {
   --border: #e5e7eb;
   --text: #1a1a1a;
   --text-dim: #525252;
-  --text-faint: #a3a3a3;
+  --text-faint: #6b7280;
   --accent: #0071B9;
   --accent-dim: #d0e7f4;
   --error: #dc2626;
@@ -1345,6 +1347,14 @@ html.light *:hover {
 .qs-results { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
 .qs-hint { color: var(--text-dim); font-size: 13px; padding: 6px 2px; line-height: 1.5; }
 .qs-hint em { color: var(--accent); font-style: normal; }
+.qs-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.qs-chip {
+  cursor: pointer; font: inherit; font-size: 13px;
+  background: var(--bg-card); color: var(--text-dim);
+  border: 1px solid var(--border); border-radius: 999px; padding: 6px 13px;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.qs-chip:hover { border-color: var(--accent); color: var(--accent); }
 .qs-offline { color: var(--error); }
 .qs-card {
   display: flex; align-items: center; gap: 12px;
@@ -1363,7 +1373,11 @@ html.light *:hover {
 .qs-tag-online { color: var(--accent); border-color: var(--accent-dim); }
 .qs-tag-curated { color: #16a34a; border-color: #16a34a55; }
 .qs-loading { color: var(--text-dim); font-size: 13px; padding: 8px 2px; }
-.qs-loading::after { content: ''; }
+.qs-loading::after {
+  content: '···'; letter-spacing: 2px; margin-left: 2px;
+  animation: qs-dots 1s steps(4, end) infinite;
+}
+@keyframes qs-dots { 0% { opacity: .3; } 50% { opacity: 1; } 100% { opacity: .3; } }
 .qs-sub { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); margin: 6px 2px 2px; }
 .qs-online-btn {
   align-self: flex-start; margin-top: 2px; cursor: pointer;

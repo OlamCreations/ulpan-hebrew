@@ -716,7 +716,8 @@ function openSRSReview() {
 
 /* ---------- Theme (light/dark) ---------- */
 function getCurrentTheme() {
-  return localStorage.getItem('theme') || 'light';
+  // Dark is the primary brand mode — new visitors (no stored pref) get dark.
+  return localStorage.getItem('theme') || 'dark';
 }
 function applyTheme(theme) {
   if (theme === 'light') document.documentElement.classList.add('light');
@@ -792,6 +793,7 @@ function injectFloatingControls() {
 
   document.addEventListener('keydown', e => {
     if (e.target.matches('input, textarea, [contenteditable]')) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return; // don't hijack Ctrl/Cmd+P/S etc.
     if (e.key === 'l' || e.key === 'L') { e.preventDefault(); listenAllWords(); }
     else if (e.key === 'p' || e.key === 'P') { e.preventDefault(); printableView(); }
     else if (e.key === 's' || e.key === 'S') { e.preventDefault(); openSRSReview(); }
@@ -1480,6 +1482,10 @@ function addMiniQuiz(title, questions) {
   try {
     var head = document.head;
     function addOnce(sel, make) { if (!document.querySelector(sel)) head.appendChild(make()); }
+    // Load the signature Hebrew face (Frank Ruhl Libre) — referenced app-wide but
+    // otherwise never fetched, so Hebrew was falling back to generic serif.
+    addOnce('link[data-font="frl"]', function () { var l = document.createElement('link'); l.rel = 'preconnect'; l.href = 'https://fonts.gstatic.com'; l.crossOrigin = 'anonymous'; l.setAttribute('data-font', 'frl'); return l; });
+    addOnce('link[href*="Frank+Ruhl"]', function () { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&display=swap'; return l; });
     addOnce('link[rel="manifest"]', function () { var l = document.createElement('link'); l.rel = 'manifest'; l.href = 'manifest.json'; return l; });
     addOnce('meta[name="theme-color"]', function () { var m = document.createElement('meta'); m.name = 'theme-color'; m.content = '#0a0a0a'; return m; });
     addOnce('link[rel="apple-touch-icon"]', function () { var a = document.createElement('link'); a.rel = 'apple-touch-icon'; a.href = 'icon-192.png'; return a; });

@@ -65,33 +65,66 @@
     const tr = p.tr ? '<div class="qs-tr">' + escapeHtml(p.tr) + '</div>' : '';
     return '' +
       '<div class="qs-card">' +
-        '<button class="qs-play icon-btn" title="Listen" data-he="' + escapeHtml(p.he) + '">▶</button>' +
+        '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.en) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
         '<div class="qs-text">' +
-          '<div class="qs-he" dir="rtl">' + escapeHtml(p.he) + '</div>' +
+          '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(p.he) + '</div>' +
           tr +
           '<div class="qs-en">' + escapeHtml(p.en) + ' ' + tag + '</div>' +
         '</div>' +
       '</div>';
   }
 
-  // --- Online translation via Google's free gtx endpoint (translation + romanization) ---
+  // --- Online translation: Google gtx (translation + romanization), MyMemory fallback ---
   let onlineAbort = null;
-  function translateOnline(q) {
-    if (onlineAbort) { try { onlineAbort.abort(); } catch (e) {} }
-    onlineAbort = new AbortController();
+  const transCache = new Map(); // nq -> result, avoids re-hitting the API on repeat queries
+
+  // Race a promise against a timeout so a hung request can't freeze "Translating…".
+  function withTimeout(promise, ms, onAbort) {
+    return new Promise(resolve => {
+      let done = false;
+      const t = setTimeout(() => { if (!done) { done = true; if (onAbort) onAbort(); resolve(null); } }, ms);
+      promise.then(v => { if (!done) { done = true; clearTimeout(t); resolve(v); } },
+                   () => { if (!done) { done = true; clearTimeout(t); resolve(null); } });
+    });
+  }
+
+  function fetchGoogle(q, signal) {
     const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
-    return fetch(url, { signal: onlineAbort.signal })
+    return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(j => {
         const segs = j && j[0];
         if (!Array.isArray(segs)) return null;
         const he = segs.filter(s => s && s[0]).map(s => s[0]).join('').trim();
-        // romanization segments have a null translation slot and text in [2] or [3]
-        const rm = segs.filter(s => s && !s[0]).map(s => s[2] || s[3]).filter(Boolean).join(' ').trim();
+        // romanization sits in a segment with a null translation slot, in [2] (Hebrew->Latin).
+        const rm = segs.filter(s => s && !s[0]).map(s => s[2]).filter(Boolean).join(' ').trim();
         if (!he) return null;
         return { he: he, tr: rm || null, en: q };
-      })
-      .catch(() => null);
+      });
+  }
+
+  function fetchMyMemory(q, signal) {
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=en|he';
+    return fetch(url, { signal: signal })
+      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(j => {
+        const he = j && j.responseData && j.responseData.translatedText;
+        if (!he || !/[֐-׿]/.test(he)) return null;
+        return { he: he.trim(), tr: null, en: q };
+      });
+  }
+
+  function translateOnline(q) {
+    const key = q.toLowerCase();
+    if (transCache.has(key)) return Promise.resolve(transCache.get(key));
+    if (onlineAbort) { try { onlineAbort.abort(); } catch (e) {} }
+    onlineAbort = new AbortController();
+    const sig = onlineAbort.signal;
+    const run = fetchGoogle(q, sig)
+      .catch(() => null)
+      .then(res => res || fetchMyMemory(q, sig).catch(() => null));
+    return withTimeout(run, 8000, () => { try { onlineAbort.abort(); } catch (e) {} })
+      .then(res => { if (res) transCache.set(key, res); return res; });
   }
 
   function wirePlay(container) {
@@ -105,7 +138,10 @@
   function render(container, q) {
     const nq = q.trim();
     if (!nq) {
-      container.innerHTML = '<div class="qs-hint">Type an English word or phrase — e.g. <em>I would like to pay</em>, <em>where is the bus</em>, <em>thank you</em>.</div>';
+      container.removeAttribute('aria-busy');
+      const examples = ['thank you', 'where is the bathroom', 'how much does it cost', 'I would like to pay'];
+      container.innerHTML = '<div class="qs-hint">Type an English word or phrase, or tap an example:</div>' +
+        '<div class="qs-chips">' + examples.map(x => '<button type="button" class="qs-chip" data-phrase="' + escapeHtml(x) + '">' + escapeHtml(x) + '</button>').join('') + '</div>';
       return;
     }
     const token = ++renderToken;
@@ -124,13 +160,15 @@
     }
 
     // Online-first: show a loading line, fetch, then render online result on top.
+    container.setAttribute('aria-busy', 'true');
     container.innerHTML =
-      '<div class="qs-loading">Translating…</div>' +
+      '<div class="qs-loading">Translating</div>' +
       (offline.length ? '<div class="qs-sub">From the lessons</div>' + offline.map(p => card(p, 'curated')).join('') : '');
     wirePlay(container);
 
     translateOnline(nq).then(res => {
       if (token !== renderToken) return; // a newer keystroke superseded this
+      container.removeAttribute('aria-busy');
       const offlineHe = new Set(offline.map(p => p.he.replace(/[֑-ׇ]/g, '')));
       let html = '';
       if (res) {
@@ -155,14 +193,22 @@
     host._qsMounted = true;
     host.innerHTML =
       '<div class="qs-box">' +
-        '<input type="text" id="qs-input" class="qs-input" placeholder="Say it in Hebrew… (type English)" ' +
+        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="Say it in Hebrew… (type English)" ' +
                'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English to Hebrew">' +
-        '<div id="qs-results" class="qs-results"></div>' +
+        '<div id="qs-results" class="qs-results" role="status" aria-live="polite" aria-atomic="false"></div>' +
       '</div>';
     const input = host.querySelector('#qs-input');
     const results = host.querySelector('#qs-results');
     let t = null;
     input.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => render(results, input.value), 350); });
+    // Tappable example chips (and any future chips) seed the input.
+    results.addEventListener('click', e => {
+      const chip = e.target.closest('.qs-chip');
+      if (!chip) return;
+      input.value = chip.dataset.phrase;
+      input.focus();
+      render(results, input.value);
+    });
     loadPhrases().then(() => { if (input.value) render(results, input.value); });
     render(results, '');
     document.addEventListener('keydown', e => {

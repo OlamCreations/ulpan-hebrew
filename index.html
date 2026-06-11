@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hebrew for Beginners</title>
-<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<script>(function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="style.css?v=1777896495151">
 <style>
  /* === New index UX (path-inspired) === */
@@ -34,7 +37,8 @@
    transition: background .15s, color .15s;
  }
  #no-sound-link:hover { background: var(--accent); color: #fff; }
- .quicksay-section { max-width: 720px; margin: 0 auto 22px; padding: 0 20px; }
+ .quicksay-section { margin: 0 0 22px; padding: 0 20px; }
+ .mini-stat .val-sub { font-size: 12px; font-weight: 500; color: var(--text-dim); }
  .quicksay-label { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
  .quicksay-kbd { font-size: 11px; color: var(--text-faint); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; }
  .hero-cta {
@@ -273,7 +277,7 @@
  display: flex; align-items: center; gap: 12px;
  cursor: pointer; user-select: none; margin: 0 !important;
  }
- .cat-ic { font-size: 19px; line-height: 1; width: 26px; text-align: center; flex: 0 0 auto; }
+ .cat-ic { font-size: 15px; line-height: 1; width: 24px; text-align: center; flex: 0 0 auto; color: var(--accent); opacity: 0.85; }
  .cat-h2title, .mega-cat-title { font-size: 17px; font-weight: 700; color: var(--text); margin: 0; }
  .cat-head .mega-cat-bar { flex: 1; max-width: 150px; }
  .cat-count {
@@ -353,21 +357,21 @@
  }
 </style>
 </head>
-<body>
+<body class="home">
 <div class="container">
 
 <header>
  <div>
  <h1>Hebrew for Beginners</h1>
  <div class="subtitle">Pre-Ulpan Crash Course · 465 Lessons + Tehilim</div>
- <button type="button" id="no-sound-link" onclick="showVoiceBanner(true)" title="No audio? Install a Hebrew voice — per-OS guide">🔊 No sound? Install a Hebrew voice</button>
+ <button type="button" id="no-sound-link" onclick="showVoiceBanner(true)" title="No audio? Install a Hebrew voice — per-OS guide">No sound? Install a Hebrew voice</button>
  </div>
  <button id="header-theme-toggle" class="theme-toggle" title="Toggle light/dark mode" onclick="toggleTheme()"> Light</button>
 </header>
 
 <!-- QUICK-SAY: type English, get Hebrew + transliteration (offline-first) -->
 <div class="quicksay-section">
-  <div class="quicksay-label">🗣 Say it in Hebrew <span class="quicksay-kbd">press /</span></div>
+  <div class="quicksay-label">Say it in Hebrew <span class="quicksay-kbd">press /</span></div>
   <div id="qs-mount"></div>
 </div>
 
@@ -384,28 +388,24 @@
 <!-- MINI STATS -->
 <div class="mini-stats">
  <div class="mini-stat">
- <div class="icon"></div>
  <div class="stack">
  <div class="val" id="d-daystreak">0</div>
  <div class="lbl">Daily streak</div>
  </div>
  </div>
  <div class="mini-stat">
- <div class="icon">📈</div>
  <div class="stack">
- <div class="val"><span id="d-done">0 / 465</span></div>
- <div class="lbl">Lessons<span id="d-pct">0%</span></div>
+ <div class="val"><span id="d-done">0 / 465</span> <span id="d-pct" class="val-sub">0%</span></div>
+ <div class="lbl">Lessons</div>
  </div>
  </div>
  <div class="mini-stat">
- <div class="icon">📚</div>
  <div class="stack">
  <div class="val" id="d-srs-due">0</div>
  <div class="lbl">SRS due</div>
  </div>
  </div>
  <div class="mini-stat">
- <div class="icon"></div>
  <div class="stack">
  <div class="val" id="d-streak">0</div>
  <div class="lbl">Best practice</div>
@@ -422,17 +422,17 @@
 
 <!-- ACTION BAR -->
 <div class="action-bar">
- <button class="btn btn-primary" id="d-srs-btn">📚 SRS Review</button>
- <button class="btn" id="d-quiz-btn">🎲 Mixed Quiz</button>
+ <button class="btn btn-primary" id="d-srs-btn">SRS Review</button>
+ <button class="btn" id="d-quiz-btn">Mixed Quiz</button>
  <button class="btn" id="d-review-btn">Wrong words</button>
- <button class="btn" id="d-export">⬇ Export</button>
- <button class="btn" id="d-import">⬆ Import</button>
+ <button class="btn" id="d-export">↓ Export</button>
+ <button class="btn" id="d-import">↑ Import</button>
  <input type="file" id="d-import-file" accept=".json" style="display:none;">
  <button class="btn" id="d-reset" style="margin-left: auto; opacity: 0.5;">Reset all</button>
 </div>
 
 <!-- SEARCH -->
-<input type="text" id="lesson-search" class="search-bar" placeholder="🔍 Search lessons — try 'prayer', 'wine', 'numbers', 'IDF', 'kabbalah'…">
+<input type="text" id="lesson-search" class="search-bar" aria-label="Search lessons" placeholder="Search lessons — try 'prayer', 'wine', 'numbers', 'IDF', 'kabbalah'…">
 
 <!-- STICKY CATEGORY CHIP NAV -->
 <nav class="cat-nav" aria-label="Category navigation">
@@ -2987,30 +2987,32 @@
  if (firstNotDone) firstNotDone.classList.add('current');
 
  // ---- Category accordion (collapsible browser) ----
+ // Monochrome typographic glyphs only (recolored to the brand accent via .cat-ic) —
+ // no full-color emoji. All chosen to render as text glyphs, not OS emoji.
  const CAT_IC = {
- 'cat-prayers':'🕊️','cat-shabbat':'🕯️','cat-tehilim':'📖','cat-roots':'🌳',
- 'cat-songs':'♫','cat-cursive':'✍️','cat-morpho':'⚙️','cat-start':'✦',
- 'cat-grammar':'אב','cat-life':'🏠','cat-society':'👥','cat-religion':'✡️',
- 'cat-specialty':'🧩','cat-cuisine':'🍽️','cat-idf':'🎖️','cat-communities':'🌍',
- 'cat-mastery':'🏆','cat-arts':'🎬'
+ 'cat-prayers':'✡','cat-shabbat':'✦','cat-tehilim':'❖','cat-roots':'✧',
+ 'cat-songs':'♫','cat-cursive':'✎','cat-morpho':'◈','cat-start':'✦',
+ 'cat-grammar':'אב','cat-life':'◆','cat-society':'❡','cat-religion':'✡',
+ 'cat-specialty':'◈','cat-cuisine':'◆','cat-idf':'✶','cat-communities':'◇',
+ 'cat-mastery':'★','cat-arts':'◆'
  };
- // Keyword -> icon fallback for the auto-id'd topic blocks (id-less h2).
+ // Keyword -> monochrome glyph for the auto-id'd topic blocks (id-less h2).
  const ICON_KW = [
- ['water','💧'],['sanitation','💧'],['irrigation','💧'],['agriculture','🌱'],
- ['yiddish','🗣️'],['arabic','☪️'],['arab','☪️'],['survival','🧭'],['modern world','🌐'],
- ['bible','📜'],['talmud','📚'],['halacha','📚'],['politic','🏛️'],['economy','💼'],['business','💼'],
- ['health','⚕️'],['sport','⚽'],['music','🎵'],['education','🎓'],['real estate','🏘️'],['housing','🏘️'],
- ['religious zionism','✡️'],['hi-tech','💻'],['startup','💻'],['cinema','🎬'],['theatre','🎭'],
- ['literature','✒️'],['visual arts','🎨'],['architecture','🏛️'],['dance','💃'],['venue','🎤'],
- ['ethiopian','🌍'],['french','🇫🇷'],['persian','🌍'],['iranian','🌍'],['iraqi','🌍'],['yemenite','🌍'],
- ['moroccan','🌍'],['tunisian','🌍'],['ladino','🌍'],['spanish','🌍'],['bukharan','🌍'],['american','🌎'],
- ['russian','🌍'],['diaspora','🌍'],['mastery','🏆'],['integration','🏆']
+ ['water','≈'],['sanitation','≈'],['irrigation','≈'],['agriculture','❖'],
+ ['yiddish','✦'],['arabic','✦'],['arab','✦'],['survival','✦'],['modern world','◆'],
+ ['bible','❖'],['talmud','❖'],['halacha','❖'],['politic','◆'],['economy','◆'],['business','◆'],
+ ['health','✚'],['sport','◆'],['music','♫'],['education','✦'],['real estate','⌂'],['housing','⌂'],
+ ['religious zionism','✡'],['hi-tech','◆'],['startup','◆'],['cinema','◆'],['theatre','◆'],
+ ['literature','✎'],['visual arts','◆'],['architecture','◆'],['dance','♫'],['venue','♫'],
+ ['ethiopian','◇'],['french','◇'],['persian','◇'],['iranian','◇'],['iraqi','◇'],['yemenite','◇'],
+ ['moroccan','◇'],['tunisian','◇'],['ladino','◇'],['spanish','◇'],['bukharan','◇'],['american','◇'],
+ ['russian','◇'],['diaspora','◇'],['mastery','★'],['integration','★']
  ];
  const iconFor = (c) => {
  if (CAT_IC[c.id]) return CAT_IC[c.id];
  const t = ((c.head && c.head.textContent) || '').toLowerCase();
  for (const [kw, ic] of ICON_KW) if (t.indexOf(kw) !== -1) return ic;
- return '•';
+ return '◆';
  };
  const containerEl = document.querySelector('.container');
  const lessonDone = done; // from getLessonProgress() above
@@ -3065,27 +3067,46 @@
  const head = document.createElement('div'); head.className = 'cat-head';
  head.innerHTML = '<span class="cat-ic">' + iconFor(c) + '</span>'
  + '<h2 class="cat-h2title">' + c.head.textContent.replace(/\s*\(\d+[-–]\d+\)\s*$/, '') + '</h2>'
- + '<div class="mega-cat-bar"><div class="mega-cat-bar-fill" style="width:' + pct + '%"></div></div>'
+ + (pct > 0 ? '<div class="mega-cat-bar"><div class="mega-cat-bar-fill" style="width:' + pct + '%"></div></div>' : '')
  + '<span class="cat-count">' + (dc ? dc + '/' : '') + total + '</span>'
  + '<span class="cat-chevron">▾</span>';
  c.head.replaceWith(block);
  block.appendChild(head); block.appendChild(body);
  });
- // Accordion behaviour (single-open) + chip quick-jump
+ // Accordion behaviour (single-open) + chip quick-jump. Headers are keyboard-
+ // operable (role=button, tabindex, Enter/Space) with aria-expanded for screen readers.
  const blocks = Array.from(document.querySelectorAll('.cat-block'));
- const collapseAll = () => blocks.forEach(b => b.classList.add('collapsed'));
+ blocks.forEach((b, i) => {
+ const head = b.querySelector('.cat-head');
+ const body = b.querySelector('.cat-body');
+ if (body && !body.id) body.id = 'catbody-' + (b.id || ('n' + i));
+ if (head) {
+ head.setAttribute('role', 'button');
+ head.setAttribute('tabindex', '0');
+ head.setAttribute('aria-expanded', 'false');
+ if (body) head.setAttribute('aria-controls', body.id);
+ }
+ });
+ const setExpanded = (block, v) => { const h = block.querySelector('.cat-head'); if (h) h.setAttribute('aria-expanded', v ? 'true' : 'false'); };
+ const collapseAll = () => blocks.forEach(b => { b.classList.add('collapsed'); setExpanded(b, false); });
  const setActiveChip = (id) => document.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('active', c.getAttribute('href') === '#' + id));
  const openBlock = (block, scroll) => {
- collapseAll(); block.classList.remove('collapsed'); setActiveChip(block.id);
+ collapseAll(); block.classList.remove('collapsed'); setExpanded(block, true); setActiveChip(block.id);
  if (scroll) { const y = block.getBoundingClientRect().top + window.scrollY - 76; window.scrollTo({ top: y, behavior: 'smooth' }); }
  };
  collapseAll();
- document.querySelectorAll('.cat-head').forEach(h => h.addEventListener('click', e => {
- if (e.target.closest('a')) return;
+ // Open the first category with an incomplete lesson so the page never opens fully blank.
+ const firstIncomplete = blocks.find(b => [...b.querySelectorAll('.lesson-card')].some(card => !lessonDone.includes(card.dataset.lesson)));
+ if (firstIncomplete) { firstIncomplete.classList.remove('collapsed'); setExpanded(firstIncomplete, true); setActiveChip(firstIncomplete.id); }
+ const toggleHead = (h) => {
  const block = h.closest('.cat-block');
  if (block.classList.contains('collapsed')) openBlock(block, true);
- else { block.classList.add('collapsed'); setActiveChip(''); }
- }));
+ else { block.classList.add('collapsed'); setExpanded(block, false); setActiveChip(''); }
+ };
+ document.querySelectorAll('.cat-head').forEach(h => {
+ h.addEventListener('click', e => { if (e.target.closest('a')) return; toggleHead(h); });
+ h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleHead(h); } });
+ });
  document.querySelectorAll('.cat-chip').forEach(chip => chip.addEventListener('click', e => {
  e.preventDefault();
  const block = document.getElementById(chip.getAttribute('href').slice(1));
