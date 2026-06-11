@@ -8,7 +8,7 @@ Blocks 11+ (lessons 101+): cultural & specialty depth.
 
 ## BLOCK 1 — Foundations (01-10) — DONE
 
-01. The Alphabet (Aleph-Bet)
+01. The Aleph Beth
 02. Vowels (Niqqud)
 03. First Words (40 by theme)
 04. Greetings & Phrases

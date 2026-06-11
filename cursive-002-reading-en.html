@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cursive 02 — Reading Handwriting</title>
+<title>Cursive 02: Reading Handwriting</title>
 <script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="style.css?v=1777896495151">
 </head>
 <body>
@@ -29,7 +29,7 @@
 </p>
 
 <h2>The confusion clusters</h2>
-<p class="intro" style="margin-bottom:8px">Each box is a group of letters that look alike in cursive. Read the "tell them apart" cue — it is the single feature that separates them. Tap any letter to hear it.</p>
+<p class="intro" style="margin-bottom:8px">Each box is a group of letters that look alike in cursive. Read the "tell them apart" cue, it is the single feature that separates them. Tap any letter to hear it.</p>
 <div id="clusters"></div>
 
 <hr class="section-divider">
@@ -56,7 +56,7 @@
 <hr class="section-divider">
 
 <h2>Read the sentences</h2>
-<p class="intro" style="margin-bottom:8px">Now full sentences. Same drill — read the handwriting before you reveal.</p>
+<p class="intro" style="margin-bottom:8px">Now full sentences. Same drill, read the handwriting before you reveal.</p>
 <div class="cur-read" id="sentence-drill"></div>
 
 <footer>
@@ -67,10 +67,10 @@
 
 <script src="app.js?v=1777896495151"></script>
 <script>
-// handwriting carries no niqqud — strip vowel points/cantillation for cursive display
+// handwriting carries no niqqud, strip vowel points/cantillation for cursive display
 const bare = s => s.replace(/[֑-ׇ]/g, '');
 
-// confusion clusters — letters that look alike in cursive + the distinguishing cue
+// confusion clusters, letters that look alike in cursive + the distinguishing cue
 const CLUSTERS = [
   { title: 'Vertical strokes', tell: 'Length and tail decide. Vav sits on the line; zayin adds a head; final nun drops far below.',
     letters: [ {he:'ו',name:'Vav',t:'v/o/u'}, {he:'ז',name:'Zayin',t:'z'}, {he:'ן',name:'Nun sofit',t:'n (final)'} ] },
@@ -82,7 +82,7 @@ const CLUSTERS = [
     letters: [ {he:'ס',name:'Samech',t:'s'}, {he:'ם',name:'Mem sofit',t:'m (final)'}, {he:'ט',name:'Tet',t:'t'} ] },
   { title: 'Arches', tell: 'He has a detached floating left leg. Chet is one solid arch. Tav adds a foot kicking left.',
     letters: [ {he:'ה',name:'He',t:'h'}, {he:'ח',name:'Chet',t:'ch'}, {he:'ת',name:'Tav',t:'t'} ] },
-  { title: 'Tails below the line', tell: 'These all dive under the baseline — a strong signal they are kuf or a final letter.',
+  { title: 'Tails below the line', tell: 'These all dive under the baseline, a strong signal they are kuf or a final letter.',
     letters: [ {he:'ק',name:'Kuf',t:'k'}, {he:'ך',name:'Khaf sofit',t:'kh'}, {he:'ף',name:'Pe sofit',t:'f'}, {he:'ץ',name:'Tzadi sofit',t:'tz'} ] }
 ];
 
@@ -96,7 +96,7 @@ CLUSTERS.forEach(c => {
        <span class="ktav" style="font-size:52px;line-height:1">${l.he}</span>
        <span style="font-size:12px;color:var(--text-dim)">${l.name} · ${l.t}</span>
      </span>`).join('');
-  box.innerHTML = `<strong>${c.title}</strong><div style="display:flex;flex-wrap:wrap;align-items:flex-end;margin:10px 0">${cells}</div><div style="font-size:13px;color:var(--text-dim)">Tell them apart — ${c.tell}</div>`;
+  box.innerHTML = `<strong>${c.title}</strong><div style="display:flex;flex-wrap:wrap;align-items:flex-end;margin:10px 0">${cells}</div><div style="font-size:13px;color:var(--text-dim)">Tell them apart, ${c.tell}</div>`;
   clustersEl.appendChild(box);
   box.querySelectorAll('.cl-letter').forEach(s => s.addEventListener('click', () => speak(s.dataset.he, 0.6)));
 });
@@ -146,7 +146,7 @@ function wqAnswer(o, b) {
   if (o.fr === wqCurrent.fr) {
     wqScore.correct++;
     b.classList.add('correct');
-    document.getElementById('wq-feedback').textContent = `Correct — ${wqCurrent.he} (${wqCurrent.t}) = ${wqCurrent.fr}`;
+    document.getElementById('wq-feedback').textContent = `Correct, ${wqCurrent.he} (${wqCurrent.t}) = ${wqCurrent.fr}`;
   } else {
     b.classList.add('wrong');
     document.querySelectorAll('#wq-options .quiz-option').forEach(x => { if (x.textContent === wqCurrent.fr) x.classList.add('correct'); });
@@ -194,10 +194,10 @@ const SENTENCES = [
 ];
 buildDrill('sentence-drill', SENTENCES);
 
-addMiniQuiz('Reading cursive — check', [
+addMiniQuiz('Reading cursive, check', [
   { q: 'In cursive, the difference between Dalet ד and Resh ר is…', options: ['the size', 'Dalet has a top hook/corner, Resh is smooth', 'Resh has a tail below', 'they are identical'], answer: 1 },
   { q: 'A vertical stroke that drops far below the baseline is most likely…', options: ['a vav', 'a yod', 'a final nun ן', 'a dalet'], answer: 2 },
-  { q: 'Bet ב vs Kaf כ — the giveaway is…', options: ['Bet has a flat base, Kaf is open', 'Kaf has niqqud', 'Bet is taller', 'no difference'], answer: 0 },
+  { q: 'Bet ב vs Kaf כ, the giveaway is…', options: ['Bet has a flat base, Kaf is open', 'Kaf has niqqud', 'Bet is taller', 'no difference'], answer: 0 },
   { q: 'Reading speed comes from…', options: ['memorizing each letter slowly forever', 'recognizing whole word shapes, not single letters', 'reading right to left only', 'using niqqud'], answer: 1, explain: 'Like in any script, fluent readers see word shapes.' },
   { q: 'Handwritten Hebrew normally has…', options: ['full niqqud', 'no niqqud (you infer vowels from context)', 'niqqud only on verbs', 'English subtitles'], answer: 1 }
 ]);

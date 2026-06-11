@@ -43,7 +43,7 @@ function hasHebrewVoice() {
   return pickHebrewVoice() !== null;
 }
 
-// Try Web Speech API first regardless of getVoices() — Chrome can speak via
+// Try Web Speech API first regardless of getVoices(), Chrome can speak via
 // the OS Hebrew engine (Microsoft Asaf, Carmit) even when the voice isn't yet
 // listed in getVoices(). We detect silent failure via a 600ms watchdog and
 // fall back to cloud TTS only when the engine truly didn't speak.
@@ -90,7 +90,7 @@ function speak(text, rate = 0.85) {
 
   return tryWebSpeech(text, rate).catch(() => {
     // If web speech actually started speaking before erroring, DO NOT fall back
-    // to cloud TTS — that's the cause of the doubled (male+female) playback.
+    // to cloud TTS, that's the cause of the doubled (male+female) playback.
     if (webSpeechStartedRecently) return Promise.resolve();
 
     const voices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
@@ -98,7 +98,7 @@ function speak(text, rate = 0.85) {
     if (!hasHe) {
       if (!cloudWarned) {
         cloudWarned = true;
-        flashHint('No Hebrew voice loaded in Chrome. Fully quit Chrome (kill all chrome.exe in Task Manager) and reopen — Microsoft Asaf will then be detected.');
+        flashHint('No Hebrew voice loaded in Chrome. Fully quit Chrome (kill all chrome.exe in Task Manager) and reopen, Microsoft Asaf will then be detected.');
       }
       return Promise.resolve();
     }
@@ -139,7 +139,7 @@ document.addEventListener('click', (e) => {
   const btn = e.target.closest('.word-row button.icon-btn, .tb-row button.icon-btn');
   if (!btn) return;
   if (btn.classList.contains('srs-btn')) return;
-  // Don't fire twice if the lesson already wired its own handler — but since
+  // Don't fire twice if the lesson already wired its own handler, but since
   // most lesson handlers stopPropagation, we'd already be skipped by then.
   e.preventDefault();
   e.stopPropagation();
@@ -201,10 +201,10 @@ function chunkText(text, max) {
   if (cur) out.push(cur);
   return out;
 }
-// StreamElements TTS — free, supports Carmit (Hebrew, he-IL). Reuses a single
+// StreamElements TTS, free, supports Carmit (Hebrew, he-IL). Reuses a single
 // Audio element across calls; a fresh `new Audio()` per click breaks the
 // user-gesture context on Safari/iOS and triggers autoplay-policy rejection.
-// No `crossOrigin` — plain <audio> playback doesn't need CORS, and setting
+// No `crossOrigin`, plain <audio> playback doesn't need CORS, and setting
 // it forces a preflight that the StreamElements CDN rejects.
 function getCloudAudio() {
   if (!cloudAudio) {
@@ -215,7 +215,7 @@ function getCloudAudio() {
 }
 
 function ttsURL(text) {
-  // Google Translate TTS — public, supports Hebrew (tl=iw), no auth.
+  // Google Translate TTS, public, supports Hebrew (tl=iw), no auth.
   // No CORS headers but plain <audio> playback doesn't need CORS.
   return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=iw&client=tw-ob`;
 }
@@ -236,7 +236,7 @@ function loadAndPlay(audio, url, label) {
       if (p && p.catch) {
         p.catch(err => {
           console.warn('[ulpan-hebrew] play() rejected', label, err && err.name, err && err.message);
-          flashHint('Browser blocked audio. Tap ▶ once and then again — gesture context now armed.');
+          flashHint('Browser blocked audio. Tap ▶ once and then again, gesture context now armed.');
           resolve();
         });
       }
@@ -248,7 +248,7 @@ function loadAndPlay(audio, url, label) {
 }
 
 // Plays cloud TTS. The first chunk MUST execute synchronously inside the
-// user-gesture call stack — wrapping it in chunks.reduce(...).then() defers
+// user-gesture call stack, wrapping it in chunks.reduce(...).then() defers
 // the first play() to a microtask and modern browsers reject it as autoplay.
 function playCloudChunks(chunks) {
   primeAudioContext();
@@ -275,7 +275,7 @@ function forvoLink(hebrewText) {
 function detectOS() {
   const ua = navigator.userAgent;
   const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
-  // iPadOS 13+ reports as "Mac" but has touch — disambiguate before desktop Mac.
+  // iPadOS 13+ reports as "Mac" but has touch, disambiguate before desktop Mac.
   const iPadOS = /Mac/i.test(platform) && navigator.maxTouchPoints > 1;
   if (/iPhone|iPad|iPod/.test(ua) || iPadOS) return 'ios';
   if (/Android/.test(ua)) return 'android';
@@ -305,11 +305,11 @@ function showVoiceBanner(force) {
       </div>
       <div class="voice-banner-sub">
         Without a system voice, the page uses a slow online fallback that some browsers block.
-        Install once — the page detects it automatically on next refresh.
+        Install once, the page detects it automatically on next refresh.
       </div>
 
       <details class="voice-banner-os"${winOpen}>
-        <summary><span class="os-icon">🪟</span> Windows 10 / 11 — Microsoft Asaf voice</summary>
+        <summary><span class="os-icon">🪟</span> Windows 10 / 11, Microsoft Asaf voice</summary>
         <ol class="voice-banner-steps">
           <li>Open <strong>Settings</strong> (Win + I) → <strong>Time &amp; language</strong> → <strong>Language &amp; region</strong>.</li>
           <li>Click <strong>Add a language</strong>, type <em>Hebrew</em>, select <strong>עברית (Hebrew)</strong>, click <strong>Next</strong>.</li>
@@ -319,14 +319,14 @@ function showVoiceBanner(force) {
         </ol>
         <div class="voice-banner-verify">
           Verify in PowerShell:
-          <pre>Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).GetInstalledVoices() | % { $_.VoiceInfo.Name + ' — ' + $_.VoiceInfo.Culture }</pre>
-          You should see <code>Microsoft Asaf — he-IL</code>.
+          <pre>Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).GetInstalledVoices() | % { $_.VoiceInfo.Name + ', ' + $_.VoiceInfo.Culture }</pre>
+          You should see <code>Microsoft Asaf, he-IL</code>.
         </div>
         <a class="voice-banner-link" href="https://support.microsoft.com/en-us/windows/download-languages-and-voices-for-narrator-tts-and-speech-recognition-d2503ad3-ad42-4d3b-b3d2-0ae599cc939e" target="_blank" rel="noopener">Microsoft documentation →</a>
       </details>
 
       <details class="voice-banner-os"${macOpen}>
-        <summary><span class="os-icon"></span> macOS — Carmit voice</summary>
+        <summary><span class="os-icon"></span> macOS, Carmit voice</summary>
         <ol class="voice-banner-steps">
           <li>Open <strong>System Settings</strong> → <strong>Accessibility</strong> → <strong>Spoken Content</strong>.</li>
           <li>Click the <strong>System voice</strong> dropdown → <strong>Manage Voices…</strong></li>
@@ -342,7 +342,7 @@ function showVoiceBanner(force) {
       </details>
 
       <details class="voice-banner-os"${iosOpen}>
-        <summary><span class="os-icon"></span> iPhone / iPad — Carmit voice</summary>
+        <summary><span class="os-icon"></span> iPhone / iPad, Carmit voice</summary>
         <ol class="voice-banner-steps">
           <li>Open <strong>Settings</strong> → <strong>Accessibility</strong> → <strong>Spoken Content</strong>.</li>
           <li>Tap <strong>Voices</strong> → <strong>Hebrew</strong> → <strong>Carmit</strong>, then tap the cloud icon to download (~30 MB).</li>
@@ -350,13 +350,13 @@ function showVoiceBanner(force) {
           <li>Fully close your browser (swipe it away in the app switcher) and reopen this page.</li>
         </ol>
         <div class="voice-banner-verify">
-          Tip: on iOS, audio only plays after you tap a <strong>▶</strong> button once — Safari blocks autoplay until you interact.
+          Tip: on iOS, audio only plays after you tap a <strong>▶</strong> button once, Safari blocks autoplay until you interact.
         </div>
         <a class="voice-banner-link" href="https://support.apple.com/en-us/HT211135" target="_blank" rel="noopener">Apple documentation →</a>
       </details>
 
       <details class="voice-banner-os"${androidOpen}>
-        <summary><span class="os-icon">🤖</span> Android — Google Hebrew voice</summary>
+        <summary><span class="os-icon">🤖</span> Android, Google Hebrew voice</summary>
         <ol class="voice-banner-steps">
           <li>Open <strong>Settings</strong> → <strong>Accessibility</strong> → <strong>Text-to-speech output</strong> (or search <em>text-to-speech</em>).</li>
           <li>Make sure the engine is <strong>Speech Services by Google</strong>, then tap its <strong>⚙ gear</strong> → <strong>Install voice data</strong>.</li>
@@ -370,7 +370,7 @@ function showVoiceBanner(force) {
       </details>
 
       <div class="voice-banner-foot">
-        Skip install? The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings) — works on every browser without setup.
+        Skip install? The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings), works on every browser without setup.
       </div>
     </div>
   `;
@@ -387,7 +387,7 @@ function setupAudioButtons() {
   if (!hasVoice && !localStorage.getItem('voice-banner-dismissed')) {
     showVoiceBanner();
   }
-  // Cloud TTS works without local voice — buttons stay functional.
+  // Cloud TTS works without local voice, buttons stay functional.
   // Add a small Forvo extra-link next to each row's button as backup for tricky words.
   if (!hasVoice) {
     document.querySelectorAll('.word-row').forEach(row => {
@@ -426,7 +426,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* ---------- Index nav tooltips (matrix of lesson numbers) ---------- */
 function enhanceIndexNavTooltips() {
-  // Run only on index — detected by presence of multiple `.lesson-card` and a top nav matrix
+  // Run only on index, detected by presence of multiple `.lesson-card` and a top nav matrix
   const cards = document.querySelectorAll('a.lesson-card[href$=".html"]');
   if (cards.length < 5) return;
   const map = {};
@@ -734,7 +734,7 @@ function openSRSReview() {
       b.addEventListener('click', () => {
         const q = parseInt(b.dataset.q, 10);
         srUpdate(current.key, q);
-        if (q === 1) queue.push(current); // again — re-queue this session
+        if (q === 1) queue.push(current); // again, re-queue this session
         renderNext();
         refreshSRSCount();
       });
@@ -806,7 +806,7 @@ function injectFloatingControls() {
     btn.textContent = (next === 'female' ? '♀ Female' : next === 'male' ? '♂ Male' : '♂ Auto');
     btn.dataset.pref = next;
     flashHint('Voice: ' + (next === 'auto' ? 'auto-detect' : next));
-    // Audible test — use a Hebrew word from the current page if available,
+    // Audible test, use a Hebrew word from the current page if available,
     // otherwise a universal greeting so the user immediately hears the new voice.
     const heEl = document.querySelector('.word-row .he, .tb-he, .verses-grid .he');
     const testWord = (heEl && heEl.textContent.trim()) || 'שָׁלוֹם';
@@ -867,7 +867,7 @@ function showShortcutsHelp() {
       <tr><td style="padding:6px 0;color:var(--text-dim);">P</td><td>Printable view</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">S</td><td>Add lesson words to SRS</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">N</td><td>Toggle niqqud (vowel marks)</td></tr>
-      <tr><td style="padding:6px 0;color:var(--text-dim);">1–7</td><td>Switch exercise mode (incl. dictation)</td></tr>
+      <tr><td style="padding:6px 0;color:var(--text-dim);">1-7</td><td>Switch exercise mode (incl. dictation)</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">Space</td><td>Flip flashcard</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">→ ←</td><td>Next/previous flashcard</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">?</td><td>This help</td></tr>
@@ -923,7 +923,7 @@ function printableView() {
   const items = collectLessonItems();
   const title = document.querySelector('h1')?.textContent || 'Hebrew Lesson';
   const w = window.open('', '_blank');
-  w.document.write(`<!doctype html><html><head><title>${title} — Print</title>
+  w.document.write(`<!doctype html><html><head><title>${title}, Print</title>
     <style>body{font-family:Georgia,serif;padding:24px;line-height:1.6;color:#000;background:#fff;}
       h1{border-bottom:2px solid #000;padding-bottom:8px;}
       table{width:100%;border-collapse:collapse;margin-top:16px;}
@@ -1130,8 +1130,8 @@ function renderDictation(stage, items, ok, ko) {
       const targets = [correct.translit, correct.fr].map(t => t.toLowerCase().replace(/['\-_\s\.\?\!\(\)\,\;]/g, '').split(/[\(\)\,\;\?]/)[0]);
       const right = targets.some(t => levenshtein(guess, t) <= Math.max(1, Math.floor(t.length * 0.2)));
       document.getElementById('qd-fb').innerHTML = right
-        ? `✓ Correct — <span dir="rtl" style="font-family:'Frank Ruhl Libre',serif;">${correct.he}</span> · ${correct.translit} · ${correct.fr}`
-        : `✗ — <span dir="rtl" style="font-family:'Frank Ruhl Libre',serif;">${correct.he}</span> · ${correct.translit} · ${correct.fr}`;
+        ? `✓ Correct, <span dir="rtl" style="font-family:'Frank Ruhl Libre',serif;">${correct.he}</span> · ${correct.translit} · ${correct.fr}`
+        : `✗, <span dir="rtl" style="font-family:'Frank Ruhl Libre',serif;">${correct.he}</span> · ${correct.translit} · ${correct.fr}`;
       input.disabled = true;
       if (right) ok(); else ko(correct);
       setTimeout(next, 2200);
@@ -1205,7 +1205,7 @@ function renderMultiple(stage, items, ok, ko) {
       const right = b.dataset.correct === 'true';
       b.classList.add(right ? 'correct' : 'wrong');
       if (!right) stage.querySelector('.ex-option[data-correct="true"]').classList.add('correct');
-      document.getElementById('qm-fb').textContent = right ? '✓ Correct' : `✗ — ${correct.fr}`;
+      document.getElementById('qm-fb').textContent = right ? '✓ Correct' : `✗, ${correct.fr}`;
       if (right) ok(); else ko(correct);
       setTimeout(next, 1200);
     }));
@@ -1227,7 +1227,7 @@ function renderReverse(stage, items, ok, ko) {
       const right = b.dataset.correct === 'true';
       b.classList.add(right ? 'correct' : 'wrong');
       if (!right) stage.querySelector('.ex-option[data-correct="true"]').classList.add('correct');
-      document.getElementById('qm-fb').textContent = right ? `✓ — ${correct.translit}` : `✗ — ${correct.he} (${correct.translit})`;
+      document.getElementById('qm-fb').textContent = right ? `✓, ${correct.translit}` : `✗, ${correct.he} (${correct.translit})`;
       speak(correct.he, 0.85);
       if (right) ok(); else ko(correct);
       setTimeout(next, 1500);
@@ -1252,7 +1252,7 @@ function renderAudio(stage, items, ok, ko) {
       const right = b.dataset.correct === 'true';
       b.classList.add(right ? 'correct' : 'wrong');
       if (!right) stage.querySelector('.ex-option[data-correct="true"]').classList.add('correct');
-      document.getElementById('qa-fb').textContent = right ? `✓ — ${correct.he}` : `✗ — ${correct.he} (${correct.fr})`;
+      document.getElementById('qa-fb').textContent = right ? `✓, ${correct.he}` : `✗, ${correct.he} (${correct.fr})`;
       if (right) ok(); else ko(correct);
       setTimeout(next, 1500);
     }));
@@ -1281,7 +1281,7 @@ function renderTyping(stage, items, ok, ko) {
       const targetCore = target.split(/[\(\)\,\;\?]/)[0].trim();
       const distance = levenshtein(guess, targetCore);
       const right = distance <= Math.max(1, Math.floor(targetCore.length * 0.2));
-      document.getElementById('qt-fb').innerHTML = right ? `✓ Correct — ${correct.translit}` : `✗ — ${correct.translit}`;
+      document.getElementById('qt-fb').innerHTML = right ? `✓ Correct, ${correct.translit}` : `✗, ${correct.translit}`;
       input.disabled = true;
       if (right) ok(); else ko(correct);
       setTimeout(next, 1700);
@@ -1352,7 +1352,7 @@ function setupNiqqudToggle() {
 
   const toggle = document.createElement('button');
   toggle.className = 'niqqud-toggle';
-  toggle.title = 'Toggle vowel marks (niqqud) — real Israeli Hebrew uses none';
+  toggle.title = 'Toggle vowel marks (niqqud), real Israeli Hebrew uses none';
   toggle.setAttribute('aria-pressed', 'true');
   toggle.innerHTML = '<span class="dot"></span> Niqqud ON';
 
@@ -1498,7 +1498,7 @@ function addMiniQuiz(title, questions) {
           const c = block.querySelector('button[data-correct="true"]');
           if (c) { c.style.borderColor = 'var(--accent)'; c.style.color = 'var(--accent)'; }
         }
-        block.querySelector('.quiz-fb').textContent = right ? '✓ Correct' + (q.explain ? ' — ' + q.explain : '') : '✗ ' + (q.explain || '');
+        block.querySelector('.quiz-fb').textContent = right ? '✓ Correct' + (q.explain ? ', ' + q.explain : '') : '✗ ' + (q.explain || '');
       });
     });
     const heEl = block.querySelector('[data-he]');
@@ -1512,7 +1512,7 @@ function addMiniQuiz(title, questions) {
   try {
     var head = document.head;
     function addOnce(sel, make) { if (!document.querySelector(sel)) head.appendChild(make()); }
-    // Load the signature Hebrew face (Frank Ruhl Libre) — referenced app-wide but
+    // Load the signature Hebrew face (Frank Ruhl Libre), referenced app-wide but
     // otherwise never fetched, so Hebrew was falling back to generic serif.
     addOnce('link[data-font="frl"]', function () { var l = document.createElement('link'); l.rel = 'preconnect'; l.href = 'https://fonts.gstatic.com'; l.crossOrigin = 'anonymous'; l.setAttribute('data-font', 'frl'); return l; });
     addOnce('link[href*="Frank+Ruhl"]', function () { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&display=swap'; return l; });
