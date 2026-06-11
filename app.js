@@ -275,17 +275,25 @@ function forvoLink(hebrewText) {
 function detectOS() {
   const ua = navigator.userAgent;
   const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
-  if (/Mac|iPhone|iPad|iPod/.test(ua) || /Mac/i.test(platform)) return 'mac';
+  // iPadOS 13+ reports as "Mac" but has touch — disambiguate before desktop Mac.
+  const iPadOS = /Mac/i.test(platform) && navigator.maxTouchPoints > 1;
+  if (/iPhone|iPad|iPod/.test(ua) || iPadOS) return 'ios';
+  if (/Android/.test(ua)) return 'android';
+  if (/Mac/i.test(ua) || /Mac/i.test(platform)) return 'mac';
   if (/Windows|Win32|Win64/.test(ua) || /Win/i.test(platform)) return 'windows';
   if (/Linux/.test(ua)) return 'linux';
   return 'other';
 }
 
-function showVoiceBanner() {
-  if (document.getElementById('voice-banner')) return;
+function showVoiceBanner(force) {
+  if (force) localStorage.removeItem('voice-banner-dismissed');
+  const existing = document.getElementById('voice-banner');
+  if (existing) { existing.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
   const os = detectOS();
   const winOpen = os === 'windows' ? ' open' : '';
   const macOpen = os === 'mac' ? ' open' : '';
+  const iosOpen = os === 'ios' ? ' open' : '';
+  const androidOpen = os === 'android' ? ' open' : '';
   const banner = document.createElement('div');
   banner.id = 'voice-banner';
   banner.className = 'voice-banner';
@@ -331,6 +339,34 @@ function showVoiceBanner() {
           You should see <code>Carmit  he_IL</code>.
         </div>
         <a class="voice-banner-link" href="https://support.apple.com/guide/mac-help/change-the-voice-your-mac-uses-to-speak-text-mchlp2290/mac" target="_blank" rel="noopener">Apple documentation →</a>
+      </details>
+
+      <details class="voice-banner-os"${iosOpen}>
+        <summary><span class="os-icon"></span> iPhone / iPad — Carmit voice</summary>
+        <ol class="voice-banner-steps">
+          <li>Open <strong>Settings</strong> → <strong>Accessibility</strong> → <strong>Spoken Content</strong>.</li>
+          <li>Tap <strong>Voices</strong> → <strong>Hebrew</strong> → <strong>Carmit</strong>, then tap the cloud icon to download (~30 MB).</li>
+          <li>Wait for the download to finish (Wi-Fi recommended).</li>
+          <li>Fully close your browser (swipe it away in the app switcher) and reopen this page.</li>
+        </ol>
+        <div class="voice-banner-verify">
+          Tip: on iOS, audio only plays after you tap a <strong>▶</strong> button once — Safari blocks autoplay until you interact.
+        </div>
+        <a class="voice-banner-link" href="https://support.apple.com/en-us/HT211135" target="_blank" rel="noopener">Apple documentation →</a>
+      </details>
+
+      <details class="voice-banner-os"${androidOpen}>
+        <summary><span class="os-icon">🤖</span> Android — Google Hebrew voice</summary>
+        <ol class="voice-banner-steps">
+          <li>Open <strong>Settings</strong> → <strong>Accessibility</strong> → <strong>Text-to-speech output</strong> (or search <em>text-to-speech</em>).</li>
+          <li>Make sure the engine is <strong>Speech Services by Google</strong>, then tap its <strong>⚙ gear</strong> → <strong>Install voice data</strong>.</li>
+          <li>Pick <strong>עברית (Hebrew)</strong> and download a voice.</li>
+          <li>Restart Chrome, then reopen this page.</li>
+        </ol>
+        <div class="voice-banner-verify">
+          If you have no Google TTS engine, install <strong>Speech Services by Google</strong> from the Play Store first.
+        </div>
+        <a class="voice-banner-link" href="https://support.google.com/accessibility/android/answer/6006983" target="_blank" rel="noopener">Google documentation →</a>
       </details>
 
       <div class="voice-banner-foot">
@@ -720,6 +756,7 @@ function injectFloatingControls() {
     <button class="fc-btn" id="fc-theme" title="Toggle light/dark (T)">${getThemeIcon()}</button>
     <button class="fc-btn" id="fc-listen-all" title="Listen to all words (L)">▶ Listen all</button>
     <button class="fc-btn" id="fc-voice" title="Choose voice (Male / Female / Auto)" data-pref="${getVoiceGenderPref()}">${getVoiceGenderPref() === 'female' ? '♀ Female' : getVoiceGenderPref() === 'male' ? '♂ Male' : '♂ Auto'}</button>
+    <button class="fc-btn" id="fc-no-sound" title="No audio? Install a Hebrew voice (per-OS guide)">🔊 No sound?</button>
     <button class="fc-btn" id="fc-print" title="Printable view (P)">🖨 Print</button>
     <button class="fc-btn" id="fc-add-sr" title="Add every word in this lesson to SRS (A)">＋ Add all</button>
     <button class="fc-btn" id="fc-srs" title="Spaced repetition review (S)">📚 SRS<span id="fc-srs-count" class="fc-badge"></span></button>
@@ -745,6 +782,7 @@ function injectFloatingControls() {
     const testWord = (heEl && heEl.textContent.trim()) || 'שָׁלוֹם';
     setTimeout(() => speak(testWord, 0.85), 100);
   });
+  document.getElementById('fc-no-sound').addEventListener('click', () => showVoiceBanner(true));
   document.getElementById('fc-print').addEventListener('click', () => printableView());
   document.getElementById('fc-add-sr').addEventListener('click', () => { addAllToSRS(lesson); injectPerCardSRS(); refreshSRSCount(); });
   document.getElementById('fc-srs').addEventListener('click', () => openSRSReview());
