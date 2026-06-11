@@ -244,7 +244,7 @@
  }
  .tehilim-card .he {
  font-family: 'Frank Ruhl Libre', 'David', serif;
- font-size: 22px; direction: rtl; color: var(--text); margin-bottom: 4px;
+ font-size: 29px; direction: rtl; color: var(--text); margin-bottom: 5px; line-height: 1.25;
  }
  .tehilim-card .ps {
  font-size: 10px; color: var(--accent);
@@ -252,14 +252,94 @@
  }
  .tehilim-card .ti { font-size: 11px; color: var(--text-dim); }
 
- /* Compact mobile */
+ /* === Collapsible category blocks (accordion browser) === */
+ .cat-block {
+ border: 1px solid var(--border); border-radius: 12px;
+ background: var(--bg-card); margin: 8px 0; padding: 14px 16px;
+ scroll-margin-top: 84px; transition: border-color 0.15s;
+ }
+ .cat-block:hover { border-color: var(--accent-dim); }
+ .cat-head {
+ display: flex; align-items: center; gap: 12px;
+ cursor: pointer; user-select: none; margin: 0 !important;
+ }
+ .cat-ic { font-size: 19px; line-height: 1; width: 26px; text-align: center; flex: 0 0 auto; }
+ .cat-h2title, .mega-cat-title { font-size: 17px; font-weight: 700; color: var(--text); margin: 0; }
+ .cat-head .mega-cat-bar { flex: 1; max-width: 150px; }
+ .cat-count {
+ font-size: 11px; color: var(--text-dim);
+ font-family: 'JetBrains Mono', monospace; min-width: 44px; text-align: right;
+ }
+ .cat-chevron { color: var(--text-dim); font-size: 14px; flex: 0 0 auto; transition: transform 0.2s; }
+ .cat-block.collapsed .cat-chevron { transform: rotate(-90deg); }
+ .cat-block.collapsed .cat-body { display: none; }
+ .cat-body { margin-top: 12px; }
+ .cat-body > p:first-child { margin-top: 0 !important; }
+ .cat-block .mega-cat-header { margin-bottom: 0; }
+
+ /* === Compact mobile === */
  @media (max-width: 700px) {
  .hero-row { grid-template-columns: 1fr; gap: 14px; padding: 18px 20px; }
  .hero-cta { width: 100%; }
- .lessons { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)) !important; }
- .lesson-card { min-height: 64px; }
- .lesson-card .num { font-size: 13px; }
- .lesson-card .title-fr { font-size: 7.5px; }
+ .mini-stats { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+ .mini-stat { padding: 9px 11px; gap: 8px; }
+ .mini-stat .val { font-size: 15px; }
+ .mini-stat .icon { font-size: 16px; }
+ .action-bar { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+ .action-bar .btn { flex: 0 0 auto; white-space: nowrap; }
+ #d-reset { margin-left: 8px !important; }
+ .cat-block { padding: 12px 13px; }
+ .cat-h2title, .mega-cat-title { font-size: 15px; }
+ .cat-head .mega-cat-bar { display: none; }
+ .cat-count { min-width: 38px; }
+
+ /* Lesson nodes become readable full-width rows on phones */
+ .lessons { grid-template-columns: 1fr !important; gap: 8px !important; }
+ .lesson-card {
+ aspect-ratio: auto !important; border-radius: 10px !important;
+ flex-direction: row !important; align-items: center !important;
+ justify-content: flex-start !important; text-align: left !important;
+ min-height: 0 !important; padding: 11px 13px !important; gap: 12px;
+ }
+ .lesson-card .num {
+ font-size: 13px !important; margin-bottom: 0 !important;
+ flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+ background: var(--accent-dim); color: var(--accent);
+ display: flex !important; align-items: center; justify-content: center;
+ }
+ .lesson-card .title-fr {
+ font-size: 14px !important; line-height: 1.25 !important;
+ max-height: none !important; overflow: visible !important;
+ -webkit-line-clamp: unset !important; padding: 0 !important;
+ text-align: left !important; color: var(--text) !important;
+ display: block !important; flex: 1;
+ }
+ .lesson-card .title-he {
+ display: block !important; font-family: 'Frank Ruhl Libre', 'David', serif;
+ font-size: 20px; color: var(--text); direction: rtl;
+ flex: 0 0 auto; margin-left: 10px;
+ }
+ .lesson-card.done { background: rgba(74,158,219,0.10) !important; }
+ .lesson-card.done::after { display: none !important; }
+ .lesson-card.done .num { background: var(--accent); color: #000; }
+ html.light .lesson-card.done .num { background: #4A9EDB; color: #fff; }
+ .lesson-card.current {
+ background: var(--bg-card) !important; border-color: var(--accent) !important;
+ box-shadow: inset 3px 0 0 var(--accent) !important; animation: none !important;
+ }
+ .lesson-card.current .num { background: var(--accent); color: #000; }
+ .lesson-card.current .title-fr { color: var(--text) !important; }
+ html.light .lesson-card.current { background: var(--bg-card) !important; }
+ html.light .lesson-card.current .num { background: #4A9EDB; color: #fff; }
+
+ .tehilim-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+ .cat-nav { padding: 8px 0; }
+ .cat-chip { padding: 8px 13px; font-size: 12px; }
+ }
+
+ /* Mid phones: liturgical cards fit 3 across */
+ @media (max-width: 700px) and (min-width: 460px) {
+ .tehilim-grid { grid-template-columns: repeat(3, 1fr) !important; }
  }
 </style>
 </head>
@@ -2887,17 +2967,77 @@
  });
  if (firstNotDone) firstNotDone.classList.add('current');
 
- // Active chip on scroll
- const chips = document.querySelectorAll('.cat-chip');
- const targets = Array.from(chips).map(c => document.querySelector(c.getAttribute('href'))).filter(Boolean);
- const onScroll = () => {
- const y = window.scrollY + 100;
- let active = targets[0];
- for (const t of targets) { if (t.offsetTop <= y) active = t; }
- chips.forEach(c => c.classList.toggle('active', c.getAttribute('href') === '#' + (active?.id || '')));
+ // ---- Category accordion (collapsible browser) ----
+ const CAT_IC = {
+ 'cat-prayers':'🕊️','cat-shabbat':'🕯️','cat-tehilim':'📖','cat-roots':'🌳',
+ 'cat-songs':'♫','cat-cursive':'✍️','cat-morpho':'⚙️','cat-start':'✦',
+ 'cat-grammar':'אב','cat-life':'🏠','cat-society':'👥','cat-religion':'✡️',
+ 'cat-specialty':'🧩','cat-cuisine':'🍽️','cat-idf':'🎖️','cat-communities':'🗣️',
+ 'cat-mastery':'🏆','cat-arts':'🎬'
  };
- window.addEventListener('scroll', onScroll, { passive: true });
- onScroll();
+ const containerEl = document.querySelector('.container');
+ const lessonDone = done; // from getLessonProgress() above
+ // Build category list in DOM order (mega sections + h2[id^=cat-])
+ const catList = [];
+ let curCat = null;
+ Array.from(containerEl.children).forEach(el => {
+ const isMega = el.matches && el.matches('section.mega-cat');
+ const isH2 = el.tagName === 'H2' && el.id && el.id.indexOf('cat-') === 0;
+ if (isMega) { curCat = { id: el.id, type: 'mega', root: el }; catList.push(curCat); }
+ else if (isH2) { curCat = { id: el.id, type: 'h2', head: el, members: [] }; catList.push(curCat); }
+ else if (curCat && curCat.type === 'h2') { curCat.members.push(el); }
+ });
+ // Normalize mega-cats: collapse body, decorate header
+ catList.filter(c => c.type === 'mega').forEach(c => {
+ const sec = c.root; sec.classList.add('cat-block');
+ const header = sec.querySelector('.mega-cat-header');
+ const body = document.createElement('div'); body.className = 'cat-body';
+ Array.from(sec.children).forEach(ch => { if (ch !== header) body.appendChild(ch); });
+ sec.appendChild(body);
+ header.classList.add('cat-head');
+ const ic = document.createElement('span'); ic.className = 'cat-ic'; ic.textContent = CAT_IC[c.id] || '•';
+ header.insertBefore(ic, header.firstChild);
+ const chev = document.createElement('span'); chev.className = 'cat-chevron'; chev.textContent = '▾';
+ header.appendChild(chev);
+ });
+ // Normalize h2 categories: wrap head + members into a block
+ catList.filter(c => c.type === 'h2').forEach(c => {
+ const body = document.createElement('div'); body.className = 'cat-body';
+ c.members.forEach(m => body.appendChild(m));
+ const cards = body.querySelectorAll('.lesson-card');
+ const total = cards.length;
+ let dc = 0; cards.forEach(card => { if (lessonDone.includes(card.dataset.lesson)) dc++; });
+ const pct = total ? Math.round(dc / total * 100) : 0;
+ const block = document.createElement('section'); block.className = 'cat-block'; block.id = c.id;
+ const head = document.createElement('div'); head.className = 'cat-head';
+ head.innerHTML = '<span class="cat-ic">' + (CAT_IC[c.id] || '•') + '</span>'
+ + '<h2 class="cat-h2title">' + c.head.textContent.replace(/\s*\(\d+[-–]\d+\)\s*$/, '') + '</h2>'
+ + '<div class="mega-cat-bar"><div class="mega-cat-bar-fill" style="width:' + pct + '%"></div></div>'
+ + '<span class="cat-count">' + (dc ? dc + '/' : '') + total + '</span>'
+ + '<span class="cat-chevron">▾</span>';
+ c.head.replaceWith(block);
+ block.appendChild(head); block.appendChild(body);
+ });
+ // Accordion behaviour (single-open) + chip quick-jump
+ const blocks = Array.from(document.querySelectorAll('.cat-block'));
+ const collapseAll = () => blocks.forEach(b => b.classList.add('collapsed'));
+ const setActiveChip = (id) => document.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('active', c.getAttribute('href') === '#' + id));
+ const openBlock = (block, scroll) => {
+ collapseAll(); block.classList.remove('collapsed'); setActiveChip(block.id);
+ if (scroll) { const y = block.getBoundingClientRect().top + window.scrollY - 76; window.scrollTo({ top: y, behavior: 'smooth' }); }
+ };
+ collapseAll();
+ document.querySelectorAll('.cat-head').forEach(h => h.addEventListener('click', e => {
+ if (e.target.closest('a')) return;
+ const block = h.closest('.cat-block');
+ if (block.classList.contains('collapsed')) openBlock(block, true);
+ else { block.classList.add('collapsed'); setActiveChip(''); }
+ }));
+ document.querySelectorAll('.cat-chip').forEach(chip => chip.addEventListener('click', e => {
+ e.preventDefault();
+ const block = document.getElementById(chip.getAttribute('href').slice(1));
+ if (block) openBlock(block, true);
+ }));
 
  // Dashboard
  const total = document.querySelectorAll('.lesson-card').length;
@@ -3038,20 +3178,19 @@
  showReviewModal(allReview);
  });
 
- // Search
+ // Search across all categories (lessons + liturgical cards)
  const search = document.getElementById('lesson-search');
  search.addEventListener('input', () => {
  const q = search.value.toLowerCase().trim();
- document.querySelectorAll('.lessons').forEach(group => {
- let anyVisible = false;
- group.querySelectorAll('.lesson-card').forEach(card => {
- const text = card.textContent.toLowerCase();
- const match = !q || text.includes(q);
- card.style.display = match ? '' : 'none';
- if (match) anyVisible = true;
- });
- const heading = group.previousElementSibling;
- if (heading && heading.tagName === 'H2') heading.style.display = anyVisible ? '' : 'none';
+ if (!q) {
+ blocks.forEach(b => { b.style.display = ''; b.classList.add('collapsed'); b.querySelectorAll('.lesson-card,.tehilim-card').forEach(c => c.style.display = ''); });
+ return;
+ }
+ blocks.forEach(b => {
+ let any = false;
+ b.querySelectorAll('.lesson-card,.tehilim-card').forEach(c => { const m = c.textContent.toLowerCase().includes(q); c.style.display = m ? '' : 'none'; if (m) any = true; });
+ b.style.display = any ? '' : 'none';
+ b.classList.toggle('collapsed', !any);
  });
  });
 
