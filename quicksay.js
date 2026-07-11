@@ -46,6 +46,36 @@
   const stripNiqqud = s => (s || '').replace(/[֑-ׇ]/g, '');
   const isHebrew = s => /[֐-׿]/.test(s || '');
 
+  // Normalized Levenshtein similarity in [0,1] (1 = identical). Short strings only.
+  function levSim(a, b) {
+    a = a || ''; b = b || '';
+    const m = a.length, n = b.length;
+    if (!m || !n) return 0;
+    const d = Array.from({ length: n + 1 }, (_, i) => i);
+    for (let i = 1; i <= m; i++) {
+      let prev = d[0]; d[0] = i;
+      for (let j = 1; j <= n; j++) {
+        const tmp = d[j];
+        d[j] = Math.min(d[j] + 1, d[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
+        prev = tmp;
+      }
+    }
+    return 1 - d[n] / Math.max(m, n);
+  }
+
+  // Did Google TRANSLITERATE the input (echo its sound in Hebrew letters) instead of
+  // TRANSLATING it? Its own romanization (dt=rm) then reads back ~ the input. This is the
+  // sl=auto failure on short foreign words (bonjour->בונז'ור, merci->מרסי); the fix is to
+  // retry with an explicit source language. Compared against Google's rm, not translit.js
+  // (which drops vowels and renders ו as v — too noisy to compare a sound against).
+  const consSkel = s => romNorm(s).replace(/[aeiou]/g, '');
+  function looksTransliterated(input, rm) {
+    const a = romNorm(input), b = romNorm(rm);
+    if (!a || !b) return false;
+    if (consSkel(a).length >= 2 && consSkel(a) === consSkel(b)) return true;
+    return levSim(a, b) >= 0.5;
+  }
+
   // Forward offline search: English/keyword -> curated phrase.
   function search(q, limit = 6) {
     const nq = norm(q);
@@ -144,8 +174,8 @@
   }
 
   // --- Forward: EN/FR (any language) -> Hebrew. sl=auto is what makes French work. ---
-  function fetchGoogle(q, signal) {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
+  function fetchGoogle(q, signal, sl) {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + (sl || 'auto') + '&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(j => {
@@ -241,12 +271,23 @@
       });
   }
 
+  // Retry sources when sl=auto transliterates a short foreign word instead of translating.
+  const RETRY_SL = ['fr', 'es'];
+
   function translateOnline(q, signal) {
     const key = q.toLowerCase();
     if (transCache.has(key)) return Promise.resolve(transCache.get(key));
-    const run = fetchGoogle(q, signal)
+    const single = !/\s/.test(q.trim());  // the failure is isolated words; phrases translate fine
+    const run = fetchGoogle(q, signal, 'auto')
       .catch(() => null)
-      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => null));
+      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => null))
+      .then(res => {
+        // sl=auto echoed the sound (bonjour->בונז'ור) rather than translating it: retry with
+        // explicit romance sources and keep the first result that isn't itself a transliteration.
+        if (!res || !single || !looksTransliterated(q, res.tr)) return res;
+        return Promise.all(RETRY_SL.map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
+          .then(alts => alts.find(a => a && a.he && !looksTransliterated(q, a.tr)) || res);
+      });
     return withTimeout(run, CFG.tTranslate)
       .then(res => {
         if (!res) return null;
