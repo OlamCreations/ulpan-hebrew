@@ -4,8 +4,8 @@
 //   2. French / Spanish → Hebrew  (same call: sl=auto detects fr, es, and any language)
 //   3. Transliterated Hebrew → Hebrew word(s), with candidates when unsure ("si hésitation")
 //        (Google Input Tools he-t-i0-und, ranked; offline reverse-match against the phrasebook)
-// Every Hebrew result is re-vocalized via Dicta Nakdan + our own translit.js for a clean
-// romanization. A curated offline phrasebook is the plane-mode fallback for both directions.
+// Every Hebrew result is transliterated from Google's own romanization (gtx dt=rm); Dicta
+// Nakdan is CORS-blocked in the browser. A curated offline phrasebook is the plane-mode fallback.
 // Reuses the app's speak() (Web Speech + voice selector) when present.
 (function () {
   'use strict';
@@ -18,8 +18,7 @@
     hiConf: 0.85,       // detected-lang confidence above which en/fr is "clearly a translation query"
     tTranslate: 8000,   // ms budget: forward EN/FR -> HE
     tPhon: 5000,        // ms budget: Input Tools phonetic candidates
-    tNakdan: 6000,      // ms budget: Dicta Nakdan vocalization
-    tGloss: 6000        // ms budget: HE -> meaning gloss
+    tGloss: 6000        // ms budget: HE -> meaning + romanization gloss
   };
 
   // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
@@ -44,7 +43,6 @@
   // Same normalization as _translit_test.cjs so the reverse-match agrees with the forward test.
   const romNorm = s => (s || '').toLowerCase().replace(/kh/g, 'ch').replace(/tz/g, 'ts').replace(/[^a-z]/g, '');
   const stripNiqqud = s => (s || '').replace(/[֑-ׇ]/g, '');
-  const isHebrew = s => /[֐-׿]/.test(s || '');
 
   // Normalized Levenshtein similarity in [0,1] (1 = identical). Short strings only.
   function levSim(a, b) {
@@ -222,52 +220,23 @@
       });
   }
 
-  // --- Nakdan vocalization + our romanization (Google's own romanization drops vowels) ---
-  const NAKDAN_URL = 'https://nakdan-u1-0.loadbalancer.dicta.org.il/api';
-
-  function vocalize(text, signal) {
-    if (!isHebrew(text)) return Promise.resolve(null);
-    const body = { task: 'nakdan', data: text, genre: 'modern', addmorph: false,
-      keepqq: false, nodageshdefault: false, patachma: false, keepmetagim: true };
-    return fetch(NAKDAN_URL, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body), signal: signal
-    })
-      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-      .then(toks => {
-        if (!Array.isArray(toks)) return null;
-        let out = '';
-        for (const t of toks) {
-          if (t && t.sep) out += (t.word || '');
-          else if (t && Array.isArray(t.options) && t.options.length) out += t.options[0];
-          else if (t && t.word) out += t.word;
-        }
-        return out.trim() || null;
-      });
-  }
-
-  // Romanize Hebrew, returning the vocalized text only (used to fix the forward tr).
-  function romanize(hebrew, signal) {
-    if (!window.Translit) return Promise.resolve(null);
-    return vocalize(hebrew, signal)
-      .then(voc => (voc ? (window.Translit.transliterate(voc) || null) : null))
-      .catch(() => null);
-  }
-
-  // Meaning of a Hebrew word/phrase (HE -> UI language), for phonetic candidates.
-  // (Romanization of candidates would need Nakdan, which has no browser CORS — so online
-  // candidates show Hebrew + meaning only; the user already typed the sound. Verified lesson
-  // matches still carry their curated `tr`.)
+  // Meaning + romanization of a Hebrew word (HE -> UI language), for phonetic candidates.
+  // When Hebrew is the source (sl=iw), gtx puts the source-side romanization at s[3], so the
+  // one call that glosses a candidate also transliterates it. Dicta Nakdan (which we used
+  // before) has no browser CORS and is blocked outright on GitHub Pages; gtx (CORS *) covers
+  // both needs with no proxy or backend. Returns { en: meaning, tr: romanization }.
   function fetchGloss(he, signal) {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=iw&tl=' + CFG.glossLang + '&dt=t&q=' + encodeURIComponent(he);
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=iw&tl=' + CFG.glossLang + '&dt=t&dt=rm&q=' + encodeURIComponent(he);
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(j => {
         const segs = j && j[0];
         if (!Array.isArray(segs)) return null;
         const t = segs.filter(s => s && s[0]).map(s => s[0]).join('').trim();
-        if (!t || t.toLowerCase() === he.toLowerCase()) return null;
-        return t;
+        const rm = segs.filter(s => s && !s[0]).map(s => s[3] || s[2]).filter(Boolean).join(' ').trim();
+        const meaning = (t && t.toLowerCase() !== he.toLowerCase()) ? t : '';
+        if (!meaning && !rm) return null;
+        return { en: meaning, tr: rm || null };
       });
   }
 
@@ -291,9 +260,10 @@
     return withTimeout(run, CFG.tTranslate)
       .then(res => {
         if (!res) return null;
-        // Replace the raw romanization with our niqqud-based one (keep raw if ours fails).
-        return withTimeout(romanize(res.he, signal), CFG.tNakdan)
-          .then(tr => { if (tr) res.tr = tr; transCache.set(key, res); return res; });
+        // Google's own romanization (dt=rm) is the transliteration. Nakdan is CORS-blocked in
+        // the browser, so we keep the raw rm rather than chase a call that always fails.
+        transCache.set(key, res);
+        return res;
       });
   }
 
@@ -310,7 +280,7 @@
       const top = cands.slice(0, CFG.enrichTop);
       return Promise.all(top.map(c =>
         withTimeout(fetchGloss(c, signal), CFG.tGloss)
-          .then(gl => ({ he: c, tr: null, en: gl || '', bare: c }))
+          .then(gl => ({ he: c, tr: (gl && gl.tr) || null, en: (gl && gl.en) || '', bare: c }))
       )).then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
     });
   }
