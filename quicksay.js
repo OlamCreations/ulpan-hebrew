@@ -1,11 +1,30 @@
-// Quick-Say — type English, get Hebrew + transliteration.
-// ONLINE-FIRST: as you type, it translates via Google's free endpoint and shows
-// the Hebrew + a vocalized romanization (real vowels, not bare consonants).
-// A curated offline phrasebook is shown as a bonus when it has a strong match
-// (better word choice + niqqud), and becomes the sole source when offline.
+// Quick-Say — type English, French, Spanish, or Hebrew-you-heard; get the Hebrew.
+// Input modes, auto-detected on every keystroke, shown together ("montre les deux"):
+//   1. English → Hebrew           (Google gtx, sl=auto)
+//   2. French / Spanish → Hebrew  (same call: sl=auto detects fr, es, and any language)
+//   3. Transliterated Hebrew → Hebrew word(s), with candidates when unsure ("si hésitation")
+//        (Google Input Tools he-t-i0-und, ranked; offline reverse-match against the phrasebook)
+// Every Hebrew result is re-vocalized via Dicta Nakdan + our own translit.js for a clean
+// romanization. A curated offline phrasebook is the plane-mode fallback for both directions.
 // Reuses the app's speak() (Web Speech + voice selector) when present.
 (function () {
   'use strict';
+
+  // --- Tunables (centralized; no magic scattered through the logic) -------------
+  const CFG = {
+    phoneticMax: 5,     // max phonetic-Hebrew candidates to request from Input Tools
+    enrichTop: 3,       // how many phonetic candidates get niqqud + gloss (extra API calls)
+    glossLang: 'en',    // meaning language for phonetic candidates (UI is English)
+    hiConf: 0.85,       // detected-lang confidence above which en/fr is "clearly a translation query"
+    tTranslate: 8000,   // ms budget: forward EN/FR -> HE
+    tPhon: 5000,        // ms budget: Input Tools phonetic candidates
+    tNakdan: 6000,      // ms budget: Dicta Nakdan vocalization
+    tGloss: 6000        // ms budget: HE -> meaning gloss
+  };
+
+  // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
+  // any language, but these are the ones whose confident detection suppresses phonetic guesses.
+  const TRANSLATE_LANGS = new Set(['en', 'fr', 'es']);
 
   let PHRASES = [];
   let loaded = false;
@@ -21,7 +40,13 @@
   }
 
   const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  // phoneme-level romanization key: kh==ch (כ/ח), tz==ts (צ), drop everything non-letter.
+  // Same normalization as _translit_test.cjs so the reverse-match agrees with the forward test.
+  const romNorm = s => (s || '').toLowerCase().replace(/kh/g, 'ch').replace(/tz/g, 'ts').replace(/[^a-z]/g, '');
+  const stripNiqqud = s => (s || '').replace(/[֑-ׇ]/g, '');
+  const isHebrew = s => /[֐-׿]/.test(s || '');
 
+  // Forward offline search: English/keyword -> curated phrase.
   function search(q, limit = 6) {
     const nq = norm(q);
     if (!nq) return [];
@@ -37,6 +62,30 @@
       else if (k.includes(nq)) score = 300;
       else if (terms.every(t => k.includes(t))) score = 150;
       if (score > 0) scored.push({ p, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, limit).map(s => s.p);
+  }
+
+  // Reverse offline lookup: romanized Hebrew -> curated phrase (verified niqqud + meaning).
+  // Matches the typed romanization against both the phrasebook's `tr` and translit.js(he).
+  function reverseOffline(q, limit = CFG.phoneticMax) {
+    const ri = romNorm(q);
+    if (ri.length < 2) return [];
+    const T = window.Translit;
+    const seen = new Set();
+    const scored = [];
+    for (const p of PHRASES) {
+      const keys = [romNorm(p.tr)];
+      if (T) keys.push(romNorm(T.transliterate(p.he)));
+      let score = 0;
+      for (const k of keys) {
+        if (!k) continue;
+        if (k === ri) score = Math.max(score, 1000);
+        else if (ri.length >= 3 && k.startsWith(ri)) score = Math.max(score, 600);
+        else if (k.length >= 3 && ri.startsWith(k)) score = Math.max(score, 400);
+      }
+      if (score > 0 && !seen.has(p.he)) { seen.add(p.he); scored.push({ p, score }); }
     }
     scored.sort((a, b) => b.score - a.score);
     return scored.slice(0, limit).map(s => s.p);
@@ -61,35 +110,42 @@
     let tag = '';
     if (kind === 'online') tag = '<span class="qs-tag qs-tag-online" title="Translated online">online</span>';
     else if (kind === 'curated') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
+    else if (kind === 'phonetic') tag = '<span class="qs-tag qs-tag-phonetic" title="Matched from what you typed phonetically">phonetic</span>';
+    else if (kind === 'phonetic-lesson') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
     else if (p.cat) tag = '<span class="qs-tag">' + escapeHtml(p.cat) + '</span>';
     const tr = p.tr ? '<div class="qs-tr">' + escapeHtml(p.tr) + '</div>' : '';
+    const meaning = (p.en || '').trim();
+    const en = (meaning || tag)
+      ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
     return '' +
       '<div class="qs-card">' +
-        '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.en) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
+        '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.he) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
         '<div class="qs-text">' +
           '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(p.he) + '</div>' +
           tr +
-          '<div class="qs-en">' + escapeHtml(p.en) + ' ' + tag + '</div>' +
+          en +
         '</div>' +
       '</div>';
   }
 
-  // --- Online translation: Google gtx (translation + romanization), MyMemory fallback ---
-  let onlineAbort = null;
-  const transCache = new Map(); // nq -> result, avoids re-hitting the API on repeat queries
+  // --- Shared abort: a new keystroke cancels every in-flight request from the last one ---
+  let qAbort = null;
+  const transCache = new Map();  // forward EN/FR->HE, keyed by lowercased query
+  const phonCache = new Map();   // phonetic online candidates, keyed by "p:"+query
 
   // Race a promise against a timeout so a hung request can't freeze "Translating…".
-  function withTimeout(promise, ms, onAbort) {
+  function withTimeout(promise, ms) {
     return new Promise(resolve => {
       let done = false;
-      const t = setTimeout(() => { if (!done) { done = true; if (onAbort) onAbort(); resolve(null); } }, ms);
+      const t = setTimeout(() => { if (!done) { done = true; resolve(null); } }, ms);
       promise.then(v => { if (!done) { done = true; clearTimeout(t); resolve(v); } },
                    () => { if (!done) { done = true; clearTimeout(t); resolve(null); } });
     });
   }
 
+  // --- Forward: EN/FR (any language) -> Hebrew. sl=auto is what makes French work. ---
   function fetchGoogle(q, signal) {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(j => {
@@ -99,26 +155,45 @@
         // romanization sits in a segment with a null translation slot, in [2] (Hebrew->Latin).
         const rm = segs.filter(s => s && !s[0]).map(s => s[2]).filter(Boolean).join(' ').trim();
         if (!he) return null;
-        return { he: he, tr: rm || null, en: q };
+        const src = (typeof j[2] === 'string') ? j[2] : null;    // detected source language
+        const conf = (typeof j[6] === 'number') ? j[6] : null;   // detection confidence
+        return { he: he, tr: rm || null, en: q, src: src, conf: conf };
       });
   }
 
-  function fetchMyMemory(q, signal) {
-    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=en|he';
+  function guessLangpair(q) {
+    if (/[ñ¿¡]/i.test(q)) return 'es|he';                 // unambiguous Spanish
+    if (/[àâçéèêëîïôûùÿœæ]/i.test(q)) return 'fr|he';      // French diacritics
+    return 'en|he';
+  }
+
+  function fetchMyMemory(q, signal, langpair) {
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=' + (langpair || 'en|he');
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(j => {
         const he = j && j.responseData && j.responseData.translatedText;
         if (!he || !/[֐-׿]/.test(he)) return null;
-        return { he: he.trim(), tr: null, en: q };
+        return { he: he.trim(), tr: null, en: q, src: (langpair || '').split('|')[0] || null, conf: null };
       });
   }
 
-  // --- Romanization: Google's own romanization for Hebrew is unreliable (drops vowels:
-  // "ifo" for איפה, "lech" for לך). We instead vocalize the Hebrew with Dicta Nakdan
-  // (adds niqqud) and transliterate it ourselves (translit.js) → "eifo", "lecha".
+  // --- Reverse: romanized Hebrew -> Hebrew script candidates (ranked = the "si hésitation") ---
+  function fetchInputTools(q, signal) {
+    const url = 'https://inputtools.google.com/request?text=' + encodeURIComponent(q) +
+      '&itc=he-t-i0-und&num=' + CFG.phoneticMax + '&cp=0&cs=1&ie=utf-8&oe=utf-8';
+    return fetch(url, { signal: signal })
+      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(j => {
+        if (!Array.isArray(j) || j[0] !== 'SUCCESS') return [];
+        const block = j[1] && j[1][0];
+        const cands = block && block[1];
+        return Array.isArray(cands) ? cands.filter(Boolean) : [];
+      });
+  }
+
+  // --- Nakdan vocalization + our romanization (Google's own romanization drops vowels) ---
   const NAKDAN_URL = 'https://nakdan-u1-0.loadbalancer.dicta.org.il/api';
-  const isHebrew = s => /[֐-׿]/.test(s || '');
 
   function vocalize(text, signal) {
     if (!isHebrew(text)) return Promise.resolve(null);
@@ -141,6 +216,7 @@
       });
   }
 
+  // Romanize Hebrew, returning the vocalized text only (used to fix the forward tr).
   function romanize(hebrew, signal) {
     if (!window.Translit) return Promise.resolve(null);
     return vocalize(hebrew, signal)
@@ -148,22 +224,54 @@
       .catch(() => null);
   }
 
-  function translateOnline(q) {
+  // Meaning of a Hebrew word/phrase (HE -> UI language), for phonetic candidates.
+  // (Romanization of candidates would need Nakdan, which has no browser CORS — so online
+  // candidates show Hebrew + meaning only; the user already typed the sound. Verified lesson
+  // matches still carry their curated `tr`.)
+  function fetchGloss(he, signal) {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=iw&tl=' + CFG.glossLang + '&dt=t&q=' + encodeURIComponent(he);
+    return fetch(url, { signal: signal })
+      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(j => {
+        const segs = j && j[0];
+        if (!Array.isArray(segs)) return null;
+        const t = segs.filter(s => s && s[0]).map(s => s[0]).join('').trim();
+        if (!t || t.toLowerCase() === he.toLowerCase()) return null;
+        return t;
+      });
+  }
+
+  function translateOnline(q, signal) {
     const key = q.toLowerCase();
     if (transCache.has(key)) return Promise.resolve(transCache.get(key));
-    if (onlineAbort) { try { onlineAbort.abort(); } catch (e) {} }
-    onlineAbort = new AbortController();
-    const sig = onlineAbort.signal;
-    const run = fetchGoogle(q, sig)
+    const run = fetchGoogle(q, signal)
       .catch(() => null)
-      .then(res => res || fetchMyMemory(q, sig).catch(() => null));
-    return withTimeout(run, 8000, () => { try { onlineAbort.abort(); } catch (e) {} })
+      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => null));
+    return withTimeout(run, CFG.tTranslate)
       .then(res => {
         if (!res) return null;
-        // Replace Google's romanization with our niqqud-based one (fall back to Google's if it fails).
-        return withTimeout(romanize(res.he, sig), 6000, null)
+        // Replace the raw romanization with our niqqud-based one (keep raw if ours fails).
+        return withTimeout(romanize(res.he, signal), CFG.tNakdan)
           .then(tr => { if (tr) res.tr = tr; transCache.set(key, res); return res; });
       });
+  }
+
+  // Phonetic pipeline: offline reverse-match (instant) + online Input Tools candidates
+  // (enriched with niqqud + gloss). Returns { offline:[phrase], online:[{he,tr,en,bare}] }.
+  function lookupPhonetic(q, signal, offlineMatches) {
+    const offline = offlineMatches || (loaded ? reverseOffline(q) : []);
+    if (!navigator.onLine) return Promise.resolve({ offline: offline, online: [] });
+    const key = 'p:' + q.toLowerCase();
+    if (phonCache.has(key)) return Promise.resolve({ offline: offline, online: phonCache.get(key) });
+    const offHe = new Set(offline.map(p => stripNiqqud(p.he)));
+    return withTimeout(fetchInputTools(q, signal), CFG.tPhon).then(cands => {
+      cands = (cands || []).filter(c => c && !offHe.has(stripNiqqud(c)));
+      const top = cands.slice(0, CFG.enrichTop);
+      return Promise.all(top.map(c =>
+        withTimeout(fetchGloss(c, signal), CFG.tGloss)
+          .then(gl => ({ he: c, tr: null, en: gl || '', bare: c }))
+      )).then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
+    });
   }
 
   function wirePlay(container) {
@@ -173,24 +281,42 @@
     });
   }
 
+  // --- Section builders ---------------------------------------------------------
+  function phonSectionHtml(offline, online) {
+    const cards = offline.map(p => card(p, 'phonetic-lesson')).concat(online.map(p => card(p, 'phonetic')));
+    if (!cards.length) return '';
+    return '<div class="qs-sub">Hebrew — did you mean?</div>' + cards.join('');
+  }
+
+  function transSectionHtml(fwd, fwdOffline, dupeSet) {
+    const cards = [];
+    if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) cards.push(card(fwd, 'online'));
+    fwdOffline.forEach(p => cards.push(card(p, 'curated')));
+    if (!cards.length) return '';
+    return '<div class="qs-sub">Translation</div>' + cards.join('');
+  }
+
   let renderToken = 0;
   function render(container, q) {
     const nq = q.trim();
     if (!nq) {
       container.removeAttribute('aria-busy');
-      const examples = ['thank you', 'where is the bathroom', 'how much does it cost', 'I would like to pay'];
-      container.innerHTML = '<div class="qs-hint">Type an English word or phrase, or tap an example:</div>' +
+      // Examples span all three modes: English, French, and Hebrew-you-heard.
+      const examples = ['thank you', 'où sont les toilettes', '¿cuánto cuesta?', 'beseder'];
+      container.innerHTML = '<div class="qs-hint">Type <em>English</em>, <em>French</em>, <em>Spanish</em>, or <em>Hebrew you heard</em> — or tap an example:</div>' +
         '<div class="qs-chips">' + examples.map(x => '<button type="button" class="qs-chip" data-phrase="' + escapeHtml(x) + '">' + escapeHtml(x) + '</button>').join('') + '</div>';
       return;
     }
     const token = ++renderToken;
-    const offline = loaded ? search(nq) : [];
+    const fwdOffline = loaded ? search(nq) : [];
+    const revOffline = loaded ? reverseOffline(nq) : [];
 
     if (!navigator.onLine) {
-      // Plane mode: curated phrasebook only.
-      if (offline.length) {
-        container.innerHTML = offline.map(p => card(p, 'curated')).join('') +
-          '<div class="qs-hint qs-offline">Offline — showing saved phrases only.</div>';
+      // Plane mode: curated phrasebook only, both directions.
+      const ph = phonSectionHtml(revOffline, []);
+      const tr = fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated')).join('') : '';
+      if (ph || tr) {
+        container.innerHTML = ph + tr + '<div class="qs-hint qs-offline">Offline — showing saved phrases only.</div>';
       } else {
         container.innerHTML = '<div class="qs-hint qs-offline">Offline, and no saved phrase matches “' + escapeHtml(nq) + '”. Connect to translate anything.</div>';
       }
@@ -198,29 +324,40 @@
       return;
     }
 
-    // Online-first: show a loading line, fetch, then render online result on top.
+    // Online-first: loading line + whatever the offline phrasebook already knows, then fill in.
     container.setAttribute('aria-busy', 'true');
     container.innerHTML =
       '<div class="qs-loading">Translating</div>' +
-      (offline.length ? '<div class="qs-sub">From the lessons</div>' + offline.map(p => card(p, 'curated')).join('') : '');
+      phonSectionHtml(revOffline, []) +
+      (fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated')).join('') : '');
     wirePlay(container);
 
-    translateOnline(nq).then(res => {
+    if (qAbort) { try { qAbort.abort(); } catch (e) {} }
+    qAbort = new AbortController();
+    const sig = qAbort.signal;
+
+    Promise.all([translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline)]).then(([fwd, phon]) => {
       if (token !== renderToken) return; // a newer keystroke superseded this
       container.removeAttribute('aria-busy');
-      const offlineHe = new Set(offline.map(p => p.he.replace(/[֑-ׇ]/g, '')));
-      let html = '';
-      if (res) {
-        const dupe = offlineHe.has(res.he.replace(/[֑-ׇ]/g, ''));
-        if (!dupe) html += card(res, 'online');
-      } else {
-        html += '<div class="qs-hint">Online translation unavailable right now.</div>';
-      }
-      if (offline.length) {
-        html += '<div class="qs-sub">From the lessons</div>' + offline.map(p => card(p, 'curated')).join('');
-      } else if (!res) {
-        html += '<div class="qs-hint">No saved phrase matches either.</div>';
-      }
+
+      // Auto-decide: if the input is clearly a confident English/French word AND nothing
+      // matched offline as Hebrew, it's a translation query — drop the online phonetic guesses.
+      let online = phon.online;
+      const realLang = fwd && TRANSLATE_LANGS.has(fwd.src) && (fwd.conf == null || fwd.conf >= CFG.hiConf);
+      if (realLang && !phon.offline.length) online = [];
+
+      // Order: lead with Hebrew-you-heard when there's a verified match, or when Google could
+      // NOT place the input as a known translation language (its tell for romanized Hebrew,
+      // e.g. beseder→"sl", sababa→"om").
+      const phonFirst = phon.offline.length > 0 ||
+        (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd;
+
+      const dupe = new Set(phon.offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
+      const ph = phonSectionHtml(phon.offline, online);
+      const tr = transSectionHtml(fwd, fwdOffline, dupe);
+
+      let html = phonFirst ? (ph + tr) : (tr + ph);
+      if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
       container.innerHTML = html;
       wirePlay(container);
     });
@@ -232,8 +369,8 @@
     host._qsMounted = true;
     host.innerHTML =
       '<div class="qs-box">' +
-        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="Say it in Hebrew… (type English)" ' +
-               'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English to Hebrew">' +
+        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="English, French, Spanish, or Hebrew you heard…" ' +
+               'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French or Spanish to Hebrew, or look up transliterated Hebrew">' +
         '<div id="qs-results" class="qs-results" role="status" aria-live="polite" aria-atomic="false"></div>' +
       '</div>';
     const input = host.querySelector('#qs-input');
