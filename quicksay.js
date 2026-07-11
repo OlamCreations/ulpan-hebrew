@@ -363,9 +363,16 @@
       const phonFirst = phon.offline.length > 0 ||
         (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd;
 
+      // Romanized-Hebrew input makes Google "translate" the latin word as some random language
+      // (ahava→rw→משם, beseder→sl→מפתח מילים) — a parasitic forward card. When we're confident
+      // it's Hebrew-you-heard (phonFirst, not a real translate language) and the phonetic section
+      // already has the real word, drop that card. Curated forward matches (fwdOffline) stay.
+      const romanizedHebrew = phonFirst && !realLang && (phon.offline.length + online.length) > 0;
+      const fwdCard = romanizedHebrew ? null : fwd;
+
       const dupe = new Set(phon.offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
       const ph = phonSectionHtml(phon.offline, online);
-      const tr = transSectionHtml(fwd, fwdOffline, dupe);
+      const tr = transSectionHtml(fwdCard, fwdOffline, dupe);
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
       if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
