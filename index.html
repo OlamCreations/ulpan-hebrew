@@ -369,53 +369,17 @@
  <button id="header-theme-toggle" class="theme-toggle" title="Toggle light/dark mode" onclick="toggleTheme()"> Light</button>
 </header>
 
-<!-- QUICK-SAY: opens the live translator modal (also on the / key and in the menu) -->
-<button type="button" id="qs-open" class="qs-open-btn">
-  <span class="qs-open-icon">א</span>
-  <span class="qs-open-text">Say it in Hebrew<span class="qs-open-sub">English · French · Spanish · Russian · or Hebrew you heard</span></span>
-  <span class="quicksay-kbd">/</span>
-</button>
-
-<!-- HERO: continue card (Today's recommendation) -->
-<div class="hero-row" id="daily-goal">
- <div class="hero-continue">
- <div class="hero-label"> Today</div>
- <div class="hero-title" id="dg-text">Loading…</div>
- <div class="hero-sub">Resume right where you left off, your daily streak depends on it.</div>
- </div>
- <button class="hero-cta" id="dg-action">Start →</button>
+<!-- QUICK-SAY: live translator, inline on the home for direct access (also / key + menu) -->
+<div class="quicksay-section quicksay-home">
+  <div id="qs-mount"></div>
 </div>
 
-<!-- MINI STATS -->
-<div class="mini-stats">
- <div class="mini-stat">
- <div class="stack">
- <div class="val" id="d-daystreak">0</div>
- <div class="lbl">Daily streak</div>
- </div>
- </div>
- <div class="mini-stat">
- <div class="stack">
- <div class="val"><span id="d-done">0 / 465</span> <span id="d-pct" class="val-sub">0%</span></div>
- <div class="lbl">Lessons</div>
- </div>
- </div>
- <div class="mini-stat">
- <div class="stack">
- <div class="val" id="d-srs-due">0</div>
- <div class="lbl">SRS due</div>
- </div>
- </div>
- <div class="mini-stat">
- <div class="stack">
- <div class="val" id="d-streak">0</div>
- <div class="lbl">Best practice</div>
- </div>
- </div>
-</div>
-
-<!-- Hidden helpers preserved for app.js compat (progress bar, heatmap, review count) -->
+<!-- Dashboard state kept but hidden: the home is purified (no Today card, no stat tiles),
+     while the progress script still has every element it writes to. -->
 <div style="display:none;" aria-hidden="true">
+ <div id="dg-text"></div><button id="dg-action"></button>
+ <div id="d-daystreak"></div><span id="d-done"></span><span id="d-pct"></span>
+ <div id="d-srs-due"></div><div id="d-streak"></div>
  <div id="d-bar"></div>
  <div id="d-review">0</div>
  <div id="d-heatmap-wrap"><div id="d-heatmap"></div></div>
@@ -2967,7 +2931,7 @@
 
 <script src="app.js?v=1777900000007"></script>
 <script src="translit.js?v=1777900000002"></script><script src="quicksay.js?v=1777900000006"></script>
-<script src="hub.js?v=1777900000006"></script>
+<script src="hub.js?v=1777900000008"></script>
 <script>
  const done = getLessonProgress();
  let firstNotDone = null;

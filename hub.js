@@ -32,6 +32,12 @@
 
   const esc = s => (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  // Today in the Hebrew calendar, in Hebrew (gematria numerals via the ICU 'he' locale).
+  function hebrewDate() {
+    try { return new Intl.DateTimeFormat('he-u-ca-hebrew', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); }
+    catch (e) { return ''; }
+  }
+
   // --- Generic overlay (mirrors the SRS modal; reuses app.js makeModalAccessible) --
   function openOverlay(id, cardClass, innerHtml, onMount) {
     const prev = document.getElementById(id);
@@ -129,8 +135,8 @@
             setter(on);
           });
         };
-        wireSwitch('pref-cursive', v => Prefs.setCursive(v));
-        wireSwitch('pref-niqqud', v => Prefs.setNiqqud(v));
+        wireSwitch('pref-cursive', v => { Prefs.setCursive(v); refreshTranslator(); });
+        wireSwitch('pref-niqqud', v => { Prefs.setNiqqud(v); refreshTranslator(); });
       });
   }
   window.openPrefs = openPrefs;
@@ -164,16 +170,49 @@
     syncMenuTheme();
   }
 
+  // Re-render the open translator so a preference change (cursive/niqqud) lands immediately
+  // instead of only on the next keystroke. Cached results mean this rarely re-hits the network.
+  function refreshTranslator() {
+    const inp = document.getElementById('qs-input');
+    if (inp && inp.value.trim()) inp.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  window.refreshTranslator = refreshTranslator;
+
   function buildMenu() {
     if (document.getElementById('hub-burger')) return;
     const header = document.querySelector('header');
     if (!header) return;
 
+    const actions = document.createElement('div');
+    actions.className = 'hub-actions';
+
+    // Today's Hebrew date, on the home, at the hamburger's level.
+    if (document.body && document.body.classList.contains('home')) {
+      const hd = hebrewDate();
+      if (hd) {
+        const d = document.createElement('span');
+        d.className = 'hub-hdate'; d.dir = 'rtl'; d.lang = 'he'; d.title = 'Today (Hebrew date)';
+        d.textContent = hd;
+        actions.appendChild(d);
+      }
+    }
+
+    // One-tap translator, immediately left of the hamburger.
+    const tbtn = document.createElement('button');
+    tbtn.id = 'hub-translate'; tbtn.className = 'hub-translate';
+    tbtn.setAttribute('aria-label', 'Live translator');
+    tbtn.title = 'Live translator (/)';
+    tbtn.innerHTML = '<span>א</span>';
+    tbtn.addEventListener('click', openTranslator);
+    actions.appendChild(tbtn);
+
     const burger = document.createElement('button');
     burger.id = 'hub-burger'; burger.className = 'hub-burger';
     burger.setAttribute('aria-label', 'Menu'); burger.setAttribute('aria-expanded', 'false');
     burger.innerHTML = '<span></span><span></span><span></span>';
-    header.appendChild(burger);
+    actions.appendChild(burger);
+
+    header.appendChild(actions);
 
     const menu = document.createElement('div');
     menu.id = 'hub-menu';
@@ -201,15 +240,15 @@
 
   function init() {
     buildMenu();
-    // `/` opens the translator from anywhere (unless typing).
+    // Home: mount the translator inline for direct access; elsewhere it lives in the modal.
+    if (document.getElementById('qs-mount') && window.QuickSay) window.QuickSay.mount('qs-mount');
+    // `/` opens the modal translator — unless one already exists (inline on the home, or the
+    // modal is open), in which case QuickSay's own handler just focuses it.
     document.addEventListener('keydown', e => {
       if (e.key === '/' && !/^(input|textarea)$/i.test(e.target.tagName) && !e.target.isContentEditable) {
-        if (!document.getElementById('qs-modal')) { e.preventDefault(); openTranslator(); }
+        if (!document.getElementById('qs-input') && !document.getElementById('qs-modal')) { e.preventDefault(); openTranslator(); }
       }
     });
-    // A home trigger, if present, opens the translator.
-    const trigger = document.getElementById('qs-open');
-    if (trigger) trigger.addEventListener('click', openTranslator);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
