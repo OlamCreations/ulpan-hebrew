@@ -324,6 +324,7 @@
       b.addEventListener('click', () => {
         if (!window.QSNotebook || b.classList.contains('on')) return;
         window.QSNotebook.add({ he: b.dataset.he, tr: b.dataset.tr, en: b.dataset.en });
+        if (window.track) track('phrase_saved');
         b.classList.add('on'); b.textContent = 'Saved';
       });
     });
@@ -403,6 +404,7 @@
         if (!out) return;
         if (out.dataset.open === '1') { out.innerHTML = ''; out.dataset.open = '0'; b.classList.remove('on'); return; }
         out.dataset.open = '1'; b.classList.add('on');
+        if (window.track) track('breakdown_used');
         renderBreakdown(out, b.dataset.he, new AbortController().signal);
       });
     });

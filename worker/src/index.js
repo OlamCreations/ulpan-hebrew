@@ -159,6 +159,35 @@ async function analyze(text) {
   return out;
 }
 
+// Anonymous usage analytics. The client batches events and POSTs them here (safelisted
+// text/plain, no preflight, sendBeacon on page hide). We write one Analytics Engine data point
+// per event: no cookies, no IP stored — country/device are derived, the only id is the client's
+// random anon key (for DAU/retention counting), which the user can reset or disable.
+function track(request, env) {
+  return request.json().then(body => {
+    const evs = Array.isArray(body && body.events) ? body.events.slice(0, 30) : [];
+    const aid = ((body && body.aid) || 'anon').toString().slice(0, 32);
+    const country = (request.cf && request.cf.country) || request.headers.get('CF-IPCountry') || 'XX';
+    const ua = request.headers.get('User-Agent') || '';
+    const device = /Mobi|Android|iPhone|iPod/i.test(ua) ? 'mobile'
+      : /iPad|Tablet/i.test(ua) ? 'tablet' : 'desktop';
+    if (env && env.AE) {
+      for (const ev of evs) {
+        const e = ((ev && ev.e) || '').toString().slice(0, 40);
+        if (!e) continue;
+        try {
+          env.AE.writeDataPoint({
+            indexes: [aid],
+            blobs: [e, ((ev.page) || '').toString().slice(0, 60), ((ev.detail) || '').toString().slice(0, 80),
+              country, device, ((ev.lang) || '').toString().slice(0, 8)],
+            doubles: [Number(ev.val) || 0]
+          });
+        } catch (err) {}
+      }
+    }
+  }).catch(() => {});
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin');
@@ -169,6 +198,12 @@ export default {
     if (env && env.RL) {
       const ip = request.headers.get('CF-Connecting-IP') || 'anon';
       try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); } catch (e) {}
+    }
+
+    // Analytics ingest — fire-and-forget, always 204 (never let tracking break or slow the app).
+    if (new URL(request.url).pathname === '/track') {
+      if (ctx && ctx.waitUntil) ctx.waitUntil(track(request, env)); else await track(request, env);
+      return new Response(null, { status: 204, headers: cors(origin) });
     }
 
     let body;

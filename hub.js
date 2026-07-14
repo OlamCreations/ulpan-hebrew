@@ -102,6 +102,7 @@
   // --- Live translator, as a modal ------------------------------------------------
   function openTranslator() {
     closeMenu();
+    if (window.track) track('translator_open');
     // Never run two translator instances at once (they'd share module-level abort/render state
     // and duplicate the qs-input id). If one already exists — the inline one on the home, or an
     // open modal — just focus it instead of mounting a second.
