@@ -29,6 +29,8 @@
     setTranslit(on) { try { localStorage.setItem('qs-translit', on ? 'on' : 'off'); } catch (e) {} },
     root() { return localStorage.getItem('qs-root') !== 'off'; },              // default on
     setRoot(on) { try { localStorage.setItem('qs-root', on ? 'on' : 'off'); } catch (e) {} },
+    grammar() { return localStorage.getItem('qs-grammar') !== 'off'; },        // default on
+    setGrammar(on) { try { localStorage.setItem('qs-grammar', on ? 'on' : 'off'); } catch (e) {} },
     voice() { try { return localStorage.getItem('voice-gender') || 'auto'; } catch (e) { return 'auto'; } },
     setVoice(v) { try { localStorage.setItem('voice-gender', v); } catch (e) {} }
   };
@@ -130,7 +132,8 @@
       toggleRow('pref-cursive', 'Cursive (ktav yad)', 'Show results in Israeli handwriting too.', Prefs.cursive()) +
       toggleRow('pref-niqqud', 'Niqqud', 'Show vowel points on Hebrew.', Prefs.niqqud()) +
       toggleRow('pref-translit', 'Transliteration', 'Show the Latin reading under Hebrew.', Prefs.translit()) +
-      toggleRow('pref-root', 'Root in breakdown', 'Show the √ root in the word-by-word view.', Prefs.root()),
+      toggleRow('pref-root', 'Root in breakdown', 'Show the √ root in the word-by-word view.', Prefs.root()) +
+      toggleRow('pref-grammar', 'Grammar in breakdown', 'Show part of speech, binyan and tense.', Prefs.grammar()),
       (card, m) => {
         card.querySelector('.hub-close').addEventListener('click', () => m.remove());
 
@@ -166,6 +169,7 @@
         wireSwitch('pref-niqqud', v => { Prefs.setNiqqud(v); refreshTranslator(); });
         wireSwitch('pref-translit', v => { Prefs.setTranslit(v); refreshTranslator(); });
         wireSwitch('pref-root', v => { Prefs.setRoot(v); refreshTranslator(); });
+        wireSwitch('pref-grammar', v => { Prefs.setGrammar(v); refreshTranslator(); });
       });
   }
   window.openPrefs = openPrefs;

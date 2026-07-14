@@ -1545,7 +1545,7 @@ function addMiniQuiz(title, questions) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1777900000015';
+  var SHARED_V = '1777900000016';
   ['translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) { return s.src && s.src.indexOf(m) !== -1; });
     if (present) return;

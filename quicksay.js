@@ -342,12 +342,20 @@
     const lemma = stripNiqqud(tok.lemma || '');
     const root = ((!prefs || prefs.root()) && lemma && lemma !== stripNiqqud(voc))
       ? '<div class="mw-root" dir="rtl" lang="he" title="root / dictionary form">√ ' + escapeHtml(lemma) + '</div>' : '';
+    // Grammar: part of speech · binyan · tense, then gender/number/person.
+    let morph = '';
+    if (!prefs || prefs.grammar()) {
+      const bits = [tok.pos, tok.binyan, tok.form].filter(Boolean);
+      if (bits.length) morph += '<div class="mw-morph">' + escapeHtml(bits.join(' · ')) + '</div>';
+      if (tok.gnp) morph += '<div class="mw-gnp">' + escapeHtml(tok.gnp) + '</div>';
+    }
     return '<div class="mw">' +
       '<div class="mw-he" dir="rtl" lang="he">' + escapeHtml(heShown) + '</div>' +
       cursive +
       tr +
       '<div class="mw-gloss">' + escapeHtml(gloss || '') + '</div>' +
       root +
+      morph +
     '</div>';
   }
 
