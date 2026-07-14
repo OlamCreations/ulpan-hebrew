@@ -1391,3 +1391,92 @@ html.light *:hover {
 @media (max-width: 700px) {
   .qs-he { font-size: 28px; }
 }
+
+/* ============ Hub: hamburger menu + modal translator + preferences ============ */
+.hub-burger { margin-left: auto; width: 42px; height: 42px; display: inline-flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 5px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer; transition: border-color .15s; padding: 0; }
+.hub-burger:hover { border-color: var(--accent); }
+.hub-burger span { display: block; width: 18px; height: 2px; background: var(--text-dim); border-radius: 2px; transition: transform .22s ease, opacity .18s ease; }
+.hub-burger:hover span { background: var(--accent); }
+.hub-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hub-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.hub-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+#hub-menu { position: fixed; inset: 0; z-index: 10000; pointer-events: none; }
+#hub-menu.open { pointer-events: auto; }
+.hub-menu-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .25s ease; }
+#hub-menu.open .hub-menu-backdrop { opacity: 1; }
+.hub-menu-panel { position: absolute; top: 0; right: 0; height: 100%; width: 290px; max-width: 84vw;
+  background: var(--bg-card); border-left: 1px solid var(--border); box-shadow: -18px 0 44px rgba(0,0,0,0.4);
+  transform: translateX(100%); transition: transform .26s cubic-bezier(.4,0,.2,1); padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; }
+#hub-menu.open .hub-menu-panel { transform: translateX(0); }
+.hub-menu-head { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-faint); padding: 4px 12px 12px; }
+.menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
+  padding: 13px 14px; background: transparent; border: 1px solid transparent; border-radius: 8px; cursor: pointer;
+  color: var(--text); font-family: inherit; font-size: 15px; text-align: left; transition: background .14s, border-color .14s; }
+.menu-item:hover { background: var(--bg-card-hover); border-color: var(--border); }
+.menu-hint { font-size: 12px; color: var(--text-faint); }
+
+/* Shared modal shell (translator + preferences) */
+.hub-modal { position: fixed; inset: 0; z-index: 10001; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.hub-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); }
+html.light .hub-overlay { background: rgba(0,0,0,0.32); }
+.hub-card { position: relative; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 26px 24px 24px; width: 100%; box-shadow: 0 24px 56px rgba(0,0,0,0.42); animation: hub-pop .18s ease; }
+@keyframes hub-pop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.qs-modal-card { max-width: 620px; }
+.prefs-card { max-width: 480px; }
+.hub-close { position: absolute; top: 12px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: transparent;
+  border: 1px solid var(--border); color: var(--text-dim); font-size: 20px; line-height: 1; cursor: pointer; transition: all .14s; }
+.hub-close:hover { border-color: var(--accent); color: var(--accent); }
+.hub-title { font-size: 21px; font-weight: 600; letter-spacing: -0.2px; margin: 0 40px 4px 0; }
+.hub-sub { color: var(--text-dim); font-size: 13px; margin-bottom: 16px; }
+#qs-modal-mount .qs-results { max-height: 60vh; overflow-y: auto; }
+
+/* Preferences controls */
+.pref-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 2px; border-top: 1px solid var(--border); }
+.pref-row.col { flex-direction: column; align-items: stretch; gap: 10px; }
+.pref-row:first-of-type { border-top: none; }
+.pref-label { font-size: 15px; color: var(--text); }
+.pref-hint { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex: 0 0 auto; }
+.seg-btn { padding: 7px 14px; background: transparent; border: none; border-left: 1px solid var(--border); color: var(--text-dim);
+  font-family: inherit; font-size: 13px; cursor: pointer; transition: all .14s; }
+.seg-btn:first-child { border-left: none; }
+.seg-btn.on { background: var(--accent); color: #fff; }
+.seg-btn:not(.on):hover { color: var(--accent); }
+.lang-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lang-chip { padding: 7px 13px; background: transparent; border: 1px solid var(--border); border-radius: 20px; color: var(--text-dim);
+  font-family: inherit; font-size: 13px; cursor: pointer; transition: all .14s; }
+.lang-chip.on { background: var(--accent-dim); border-color: var(--accent); color: var(--text); }
+.lang-chip:hover { border-color: var(--accent); }
+.pref-switch { position: relative; width: 46px; height: 26px; border-radius: 20px; background: var(--bg-card-hover);
+  border: 1px solid var(--border); cursor: pointer; flex: 0 0 auto; transition: background .18s, border-color .18s; padding: 0; }
+.pref-switch .knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--text-faint); transition: transform .18s ease, background .18s; }
+.pref-switch.on { background: var(--accent-dim); border-color: var(--accent); }
+.pref-switch.on .knob { transform: translateX(20px); background: var(--accent); }
+
+/* Cursive echo line inside a translator card */
+.qs-he-cursive { font-family: 'KtavYad', cursive; direction: rtl; font-size: 26px; line-height: 1.2; color: var(--text-dim); margin-top: 2px; }
+
+@media (max-width: 700px) {
+  .hub-title { font-size: 19px; }
+  .hub-card { padding: 22px 16px 18px; }
+  #qs-modal-mount .qs-results { max-height: 66vh; }
+}
+
+/* Home trigger that opens the translator modal */
+.qs-open-btn { display: flex; align-items: center; gap: 14px; width: 100%; margin: 0 0 22px; padding: 14px 16px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
+  font-family: inherit; text-align: left; transition: border-color .15s, background .15s; }
+.qs-open-btn:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+.qs-open-icon { flex: 0 0 auto; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 24px; color: var(--accent);
+  background: var(--accent-dim); border-radius: 10px; }
+.qs-open-text { flex: 1 1 auto; display: flex; flex-direction: column; font-size: 15px; color: var(--text); }
+.qs-open-sub { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+
+/* Home uses the hamburger hub; the per-lesson niqqud pill has nothing to act on here. */
+body.home .niqqud-toggle { display: none; }

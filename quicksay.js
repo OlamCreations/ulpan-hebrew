@@ -23,7 +23,12 @@
 
   // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
   // any language, but these are the ones whose confident detection suppresses phonetic guesses.
-  const TRANSLATE_LANGS = new Set(['en', 'fr', 'es']);
+  const TRANSLATE_LANGS = new Set(['en', 'fr', 'es', 'ru']);
+
+  // One seed example per source language (empty-state chips), filtered by the user's enabled
+  // languages (window.QSPrefs.langs); 'beseder' always seeds the Hebrew-you-heard mode.
+  const LANG_EXAMPLES = { en: 'thank you', fr: 'où sont les toilettes', es: '¿cuánto cuesta?', ru: 'спасибо' };
+  const prefLangs = () => (window.QSPrefs && window.QSPrefs.langs) ? window.QSPrefs.langs() : ['en', 'fr', 'es', 'ru'];
 
   let PHRASES = [];
   let loaded = false;
@@ -145,11 +150,18 @@
     const meaning = (p.en || '').trim();
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
+    // Preference-aware Hebrew: strip niqqud when the user turned it off; echo the word in
+    // cursive (ktav yad) when enabled. Cursive fonts don't carry niqqud, so it's always stripped.
+    const prefs = window.QSPrefs;
+    const heDisp = (!prefs || prefs.niqqud()) ? p.he : stripNiqqud(p.he);
+    const cursive = (prefs && prefs.cursive())
+      ? '<div class="qs-he-cursive" dir="rtl" lang="he">' + escapeHtml(stripNiqqud(p.he)) + '</div>' : '';
     return '' +
       '<div class="qs-card">' +
         '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.he) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
         '<div class="qs-text">' +
-          '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(p.he) + '</div>' +
+          '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(heDisp) + '</div>' +
+          cursive +
           tr +
           en +
         '</div>' +
@@ -190,6 +202,7 @@
   }
 
   function guessLangpair(q) {
+    if (/[Ѐ-ӿ]/.test(q)) return 'ru|he';         // Cyrillic -> Russian
     if (/[ñ¿¡]/i.test(q)) return 'es|he';                 // unambiguous Spanish
     if (/[àâçéèêëîïôûùÿœæ]/i.test(q)) return 'fr|he';      // French diacritics
     return 'en|he';
@@ -241,7 +254,8 @@
   }
 
   // Retry sources when sl=auto transliterates a short foreign word instead of translating.
-  const RETRY_SL = ['fr', 'es'];
+  // Only the romance/cyrillic sources the user actually types (prefs) are worth retrying.
+  const retrySls = () => ['fr', 'es', 'ru'].filter(l => prefLangs().indexOf(l) >= 0);
 
   function translateOnline(q, signal) {
     const key = q.toLowerCase();
@@ -254,7 +268,7 @@
         // sl=auto echoed the sound (bonjour->בונז'ור) rather than translating it: retry with
         // explicit romance sources and keep the first result that isn't itself a transliteration.
         if (!res || !single || !looksTransliterated(q, res.tr)) return res;
-        return Promise.all(RETRY_SL.map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
+        return Promise.all(retrySls().map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
           .then(alts => alts.find(a => a && a.he && !looksTransliterated(q, a.tr)) || res);
       });
     return withTimeout(run, CFG.tTranslate)
@@ -312,9 +326,9 @@
     const nq = q.trim();
     if (!nq) {
       container.removeAttribute('aria-busy');
-      // Examples span all three modes: English, French, and Hebrew-you-heard.
-      const examples = ['thank you', 'où sont les toilettes', '¿cuánto cuesta?', 'beseder'];
-      container.innerHTML = '<div class="qs-hint">Type <em>English</em>, <em>French</em>, <em>Spanish</em>, or <em>Hebrew you heard</em> — or tap an example:</div>' +
+      // Example chips: one per enabled source language + 'beseder' for Hebrew-you-heard.
+      const examples = prefLangs().map(l => LANG_EXAMPLES[l]).filter(Boolean).concat(['beseder']);
+      container.innerHTML = '<div class="qs-hint">Type a phrase in your language, or Hebrew you heard, or tap an example:</div>' +
         '<div class="qs-chips">' + examples.map(x => '<button type="button" class="qs-chip" data-phrase="' + escapeHtml(x) + '">' + escapeHtml(x) + '</button>').join('') + '</div>';
       return;
     }
@@ -387,8 +401,8 @@
     host._qsMounted = true;
     host.innerHTML =
       '<div class="qs-box">' +
-        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="English, French, Spanish, or Hebrew you heard…" ' +
-               'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French or Spanish to Hebrew, or look up transliterated Hebrew">' +
+        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="English, French, Spanish, Russian, or Hebrew you heard…" ' +
+               'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French, Spanish or Russian to Hebrew, or look up transliterated Hebrew">' +
         '<div id="qs-results" class="qs-results" role="status" aria-live="polite" aria-atomic="false"></div>' +
       '</div>';
     const input = host.querySelector('#qs-input');

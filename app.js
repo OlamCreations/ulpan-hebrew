@@ -776,7 +776,9 @@ function toggleTheme() {
 function injectFloatingControls() {
   if (document.getElementById('floating-controls')) return;
   const lesson = location.pathname.split(/[\\/]/).pop().replace('.html', '');
-  if (lesson === 'index') return;
+  // '' = directory index (served as '/…/'), 'home' likewise: the home uses the hamburger hub,
+  // not the per-lesson floating bar (whose Show/Hide/Listen/Add actions are no-ops there).
+  if (lesson === 'index' || lesson === '' || lesson === 'home') return;
   const el = document.createElement('div');
   el.id = 'floating-controls';
   el.innerHTML = `
