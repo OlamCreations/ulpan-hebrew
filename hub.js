@@ -369,6 +369,9 @@
 
     header.appendChild(actions);
 
+    // Lesson header: compact it into two rows on mobile (title + actions, then nav + niqqud).
+    if (!(document.body && document.body.classList.contains('home'))) header.classList.add('lesson-topbar');
+
     const menu = document.createElement('div');
     menu.id = 'hub-menu';
     menu.innerHTML =
