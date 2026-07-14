@@ -154,15 +154,21 @@
     const heDisp = (!prefs || prefs.niqqud()) ? p.he : stripNiqqud(p.he);
     const cursive = (prefs && prefs.cursive())
       ? '<div class="qs-he-cursive" dir="rtl" lang="he">' + escapeHtml(stripNiqqud(p.he)) + '</div>' : '';
+    // Multi-word Hebrew results can be decomposed word by word (root + niqqud + meaning).
+    const breakable = /[֐-׿]/.test(p.he || '') && stripNiqqud(p.he).trim().split(/\s+/).filter(Boolean).length >= 2;
+    const breakBtn = breakable
+      ? '<button type="button" class="qs-break" data-he="' + escapeHtml(p.he) + '">Break it down</button>' : '';
     return '' +
-      '<div class="qs-card">' +
+      '<div class="qs-card' + (breakable ? ' has-break' : '') + '">' +
         '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.he) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
         '<div class="qs-text">' +
           '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(heDisp) + '</div>' +
           cursive +
           tr +
           en +
+          breakBtn +
         '</div>' +
+        (breakable ? '<div class="qs-break-out"></div>' : '') +
       '</div>';
   }
 
@@ -301,6 +307,76 @@
     container.querySelectorAll('.qs-play').forEach(b => {
       if (b._wired) return; b._wired = true;
       b.addEventListener('click', () => play(b.dataset.he));
+    });
+    wireBreak(container);
+  }
+
+  // --- Word-by-word breakdown (deep morphology via the Dicta proxy Worker) --------
+  // Config: the Cloudflare Worker that relays Dicta Nakdan (CORS-blocked in the browser) and
+  // returns per-word vocalization + root (lemma). Point this at another deployment to move it.
+  const MORPH_URL = 'https://ulpan-morph.olamcreations.workers.dev';
+  const isHeb = s => /[֐-׿]/.test(s || '');
+  const morphCache = new Map();
+
+  function fetchMorph(text, signal) {
+    const key = 'm:' + text;
+    if (morphCache.has(key)) return Promise.resolve(morphCache.get(key));
+    return fetch(MORPH_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text }), signal: signal
+    })
+      .then(r => { if (!r.ok) throw new Error('morph ' + r.status); return r.json(); })
+      .then(j => { const toks = (j && j.tokens) || []; morphCache.set(key, toks); return toks; });
+  }
+
+  // One word cell: vocalized Hebrew (+ optional cursive), transliteration (niqqud-based via
+  // translit.js), meaning, and the root / dictionary form (√lemma) when it differs.
+  function morphWordHtml(tok, gloss) {
+    const prefs = window.QSPrefs;
+    const voc = tok.voc || tok.word || '';
+    const heShown = (!prefs || prefs.niqqud()) ? voc : stripNiqqud(voc);
+    const tr = (window.Translit && window.Translit.transliterate(voc)) || '';
+    const cursive = (prefs && prefs.cursive())
+      ? '<div class="mw-cursive" dir="rtl" lang="he">' + escapeHtml(stripNiqqud(voc)) + '</div>' : '';
+    const lemma = stripNiqqud(tok.lemma || '');
+    const root = (lemma && lemma !== stripNiqqud(voc))
+      ? '<div class="mw-root" dir="rtl" lang="he" title="root / dictionary form">√ ' + escapeHtml(lemma) + '</div>' : '';
+    return '<div class="mw">' +
+      '<div class="mw-he" dir="rtl" lang="he">' + escapeHtml(heShown) + '</div>' +
+      cursive +
+      '<div class="mw-tr">' + escapeHtml(tr) + '</div>' +
+      '<div class="mw-gloss">' + escapeHtml(gloss || '') + '</div>' +
+      root +
+    '</div>';
+  }
+
+  function renderBreakdown(out, hebrew, signal) {
+    out.innerHTML = '<div class="qs-loading">Breaking down</div>';
+    fetchMorph(hebrew, signal)
+      .then(tokens => {
+        const words = tokens.filter(t => t && !t.sep && isHeb(t.word));
+        if (!words.length) { out.innerHTML = '<div class="qs-hint">No breakdown for this.</div>'; return; }
+        return Promise.all(words.map(t =>
+          withTimeout(fetchGloss(stripNiqqud(t.voc || t.word), signal), CFG.tGloss).then(g => (g && g.en) || '')
+        )).then(glosses => {
+          out.innerHTML = '<div class="qs-sub">Word by word</div>' +
+            '<div class="mw-grid" dir="rtl">' + words.map((t, i) => morphWordHtml(t, glosses[i])).join('') + '</div>';
+        });
+      })
+      .catch(() => { out.innerHTML = '<div class="qs-hint">Breakdown needs a connection.</div>'; });
+  }
+
+  function wireBreak(container) {
+    container.querySelectorAll('.qs-break').forEach(b => {
+      if (b._wired) return; b._wired = true;
+      b.addEventListener('click', () => {
+        const cardEl = b.closest('.qs-card');
+        const out = cardEl && cardEl.querySelector('.qs-break-out');
+        if (!out) return;
+        if (out.dataset.open === '1') { out.innerHTML = ''; out.dataset.open = '0'; b.classList.remove('on'); return; }
+        out.dataset.open = '1'; b.classList.add('on');
+        renderBreakdown(out, b.dataset.he, new AbortController().signal);
+      });
     });
   }
 
