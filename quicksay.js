@@ -25,9 +25,7 @@
   // any language, but these are the ones whose confident detection suppresses phonetic guesses.
   const TRANSLATE_LANGS = new Set(['en', 'fr', 'es', 'ru']);
 
-  // One seed example per source language (empty-state chips), filtered by the user's enabled
-  // languages (window.QSPrefs.langs); 'beseder' always seeds the Hebrew-you-heard mode.
-  const LANG_EXAMPLES = { en: 'thank you', fr: 'où sont les toilettes', es: '¿cuánto cuesta?', ru: 'спасибо' };
+  // Enabled source languages (window.QSPrefs.langs) drive which sources we retry.
   const prefLangs = () => (window.QSPrefs && window.QSPrefs.langs) ? window.QSPrefs.langs() : ['en', 'fr', 'es', 'ru'];
 
   let PHRASES = [];
@@ -326,10 +324,7 @@
     const nq = q.trim();
     if (!nq) {
       container.removeAttribute('aria-busy');
-      // Example chips: one per enabled source language + 'beseder' for Hebrew-you-heard.
-      const examples = prefLangs().map(l => LANG_EXAMPLES[l]).filter(Boolean).concat(['beseder']);
-      container.innerHTML = '<div class="qs-hint">Type a phrase in your language, or Hebrew you heard, or tap an example:</div>' +
-        '<div class="qs-chips">' + examples.map(x => '<button type="button" class="qs-chip" data-phrase="' + escapeHtml(x) + '">' + escapeHtml(x) + '</button>').join('') + '</div>';
+      container.innerHTML = '';   // minimal empty state: no hint text, no example chips
       return;
     }
     const token = ++renderToken;
@@ -401,7 +396,7 @@
     host._qsMounted = true;
     host.innerHTML =
       '<div class="qs-box">' +
-        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="English, French, Spanish, Russian, or Hebrew you heard…" ' +
+        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="…" ' +
                'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French, Spanish or Russian to Hebrew, or look up transliterated Hebrew">' +
         '<div id="qs-results" class="qs-results" role="status" aria-live="polite" aria-atomic="false"></div>' +
       '</div>';

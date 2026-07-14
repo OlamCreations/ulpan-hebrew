@@ -91,7 +91,7 @@
     openOverlay('qs-modal', 'hub-card qs-modal-card',
       '<button class="hub-close" aria-label="Close">×</button>' +
       '<div class="hub-title">Live translator</div>' +
-      '<div class="hub-sub">English, French, Spanish, Russian, or Hebrew you heard</div>' +
+      '<div class="hub-sub">Type a phrase, or Hebrew you heard</div>' +
       '<div id="qs-modal-mount"></div>',
       (card, m) => {
         card.querySelector('.hub-close').addEventListener('click', () => m.remove());
