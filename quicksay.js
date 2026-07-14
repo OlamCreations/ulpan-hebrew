@@ -417,8 +417,14 @@
 
   function transSectionHtml(fwd, fwdOffline, dupeSet) {
     const cards = [];
-    if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) cards.push(card(fwd, 'online'));
-    fwdOffline.forEach(p => cards.push(card(p, 'curated')));
+    if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) { cards.push(card(fwd, 'online')); dupeSet.add(stripNiqqud(fwd.he)); }
+    // Skip curated matches already shown in the phonetic "did you mean?" section (e.g. "beseder"
+    // surfaces both as romanized-Hebrew and as a keyword) so the same card isn't listed twice.
+    fwdOffline.forEach(p => {
+      const k = stripNiqqud(p.he);
+      if (dupeSet.has(k)) return;
+      dupeSet.add(k); cards.push(card(p, 'curated'));
+    });
     if (!cards.length) return '';
     return '<div class="qs-sub">Translation</div>' + cards.join('');
   }

@@ -37,6 +37,15 @@ const POS_LABEL = { PRON: 'pronoun', VERB: 'verb', NOUN: 'noun', PROPN: 'proper 
 const BINYAN_LABEL = { PAAL: "Pa'al", NIFAL: "Nif'al", PIEL: "Pi'el", PUAL: "Pu'al", HIFIL: "Hif'il",
   HUFAL: "Huf'al", HITPAEL: "Hitpa'el" };
 
+// Dicta encodes binyan in bits 51-53 of its morph id (0 = not a verb). Dicta is Hebrew-native
+// and gets irregular verbs right where UDPipe fails (הלך as Pa'al not Hif'il, אלמד as a verb
+// not a proper noun), so it's authoritative for binyan. (Its tense byte is not cleanly
+// decodable — mixes conjugation class — so tense stays with UDPipe.)
+const DBINYAN = { 1: "Pa'al", 2: "Nif'al", 3: "Hif'il", 4: "Huf'al", 5: "Pi'el", 6: "Pu'al", 7: "Hitpa'el" };
+function decodeBinyan(midStr) {
+  try { return DBINYAN[Number((BigInt(midStr) >> 51n) & 7n)] || ''; } catch (e) { return ''; }
+}
+
 const feat = (feats, key) => { const m = feats && feats.match(new RegExp(key + '=([^|]+)')); return m ? m[1] : ''; };
 function verbForm(feats) {
   const t = feat(feats, 'Tense'), vf = feat(feats, 'VerbForm'), mood = feat(feats, 'Mood');
@@ -105,8 +114,10 @@ async function dicta(text, signal) {
     const opt = t && Array.isArray(t.options) && t.options[0];
     // Dicta marks prefix boundaries with '|' (לְ|בֵית); drop it for a clean vocalized form.
     const voc = (((opt && opt[0]) || (t && t.word) || '')).replace(/\|/g, '');
-    const lemma = (opt && Array.isArray(opt[1]) && opt[1][0] && opt[1][0][1]) || '';
-    out.push({ sep: false, word: (t && t.word) || '', voc, lemma });
+    const a0 = opt && Array.isArray(opt[1]) && opt[1][0];
+    const lemma = (a0 && a0[1]) || '';
+    const dbinyan = decodeBinyan(a0 && a0[0]);
+    out.push({ sep: false, word: (t && t.word) || '', voc, lemma, dbinyan });
   }
   return out;
 }
@@ -135,7 +146,15 @@ async function analyze(text) {
   for (const tok of out) {
     if (tok.sep) continue;
     const w = ud[ui++];
-    if (w) Object.assign(tok, morphOf(w));
+    const um = w ? morphOf(w) : {};
+    if (tok.dbinyan) {
+      // Dicta says verb (with this binyan); trust it over UDPipe for pos+binyan, keep UDPipe's
+      // tense (form) and gender/number/person.
+      tok.pos = 'verb'; tok.binyan = tok.dbinyan; tok.form = um.form || ''; tok.gnp = um.gnp || '';
+    } else {
+      Object.assign(tok, um);
+    }
+    delete tok.dbinyan;
   }
   return out;
 }
@@ -146,6 +165,12 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
     if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
+    // Per-IP rate limit (native binding) — stops scripted abuse of the public endpoint.
+    if (env && env.RL) {
+      const ip = request.headers.get('CF-Connecting-IP') || 'anon';
+      try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); } catch (e) {}
+    }
+
     let body;
     try { body = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
     const text = ((body && body.text) || '').toString().slice(0, 500);
@@ -153,7 +178,7 @@ export default {
 
     // Cache the computed payload (not the CORS-stamped Response) so the header stays per-origin.
     const cache = caches.default;
-    const cacheKey = new Request('https://morph.cache/v2/' + encodeURIComponent(text));
+    const cacheKey = new Request('https://morph.cache/v3/' + encodeURIComponent(text));
     const hit = await cache.match(cacheKey);
     if (hit) return new Response(await hit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
 
