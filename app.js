@@ -421,8 +421,19 @@ if ('speechSynthesis' in window) {
 window.addEventListener('DOMContentLoaded', () => {
   setupNiqqudToggle();
   setTimeout(() => { if (!voiceCheckDone) setupAudioButtons(); }, 1000);
-  setTimeout(() => { autoInjectExercises(); recordDailyStreak(); injectFloatingControls(); enableTextBlockAutoPlay(); setupRevealToggle(); enhanceIndexNavTooltips(); }, 250);
+  setTimeout(() => { autoInjectExercises(); recordDailyStreak(); injectFloatingControls(); enableTextBlockAutoPlay(); setupRevealToggle(); enhanceIndexNavTooltips(); a11yIconButtons(); }, 250);
 });
+
+// Lesson play buttons are baked into ~500 HTML files as `<button class="icon-btn">▶</button>`
+// (CSS paints the triangle via a mask, font-size:0). The raw ▶ text node becomes the screen-
+// reader name, beating the title. Fix at runtime for every page instead of editing 500 files:
+// give a real aria-label and hide the glyph from assistive tech.
+function a11yIconButtons() {
+  document.querySelectorAll('.icon-btn').forEach(b => {
+    if (!b.getAttribute('aria-label')) b.setAttribute('aria-label', b.title || 'Listen');
+    if (b.textContent.trim() === '▶' && !b.querySelector('span')) b.innerHTML = '<span aria-hidden="true">▶</span>';
+  });
+}
 
 /* ---------- Index nav tooltips (matrix of lesson numbers) ---------- */
 function enhanceIndexNavTooltips() {
@@ -460,7 +471,10 @@ function wrapRevealCards() {
     if (el.querySelector(':scope > .reveal-inner')) return;
     const original = el.innerHTML;
     if (!original.trim()) return;
-    el.innerHTML = `<span class="reveal-inner"><span class="reveal-front">${original}</span><span class="reveal-back"></span></span>`;
+    el.innerHTML = `<span class="reveal-inner"><span class="reveal-front">${original}</span><span class="reveal-back" aria-hidden="true">•••</span></span>`;
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Tap to reveal');
   });
 }
 
@@ -468,14 +482,24 @@ function setupRevealToggle() {
   wrapRevealCards();
   injectPerCardSRS();
   // re-wrap when DOM changes (lessons inject content after R() runs)
-  const obs = new MutationObserver(() => { wrapRevealCards(); injectPerCardSRS(); });
+  const obs = new MutationObserver(() => { wrapRevealCards(); injectPerCardSRS(); a11yIconButtons(); });
   obs.observe(document.body, { childList: true, subtree: true });
   document.addEventListener('click', (e) => {
     if (e.target.closest('.srs-btn')) return;
     const card = e.target.closest('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr');
     if (!card) return;
     card.classList.toggle('revealed');
+    card.setAttribute('aria-pressed', card.classList.contains('revealed') ? 'true' : 'false');
     e.stopPropagation();
+  });
+  // Keyboard parity: Enter/Space reveals the focused cell.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    const card = e.target.closest && e.target.closest('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr');
+    if (!card) return;
+    e.preventDefault();
+    card.classList.toggle('revealed');
+    card.setAttribute('aria-pressed', card.classList.contains('revealed') ? 'true' : 'false');
   });
 }
 
@@ -632,6 +656,12 @@ function makeModalAccessible(modal, dialog) {
   return modal;
 }
 
+// Escape any field interpolated into innerHTML. The SRS/review data comes from localStorage
+// (developer-authored lesson text today), but a future "save this translation to SRS" feature
+// would feed third-party API text straight in — escape now so that can never become stored XSS.
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
 function openSRSReview() {
   const existing = document.getElementById('srs-modal');
   if (existing) existing.remove();
@@ -702,11 +732,11 @@ function openSRSReview() {
         <div class="srs-progress">${due.length - queue.length} / ${due.length}</div>
         <button class="srs-niqqud-toggle" type="button" aria-pressed="${getSrsNiqqud()}" title="Toggle niqqud (vowel marks)"><span class="dot"></span><span class="label">${getSrsNiqqud()?'Niqqud on':'Niqqud off'}</span></button>
       </div>
-      <div class="srs-he" data-he="${current.he.replace(/"/g,'&quot;')}">${heShown}</div>
+      <div class="srs-he" data-he="${escHtml(current.he)}">${escHtml(heShown)}</div>
       <button class="srs-listen" type="button" aria-label="Play audio">▶</button>
       <div class="srs-answer" hidden>
-        <div class="srs-translit">${current.translit||''}</div>
-        <div class="srs-fr">${current.fr||''}</div>
+        <div class="srs-translit">${escHtml(current.translit||'')}</div>
+        <div class="srs-fr">${escHtml(current.fr||'')}</div>
       </div>
       <div class="srs-actions">
         <button class="srs-show fc-btn" type="button">Show answer</button>
@@ -1545,13 +1575,16 @@ function addMiniQuiz(title, questions) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1777900000017';
+  var SHARED_V = '1777900000018';
   ['translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
-    var present = Array.prototype.some.call(document.scripts, function (s) { return s.src && s.src.indexOf(m) !== -1; });
+    var present = Array.prototype.some.call(document.scripts, function (s) {
+      try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }
+    });
     if (present) return;
     var s = document.createElement('script');
     s.src = m + '?v=' + SHARED_V;
     s.async = false;              // preserve execution order across the injected modules
+    s.onerror = function () { try { console.warn('[ulpan] failed to load shared module', m); } catch (e) {} };
     document.head.appendChild(s);
   });
 })();

@@ -5,15 +5,31 @@
 // UDPipe is CC BY-NC-SA (non-commercial) — fine for a personal learning app.
 const NAKDAN = 'https://nakdan-u1-0.loadbalancer.dicta.org.il/api';
 const UDPIPE = 'https://lindat.mff.cuni.cz/services/udpipe/api/process';
+const UPSTREAM_TIMEOUT = 6000;   // ms; a hung upstream degrades instead of hanging the request
+const CACHE_TTL = 604800;        // 7 days — the vocabulary is effectively static
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Max-Age': '86400'
-};
-const json = (obj, status = 200) =>
-  new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS } });
+// CORS restricted to the app origins (still open to direct curl — that's a rate-limit concern,
+// not a CORS one — but this stops other sites embedding the endpoint in visitors' browsers).
+function allowOrigin(origin) {
+  try {
+    if (!origin) return 'https://olamcreations.github.io';
+    const h = new URL(origin).hostname;
+    if (/\.github\.io$/.test(h) || h === 'localhost' || h === '127.0.0.1') return origin;
+  } catch (e) {}
+  return 'https://olamcreations.github.io';
+}
+function cors(origin) {
+  return {
+    'Access-Control-Allow-Origin': allowOrigin(origin),
+    'Vary': 'Origin',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+    'X-Content-Type-Options': 'nosniff'
+  };
+}
+const json = (obj, status, origin) =>
+  new Response(JSON.stringify(obj), { status: status || 200, headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
 
 const POS_LABEL = { PRON: 'pronoun', VERB: 'verb', NOUN: 'noun', PROPN: 'proper noun', ADJ: 'adjective',
   ADV: 'adverb', ADP: 'preposition', DET: 'article', NUM: 'number', CCONJ: 'conjunction', SCONJ: 'conjunction',
@@ -33,7 +49,9 @@ function verbForm(feats) {
 }
 
 // CoNLL-U -> one entry per surface word; multiword tokens (prefix splits) fold into their
-// content sub-token so a word like בבית keeps its noun morphology.
+// content sub-token so a word like בבית keeps its noun morphology. PUNCT tokens are dropped:
+// Dicta already folds punctuation into its separator tokens, so keeping them here would shift
+// the per-word alignment by one for every following word.
 function parseUD(conllu) {
   const rows = (conllu || '').split('\n').filter(l => l && l[0] !== '#').map(l => l.split('\t'));
   const words = [];
@@ -49,15 +67,18 @@ function parseUD(conllu) {
       words.push({ surface: cols[1], pos: head[3], feats: head[5], lemma: head[2] });
       k += 1 + n;
     } else {
-      words.push({ surface: cols[1], pos: cols[3], feats: cols[5], lemma: cols[2] });
+      if (cols[3] !== 'PUNCT') words.push({ surface: cols[1], pos: cols[3], feats: cols[5], lemma: cols[2] });
       k += 1;
     }
   }
   return words;
 }
 
+const HEB = /[֐-׿]/;
 function morphOf(ud) {
   const out = {};
+  // Never surface a "punct"/other bogus tag on a token that is actually Hebrew letters.
+  if (HEB.test(ud.surface) && (ud.pos === 'PUNCT' || ud.pos === 'X' || ud.pos === 'SYM')) return out;
   out.pos = POS_LABEL[ud.pos] || (ud.pos ? ud.pos.toLowerCase() : '');
   if (ud.pos === 'VERB' || ud.pos === 'AUX') {
     out.binyan = BINYAN_LABEL[feat(ud.feats, 'HebBinyan')] || '';
@@ -72,12 +93,10 @@ function morphOf(ud) {
   return out;
 }
 
-async function dicta(text) {
-  // addmorph:true makes each option an array [vocalized, [[morphId, lemma, ...], ...]] — we read
-  // the vocalized form and the first lemma (root). With it false the options are bare strings.
+async function dicta(text, signal) {
   const payload = { task: 'nakdan', data: text, genre: 'modern', addmorph: true,
     keepqq: false, nodageshdefault: false, patachma: false, keepmetagim: true };
-  const r = await fetch(NAKDAN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  const r = await fetch(NAKDAN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal });
   if (!r.ok) throw new Error('nakdan ' + r.status);
   const toks = await r.json();
   const out = [];
@@ -92,37 +111,56 @@ async function dicta(text) {
   return out;
 }
 
-async function udpipe(text) {
+async function udpipe(text, signal) {
   const form = new URLSearchParams();
   form.set('tokenizer', ''); form.set('tagger', ''); form.set('model', 'hebrew'); form.set('data', text);
-  const r = await fetch(UDPIPE, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: form.toString() });
+  const r = await fetch(UDPIPE, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: form.toString(), signal });
   if (!r.ok) throw new Error('udpipe ' + r.status);
   const j = await r.json();
   return parseUD(j && j.result);
 }
 
+async function analyze(text) {
+  const dCtrl = new AbortController(), uCtrl = new AbortController();
+  const dT = setTimeout(() => dCtrl.abort(), UPSTREAM_TIMEOUT);
+  const uT = setTimeout(() => uCtrl.abort(), UPSTREAM_TIMEOUT);
+  const [dRes, uRes] = await Promise.allSettled([
+    dicta(text, dCtrl.signal).finally(() => clearTimeout(dT)),
+    udpipe(text, uCtrl.signal).finally(() => clearTimeout(uT))
+  ]);
+  if (dRes.status !== 'fulfilled') return null;
+  const out = dRes.value;
+  const ud = uRes.status === 'fulfilled' ? uRes.value : [];
+  let ui = 0;
+  for (const tok of out) {
+    if (tok.sep) continue;
+    const w = ud[ui++];
+    if (w) Object.assign(tok, morphOf(w));
+  }
+  return out;
+}
+
 export default {
-  async fetch(request) {
-    if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
-    if (request.method !== 'POST') return json({ error: 'POST only' }, 405);
+  async fetch(request, env, ctx) {
+    const origin = request.headers.get('Origin');
+    if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
+    if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
     let body;
-    try { body = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400); }
+    try { body = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
     const text = ((body && body.text) || '').toString().slice(0, 500);
-    if (!text.trim()) return json({ tokens: [] });
+    if (!text.trim()) return json({ tokens: [] }, 200, origin);
 
-    const [dRes, uRes] = await Promise.allSettled([dicta(text), udpipe(text)]);
-    if (dRes.status !== 'fulfilled') return json({ error: 'upstream' }, 502);
-    const out = dRes.value;
-    const ud = uRes.status === 'fulfilled' ? uRes.value : [];
+    // Cache the computed payload (not the CORS-stamped Response) so the header stays per-origin.
+    const cache = caches.default;
+    const cacheKey = new Request('https://morph.cache/v2/' + encodeURIComponent(text));
+    const hit = await cache.match(cacheKey);
+    if (hit) return new Response(await hit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
 
-    // Attach UDPipe morphology to each content word, in order.
-    let ui = 0;
-    for (const tok of out) {
-      if (tok.sep) continue;
-      const u = ud[ui++];
-      if (u) Object.assign(tok, morphOf(u));
-    }
-    return json({ tokens: out });
+    const tokens = await analyze(text);
+    if (tokens === null) return json({ error: 'upstream' }, 502, origin);
+    const payload = JSON.stringify({ tokens });
+    if (ctx && ctx.waitUntil) ctx.waitUntil(cache.put(cacheKey, new Response(payload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
+    return new Response(payload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
   }
 };

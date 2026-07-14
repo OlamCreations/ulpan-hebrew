@@ -18,7 +18,8 @@
     hiConf: 0.85,       // detected-lang confidence above which en/fr is "clearly a translation query"
     tTranslate: 8000,   // ms budget: forward EN/FR -> HE
     tPhon: 5000,        // ms budget: Input Tools phonetic candidates
-    tGloss: 6000        // ms budget: HE -> meaning + romanization gloss
+    tGloss: 6000,       // ms budget: HE -> meaning + romanization gloss
+    tMorph: 9000        // ms budget: word-by-word morphology (the Worker + its two upstreams)
   };
 
   // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
@@ -378,8 +379,9 @@
 
   function renderBreakdown(out, hebrew, signal) {
     out.innerHTML = '<div class="qs-loading">Breaking down</div>';
-    fetchMorph(hebrew, signal)
+    withTimeout(fetchMorph(hebrew, signal), CFG.tMorph)
       .then(tokens => {
+        if (!tokens) { out.innerHTML = '<div class="qs-hint">Breakdown needs a connection.</div>'; return; }
         const words = tokens.filter(t => t && !t.sep && isHeb(t.word));
         if (!words.length) { out.innerHTML = '<div class="qs-hint">No breakdown for this.</div>'; return; }
         return Promise.all(words.map(t =>
@@ -516,13 +518,20 @@
     });
     loadPhrases().then(() => { if (input.value) render(results, input.value); });
     render(results, '');
-    document.addEventListener('keydown', e => {
-      if (e.key === '/' && !/^(input|textarea)$/i.test(e.target.tagName) && !e.target.isContentEditable) {
-        e.preventDefault(); input.focus(); input.select();
-      }
-      if (e.key === 'Escape' && document.activeElement === input) { input.value = ''; render(results, ''); input.blur(); }
-    });
   }
+
+  // `/` focuses the current translator, Escape clears it — registered ONCE at module scope
+  // (not per mount()) so reopening the modal doesn't leak a listener + detached DOM each time.
+  document.addEventListener('keydown', e => {
+    const input = document.getElementById('qs-input');
+    if (!input) return;
+    if (e.key === '/' && !/^(input|textarea)$/i.test(e.target.tagName) && !e.target.isContentEditable) {
+      e.preventDefault(); input.focus(); input.select();
+    } else if (e.key === 'Escape' && document.activeElement === input) {
+      const results = document.getElementById('qs-results');
+      input.value = ''; if (results) render(results, ''); input.blur();
+    }
+  });
 
   window.QuickSay = { mount: mount };
 })();

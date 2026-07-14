@@ -276,9 +276,10 @@
  .cat-head {
  display: flex; align-items: center; gap: 12px;
  cursor: pointer; user-select: none; margin: 0 !important;
+ min-width: 0;
  }
  .cat-ic { font-size: 15px; line-height: 1; width: 24px; text-align: center; flex: 0 0 auto; color: var(--accent); opacity: 0.85; }
- .cat-h2title, .mega-cat-title { font-size: 17px; font-weight: 700; color: var(--text); margin: 0; }
+ .cat-h2title, .mega-cat-title { font-size: 17px; font-weight: 700; color: var(--text); margin: 0; min-width: 0; overflow-wrap: anywhere; }
  .cat-head .mega-cat-bar { flex: 1; max-width: 150px; }
  .cat-count {
  font-size: 11px; color: var(--text-dim);
@@ -2918,7 +2919,7 @@
 </div>
 
 <!-- app.js injects the shared modules (translit + quicksay + hub); see loadSharedModules there. -->
-<script src="app.js?v=1777900000017"></script>
+<script src="app.js?v=1777900000018"></script>
 <script>
  const done = getLessonProgress();
  let firstNotDone = null;
@@ -3278,13 +3279,13 @@ async function showMixedQuiz() {
  <span>Score: ${score}</span>
  </div>
  <div style="text-align:center;padding:24px 0;">
- <div style="font-family:'Frank Ruhl Libre',serif;font-size:42px;direction:rtl;color:var(--text);">${correct.he}</div>
- <div style="font-size:13px;color:var(--text-dim);font-style:italic;margin-top:6px;">${correct.translit}</div>
+ <div style="font-family:'Frank Ruhl Libre',serif;font-size:42px;direction:rtl;color:var(--text);">${escHtml(correct.he)}</div>
+ <div style="font-size:13px;color:var(--text-dim);font-style:italic;margin-top:6px;">${escHtml(correct.translit)}</div>
  <button class="btn icon-btn" id="mq-play" style="margin-top:8px;">▶ Hear</button>
  <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">from: ${correct.source}</div>
  </div>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
- ${opts.map(o => `<button class="btn" data-c="${o.fr === correct.fr}">${o.fr}</button>`).join('')}
+ ${opts.map(o => `<button class="btn" data-c="${o.fr === correct.fr}">${escHtml(o.fr)}</button>`).join('')}
  </div>
  <div id="mq-fb" style="text-align:center;margin-top:12px;font-size:13px;min-height:18px;"></div>
  <button class="btn" onclick="this.closest('div').parentElement.remove()" style="margin-top:12px;width:100%;opacity:0.6;">End quiz</button>
@@ -3334,10 +3335,10 @@ function showSRSReview(cards) {
  <span>Reps: ${c.reps} Ease: ${c.ease.toFixed(2)}</span>
  </div>
  <div style="background:var(--bg);border-radius:6px;padding:32px;text-align:center;cursor:pointer;" id="srs-card">
- <div style="font-family:'Frank Ruhl Libre',serif;font-size:48px;direction:rtl;color:var(--text);">${c.he}</div>
+ <div style="font-family:'Frank Ruhl Libre',serif;font-size:48px;direction:rtl;color:var(--text);">${escHtml(c.he)}</div>
  <div id="srs-back" style="margin-top:16px;display:none;">
- <div style="font-size:14px;color:var(--text-dim);font-style:italic;margin-bottom:8px;">${c.translit || ''}</div>
- <div style="font-size:24px;color:var(--accent);">${c.fr || ''}</div>
+ <div style="font-size:14px;color:var(--text-dim);font-style:italic;margin-bottom:8px;">${escHtml(c.translit || '')}</div>
+ <div style="font-size:24px;color:var(--accent);">${escHtml(c.fr || '')}</div>
  </div>
  <div id="srs-hint" style="margin-top:16px;font-size:11px;color:var(--text-faint);">Click to reveal</div>
  </div>
@@ -3389,7 +3390,7 @@ function showReviewModal(words) {
  words.forEach(w => {
  const row = document.createElement('div');
  row.style.cssText = 'padding:10px;border-bottom:1px solid var(--border);cursor:pointer;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:center;';
- row.innerHTML = `<span style="font-family:'Frank Ruhl Libre',serif;font-size:20px;direction:rtl;text-align:right;">${w.he}</span><span style="font-style:italic;color:var(--text-dim);font-size:13px;">${w.translit}</span><span style="font-size:14px;">${w.fr}</span>`;
+ row.innerHTML = `<span style="font-family:'Frank Ruhl Libre',serif;font-size:20px;direction:rtl;text-align:right;">${escHtml(w.he)}</span><span style="font-style:italic;color:var(--text-dim);font-size:13px;">${escHtml(w.translit)}</span><span style="font-size:14px;">${escHtml(w.fr)}</span>`;
  row.addEventListener('click', () => speak(w.he, 0.85));
  list.appendChild(row);
  });
@@ -3410,8 +3411,8 @@ function showReviewModal(words) {
  const correct = words[i++];
  const distractors = shuffle(words.filter(w => w.he !== correct.he)).slice(0, 3);
  const opts = shuffle([correct, ...distractors]);
- list.innerHTML = `<div style="text-align:center;padding:20px;"><div style="font-family:'Frank Ruhl Libre',serif;font-size:36px;direction:rtl;">${correct.he}</div><div style="font-size:14px;color:var(--text-dim);font-style:italic;margin-top:6px;">${correct.translit}</div></div>
- <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">${opts.map(o => `<button class="btn" data-c="${o.fr === correct.fr}">${o.fr}</button>`).join('')}</div>
+ list.innerHTML = `<div style="text-align:center;padding:20px;"><div style="font-family:'Frank Ruhl Libre',serif;font-size:36px;direction:rtl;">${escHtml(correct.he)}</div><div style="font-size:14px;color:var(--text-dim);font-style:italic;margin-top:6px;">${escHtml(correct.translit)}</div></div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">${opts.map(o => `<button class="btn" data-c="${o.fr === correct.fr}">${escHtml(o.fr)}</button>`).join('')}</div>
  <div style="margin-top:12px;text-align:center;color:var(--text-dim);font-size:13px;">Q ${i} / ${words.length} Score ${score}</div>`;
  speak(correct.he, 0.85);
  list.querySelectorAll('button[data-c]').forEach(b => b.addEventListener('click', () => {

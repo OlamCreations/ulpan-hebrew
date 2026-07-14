@@ -102,6 +102,11 @@
   // --- Live translator, as a modal ------------------------------------------------
   function openTranslator() {
     closeMenu();
+    // Never run two translator instances at once (they'd share module-level abort/render state
+    // and duplicate the qs-input id). If one already exists — the inline one on the home, or an
+    // open modal — just focus it instead of mounting a second.
+    const existing = document.getElementById('qs-input');
+    if (existing) { try { existing.focus(); existing.select(); } catch (e) {} return; }
     openOverlay('qs-modal', 'hub-card qs-modal-card',
       '<button class="hub-close" aria-label="Close">×</button>' +
       '<div class="hub-title">Live translator</div>' +
@@ -139,7 +144,7 @@
     openOverlay('prefs-modal', 'hub-card prefs-card',
       '<button class="hub-close" aria-label="Close">×</button>' +
       '<div class="hub-title">Preferences</div>' +
-      segRow('Theme', 'Dark is the real mode; light is the adaptation.',
+      segRow('Theme', 'Light or dark — your call.',
         [{ value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }], t, 'pref-theme') +
       segRow('Voice', 'Hebrew text-to-speech.',
         [{ value: 'auto', label: 'Auto' }, { value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }], Prefs.voice(), 'pref-voice') +
