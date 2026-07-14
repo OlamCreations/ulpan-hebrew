@@ -200,9 +200,11 @@ export default {
       try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); } catch (e) {}
     }
 
-    // Analytics ingest — fire-and-forget, always 204 (never let tracking break or slow the app).
+    // Analytics ingest — always 204 (never let tracking break or slow the app). Awaited (not
+    // waitUntil) so the request body is read before we return; reading it afterwards can drop
+    // the write. writeDataPoint itself is non-blocking, so this stays fast.
     if (new URL(request.url).pathname === '/track') {
-      if (ctx && ctx.waitUntil) ctx.waitUntil(track(request, env)); else await track(request, env);
+      await track(request, env);
       return new Response(null, { status: 204, headers: cors(origin) });
     }
 
