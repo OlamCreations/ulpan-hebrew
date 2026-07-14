@@ -32,18 +32,9 @@
 
   const esc = s => (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  // Today in the Hebrew calendar, both as Hebrew (self-built gematria — ICU renders western
-  // digits — so כ״ט is reliable) and as a transliteration of the spoken date, to learn the
-  // numbers: you see כ״ט, read "esrim ve-tisha", and learn it means 29.
-  const G_ONES = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
-  const G_TENS = ['', 'י', 'כ', 'ל'];
-  function gematria(n) {
-    if (n === 15) return 'ט״ו';
-    if (n === 16) return 'ט״ז';
-    const letters = (G_TENS[Math.floor(n / 10)] || '') + (G_ONES[n % 10] || '');
-    if (letters.length <= 1) return letters + '׳';
-    return letters.slice(0, -1) + '״' + letters.slice(-1);
-  }
+  // Today's Hebrew date with classic (Western) day numbers — gematria letters are unfamiliar
+  // without a lesson — plus a transliteration of the spoken date, so the day number teaches the
+  // Hebrew numbers: you see "29 בתמוז", read "esrim ve-tisha be-Tammuz", learn 29 = esrim ve-tisha.
   const T_ONES = ['', 'echad', 'shnayim', 'shlosha', 'arbaa', 'chamisha', 'shisha', 'shiva', 'shmona', 'tisha'];
   const T_TEEN = ['asara', 'achad-asar', 'shneim-asar', 'shlosha-asar', 'arbaa-asar', 'chamisha-asar', 'shisha-asar', 'shiva-asar', 'shmona-asar', 'tisha-asar'];
   function dayTranslit(n) {
@@ -64,7 +55,7 @@
       const day = parseInt(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric' }).format(now), 10);
       const monthHe = new Intl.DateTimeFormat('he-u-ca-hebrew', { month: 'long' }).format(now);
       if (!day) return null;
-      return { he: gematria(day) + ' ב' + monthHe, tr: dayTranslit(day) + ' be-' + monthTranslit(monthHe) };
+      return { he: day + ' ב' + monthHe, tr: dayTranslit(day) + ' be-' + monthTranslit(monthHe) };
     } catch (e) { return null; }
   }
 
@@ -179,6 +170,14 @@
     { label: 'SRS review', hint: '', showIf: hasBtn('d-srs-btn'), act: () => { closeMenu(); if (window.openSRSReview) window.openSRSReview(); } },
     { label: 'Mixed quiz', hint: '', showIf: hasBtn('d-quiz-btn'), act: () => clickHidden('d-quiz-btn') },
     { label: 'Wrong words', hint: '', showIf: hasBtn('d-review-btn'), act: () => clickHidden('d-review-btn') },
+    // Lesson-page actions (route to the hidden floating-control buttons app.js still injects).
+    { label: 'Reveal all', hint: '', showIf: hasBtn('fc-show-all'), act: () => clickHidden('fc-show-all') },
+    { label: 'Hide all', hint: '', showIf: hasBtn('fc-hide-all'), act: () => clickHidden('fc-hide-all') },
+    { label: 'Listen to all', hint: '', showIf: hasBtn('fc-listen-all'), act: () => clickHidden('fc-listen-all') },
+    { label: 'Add all to review', hint: '', showIf: hasBtn('fc-add-sr'), act: () => clickHidden('fc-add-sr') },
+    { label: 'SRS review', hint: '', showIf: hasBtn('fc-srs'), act: () => clickHidden('fc-srs') },
+    { label: 'Print', hint: '', showIf: hasBtn('fc-print'), act: () => clickHidden('fc-print') },
+    { label: 'Shortcuts', hint: '', showIf: hasBtn('fc-help'), act: () => clickHidden('fc-help') },
     { label: 'Preferences', hint: '', act: openPrefs },
     { label: 'Toggle theme', hint: '', act: () => { if (window.toggleTheme) window.toggleTheme(); syncMenuTheme(); } },
     { label: 'No sound? Install a voice', hint: '', act: () => { closeMenu(); if (window.showVoiceBanner) window.showVoiceBanner(true); } }
@@ -195,9 +194,24 @@
     if (btn) btn.setAttribute('aria-expanded', 'false');
     document.documentElement.classList.remove('hub-menu-open');
   }
+  // Render menu items on each open so page-specific actions (lesson floating-control buttons
+  // injected by app.js after the hub builds) are detected fresh, not frozen at build time.
+  function renderMenuItems() {
+    const host = document.querySelector('#hub-menu .hub-menu-items');
+    if (!host) return;
+    const items = MENU_ITEMS.filter(it => !it.showIf || it.showIf());
+    host.innerHTML = items.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '"' +
+      (it.label === 'Toggle theme' ? ' data-role="theme"' : '') + '>' +
+      '<span class="menu-label">' + esc(it.label) + '</span>' +
+      '<span class="menu-hint">' + esc(it.hint) + '</span></button>').join('');
+    host.querySelectorAll('.menu-item').forEach(el => {
+      el.addEventListener('click', () => { const it = items[+el.dataset.i]; if (it && it.act) it.act(); });
+    });
+  }
   function openMenu() {
     const menu = document.getElementById('hub-menu');
     const btn = document.getElementById('hub-burger');
+    renderMenuItems();
     if (menu) menu.classList.add('open');
     if (btn) btn.setAttribute('aria-expanded', 'true');
     document.documentElement.classList.add('hub-menu-open');
@@ -233,6 +247,15 @@
     const actions = document.createElement('div');
     actions.className = 'hub-actions';
 
+    // Back to the lesson index — every page except the home.
+    if (!(document.body && document.body.classList.contains('home'))) {
+      const back = document.createElement('a');
+      back.className = 'hub-back'; back.href = 'index.html';
+      back.setAttribute('aria-label', 'Back to index'); back.title = 'Back to index';
+      back.innerHTML = '<span>←</span>';
+      actions.appendChild(back);
+    }
+
     // One-tap translator, immediately left of the hamburger.
     const tbtn = document.createElement('button');
     tbtn.id = 'hub-translate'; tbtn.className = 'hub-translate';
@@ -250,28 +273,18 @@
 
     header.appendChild(actions);
 
-    const items = MENU_ITEMS.filter(it => !it.showIf || it.showIf());
     const menu = document.createElement('div');
     menu.id = 'hub-menu';
     menu.innerHTML =
       '<div class="hub-menu-backdrop"></div>' +
       '<nav class="hub-menu-panel" role="menu" aria-label="Menu">' +
         '<div class="hub-menu-head">Menu</div>' +
-        items.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '"' +
-          (it.label === 'Toggle theme' ? ' data-role="theme"' : '') + '>' +
-          '<span class="menu-label">' + esc(it.label) + '</span>' +
-          '<span class="menu-hint">' + esc(it.hint) + '</span></button>').join('') +
+        '<div class="hub-menu-items"></div>' +
       '</nav>';
     document.body.appendChild(menu);
 
-    burger.addEventListener('click', () => {
-      const open = menu.classList.contains('open');
-      if (open) closeMenu(); else openMenu();
-    });
+    burger.addEventListener('click', () => { menu.classList.contains('open') ? closeMenu() : openMenu(); });
     menu.querySelector('.hub-menu-backdrop').addEventListener('click', closeMenu);
-    menu.querySelectorAll('.menu-item').forEach(el => {
-      el.addEventListener('click', () => { const it = items[+el.dataset.i]; if (it && it.act) it.act(); });
-    });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
   }
 

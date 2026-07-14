@@ -396,7 +396,7 @@
     host._qsMounted = true;
     host.innerHTML =
       '<div class="qs-box">' +
-        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="…" ' +
+        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="Type something…" ' +
                'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French, Spanish or Russian to Hebrew, or look up transliterated Hebrew">' +
         '<div id="qs-results" class="qs-results" role="status" aria-live="polite" aria-atomic="false"></div>' +
       '</div>';

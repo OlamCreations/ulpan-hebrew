@@ -1525,7 +1525,33 @@ function addMiniQuiz(title, questions) {
     addOnce('meta[name="apple-mobile-web-app-status-bar-style"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-status-bar-style'; m.content = 'black-translucent'; return m; });
     addOnce('meta[name="apple-mobile-web-app-title"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-title'; m.content = 'Ulpan'; return m; });
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+      // Auto-update: bypass the HTTP cache when checking sw.js, and reload once when a fresh
+      // worker takes control — so a deploy lands on the next visit with no manual cache clearing.
+      var hadController = !!navigator.serviceWorker.controller, swRefreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (swRefreshing || !hadController) return; swRefreshing = true; window.location.reload();
+      });
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+          .then(function (reg) { try { reg.update(); } catch (e) {} })
+          .catch(function () {});
+      });
     }
   } catch (e) {}
+})();
+
+/* Shared front-end modules — injected once from app.js (which every page already loads) so the
+   home and all ~500 lesson pages get translit + quick-say + the hamburger hub without editing
+   each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
+   translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
+(function loadSharedModules() {
+  var SHARED_V = '1777900000013';
+  ['translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
+    var present = Array.prototype.some.call(document.scripts, function (s) { return s.src && s.src.indexOf(m) !== -1; });
+    if (present) return;
+    var s = document.createElement('script');
+    s.src = m + '?v=' + SHARED_V;
+    s.async = false;              // preserve execution order across the injected modules
+    document.head.appendChild(s);
+  });
 })();
