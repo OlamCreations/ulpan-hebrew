@@ -32,10 +32,40 @@
 
   const esc = s => (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  // Today in the Hebrew calendar, in Hebrew (gematria numerals via the ICU 'he' locale).
+  // Today in the Hebrew calendar, both as Hebrew (self-built gematria — ICU renders western
+  // digits — so כ״ט is reliable) and as a transliteration of the spoken date, to learn the
+  // numbers: you see כ״ט, read "esrim ve-tisha", and learn it means 29.
+  const G_ONES = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
+  const G_TENS = ['', 'י', 'כ', 'ל'];
+  function gematria(n) {
+    if (n === 15) return 'ט״ו';
+    if (n === 16) return 'ט״ז';
+    const letters = (G_TENS[Math.floor(n / 10)] || '') + (G_ONES[n % 10] || '');
+    if (letters.length <= 1) return letters + '׳';
+    return letters.slice(0, -1) + '״' + letters.slice(-1);
+  }
+  const T_ONES = ['', 'echad', 'shnayim', 'shlosha', 'arbaa', 'chamisha', 'shisha', 'shiva', 'shmona', 'tisha'];
+  const T_TEEN = ['asara', 'achad-asar', 'shneim-asar', 'shlosha-asar', 'arbaa-asar', 'chamisha-asar', 'shisha-asar', 'shiva-asar', 'shmona-asar', 'tisha-asar'];
+  function dayTranslit(n) {
+    if (n >= 1 && n <= 9) return T_ONES[n];
+    if (n >= 10 && n <= 19) return T_TEEN[n - 10];
+    if (n === 20) return 'esrim';
+    if (n >= 21 && n <= 29) return 'esrim ve-' + T_ONES[n - 20];
+    if (n === 30) return 'shloshim';
+    return String(n);
+  }
+  const HE_MONTHS = { 'תשרי': 'Tishrei', 'חשוון': 'Cheshvan', 'חשון': 'Cheshvan', 'כסלו': 'Kislev', 'טבת': 'Tevet',
+    'שבט': 'Shvat', 'אדר': 'Adar', 'אדרא': 'Adar I', 'אדרב': 'Adar II', 'ניסן': 'Nisan', 'אייר': 'Iyar',
+    'סיון': 'Sivan', 'סיוון': 'Sivan', 'תמוז': 'Tammuz', 'אב': 'Av', 'אלול': 'Elul' };
+  function monthTranslit(name) { return HE_MONTHS[(name || '').replace(/[^א-ת]/g, '')] || name; }
   function hebrewDate() {
-    try { return new Intl.DateTimeFormat('he-u-ca-hebrew', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); }
-    catch (e) { return ''; }
+    try {
+      const now = new Date();
+      const day = parseInt(new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric' }).format(now), 10);
+      const monthHe = new Intl.DateTimeFormat('he-u-ca-hebrew', { month: 'long' }).format(now);
+      if (!day) return null;
+      return { he: gematria(day) + ' ב' + monthHe, tr: dayTranslit(day) + ' be-' + monthTranslit(monthHe) };
+    } catch (e) { return null; }
   }
 
   // --- Generic overlay (mirrors the SRS modal; reuses app.js makeModalAccessible) --
@@ -142,9 +172,13 @@
   window.openPrefs = openPrefs;
 
   // --- Hamburger menu (slide-in drawer) -------------------------------------------
+  const clickHidden = id => { closeMenu(); const b = document.getElementById(id); if (b) b.click(); };
+  const hasBtn = id => () => !!document.getElementById(id);
   const MENU_ITEMS = [
     { label: 'Live translator', hint: 'press /', act: openTranslator },
-    { label: 'SRS review', hint: '', act: () => { closeMenu(); if (window.openSRSReview) window.openSRSReview(); } },
+    { label: 'SRS review', hint: '', showIf: hasBtn('d-srs-btn'), act: () => { closeMenu(); if (window.openSRSReview) window.openSRSReview(); } },
+    { label: 'Mixed quiz', hint: '', showIf: hasBtn('d-quiz-btn'), act: () => clickHidden('d-quiz-btn') },
+    { label: 'Wrong words', hint: '', showIf: hasBtn('d-review-btn'), act: () => clickHidden('d-review-btn') },
     { label: 'Preferences', hint: '', act: openPrefs },
     { label: 'Toggle theme', hint: '', act: () => { if (window.toggleTheme) window.toggleTheme(); syncMenuTheme(); } },
     { label: 'No sound? Install a voice', hint: '', act: () => { closeMenu(); if (window.showVoiceBanner) window.showVoiceBanner(true); } }
@@ -183,19 +217,21 @@
     const header = document.querySelector('header');
     if (!header) return;
 
-    const actions = document.createElement('div');
-    actions.className = 'hub-actions';
-
-    // Today's Hebrew date, on the home, at the hamburger's level.
+    // Today's Hebrew date on the left of the top bar (home only), with a transliteration below
+    // so the daily-changing day number teaches the Hebrew numbers.
     if (document.body && document.body.classList.contains('home')) {
       const hd = hebrewDate();
       if (hd) {
-        const d = document.createElement('span');
-        d.className = 'hub-hdate'; d.dir = 'rtl'; d.lang = 'he'; d.title = 'Today (Hebrew date)';
-        d.textContent = hd;
-        actions.appendChild(d);
+        const d = document.createElement('div');
+        d.className = 'hub-hdate'; d.title = 'Today (Hebrew date)';
+        d.innerHTML = '<span class="hd-he" dir="rtl" lang="he">' + esc(hd.he) + '</span>' +
+          '<span class="hd-tr">' + esc(hd.tr) + '</span>';
+        header.appendChild(d);
       }
     }
+
+    const actions = document.createElement('div');
+    actions.className = 'hub-actions';
 
     // One-tap translator, immediately left of the hamburger.
     const tbtn = document.createElement('button');
@@ -214,13 +250,14 @@
 
     header.appendChild(actions);
 
+    const items = MENU_ITEMS.filter(it => !it.showIf || it.showIf());
     const menu = document.createElement('div');
     menu.id = 'hub-menu';
     menu.innerHTML =
       '<div class="hub-menu-backdrop"></div>' +
       '<nav class="hub-menu-panel" role="menu" aria-label="Menu">' +
         '<div class="hub-menu-head">Menu</div>' +
-        MENU_ITEMS.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '"' +
+        items.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '"' +
           (it.label === 'Toggle theme' ? ' data-role="theme"' : '') + '>' +
           '<span class="menu-label">' + esc(it.label) + '</span>' +
           '<span class="menu-hint">' + esc(it.hint) + '</span></button>').join('') +
@@ -233,7 +270,7 @@
     });
     menu.querySelector('.hub-menu-backdrop').addEventListener('click', closeMenu);
     menu.querySelectorAll('.menu-item').forEach(el => {
-      el.addEventListener('click', () => { const it = MENU_ITEMS[+el.dataset.i]; if (it && it.act) it.act(); });
+      el.addEventListener('click', () => { const it = items[+el.dataset.i]; if (it && it.act) it.act(); });
     });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
   }

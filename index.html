@@ -360,22 +360,17 @@
 <body class="home">
 <div class="container">
 
-<header>
- <div>
- <h1>Hebrew for Beginners</h1>
- <div class="subtitle">Pre-Ulpan Crash Course · 465 Lessons + Tehilim</div>
- <button type="button" id="no-sound-link" onclick="showVoiceBanner(true)" title="No audio? Install a Hebrew voice, per-OS guide">No sound? Install a Hebrew voice</button>
- </div>
- <button id="header-theme-toggle" class="theme-toggle" title="Toggle light/dark mode" onclick="toggleTheme()"> Light</button>
-</header>
+<!-- Minimal top bar: hub.js fills it with today's Hebrew date (left) + translator & menu (right). -->
+<header class="home-topbar"></header>
 
 <!-- QUICK-SAY: live translator, inline on the home for direct access (also / key + menu) -->
 <div class="quicksay-section quicksay-home">
   <div id="qs-mount"></div>
 </div>
 
-<!-- Dashboard state kept but hidden: the home is purified (no Today card, no stat tiles),
-     while the progress script still has every element it writes to. -->
+<!-- Dashboard state + actions kept but hidden: the home is purified (no Today card, no stat
+     tiles, no action bar). SRS/Quiz/Wrong-words live in the hamburger menu; the buttons stay
+     here so the progress script keeps every element it wires to. -->
 <div style="display:none;" aria-hidden="true">
  <div id="dg-text"></div><button id="dg-action"></button>
  <div id="d-daystreak"></div><span id="d-done"></span><span id="d-pct"></span>
@@ -383,17 +378,10 @@
  <div id="d-bar"></div>
  <div id="d-review">0</div>
  <div id="d-heatmap-wrap"><div id="d-heatmap"></div></div>
-</div>
-
-<!-- ACTION BAR -->
-<div class="action-bar">
- <button class="btn btn-primary" id="d-srs-btn">SRS Review</button>
- <button class="btn" id="d-quiz-btn">Mixed Quiz</button>
- <button class="btn" id="d-review-btn">Wrong words</button>
- <button class="btn" id="d-export">↓ Export</button>
- <button class="btn" id="d-import">↑ Import</button>
- <input type="file" id="d-import-file" accept=".json" style="display:none;">
- <button class="btn" id="d-reset" style="margin-left: auto; opacity: 0.5;">Reset all</button>
+ <button id="d-srs-btn"></button><button id="d-quiz-btn"></button><button id="d-review-btn"></button>
+ <button id="d-export"></button><button id="d-import"></button>
+ <input type="file" id="d-import-file" accept=".json">
+ <button id="d-reset"></button>
 </div>
 
 <!-- SEARCH -->
@@ -2931,7 +2919,7 @@
 
 <script src="app.js?v=1777900000007"></script>
 <script src="translit.js?v=1777900000002"></script><script src="quicksay.js?v=1777900000006"></script>
-<script src="hub.js?v=1777900000008"></script>
+<script src="hub.js?v=1777900000009"></script>
 <script>
  const done = getLessonProgress();
  let firstNotDone = null;
