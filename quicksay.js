@@ -144,7 +144,7 @@
     else if (kind === 'phonetic') tag = '<span class="qs-tag qs-tag-phonetic" title="Matched from what you typed phonetically">phonetic</span>';
     else if (kind === 'phonetic-lesson') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
     else if (p.cat) tag = '<span class="qs-tag">' + escapeHtml(p.cat) + '</span>';
-    const tr = p.tr ? '<div class="qs-tr">' + escapeHtml(p.tr) + '</div>' : '';
+    const tr = (p.tr && (!window.QSPrefs || window.QSPrefs.translit())) ? '<div class="qs-tr">' + escapeHtml(p.tr) + '</div>' : '';
     const meaning = (p.en || '').trim();
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
@@ -335,16 +335,17 @@
     const prefs = window.QSPrefs;
     const voc = tok.voc || tok.word || '';
     const heShown = (!prefs || prefs.niqqud()) ? voc : stripNiqqud(voc);
-    const tr = (window.Translit && window.Translit.transliterate(voc)) || '';
     const cursive = (prefs && prefs.cursive())
       ? '<div class="mw-cursive" dir="rtl" lang="he">' + escapeHtml(stripNiqqud(voc)) + '</div>' : '';
+    const tr = (!prefs || prefs.translit())
+      ? '<div class="mw-tr">' + escapeHtml((window.Translit && window.Translit.transliterate(voc)) || '') + '</div>' : '';
     const lemma = stripNiqqud(tok.lemma || '');
-    const root = (lemma && lemma !== stripNiqqud(voc))
+    const root = ((!prefs || prefs.root()) && lemma && lemma !== stripNiqqud(voc))
       ? '<div class="mw-root" dir="rtl" lang="he" title="root / dictionary form">√ ' + escapeHtml(lemma) + '</div>' : '';
     return '<div class="mw">' +
       '<div class="mw-he" dir="rtl" lang="he">' + escapeHtml(heShown) + '</div>' +
       cursive +
-      '<div class="mw-tr">' + escapeHtml(tr) + '</div>' +
+      tr +
       '<div class="mw-gloss">' + escapeHtml(gloss || '') + '</div>' +
       root +
     '</div>';

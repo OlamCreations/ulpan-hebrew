@@ -25,6 +25,10 @@
     setCursive(on) { try { localStorage.setItem('qs-cursive', on ? 'on' : 'off'); } catch (e) {} },
     niqqud() { return localStorage.getItem('qs-niqqud') !== 'off'; },          // default on
     setNiqqud(on) { try { localStorage.setItem('qs-niqqud', on ? 'on' : 'off'); } catch (e) {} },
+    translit() { return localStorage.getItem('qs-translit') !== 'off'; },      // default on
+    setTranslit(on) { try { localStorage.setItem('qs-translit', on ? 'on' : 'off'); } catch (e) {} },
+    root() { return localStorage.getItem('qs-root') !== 'off'; },              // default on
+    setRoot(on) { try { localStorage.setItem('qs-root', on ? 'on' : 'off'); } catch (e) {} },
     voice() { try { return localStorage.getItem('voice-gender') || 'auto'; } catch (e) { return 'auto'; } },
     setVoice(v) { try { localStorage.setItem('voice-gender', v); } catch (e) {} }
   };
@@ -124,7 +128,9 @@
         '<div class="pref-hint">Languages you type into the translator.</div></div>' +
         '<div class="lang-chips" id="pref-langs">' + langChips + '</div></div>' +
       toggleRow('pref-cursive', 'Cursive (ktav yad)', 'Show results in Israeli handwriting too.', Prefs.cursive()) +
-      toggleRow('pref-niqqud', 'Niqqud', 'Show vowel points on Hebrew.', Prefs.niqqud()),
+      toggleRow('pref-niqqud', 'Niqqud', 'Show vowel points on Hebrew.', Prefs.niqqud()) +
+      toggleRow('pref-translit', 'Transliteration', 'Show the Latin reading under Hebrew.', Prefs.translit()) +
+      toggleRow('pref-root', 'Root in breakdown', 'Show the √ root in the word-by-word view.', Prefs.root()),
       (card, m) => {
         card.querySelector('.hub-close').addEventListener('click', () => m.remove());
 
@@ -158,6 +164,8 @@
         };
         wireSwitch('pref-cursive', v => { Prefs.setCursive(v); refreshTranslator(); });
         wireSwitch('pref-niqqud', v => { Prefs.setNiqqud(v); refreshTranslator(); });
+        wireSwitch('pref-translit', v => { Prefs.setTranslit(v); refreshTranslator(); });
+        wireSwitch('pref-root', v => { Prefs.setRoot(v); refreshTranslator(); });
       });
   }
   window.openPrefs = openPrefs;
