@@ -158,6 +158,8 @@
     const breakable = /[֐-׿]/.test(p.he || '') && stripNiqqud(p.he).trim().split(/\s+/).filter(Boolean).length >= 2;
     const breakBtn = breakable
       ? '<button type="button" class="qs-break" data-he="' + escapeHtml(p.he) + '">Break it down</button>' : '';
+    const saveBtn = '<button type="button" class="qs-save" data-he="' + escapeHtml(p.he) +
+      '" data-tr="' + escapeHtml(p.tr || '') + '" data-en="' + escapeHtml(meaning) + '">Save</button>';
     return '' +
       '<div class="qs-card' + (breakable ? ' has-break' : '') + '">' +
         '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.he) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
@@ -166,7 +168,7 @@
           cursive +
           tr +
           en +
-          breakBtn +
+          '<div class="qs-actions">' + saveBtn + breakBtn + '</div>' +
         '</div>' +
         (breakable ? '<div class="qs-break-out"></div>' : '') +
       '</div>';
@@ -309,6 +311,21 @@
       b.addEventListener('click', () => play(b.dataset.he));
     });
     wireBreak(container);
+    wireSave(container);
+  }
+
+  // Save a result to the personal phrasebook (window.QSNotebook, owned by hub.js).
+  function wireSave(container) {
+    container.querySelectorAll('.qs-save').forEach(b => {
+      if (b._wired) return; b._wired = true;
+      const nb = window.QSNotebook;
+      if (nb && nb.has(b.dataset.he, b.dataset.en)) { b.classList.add('on'); b.textContent = 'Saved'; }
+      b.addEventListener('click', () => {
+        if (!window.QSNotebook || b.classList.contains('on')) return;
+        window.QSNotebook.add({ he: b.dataset.he, tr: b.dataset.tr, en: b.dataset.en });
+        b.classList.add('on'); b.textContent = 'Saved';
+      });
+    });
   }
 
   // --- Word-by-word breakdown (deep morphology via the Dicta proxy Worker) --------

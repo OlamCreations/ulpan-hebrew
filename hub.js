@@ -37,6 +37,23 @@
   window.QSPrefs = Prefs;
 
   const esc = s => (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const stripN = s => (s || '').replace(/[֑-ׇ]/g, '');
+
+  // --- Personal phrasebook: one store, two views (Manual + Journal) ---------------
+  const Notebook = {
+    all() { try { return JSON.parse(localStorage.getItem('qs-notebook') || '[]'); } catch (e) { return []; } },
+    write(list) { try { localStorage.setItem('qs-notebook', JSON.stringify(list)); } catch (e) {} },
+    has(he, en) { return Notebook.all().some(x => x.he === he && x.en === en); },
+    add(entry) {
+      const list = Notebook.all();
+      if (list.some(x => x.he === entry.he && x.en === entry.en)) return false;
+      list.push(Object.assign({ id: 'p' + Date.now() + Math.random().toString(36).slice(2, 6), date: Date.now(), note: '' }, entry));
+      Notebook.write(list); return true;
+    },
+    remove(id) { Notebook.write(Notebook.all().filter(x => x.id !== id)); },
+    update(id, patch) { const l = Notebook.all(); const i = l.findIndex(x => x.id === id); if (i >= 0) { l[i] = Object.assign(l[i], patch); Notebook.write(l); } }
+  };
+  window.QSNotebook = Notebook;
 
   // Today's Hebrew date with classic (Western) day numbers — gematria letters are unfamiliar
   // without a lesson — plus a transliteration of the spoken date, so the day number teaches the
@@ -174,11 +191,73 @@
   }
   window.openPrefs = openPrefs;
 
+  // --- My phrases (saved phrases, two views) --------------------------------------
+  const fmtDate = ts => { try { return new Date(ts).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return ''; } };
+
+  function phraseRowHtml(e, tab) {
+    const prefs = window.QSPrefs;
+    const he = (prefs && !prefs.niqqud()) ? stripN(e.he) : e.he;
+    return '<div class="ph-row" data-id="' + e.id + '">' +
+      '<button class="ph-play icon-btn" title="Listen" data-he="' + esc(e.he) + '">▶</button>' +
+      '<div class="ph-text">' +
+        '<div class="ph-he" dir="rtl" lang="he">' + esc(he) + '</div>' +
+        (e.tr ? '<div class="ph-tr">' + esc(e.tr) + '</div>' : '') +
+        (e.en ? '<div class="ph-en">' + esc(e.en) + '</div>' : '') +
+        (tab === 'journal' ? '<div class="ph-date">' + esc(fmtDate(e.date)) + '</div>' : '') +
+        '<input class="ph-note" placeholder="add a note…" value="' + esc(e.note || '') + '">' +
+      '</div>' +
+      '<button class="ph-del" title="Delete" aria-label="Delete" data-id="' + e.id + '">×</button>' +
+    '</div>';
+  }
+
+  function renderPhrases(host, tab, query) {
+    let list = Notebook.all();
+    if (!list.length) { host.innerHTML = '<div class="ph-empty">No saved phrases yet. Translate something and tap <strong>Save</strong>.</div>'; return; }
+    if (query) { const q = query.toLowerCase(); list = list.filter(e => (e.he + ' ' + (e.tr || '') + ' ' + (e.en || '') + ' ' + (e.note || '')).toLowerCase().indexOf(q) !== -1); }
+    list = (tab === 'journal')
+      ? list.slice().sort((a, b) => b.date - a.date)
+      : list.slice().sort((a, b) => (a.tr || a.en || '').localeCompare(b.tr || b.en || ''));
+    host.innerHTML = list.map(e => phraseRowHtml(e, tab)).join('') || '<div class="ph-empty">No match.</div>';
+    host.querySelectorAll('.ph-play').forEach(b => b.addEventListener('click', () => { if (typeof window.speak === 'function') window.speak(b.dataset.he, 0.8); }));
+    host.querySelectorAll('.ph-del').forEach(b => b.addEventListener('click', () => { Notebook.remove(b.dataset.id); renderPhrases(host, tab, query); }));
+    host.querySelectorAll('.ph-note').forEach(inp => inp.addEventListener('change', () => { Notebook.update(inp.closest('.ph-row').dataset.id, { note: inp.value }); }));
+  }
+
+  function openPhrases() {
+    closeMenu();
+    let tab = 'manual';
+    openOverlay('phrases-modal', 'hub-card phrases-card',
+      '<button class="hub-close" aria-label="Close">×</button>' +
+      '<div class="hub-title">My phrases</div>' +
+      '<div class="hub-sub">Everything you save, as a manual or a journal.</div>' +
+      '<div class="seg ph-tabs"><button type="button" class="seg-btn on" data-tab="manual">Manual</button>' +
+        '<button type="button" class="seg-btn" data-tab="journal">Journal</button></div>' +
+      '<input class="ph-search qs-input" placeholder="Search your phrases…">' +
+      '<div class="ph-list"></div>',
+      (card, m) => {
+        card.querySelector('.hub-close').addEventListener('click', () => m.remove());
+        const host = card.querySelector('.ph-list');
+        const search = card.querySelector('.ph-search');
+        const draw = () => renderPhrases(host, tab, search.value.trim());
+        card.querySelector('.ph-tabs').addEventListener('click', e => {
+          const b = e.target.closest('.seg-btn'); if (!b) return;
+          tab = b.dataset.tab;
+          card.querySelectorAll('.ph-tabs .seg-btn').forEach(x => x.classList.toggle('on', x === b));
+          search.style.display = (tab === 'manual') ? '' : 'none';
+          draw();
+        });
+        search.addEventListener('input', draw);
+        draw();
+      });
+  }
+  window.openPhrases = openPhrases;
+
   // --- Hamburger menu (slide-in drawer) -------------------------------------------
   const clickHidden = id => { closeMenu(); const b = document.getElementById(id); if (b) b.click(); };
   const hasBtn = id => () => !!document.getElementById(id);
   const MENU_ITEMS = [
     { label: 'Live translator', hint: 'press /', act: openTranslator },
+    { label: 'My phrases', hint: '', act: openPhrases },
     { label: 'SRS review', hint: '', showIf: hasBtn('d-srs-btn'), act: () => { closeMenu(); if (window.openSRSReview) window.openSRSReview(); } },
     { label: 'Mixed quiz', hint: '', showIf: hasBtn('d-quiz-btn'), act: () => clickHidden('d-quiz-btn') },
     { label: 'Wrong words', hint: '', showIf: hasBtn('d-review-btn'), act: () => clickHidden('d-review-btn') },
