@@ -541,5 +541,7 @@
     }
   });
 
-  window.QuickSay = { mount: mount };
+  // renderBreakdown is reused by the lesson Sentence-Builder (app.js) to turn a finished
+  // sentence into a per-word morphology micro-lesson, so it's exposed alongside mount.
+  window.QuickSay = { mount: mount, renderBreakdown: renderBreakdown };
 })();

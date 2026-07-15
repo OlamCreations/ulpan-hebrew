@@ -118,6 +118,55 @@ const DAILY = [
   { he: 'אֲנִי רוֹצֶה',            translit: 'ani rotze',        fr: 'I want (m.)' }
 ];
 
+/* --- Production practice (Phase 1) -------------------------------------------------
+   Sentences reuse the already-vocalized full phrases above (INTRODUCTION / DAILY): the
+   `he` string is copied verbatim, `chunks` splits it into meaningful tokens, and the
+   distractors are deliberately-wrong tiles (opposite-gender verb, extra preposition, a
+   parasitic pronoun) — the distractors ARE the grammar lesson. Read directly by the
+   engine via window.*, never rendered as .word-row so the vocab scraper leaves them alone. */
+window.SENTENCES = [
+  { he: 'אֲנִי דָּוִד',            translit: 'ani David',           fr: 'I am David',
+    chunks: ['אֲנִי', 'דָּוִד'],                   distractors: ['אַתָּה', 'הוּא'],       focus: 'word-order' },
+  { he: 'אֲנִי מִצָּרְפַת',        translit: 'ani mi-Tzarfat',      fr: "I'm from France",
+    chunks: ['אֲנִי', 'מִצָּרְפַת'],               distractors: ['אַתָּה', 'אֶת'],        focus: 'word-order' },
+  { he: 'אֲנִי גָּר בְּתֵל אָבִיב', translit: 'ani gar be-Tel Aviv', fr: 'I live in Tel Aviv',
+    chunks: ['אֲנִי', 'גָּר', 'בְּתֵל אָבִיב'],     distractors: ['גָּרָה', 'אַתָּה'],     focus: 'agreement:gender' },
+  { he: 'אֲנִי לוֹמֵד עִבְרִית',   translit: 'ani lomed ivrit',     fr: 'I learn Hebrew (m.)',
+    chunks: ['אֲנִי', 'לוֹמֵד', 'עִבְרִית'],        distractors: ['לוֹמֶדֶת', 'אֶת'],     focus: 'agreement:gender' },
+  { he: 'אֲנִי עוֹלֶה חָדָשׁ',     translit: 'ani oleh chadash',    fr: "I'm a new immigrant (m.)",
+    chunks: ['אֲנִי', 'עוֹלֶה', 'חָדָשׁ'],          distractors: ['עוֹלָה', 'חֲדָשָׁה'],  focus: 'agreement:gender' },
+  { he: 'אֲנִי לֹא מֵבִין',        translit: 'ani lo mevin',        fr: "I don't understand (m.)",
+    chunks: ['אֲנִי', 'לֹא', 'מֵבִין'],             distractors: ['מְבִינָה', 'כֵּן'],    focus: 'agreement:gender' },
+  { he: 'הַכֹּל בְּסֵדֶר',         translit: 'ha-kol beseder',      fr: "everything's fine",
+    chunks: ['הַכֹּל', 'בְּסֵדֶר'],                 distractors: ['לֹא', 'אֲנִי'],        focus: 'word-order' },
+  { he: 'כַּמָּה זֶה עוֹלֶה?',     translit: 'kama ze oleh?',       fr: 'how much does it cost?',
+    chunks: ['כַּמָּה', 'זֶה', 'עוֹלֶה?'],          distractors: ['עוֹלָה?', 'אֵיפֹה'],   focus: 'word-order' },
+  { he: 'תְּדַבֵּר לְאַט',         translit: "tedaber le'at",       fr: 'speak slowly (to a m.)',
+    chunks: ['תְּדַבֵּר', 'לְאַט'],                 distractors: ['תְּדַבְּרִי', 'מַהֵר'], focus: 'agreement:gender' },
+  { he: 'מָה שְׁלוֹמְךָ?',         translit: 'ma shlomcha?',        fr: 'how are you? (to a m.)',
+    chunks: ['מָה', 'שְׁלוֹמְךָ?'],                 distractors: ['שְׁלוֹמֵךְ?'],         focus: 'agreement:gender' }
+];
+
+/* A frame is a slot to fill: one shape, many sentences. Each full result matches a real
+   phrase from the lesson (e.g. בּוֹקֶר טוֹב, אֲנִי גָּר בְּתֵל אָבִיב). */
+window.FRAMES = [
+  { frame: '___ טוֹב', translit: '___ tov', fr: 'good ___ (time of day)',
+    slots: [ { he: 'בּוֹקֶר', fr: 'morning' }, { he: 'עֶרֶב', fr: 'evening' }, { he: 'לַיְלָה', fr: 'night' } ] },
+  { frame: 'אֲנִי גָּר בְּ___', translit: 'ani gar be-___', fr: 'I live in ___',
+    slots: [ { he: 'תֵּל אָבִיב', fr: 'Tel Aviv' }, { he: 'יְרוּשָׁלַיִם', fr: 'Jerusalem' }, { he: 'חֵיפָה', fr: 'Haifa' } ] },
+  { frame: 'אֲנִי רוֹצֶה ___', translit: 'ani rotze ___', fr: 'I want ___',
+    slots: [ { he: 'קָפֶה', fr: 'coffee' }, { he: 'מַיִם', fr: 'water' }, { he: 'לְשַׁלֵּם', fr: 'to pay' } ] }
+];
+
+/* Situations: right phrase, right moment (promoted from the old inline mini-quiz). */
+window.SITUATIONS = [
+  { q: "It's 7 PM. What do you say?", options: ['בֹּקֶר טוֹב', 'צָהֳרַיִם טוֹבִים', 'עֶרֶב טוֹב', 'לַיְלָה טוֹב'], answer: 2, he: 'עֶרֶב טוֹב', explain: 'erev tov = good evening' },
+  { q: "It's Friday at sunset. What do you say?", options: ['שָׁבוּעַ טוֹב', 'שַׁבָּת שָׁלוֹם', 'בְּסֵדֶר', 'יוֹם נֶהֱדָר'], answer: 1, he: 'שַׁבָּת שָׁלוֹם', explain: 'shabbat shalom greets the incoming sabbath' },
+  { q: "Saturday night, heading home. What do you say?", options: ['שַׁבָּת שָׁלוֹם', 'שָׁבוּעַ טוֹב', 'בֹּקֶר טוֹב', 'יוֹם רִאשׁוֹן טוֹב'], answer: 1, he: 'שָׁבוּעַ טוֹב', explain: 'shavua tov wishes a good week' },
+  { q: 'Someone says תּוֹדָה to you. You reply?', options: ['סְלִיחָה', 'בְּבַקָּשָׁה', 'נָעִים מְאֹד', 'בְּסֵדֶר'], answer: 1, he: 'בְּבַקָּשָׁה', explain: "bevakasha = you're welcome" },
+  { q: 'A friend asks מָה נִשְׁמָע? — best reply?', options: ["I'm hungry", 'הַכֹּל טוֹב, תּוֹדָה', 'יוֹם הוּלֶדֶת שָׂמֵחַ', 'לְהִתְרָאוֹת'], answer: 1, he: 'הַכֹּל טוֹב, תּוֹדָה', explain: 'reply about how things are going' }
+];
+
 function renderRows(elementId, items) {
   const list = document.getElementById(elementId);
   items.forEach(w => {
@@ -219,14 +268,6 @@ addExtraVocab('How Are You?, All Variations', [
   { he: 'יוֹתֵר אוֹ פָּחוֹת', translit: 'yoter o pachot', fr: 'more or less' },
   { he: 'יוֹם יָפֶה', translit: 'yom yafe', fr: 'good day (response)' },
   { he: 'בָּרוּךְ הַשֵּׁם', translit: 'baruch ha-shem', fr: 'thank God (also = "fine")' }
-]);
-
-addMiniQuiz('Greetings Quiz', [
-  { q: 'It\'s 7 PM. What do you say?', options: ['בֹּקֶר טוֹב', 'צָהֳרַיִם טוֹבִים', 'עֶרֶב טוֹב', 'לַיְלָה טוֹב'], answer: 2, explain: 'erev tov = good evening' },
-  { q: 'It\'s Friday at sunset. What do you say?', options: ['שָׁבוּעַ טוֹב', 'שַׁבָּת שָׁלוֹם', 'בְּסֵדֶר', 'יוֹם נֶהֱדָר'], answer: 1 },
-  { q: 'Saturday night, going home. What do you say?', options: ['שַׁבָּת שָׁלוֹם', 'שָׁבוּעַ טוֹב', 'בֹּקֶר טוֹב', 'יוֹם רִאשׁוֹן טוֹב'], answer: 1, explain: 'shavua tov, wishing a good week' },
-  { q: 'How do you respond to תּוֹדָה?', options: ['סְלִיחָה', 'בְּבַקָּשָׁה', 'נָעִים מְאֹד', 'בְּסֵדֶר'], answer: 1, explain: 'bevakasha = you\'re welcome' },
-  { q: 'A friend asks "מָה נִשְׁמָע?", best response?', options: ['I\'m hungry', 'הַכֹּל טוֹב, תּוֹדָה', 'יוֹם הוּלֶדֶת שָׂמֵחַ', 'לְהִתְרָאוֹת'], answer: 1 }
 ]);
 
 addCulturalText('Daily Greetings, Time of Day Matters', "Israelis use distinct greetings for each time of day. Saying 'boker tov' at 4pm is wrong, it tells everyone you're foreign.", [

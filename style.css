@@ -1583,3 +1583,72 @@ body.home .niqqud-toggle { display: none; }
   header.lesson-topbar > .nav { order: 3; flex: 0 1 auto; }
   header.lesson-topbar > .niqqud-toggle { order: 4; margin-left: auto; }
 }
+
+/* =====================================================================
+ * PRODUCTION PRACTICE — Sentence Builder / Frames / Situations
+ * Launchers live in the lesson exercise panel; each opens a focused modal
+ * that reuses the SRS shell (.srs-overlay / .srs-card). Theme-aware via tokens.
+ * ===================================================================== */
+
+/* Launch row inside the exercise panel (production comes first, above the tabs) */
+.ex-produce { margin-bottom: 16px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; }
+.ex-produce-label { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); margin-bottom: 10px; }
+.ex-produce-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.ex-produce-btn { background: var(--bg-card-hover); border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 14px; transition: all .15s; }
+.ex-produce-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ex-produce-btn.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* Modal shell (mirrors #srs-modal positioning) */
+#prod-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+#prod-modal .prod-card { max-width: 600px; min-height: auto; text-align: left; }
+
+/* Sentence Builder */
+.sb-prompt { font-size: 18px; color: var(--text); margin: 6px 0 16px; }
+.sb-answer { min-height: 56px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px; background: var(--bg); border: 1px dashed var(--border); border-radius: 8px; direction: rtl; }
+.sb-placeholder { color: var(--text-faint); font-size: 14px; direction: ltr; }
+.sb-tray { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; direction: rtl; }
+.sb-tile { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 22px; line-height: 1.2; padding: 8px 14px; background: var(--bg-card-hover); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; transition: all .13s; }
+.sb-tile:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-1px); }
+.sb-tile:disabled { cursor: default; opacity: 0.85; }
+.sb-placed { background: var(--accent-dim); border-color: var(--accent); }
+.sb-feedback { min-height: 20px; margin-top: 14px; font-size: 14px; }
+.sb-feedback.ok { color: var(--accent); }
+.sb-feedback.bad { color: #ef4444; }
+html.light .sb-feedback.bad { color: #dc2626; }
+.sb-breakdown { display: none; margin-top: 14px; }
+.sb-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.sb-actions .btn { flex: 0 0 auto; }
+
+/* Substitution Frames */
+.fr-frame { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 30px; text-align: center; margin: 8px 0 6px; color: var(--text); }
+.fr-blank { color: var(--accent); border-bottom: 2px dashed var(--accent); padding: 0 10px; }
+.fr-sub { text-align: center; color: var(--text-dim); font-size: 14px; margin-bottom: 18px; }
+.fr-slots { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.fr-slot { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 16px; background: var(--bg-card-hover); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-family: inherit; transition: all .14s; }
+.fr-slot span[dir="rtl"] { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 22px; color: var(--text); }
+.fr-slot-fr { font-size: 12px; color: var(--text-faint); }
+.fr-slot:hover { border-color: var(--accent); }
+.fr-slot.on { background: var(--accent-dim); border-color: var(--accent); }
+.fr-result { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 60px; margin: 18px 0 6px; }
+.fr-full { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 28px; color: var(--text); }
+.fr-play { flex: 0 0 auto; }
+
+/* Situations */
+.sit-q { font-size: 17px; color: var(--text); margin: 6px 0 16px; }
+.sit-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sit-option { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 22px; padding: 14px 12px; background: var(--bg-card-hover); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; transition: all .14s; }
+.sit-option:hover:not(:disabled) { border-color: var(--accent); }
+.sit-option:disabled { cursor: default; }
+.sit-option.correct { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.sit-option.wrong { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #ef4444; }
+.sit-feedback { min-height: 20px; margin-top: 14px; font-size: 14px; }
+.sit-feedback.ok { color: var(--accent); }
+.sit-feedback.bad { color: #ef4444; }
+html.light .sit-feedback.bad { color: #dc2626; }
+
+@media (max-width: 600px) {
+  #prod-modal .prod-card { padding: 22px 16px 18px !important; }
+  .sb-tile, .sit-option { font-size: 20px; }
+  .sit-options { grid-template-columns: 1fr; }
+  .fr-frame, .fr-full { font-size: 24px; }
+}

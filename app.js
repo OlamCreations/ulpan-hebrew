@@ -869,7 +869,7 @@ function injectFloatingControls() {
     }
     else if (e.key === 't' || e.key === 'T') { e.preventDefault(); toggleTheme(); }
     else if (e.key === '?' || e.key === '/') { e.preventDefault(); showShortcutsHelp(); }
-    else if (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4' || e.key === '5' || e.key === '6' || e.key === '7') {
+    else if (e.key === '1' || e.key === '2') {
       const tab = document.querySelectorAll('.ex-tab')[parseInt(e.key) - 1];
       if (tab) { e.preventDefault(); tab.click(); }
     }
@@ -900,7 +900,7 @@ function showShortcutsHelp() {
       <tr><td style="padding:6px 0;color:var(--text-dim);">P</td><td>Printable view</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">S</td><td>Add lesson words to SRS</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">N</td><td>Toggle niqqud (vowel marks)</td></tr>
-      <tr><td style="padding:6px 0;color:var(--text-dim);">1-7</td><td>Switch exercise mode (incl. dictation)</td></tr>
+      <tr><td style="padding:6px 0;color:var(--text-dim);">1-2</td><td>Switch exercise mode (Flashcards / Listen)</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">Space</td><td>Flip flashcard</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">→ ←</td><td>Next/previous flashcard</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">?</td><td>This help</td></tr>
@@ -1085,24 +1085,39 @@ function autoInjectExercises() {
 
   const lessonId = location.pathname.split(/[\\/]/).pop().replace('.html', '');
 
+  // Production modes are lesson-authored: they only appear when the lesson defines the arrays.
+  // A lesson without them degrades gracefully to the two exposure tabs below. (See §2c of the
+  // pedagogy plan: Flashcards + Listen&Match stay inline; Sentence Builder / Frames / Situations
+  // are launched into a focused modal, and the reconnaissance quiz modes were removed.)
+  const sentences = Array.isArray(window.SENTENCES) ? window.SENTENCES : [];
+  const frames = Array.isArray(window.FRAMES) ? window.FRAMES : [];
+  const situations = Array.isArray(window.SITUATIONS) ? window.SITUATIONS : [];
+  const produceBtns = [];
+  if (sentences.length) produceBtns.push('<button class="ex-produce-btn primary" id="ex-sentence" type="button">Build a sentence</button>');
+  if (frames.length) produceBtns.push('<button class="ex-produce-btn" id="ex-frames" type="button">Swap the slot</button>');
+  if (situations.length) produceBtns.push('<button class="ex-produce-btn" id="ex-situations" type="button">Real situations</button>');
+  const produceHtml = produceBtns.length
+    ? `<div class="ex-produce"><div class="ex-produce-label">Speak &amp; produce</div><div class="ex-produce-row">${produceBtns.join('')}</div></div>`
+    : '';
+
   const wrap = document.createElement('div');
   wrap.id = 'exercises-block';
   wrap.innerHTML = `
     <hr class="section-divider">
     <h2>Practice & Exercises</h2>
+    ${produceHtml}
     <div class="ex-tabs">
       <button class="ex-tab active" data-mode="flashcard">Flashcards</button>
-      <button class="ex-tab" data-mode="multiple">Multiple Choice</button>
-      <button class="ex-tab" data-mode="reverse">English → Hebrew</button>
       <button class="ex-tab" data-mode="audio">Listen & Match</button>
-      <button class="ex-tab" data-mode="typing">Typing</button>
-      <button class="ex-tab" data-mode="memory">Memory Pairs</button>
-      <button class="ex-tab" data-mode="dictation">Dictation</button>
     </div>
     <div id="ex-stage"></div>
     <div class="ex-stats" id="ex-stats">Score: 0 / 0 · Streak: 0</div>
   `;
   container.insertBefore(wrap, footer);
+
+  if (sentences.length) wrap.querySelector('#ex-sentence').addEventListener('click', () => openSentenceBuilder(sentences, lessonId));
+  if (frames.length) wrap.querySelector('#ex-frames').addEventListener('click', () => openFrames(frames, lessonId));
+  if (situations.length) wrap.querySelector('#ex-situations').addEventListener('click', () => openSituations(situations, lessonId));
 
   const stage = wrap.querySelector('#ex-stage');
   const stats = wrap.querySelector('#ex-stats');
@@ -1132,48 +1147,10 @@ function autoInjectExercises() {
   function renderExercise(mode) {
     stage.innerHTML = '';
     const pool = items.length > 1 ? items : [items[0], items[0]];
-    if (mode === 'flashcard') renderFlashcard(stage, pool);
-    else if (mode === 'multiple') renderMultiple(stage, pool, recordCorrect, recordWrong);
-    else if (mode === 'reverse') renderReverse(stage, pool, recordCorrect, recordWrong);
-    else if (mode === 'audio') renderAudio(stage, pool, recordCorrect, recordWrong);
-    else if (mode === 'typing') renderTyping(stage, pool, recordCorrect, recordWrong);
-    else if (mode === 'memory') renderMemory(stage, pool, recordCorrect);
-    else if (mode === 'dictation') renderDictation(stage, pool, recordCorrect, recordWrong);
+    if (mode === 'audio') renderAudio(stage, pool, recordCorrect, recordWrong);
+    else renderFlashcard(stage, pool);
   }
   renderExercise('flashcard');
-}
-
-function renderDictation(stage, items, ok, ko) {
-  function next() {
-    const correct = items[Math.floor(Math.random() * items.length)];
-    stage.innerHTML = `
-      <div class="ex-prompt"><button class="btn btn-primary" id="qd-play" style="font-size:18px;padding:14px 28px;">▶ Listen</button><div class="ex-q-tr" style="margin-top:8px;">Type what you hear (transliteration OR English)</div></div>
-      <div class="ex-input-row">
-        <input type="text" class="ex-input" id="qd-input" placeholder="e.g. shalom · or · hello" autofocus>
-        <button class="btn btn-primary" id="qd-submit">Check</button>
-        <button class="btn" id="qd-reveal">Reveal</button>
-      </div>
-      <div class="ex-feedback" id="qd-fb"></div>`;
-    setTimeout(() => speak(correct.he, 0.7), 200);
-    document.getElementById('qd-play').addEventListener('click', () => speak(correct.he, 0.7));
-    const input = document.getElementById('qd-input');
-    input.focus();
-    function check() {
-      const guess = input.value.toLowerCase().replace(/['\-_\s\.\?\!]/g, '').trim();
-      const targets = [correct.translit, correct.fr].map(t => t.toLowerCase().replace(/['\-_\s\.\?\!\(\)\,\;]/g, '').split(/[\(\)\,\;\?]/)[0]);
-      const right = targets.some(t => levenshtein(guess, t) <= Math.max(1, Math.floor(t.length * 0.2)));
-      document.getElementById('qd-fb').innerHTML = right
-        ? `✓ Correct, <span dir="rtl" style="font-family:'Frank Ruhl Libre',serif;">${correct.he}</span> · ${correct.translit} · ${correct.fr}`
-        : `✗, <span dir="rtl" style="font-family:'Frank Ruhl Libre',serif;">${correct.he}</span> · ${correct.translit} · ${correct.fr}`;
-      input.disabled = true;
-      if (right) ok(); else ko(correct);
-      setTimeout(next, 2200);
-    }
-    document.getElementById('qd-submit').addEventListener('click', check);
-    document.getElementById('qd-reveal').addEventListener('click', () => { ko(correct); next(); });
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
-  }
-  next();
 }
 
 function renderFlashcard(stage, items) {
@@ -1223,52 +1200,6 @@ function renderFlashcard(stage, items) {
   show();
 }
 
-function renderMultiple(stage, items, ok, ko) {
-  function next() {
-    const correct = items[Math.floor(Math.random() * items.length)];
-    const distractors = shuffle(items.filter(x => x.he !== correct.he)).slice(0, 3);
-    const opts = shuffle([correct, ...distractors]);
-    stage.innerHTML = `
-      <div class="ex-prompt"><div class="ex-q-he">${correct.he}</div><div class="ex-q-tr">${correct.translit}</div><button class="btn icon-btn" id="qm-play">▶</button></div>
-      <div class="ex-options">${opts.map((o, j) => `<button class="ex-option" data-correct="${o.fr === correct.fr}">${o.fr}</button>`).join('')}</div>
-      <div class="ex-feedback" id="qm-fb"></div>`;
-    document.getElementById('qm-play').addEventListener('click', () => speak(correct.he, 0.85));
-    stage.querySelectorAll('.ex-option').forEach(b => b.addEventListener('click', () => {
-      stage.querySelectorAll('.ex-option').forEach(x => x.disabled = true);
-      const right = b.dataset.correct === 'true';
-      b.classList.add(right ? 'correct' : 'wrong');
-      if (!right) stage.querySelector('.ex-option[data-correct="true"]').classList.add('correct');
-      document.getElementById('qm-fb').textContent = right ? '✓ Correct' : `✗, ${correct.fr}`;
-      if (right) ok(); else ko(correct);
-      setTimeout(next, 1200);
-    }));
-  }
-  next();
-}
-
-function renderReverse(stage, items, ok, ko) {
-  function next() {
-    const correct = items[Math.floor(Math.random() * items.length)];
-    const distractors = shuffle(items.filter(x => x.he !== correct.he)).slice(0, 3);
-    const opts = shuffle([correct, ...distractors]);
-    stage.innerHTML = `
-      <div class="ex-prompt"><div class="ex-q-fr">${correct.fr}</div><div class="ex-q-tr">Pick the Hebrew</div></div>
-      <div class="ex-options ex-options-he">${opts.map(o => `<button class="ex-option" data-correct="${o.he === correct.he}"><span style="font-family:'Frank Ruhl Libre',serif;font-size:24px;direction:rtl;">${o.he}</span><br><span style="font-size:12px;color:var(--text-dim);">${o.translit}</span></button>`).join('')}</div>
-      <div class="ex-feedback" id="qm-fb"></div>`;
-    stage.querySelectorAll('.ex-option').forEach(b => b.addEventListener('click', () => {
-      stage.querySelectorAll('.ex-option').forEach(x => x.disabled = true);
-      const right = b.dataset.correct === 'true';
-      b.classList.add(right ? 'correct' : 'wrong');
-      if (!right) stage.querySelector('.ex-option[data-correct="true"]').classList.add('correct');
-      document.getElementById('qm-fb').textContent = right ? `✓, ${correct.translit}` : `✗, ${correct.he} (${correct.translit})`;
-      speak(correct.he, 0.85);
-      if (right) ok(); else ko(correct);
-      setTimeout(next, 1500);
-    }));
-  }
-  next();
-}
-
 function renderAudio(stage, items, ok, ko) {
   function next() {
     const correct = items[Math.floor(Math.random() * items.length)];
@@ -1291,89 +1222,6 @@ function renderAudio(stage, items, ok, ko) {
     }));
   }
   next();
-}
-
-function renderTyping(stage, items, ok, ko) {
-  function next() {
-    const correct = items[Math.floor(Math.random() * items.length)];
-    stage.innerHTML = `
-      <div class="ex-prompt"><div class="ex-q-he">${correct.he}</div><button class="btn icon-btn" id="qt-play">▶</button></div>
-      <div class="ex-input-row">
-        <input type="text" class="ex-input" id="qt-input" placeholder="Type the transliteration (e.g. shalom)" autofocus>
-        <button class="btn btn-primary" id="qt-submit">Check</button>
-        <button class="btn" id="qt-skip">Skip</button>
-      </div>
-      <div class="ex-hint">Hint: ${correct.fr}</div>
-      <div class="ex-feedback" id="qt-fb"></div>`;
-    document.getElementById('qt-play').addEventListener('click', () => speak(correct.he, 0.85));
-    const input = document.getElementById('qt-input');
-    input.focus();
-    function check() {
-      const guess = input.value.toLowerCase().replace(/['\-_\s]/g, '').trim();
-      const target = correct.translit.toLowerCase().replace(/['\-_\s\.\?\!]/g, '').trim();
-      const targetCore = target.split(/[\(\)\,\;\?]/)[0].trim();
-      const distance = levenshtein(guess, targetCore);
-      const right = distance <= Math.max(1, Math.floor(targetCore.length * 0.2));
-      document.getElementById('qt-fb').innerHTML = right ? `✓ Correct, ${correct.translit}` : `✗, ${correct.translit}`;
-      input.disabled = true;
-      if (right) ok(); else ko(correct);
-      setTimeout(next, 1700);
-    }
-    document.getElementById('qt-submit').addEventListener('click', check);
-    document.getElementById('qt-skip').addEventListener('click', () => { ko(correct); next(); });
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
-  }
-  next();
-}
-
-function levenshtein(a, b) {
-  if (!a.length) return b.length;
-  if (!b.length) return a.length;
-  const dp = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
-  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
-    }
-  }
-  return dp[a.length][b.length];
-}
-
-function renderMemory(stage, items, ok) {
-  const pool = shuffle(items).slice(0, Math.min(8, items.length));
-  const cards = shuffle([
-    ...pool.map(p => ({ id: p.he, side: 'he', text: p.he, sub: p.translit })),
-    ...pool.map(p => ({ id: p.he, side: 'fr', text: p.fr, sub: '' }))
-  ]);
-  stage.innerHTML = `<div class="memory-grid" id="mem-grid">${cards.map((c, i) => `
-    <div class="memory-card" data-id="${c.id}" data-i="${i}">
-      <div class="memory-back">?</div>
-      <div class="memory-front" style="${c.side === 'he' ? "font-family:'Frank Ruhl Libre',serif;direction:rtl;font-size:20px;" : 'font-size:14px;'}">${c.text}<br><span style="font-size:11px;color:var(--text-dim);">${c.sub}</span></div>
-    </div>`).join('')}</div>
-    <div class="ex-feedback" id="mem-fb">Click 2 cards to find a Hebrew↔English pair</div>`;
-  let flipped = [], pairs = 0;
-  stage.querySelectorAll('.memory-card').forEach(card => {
-    card.addEventListener('click', () => {
-      if (card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length >= 2) return;
-      card.classList.add('flipped');
-      flipped.push(card);
-      const heText = card.querySelector('.memory-front').textContent;
-      if (card.dataset.id) speak(card.dataset.id, 0.85);
-      if (flipped.length === 2) {
-        if (flipped[0].dataset.id === flipped[1].dataset.id && flipped[0] !== flipped[1]) {
-          flipped.forEach(c => c.classList.add('matched'));
-          pairs++;
-          ok();
-          document.getElementById('mem-fb').textContent = `✓ Match! Pairs: ${pairs} / ${pool.length}`;
-          flipped = [];
-          if (pairs === pool.length) document.getElementById('mem-fb').textContent = '🎉 All pairs found!';
-        } else {
-          setTimeout(() => { flipped.forEach(c => c.classList.remove('flipped')); flipped = []; }, 900);
-        }
-      }
-    });
-  });
 }
 
 function setupNiqqudToggle() {
@@ -1540,6 +1388,250 @@ function addMiniQuiz(title, questions) {
   });
 }
 
+/* ---------- Production practice (focused modals launched from a lesson) ----------
+   Sentence Builder, Substitution Frames, and Situations. These consume lesson-authored
+   window.SENTENCES / window.FRAMES / window.SITUATIONS arrays (never scraped as vocab, since
+   collectLessonItems only reads .word-row DOM). Each opens as a focused modal mirroring the
+   SRS review shell (#srs-modal / .srs-overlay / .srs-card). Backward compatible: a lesson
+   without these arrays shows no launch buttons and the exercise panel behaves as before. */
+
+// One-line grammar rule surfaced when a Sentence-Builder attempt is wrong. The distractors ARE
+// the pedagogy; this names what the learner tripped on. UI copy, keyed by the sentence's `focus`.
+const FOCUS_HINTS = {
+  'agreement:gender': 'Gender agreement: the verb/adjective must match the speaker (m. vs f.).',
+  'agreement:number': 'Number agreement: singular and plural forms must match.',
+  'word-order': 'Word order: a word is out of place, or a pronoun slipped in.',
+  'preposition': 'Preposition: one tile is an extra or wrong attachment (בְּ / לְ / אֶת / מ).',
+  'vocabulary': 'Wrong word: one tile does not belong in this sentence.'
+};
+function focusHint(focus) {
+  return FOCUS_HINTS[focus] || 'Not quite — check the order and drop any tile that does not belong.';
+}
+
+// Shared modal shell for the production modes. Returns the .srs-card element to fill.
+function openProdModal(ariaLabel) {
+  const existing = document.getElementById('prod-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'prod-modal';
+  modal.innerHTML = `<div class="srs-overlay"></div><div class="srs-card prod-card" role="dialog" aria-label="${escHtml(ariaLabel || 'Practice')}"></div>`;
+  document.body.appendChild(modal);
+  makeModalAccessible(modal, modal.querySelector('.srs-card'));
+  modal.querySelector('.srs-overlay').addEventListener('click', () => modal.remove());
+  return modal;
+}
+
+function openSentenceBuilder(sentences, lessonId) {
+  const list = (sentences || []).filter(s => s && Array.isArray(s.chunks) && s.chunks.length);
+  if (!list.length) return;
+  if (window.track) track('sentence_builder_open', lessonId, list.length);
+  const modal = openProdModal('Sentence builder');
+  const card = modal.querySelector('.srs-card');
+  let idx = 0;
+
+  function renderOne() {
+    if (idx >= list.length) return renderDone();
+    const s = list[idx];
+    // Stable ids let duplicate word forms coexist; comparison is by the he string sequence.
+    const tiles = shuffle(s.chunks.concat(s.distractors || []).map((he, i) => ({ id: i, he })));
+    let tray = tiles.slice();
+    let placed = [];
+    let solved = false;
+
+    card.innerHTML = `
+      <button class="srs-close" aria-label="Close">×</button>
+      <div class="srs-topbar"><div class="srs-progress">Build · ${idx + 1} / ${list.length}</div></div>
+      <div class="sb-prompt">${escHtml(s.fr || '')}</div>
+      <div class="sb-answer" id="sb-answer" aria-label="Your sentence"></div>
+      <div class="sb-tray" id="sb-tray"></div>
+      <div class="sb-feedback" id="sb-feedback" role="status" aria-live="polite"></div>
+      <div class="sb-breakdown" id="sb-breakdown"></div>
+      <div class="srs-actions sb-actions">
+        <button class="btn" id="sb-reset" type="button">Reset</button>
+        <button class="btn btn-primary" id="sb-check" type="button">Check</button>
+      </div>`;
+    card.querySelector('.srs-close').addEventListener('click', () => modal.remove());
+    const ansEl = card.querySelector('#sb-answer');
+    const trayEl = card.querySelector('#sb-tray');
+    const fbEl = card.querySelector('#sb-feedback');
+    const checkBtn = card.querySelector('#sb-check');
+
+    function paint() {
+      ansEl.innerHTML = placed.length
+        ? placed.map(t => `<button class="sb-tile sb-placed" type="button" data-id="${t.id}" dir="rtl" lang="he">${escHtml(t.he)}</button>`).join('')
+        : '<span class="sb-placeholder">Tap the words in order…</span>';
+      trayEl.innerHTML = tray.map(t => `<button class="sb-tile" type="button" data-id="${t.id}" dir="rtl" lang="he">${escHtml(t.he)}</button>`).join('');
+      if (solved) return;
+      ansEl.querySelectorAll('.sb-tile').forEach(b => b.addEventListener('click', () => {
+        const i = placed.findIndex(t => t.id === +b.dataset.id);
+        if (i >= 0) { tray.push(placed.splice(i, 1)[0]); fbEl.textContent = ''; paint(); }
+      }));
+      trayEl.querySelectorAll('.sb-tile').forEach(b => b.addEventListener('click', () => {
+        const i = tray.findIndex(t => t.id === +b.dataset.id);
+        if (i >= 0) { placed.push(tray.splice(i, 1)[0]); fbEl.textContent = ''; paint(); }
+      }));
+    }
+
+    function check() {
+      if (solved) return;
+      const guess = placed.map(t => t.he);
+      const right = guess.length === s.chunks.length && guess.every((g, i) => g === s.chunks[i]);
+      if (!right) {
+        fbEl.className = 'sb-feedback bad';
+        fbEl.textContent = '✗ ' + focusHint(s.focus);
+        return;
+      }
+      solved = true;
+      fbEl.className = 'sb-feedback ok';
+      fbEl.textContent = '✓ ' + (s.translit || '');
+      card.querySelectorAll('.sb-tile').forEach(b => { b.disabled = true; });
+      card.querySelector('#sb-reset').disabled = true;
+      speak(s.he, 0.85);
+      if (window.track) track('sentence_built', lessonId);
+      // The finished sentence becomes a grammar micro-lesson: root / binyan / gender per word.
+      const out = card.querySelector('#sb-breakdown');
+      out.style.display = 'block';
+      if (window.QuickSay && window.QuickSay.renderBreakdown) {
+        window.QuickSay.renderBreakdown(out, s.he, new AbortController().signal);
+      }
+      checkBtn.textContent = idx + 1 >= list.length ? 'Finish' : 'Next →';
+      checkBtn.onclick = () => { idx++; renderOne(); };
+    }
+
+    card.querySelector('#sb-reset').addEventListener('click', () => {
+      if (solved) return;
+      tray = tiles.slice(); placed = []; fbEl.textContent = ''; paint();
+    });
+    checkBtn.addEventListener('click', check);
+    paint();
+  }
+
+  function renderDone() {
+    card.innerHTML = `<button class="srs-close" aria-label="Close">×</button>
+      <h2 style="margin:0 0 12px;font-size:22px;">Nicely built</h2>
+      <p style="color:var(--text-dim);margin:0 0 20px;">You produced ${list.length} sentence${list.length > 1 ? 's' : ''} from scratch.</p>
+      <button class="btn btn-primary" id="sb-again" type="button">Again</button>`;
+    card.querySelector('.srs-close').addEventListener('click', () => modal.remove());
+    card.querySelector('#sb-again').addEventListener('click', () => { idx = 0; renderOne(); });
+  }
+
+  renderOne();
+}
+
+function openFrames(frames, lessonId) {
+  const list = (frames || []).filter(f => f && f.frame && Array.isArray(f.slots) && f.slots.length);
+  if (!list.length) return;
+  if (window.track) track('frames_open', lessonId, list.length);
+  const modal = openProdModal('Substitution frames');
+  const card = modal.querySelector('.srs-card');
+  let idx = 0;
+
+  function fill(frame, he) {
+    // Frames carry the blank as ___; substitute the chosen slot value in place.
+    return frame.replace('___', he);
+  }
+
+  function renderOne() {
+    if (idx >= list.length) return renderDone();
+    const f = list[idx];
+    const framePretty = f.frame.replace('___', '<span class="fr-blank">___</span>');
+    card.innerHTML = `
+      <button class="srs-close" aria-label="Close">×</button>
+      <div class="srs-topbar"><div class="srs-progress">Swap · ${idx + 1} / ${list.length}</div></div>
+      <div class="fr-frame" dir="rtl" lang="he">${framePretty}</div>
+      <div class="fr-sub">${escHtml(f.translit || '')} · ${escHtml(f.fr || '')}</div>
+      <div class="fr-slots" id="fr-slots">${f.slots.map((sl, i) =>
+        `<button class="fr-slot" type="button" data-i="${i}"><span dir="rtl" lang="he">${escHtml(sl.he)}</span><span class="fr-slot-fr">${escHtml(sl.fr || '')}</span></button>`).join('')}</div>
+      <div class="fr-result" id="fr-result"></div>
+      <div class="srs-actions sb-actions">
+        <button class="btn btn-primary" id="fr-next" type="button">${idx + 1 >= list.length ? 'Finish' : 'Next frame →'}</button>
+      </div>`;
+    card.querySelector('.srs-close').addEventListener('click', () => modal.remove());
+    card.querySelector('#fr-next').addEventListener('click', () => { idx++; renderOne(); });
+    const result = card.querySelector('#fr-result');
+    card.querySelectorAll('.fr-slot').forEach(b => b.addEventListener('click', () => {
+      card.querySelectorAll('.fr-slot').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      const sl = f.slots[+b.dataset.i];
+      const full = fill(f.frame, sl.he);
+      result.innerHTML = `<button class="fr-play icon-btn" type="button" aria-label="Listen">▶</button>
+        <span class="fr-full" dir="rtl" lang="he">${escHtml(full)}</span>`;
+      result.querySelector('.fr-play').addEventListener('click', () => speak(full, 0.85));
+      speak(full, 0.85);
+      if (window.track) track('frame_swapped', lessonId);
+    }));
+  }
+
+  function renderDone() {
+    card.innerHTML = `<button class="srs-close" aria-label="Close">×</button>
+      <h2 style="margin:0 0 12px;font-size:22px;">Frame drilled</h2>
+      <p style="color:var(--text-dim);margin:0 0 20px;">A sentence is a frame plus slots, not a memorized string.</p>
+      <button class="btn btn-primary" id="fr-again" type="button">Again</button>`;
+    card.querySelector('.srs-close').addEventListener('click', () => modal.remove());
+    card.querySelector('#fr-again').addEventListener('click', () => { idx = 0; renderOne(); });
+  }
+
+  renderOne();
+}
+
+function openSituations(situations, lessonId) {
+  const list = (situations || []).filter(q => q && q.q && Array.isArray(q.options) && q.options.length);
+  if (!list.length) return;
+  if (window.track) track('situations_open', lessonId, list.length);
+  const modal = openProdModal('Situations');
+  const card = modal.querySelector('.srs-card');
+  let idx = 0, score = 0;
+
+  function renderOne() {
+    if (idx >= list.length) return renderDone();
+    const q = list[idx];
+    card.innerHTML = `
+      <button class="srs-close" aria-label="Close">×</button>
+      <div class="srs-topbar"><div class="srs-progress">Situation · ${idx + 1} / ${list.length}</div><div class="srs-progress">Score ${score}</div></div>
+      <div class="sit-q">${escHtml(q.q)}</div>
+      <div class="sit-options" id="sit-options">${q.options.map((o, i) =>
+        `<button class="sit-option" type="button" data-i="${i}" dir="rtl" lang="he">${escHtml(o)}</button>`).join('')}</div>
+      <div class="sit-feedback" id="sit-feedback" role="status" aria-live="polite"></div>
+      <div class="srs-actions sb-actions">
+        <button class="btn btn-primary" id="sit-next" type="button" disabled>${idx + 1 >= list.length ? 'Finish' : 'Next →'}</button>
+      </div>`;
+    card.querySelector('.srs-close').addEventListener('click', () => modal.remove());
+    const fb = card.querySelector('#sit-feedback');
+    const nextBtn = card.querySelector('#sit-next');
+    card.querySelectorAll('.sit-option').forEach(b => b.addEventListener('click', () => {
+      card.querySelectorAll('.sit-option').forEach(x => { x.disabled = true; });
+      const chosen = +b.dataset.i;
+      const right = chosen === q.answer;
+      b.classList.add(right ? 'correct' : 'wrong');
+      if (!right) {
+        const correctEl = card.querySelector(`.sit-option[data-i="${q.answer}"]`);
+        if (correctEl) correctEl.classList.add('correct');
+      }
+      if (right) score++;
+      const answerHe = q.he || q.options[q.answer];
+      if (answerHe) speak(answerHe, 0.85);
+      fb.className = 'sit-feedback ' + (right ? 'ok' : 'bad');
+      fb.textContent = (right ? '✓ ' : '✗ ') + (q.explain || (right ? 'Correct' : ''));
+      nextBtn.disabled = false;
+      nextBtn.focus();
+      if (window.track) track('situation_answered', lessonId, right ? 1 : 0);
+    }));
+    nextBtn.addEventListener('click', () => { idx++; renderOne(); });
+  }
+
+  function renderDone() {
+    card.innerHTML = `<button class="srs-close" aria-label="Close">×</button>
+      <h2 style="margin:0 0 12px;font-size:22px;">Situation drill done</h2>
+      <p style="color:var(--text-dim);margin:0 0 6px;font-size:32px;color:var(--accent);">${score} / ${list.length}</p>
+      <p style="color:var(--text-dim);margin:0 0 20px;">Right greeting, right moment.</p>
+      <button class="btn btn-primary" id="sit-again" type="button">Again</button>`;
+    card.querySelector('.srs-close').addEventListener('click', () => modal.remove());
+    card.querySelector('#sit-again').addEventListener('click', () => { idx = 0; score = 0; renderOne(); });
+  }
+
+  renderOne();
+}
+
 // --- PWA bootstrap: injects manifest + icons + registers the service worker on every page ---
 (function () {
   try {
@@ -1576,7 +1668,7 @@ function addMiniQuiz(title, questions) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1777900000027';
+  var SHARED_V = '1777900000028';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }
