@@ -62,6 +62,27 @@
   if (document.readyState !== 'loading') pageView();
   else document.addEventListener('DOMContentLoaded', pageView);
 
+  // Sentry-lite: report uncaught JS errors so silent breakage on a real user's device is
+  // visible in the analytics (anonymous — just the message + file:line, no stack, no PII).
+  // Capped per session so an error loop can't flood the endpoint.
+  var errsSent = 0, ERR_CAP = 8;
+  function reportError(msg, where) {
+    if (off || errsSent >= ERR_CAP) return;
+    errsSent++;
+    track('error', (String(msg || 'error') + (where ? ' @' + where : '')).slice(0, 78));
+    flush(true);
+  }
+  window.addEventListener('error', function (e) {
+    try {
+      var msg = (e && (e.message || (e.error && e.error.message))) || 'error';
+      var where = (e && e.filename) ? (String(e.filename).split('/').pop() + ':' + (e.lineno || 0)) : '';
+      reportError(msg, where);
+    } catch (_) {}
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    try { var r = e && e.reason; reportError('promise: ' + (r && r.message || r), ''); } catch (_) {}
+  });
+
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(true); });
   window.addEventListener('pagehide', function () { flush(true); });
   setInterval(function () { flush(false); }, 20000);

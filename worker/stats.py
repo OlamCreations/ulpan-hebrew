@@ -45,11 +45,18 @@ def table(title, rows, cols):
 print(f"\n=== Ulpan usage — last {DAYS} day(s) ===")
 
 head = q(f"SELECT sum(_sample_interval) AS events, count(DISTINCT index1) AS users FROM ulpan_events WHERE {WINDOW}")
+today = q("SELECT sum(_sample_interval) AS events, count(DISTINCT index1) AS users FROM ulpan_events WHERE timestamp > NOW() - INTERVAL '1' DAY")
 if head:
-    print(f"\n\033[1mTotal\033[0m  events: {head[0]['events']}   unique visitors: {head[0]['users']}")
+    ev = int(head[0]["events"] or 0); us = int(head[0]["users"] or 0)
+    per = round(ev / us, 1) if us else 0
+    print(f"\n\033[1mTotal\033[0m  events: {ev}   unique visitors: {us}   engagement: {per} events/visitor")
+    if today:
+        print(f"\033[1mToday\033[0m  events: {today[0]['events'] or 0}   visitors: {today[0]['users'] or 0}")
 
 table("By event", q(f"SELECT blob1 AS event, sum(_sample_interval) AS n FROM ulpan_events WHERE {WINDOW} GROUP BY event ORDER BY n DESC"),
       [("event", "event"), ("count", "n")])
+table("Errors (Sentry-lite)", q(f"SELECT blob3 AS message, blob5 AS device, sum(_sample_interval) AS n FROM ulpan_events WHERE blob1='error' AND {WINDOW} GROUP BY message, device ORDER BY n DESC LIMIT 20"),
+      [("message", "message"), ("device", "device"), ("count", "n")])
 table("Top lessons (page views)", q(f"SELECT blob2 AS page, sum(_sample_interval) AS n FROM ulpan_events WHERE blob1='page_view' AND {WINDOW} GROUP BY page ORDER BY n DESC LIMIT 20"),
       [("page", "page"), ("views", "n")])
 table("By country", q(f"SELECT blob4 AS country, sum(_sample_interval) AS n FROM ulpan_events WHERE {WINDOW} GROUP BY country ORDER BY n DESC"),
