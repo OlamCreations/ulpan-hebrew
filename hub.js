@@ -275,15 +275,10 @@
     { label: 'SRS review', hint: '', showIf: hasBtn('fc-srs'), act: () => clickHidden('fc-srs') },
     { label: 'Print', hint: '', showIf: hasBtn('fc-print'), act: () => clickHidden('fc-print') },
     { label: 'Shortcuts', hint: '', showIf: hasBtn('fc-help'), act: () => clickHidden('fc-help') },
-    { label: 'Preferences', hint: '', act: openPrefs },
-    { label: 'Toggle theme', hint: '', act: () => { if (window.toggleTheme) window.toggleTheme(); syncMenuTheme(); } },
+    { label: 'Preferences', hint: '', act: openPrefs },   // theme lives inside Preferences — no separate toggle (was a duplicate)
     { label: 'No sound? Install a voice', hint: '', act: () => { closeMenu(); if (window.showVoiceBanner) window.showVoiceBanner(true); } }
   ];
 
-  function syncMenuTheme() {
-    const el = document.querySelector('#hub-menu [data-role="theme"] .menu-hint');
-    if (el) el.textContent = (localStorage.getItem('theme') || 'light') === 'light' ? 'dark' : 'light';
-  }
   function closeMenu() {
     const menu = document.getElementById('hub-menu');
     const btn = document.getElementById('hub-burger');
@@ -297,22 +292,73 @@
     const host = document.querySelector('#hub-menu .hub-menu-items');
     if (!host) return;
     const items = MENU_ITEMS.filter(it => !it.showIf || it.showIf());
-    host.innerHTML = items.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '"' +
-      (it.label === 'Toggle theme' ? ' data-role="theme"' : '') + '>' +
+    host.innerHTML = items.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '">' +
       '<span class="menu-label">' + esc(it.label) + '</span>' +
       '<span class="menu-hint">' + esc(it.hint) + '</span></button>').join('');
     host.querySelectorAll('.menu-item').forEach(el => {
       el.addEventListener('click', () => { const it = items[+el.dataset.i]; if (it && it.act) it.act(); });
     });
   }
+  // Home only: a "Find a lesson" block at the top of the drawer — the search bar and the
+  // category jumps that used to sit stacked under the translator on the home now live here,
+  // so the home top is just the translator. Empty query shows category jump rows; typing
+  // filters across every lesson card and jumps straight to a lesson (or a category).
+  function drawFind(find, q) {
+    const list = find.querySelector('.hub-find-list');
+    const cats = window.__homeLessons ? window.__homeLessons() : [];
+    const clip = t => (t && t.length > 64) ? t.slice(0, 63) + '…' : (t || '');
+    if (!q) {
+      list.innerHTML = cats.map(c =>
+        '<button type="button" class="hub-find-row" data-jump="' + esc(c.id) + '">' +
+        '<span class="hub-find-label">' + esc(c.title) + '</span>' +
+        '<span class="hub-find-n">' + c.cards.length + '</span></button>').join('');
+    } else {
+      const rows = [];
+      for (const c of cats) {
+        if (c.title.toLowerCase().indexOf(q) !== -1) rows.push({ jump: c.id, label: c.title, sub: 'category' });
+        for (const card of c.cards) {
+          if (rows.length >= 40) break;
+          if (card.href && card.text.toLowerCase().indexOf(q) !== -1) rows.push({ href: card.href, label: clip(card.text), sub: c.title });
+        }
+        if (rows.length >= 40) break;
+      }
+      list.innerHTML = rows.length ? rows.map(r =>
+        (r.href ? '<a class="hub-find-row" href="' + esc(r.href) + '">'
+                : '<button type="button" class="hub-find-row" data-jump="' + esc(r.jump) + '">') +
+        '<span class="hub-find-label">' + esc(r.label) + '</span>' +
+        '<span class="hub-find-sub">' + esc(r.sub) + '</span>' +
+        (r.href ? '</a>' : '</button>')).join('') : '<div class="hub-find-empty">No match.</div>';
+    }
+    list.querySelectorAll('[data-jump]').forEach(el => el.addEventListener('click', () => {
+      closeMenu(); if (window.__homeJump) window.__homeJump(el.getAttribute('data-jump'));
+    }));
+    list.querySelectorAll('a.hub-find-row').forEach(el => el.addEventListener('click', () => closeMenu()));
+  }
+  function renderHomeFind() {
+    if (!(document.body && document.body.classList.contains('home'))) return;
+    const panel = document.querySelector('#hub-menu .hub-menu-panel');
+    if (!panel) return;
+    let find = panel.querySelector('.hub-find');
+    if (!find) {
+      find = document.createElement('div');
+      find.className = 'hub-find';
+      find.innerHTML = '<input type="text" class="hub-find-input" placeholder="Find a lesson…" aria-label="Find a lesson">' +
+        '<div class="hub-find-list"></div>';
+      const items = panel.querySelector('.hub-menu-items');
+      panel.insertBefore(find, items);
+      const input = find.querySelector('.hub-find-input');
+      input.addEventListener('input', () => drawFind(find, input.value.trim().toLowerCase()));
+    }
+    drawFind(find, (find.querySelector('.hub-find-input').value || '').trim().toLowerCase());
+  }
   function openMenu() {
     const menu = document.getElementById('hub-menu');
     const btn = document.getElementById('hub-burger');
     renderMenuItems();
+    renderHomeFind();
     if (menu) menu.classList.add('open');
     if (btn) btn.setAttribute('aria-expanded', 'true');
     document.documentElement.classList.add('hub-menu-open');
-    syncMenuTheme();
   }
 
   // Re-render the open translator so a preference change (cursive/niqqud) lands immediately

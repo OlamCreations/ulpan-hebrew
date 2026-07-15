@@ -71,34 +71,8 @@
  .action-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
 
  /* Search */
- .search-bar {
- width: 100%; padding: 12px 16px;
- background: var(--bg-card); border: 1px solid var(--border);
- color: var(--text); border-radius: 8px; font-size: 14px;
- margin-bottom: 16px; box-sizing: border-box;
- }
 
  /* Sticky category chip nav */
- .cat-nav {
- position: sticky; top: 0;
- background: var(--bg); z-index: 50;
- padding: 10px 0; margin: 0 0 18px;
- overflow-x: auto; white-space: nowrap;
- border-bottom: 1px solid var(--border);
- -webkit-overflow-scrolling: touch;
- }
- .cat-nav-inner { display: inline-flex; gap: 6px; padding: 0 2px; }
- .cat-chip {
- display: inline-flex; align-items: center; gap: 6px;
- padding: 7px 14px;
- background: var(--bg-card); border: 1px solid var(--border);
- border-radius: 999px; font-size: 12px; color: var(--text-dim);
- text-decoration: none; transition: all 0.15s; cursor: pointer;
- }
- .cat-chip:hover, .cat-chip.active {
- background: var(--accent-dim); border-color: var(--accent); color: var(--accent);
- }
- .cat-chip .ico { font-size: 14px; }
 
  /* Scroll-margin so sticky nav doesn't cover anchored sections */
  html { scroll-padding-top: 80px; }
@@ -348,8 +322,6 @@
  html.light .lesson-card.current .num { background: #4A9EDB; color: #fff; }
 
  .tehilim-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
- .cat-nav { padding: 8px 0; }
- .cat-chip { padding: 8px 13px; font-size: 12px; }
  }
 
  /* Mid phones: liturgical cards fit 3 across */
@@ -385,32 +357,7 @@
  <button id="d-reset"></button>
 </div>
 
-<!-- SEARCH -->
-<input type="text" id="lesson-search" class="search-bar" aria-label="Search lessons" placeholder="Search lessons, try 'prayer', 'wine', 'numbers', 'IDF', 'kabbalah'…">
-
-<!-- STICKY CATEGORY CHIP NAV -->
-<nav class="cat-nav" aria-label="Category navigation">
- <div class="cat-nav-inner">
- <a class="cat-chip" href="#cat-prayers">Prayers</a>
- <a class="cat-chip" href="#cat-shabbat">Shabbat</a>
- <a class="cat-chip" href="#cat-tehilim">Tehilim</a>
- <a class="cat-chip" href="#cat-roots">Roots</a>
- <a class="cat-chip" href="#cat-songs">Songs</a>
- <a class="cat-chip" href="#cat-cursive">Cursive</a>
- <a class="cat-chip" href="#cat-morpho">Morphology</a>
- <a class="cat-chip" href="#cat-start">Start</a>
- <a class="cat-chip" href="#cat-grammar">Grammar</a>
- <a class="cat-chip" href="#cat-life">Life</a>
- <a class="cat-chip" href="#cat-society">Society</a>
- <a class="cat-chip" href="#cat-religion">Religion</a>
- <a class="cat-chip" href="#cat-cuisine">Cuisine</a>
- <a class="cat-chip" href="#cat-idf">IDF</a>
- <a class="cat-chip" href="#cat-communities">Communities</a>
- <a class="cat-chip" href="#cat-specialty">Specialty</a>
- <a class="cat-chip" href="#cat-arts">Arts</a>
- <a class="cat-chip" href="#cat-mastery">Mastery</a>
- </div>
-</nav>
+<!-- Search + category jumps moved into the hamburger drawer (see hub.js renderHomeFind). Home top = translator only. -->
 
 <!-- DAILY PRAYERS -->
 <section class="mega-cat" id="cat-prayers">
@@ -2919,7 +2866,7 @@
 </div>
 
 <!-- app.js injects the shared modules (translit + quicksay + hub); see loadSharedModules there. -->
-<script src="app.js?v=1777900000021"></script>
+<script src="app.js?v=1777900000022"></script>
 <script>
  const done = getLessonProgress();
  let firstNotDone = null;
@@ -3204,23 +3151,17 @@
  showReviewModal(allReview);
  });
 
- // Search across all categories (lessons + liturgical cards)
- const search = document.getElementById('lesson-search');
- search.addEventListener('input', () => {
- const q = search.value.toLowerCase().trim();
- if (!q) {
- blocks.forEach(b => { b.style.display = ''; b.classList.add('collapsed'); b.querySelectorAll('.lesson-card,.tehilim-card').forEach(c => c.style.display = ''); });
- return;
- }
- blocks.forEach(b => {
- let any = false;
- b.querySelectorAll('.lesson-card,.tehilim-card').forEach(c => { const m = c.textContent.toLowerCase().includes(q); c.style.display = m ? '' : 'none'; if (m) any = true; });
- b.style.display = any ? '' : 'none';
- b.classList.toggle('collapsed', !any);
- });
- });
+ // Search + category jumps now live in the hamburger drawer (hub.js renderHomeFind).
+ // Expose a jump hook so the drawer can open+scroll to a category, and a search hook
+ // that filters the page's lesson cards and returns the matches for an in-drawer list.
+ window.__homeJump = (id) => { const b = document.getElementById(id); if (b) openBlock(b, true); };
+ window.__homeLessons = () => Array.from(document.querySelectorAll('.cat-block')).map(bl => ({
+   id: bl.id,
+   title: (bl.querySelector('.cat-h2title,.mega-cat-title') || {}).textContent || bl.id,
+   cards: Array.from(bl.querySelectorAll('.lesson-card,.tehilim-card')).map(c => ({ href: c.getAttribute('href'), text: (c.textContent||'').replace(/\s+/g,' ').trim() }))
+ }));
 
-async function showMixedQuiz() {
+ async function showMixedQuiz() {
  const lessons = Array.from(document.querySelectorAll('.lesson-card')).map(c => c.getAttribute('href'));
  const overlay = document.createElement('div');
  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;';
