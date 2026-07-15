@@ -111,8 +111,16 @@
  border-bottom: 1px dashed var(--border);
  font-weight: 500;
  }
- .cluster-head { margin-top: 34px; color: var(--accent); border-bottom-color: var(--accent-dim); font-weight: 700; }
+ .cluster-head { margin-top: 34px; color: var(--accent); border-bottom-color: var(--accent-dim); font-weight: 700;
+ cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
  .cluster-head:first-of-type { margin-top: 10px; }
+ .cluster-chev { font-size: 12px; color: var(--accent); transition: transform .15s ease; flex: 0 0 auto; }
+ .cluster-head.cluster-collapsed .cluster-chev { transform: rotate(-90deg); }
+ .card-hidden { display: none !important; }
+ .show-more { display: block; width: 100%; margin-top: 10px; padding: 12px; background: transparent;
+ border: 1px dashed var(--border); border-radius: 8px; color: var(--accent); font-family: inherit;
+ font-size: 14px; cursor: pointer; transition: all .14s; }
+ .show-more:hover { border-color: var(--accent); background: var(--bg-card-hover); }
 
  /* Each .lessons grid → path of nodes */
  .lessons {
@@ -2868,7 +2876,7 @@
 </div>
 
 <!-- app.js injects the shared modules (translit + quicksay + hub); see loadSharedModules there. -->
-<script src="app.js?v=1777900000026"></script>
+<script src="app.js?v=1777900000027"></script>
 <script>
  const done = getLessonProgress();
  let firstNotDone = null;
@@ -3033,11 +3041,48 @@
  h.addEventListener('click', e => { if (e.target.closest('a')) return; toggleHead(h); });
  h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleHead(h); } });
  });
- document.querySelectorAll('.cat-chip').forEach(chip => chip.addEventListener('click', e => {
- e.preventDefault();
- const block = document.getElementById(chip.getAttribute('href').slice(1));
- if (block) openBlock(block, true);
- }));
+ // Foldable clusters: a cluster header toggles all its categories (up to the next header),
+ // so the long list can be collapsed section by section. Collapsed state persists.
+ (function () {
+ const heads = Array.from(containerEl.querySelectorAll(':scope > .cluster-head'));
+ const KEY = 'ulpan-clusters-collapsed';
+ const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
+ heads.forEach(h => {
+ h.dataset.cluster = h.textContent.trim();
+ h.setAttribute('role', 'button'); h.setAttribute('tabindex', '0');
+ const chev = document.createElement('span'); chev.className = 'cluster-chev'; chev.textContent = '▾'; h.appendChild(chev);
+ const members = [];
+ let el = h.nextElementSibling;
+ while (el && !el.classList.contains('cluster-head')) { if (el.classList.contains('cat-block')) members.push(el); el = el.nextElementSibling; }
+ const apply = (collapsed) => { h.classList.toggle('cluster-collapsed', collapsed); members.forEach(m => { m.style.display = collapsed ? 'none' : ''; }); };
+ if (load().includes(h.dataset.cluster)) apply(true);
+ const toggle = () => {
+ const now = !h.classList.contains('cluster-collapsed');
+ apply(now);
+ let set = load().filter(x => x !== h.dataset.cluster);
+ if (now) set.push(h.dataset.cluster);
+ try { localStorage.setItem(KEY, JSON.stringify(set)); } catch (e) {}
+ };
+ h.addEventListener('click', toggle);
+ h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+ });
+ })();
+ // Progressive reveal for very large categories (Roots ~250, Tehilim ~150) so expanding one
+ // doesn't dump a giant list — show a capped batch plus a "show all" button.
+ (function () {
+ const CAP = 48;
+ blocks.forEach(b => {
+ const body = b.querySelector('.cat-body'); if (!body) return;
+ const cards = Array.from(body.querySelectorAll('.lesson-card, .tehilim-card'));
+ if (cards.length <= CAP) return;
+ cards.forEach((c, i) => { if (i >= CAP) c.classList.add('card-hidden'); });
+ const more = document.createElement('button');
+ more.type = 'button'; more.className = 'show-more';
+ more.textContent = 'Show all ' + cards.length + ' lessons';
+ more.addEventListener('click', () => { cards.forEach(c => c.classList.remove('card-hidden')); more.remove(); });
+ body.appendChild(more);
+ });
+ })();
 
  // Dashboard
  const total = document.querySelectorAll('.lesson-card').length;
