@@ -167,6 +167,7 @@ function track(request, env) {
   return request.json().then(body => {
     const evs = Array.isArray(body && body.events) ? body.events.slice(0, 30) : [];
     const aid = ((body && body.aid) || 'anon').toString().slice(0, 32);
+    const role = (body && body.owner) ? 'owner' : '';   // owner-tagged devices are excluded from the public report
     const country = (request.cf && request.cf.country) || request.headers.get('CF-IPCountry') || 'XX';
     const ua = request.headers.get('User-Agent') || '';
     const device = /Mobi|Android|iPhone|iPod/i.test(ua) ? 'mobile'
@@ -179,7 +180,7 @@ function track(request, env) {
           env.AE.writeDataPoint({
             indexes: [aid],
             blobs: [e, ((ev.page) || '').toString().slice(0, 60), ((ev.detail) || '').toString().slice(0, 80),
-              country, device, ((ev.lang) || '').toString().slice(0, 8)],
+              country, device, ((ev.lang) || '').toString().slice(0, 8), role],
             doubles: [Number(ev.val) || 0]
           });
         } catch (err) {}

@@ -25,6 +25,16 @@
     if (!aid) { aid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem('ulpan-aid', aid); }
   } catch (e) {}
 
+  // Owner tagging: open the app once with ?owner=1 on your own devices to mark your traffic as
+  // internal (the analytics report excludes it, so you see real users, not yourself). ?owner=0 clears it.
+  try {
+    var op = new URLSearchParams(location.search).get('owner');
+    if (op === '1') localStorage.setItem('ulpan-owner', '1');
+    else if (op === '0') localStorage.removeItem('ulpan-owner');
+  } catch (e) {}
+  var owner = false;
+  try { owner = localStorage.getItem('ulpan-owner') === '1'; } catch (e) {}
+
   var queue = [];
 
   function pageSlug() {
@@ -38,7 +48,7 @@
   function flush(useBeacon) {
     if (off || !queue.length) return;
     var payload;
-    try { payload = JSON.stringify({ aid: aid, events: queue }); } catch (e) { queue = []; return; }
+    try { payload = JSON.stringify({ aid: aid, owner: owner, events: queue }); } catch (e) { queue = []; return; }
     queue = [];
     try {
       if (useBeacon && navigator.sendBeacon) { navigator.sendBeacon(ENDPOINT, payload); return; }

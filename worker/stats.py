@@ -25,7 +25,13 @@ def load_env(path):
 env = load_env(ENV)
 TOKEN, ACCOUNT = env["CF_API_TOKEN"], env["CF_ACCOUNT_ID"]
 URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/analytics_engine/sql"
-WINDOW = f"timestamp > NOW() - INTERVAL '{DAYS}' DAY"
+# Exclude owner-tagged devices (blob7='owner', set via ?owner=1) and Claude's known test ids,
+# so the report shows REAL users, not Jonas or test traffic.
+TEST_AIDS = ("testverify", "seed1", "synctest", "dbg", "errtest")
+EXCL = " AND blob7 != 'owner' AND index1 NOT IN (" + ", ".join(f"'{a}'" for a in TEST_AIDS) + ")"
+TIME = f"timestamp > NOW() - INTERVAL '{DAYS}' DAY"
+WINDOW = TIME + EXCL          # public: real users only
+TODAY = "timestamp > NOW() - INTERVAL '1' DAY" + EXCL
 
 def q(sql):
     req = urllib.request.Request(URL, data=sql.encode("utf-8"),
@@ -44,14 +50,21 @@ def table(title, rows, cols):
 
 print(f"\n=== Ulpan usage — last {DAYS} day(s) ===")
 
+print("  (real users only — owner-tagged + test traffic excluded)")
 head = q(f"SELECT sum(_sample_interval) AS events, count(DISTINCT index1) AS users FROM ulpan_events WHERE {WINDOW}")
-today = q("SELECT sum(_sample_interval) AS events, count(DISTINCT index1) AS users FROM ulpan_events WHERE timestamp > NOW() - INTERVAL '1' DAY")
+today = q(f"SELECT sum(_sample_interval) AS events, count(DISTINCT index1) AS users FROM ulpan_events WHERE {TODAY}")
 if head:
     ev = int(head[0]["events"] or 0); us = int(head[0]["users"] or 0)
     per = round(ev / us, 1) if us else 0
     print(f"\n\033[1mTotal\033[0m  events: {ev}   unique visitors: {us}   engagement: {per} events/visitor")
     if today:
         print(f"\033[1mToday\033[0m  events: {today[0]['events'] or 0}   visitors: {today[0]['users'] or 0}")
+
+# What we excluded, for transparency
+excl = q(f"SELECT blob7 AS role, sum(_sample_interval) AS n, count(DISTINCT index1) AS u FROM ulpan_events WHERE {TIME} AND (blob7 = 'owner' OR index1 IN ({', '.join(chr(39)+a+chr(39) for a in TEST_AIDS)})) GROUP BY role")
+if excl:
+    parts = [f"{'owner' if (r['role']=='owner') else 'test'}: {r['n']} ev / {r['u']} id" for r in excl]
+    print("\033[2mExcluded\033[0m  " + "   ".join(parts))
 
 table("By event", q(f"SELECT blob1 AS event, sum(_sample_interval) AS n FROM ulpan_events WHERE {WINDOW} GROUP BY event ORDER BY n DESC"),
       [("event", "event"), ("count", "n")])
