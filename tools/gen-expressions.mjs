@@ -14,17 +14,20 @@
 // "idioms" (מַיִם שֶׁקֶטוֹם for מַיִם שְׁקֵטִים, דֻּבֵּי אֱמֶת, צִפּוֹר הַסַּף). An expression no Israeli
 // actually says is worse than no expression. Curation is the gate; the pool is the evidence.
 //
-// Three guards, each of which exits non-zero (so this can gate a deploy):
-//   - every curation key must still match a pool entry  → a lesson edit can't silently
-//     orphan a curated expression (and a typo'd key can't ship an unverified string);
-//   - every entry must carry a usage note              → the whole point of the layer;
-//   - --validate re-runs each `he` through the live Dicta Worker → morphology verified,
-//     not invented (LOI #0g, plan §7.1). A phrase Dicta can't vocalize cleanly is reported,
-//     never silently shipped.
+// Guards that gate the build (exit non-zero):
+//   - every curation key must still match a pool entry (on consonants) → a lesson edit can't
+//     silently orphan a curated expression, and a typo'd key can't ship an unsourced string;
+//   - every entry must carry a usage note → the whole point of the layer;
+//   - a `fix` may correct niqqud but never consonants → that would be a different expression.
+//
+// NOT a gate: --audit. It compares the vocalized strings against Dicta (NFC-normalized) and
+// PRINTS disagreements for human review. Dicta is an imperfect oracle — see audit() for why a
+// hard gate on it would be theatre. The honest claim this pipeline can make is "sourced from
+// shipped lessons + curated by hand + niqqud audited", NOT "verified".
 //
 // Usage:
 //   node tools/gen-expressions.mjs build [--out expressions.json]
-//   node tools/gen-expressions.mjs --validate     # build + Dicta round-trip on every entry
+//   node tools/gen-expressions.mjs --audit        # build + NFC-aware niqqud diff vs Dicta
 //   node tools/gen-expressions.mjs --report       # what's in the pool but not yet curated
 //
 // Config-driven, no secrets. Override the endpoint with MORPH_URL=... if needed.
@@ -78,12 +81,16 @@ async function poolFrom(file) {
   return out;
 }
 
+// Join on the CONSONANTAL skeleton, not the vocalized string. Keying on niqqud created a perverse
+// coupling: correcting a vocalization broke the join (orphan -> exit 1), i.e. fixing the Hebrew
+// broke the build, which discourages exactly the edit we want. Consonants are the stable identity
+// of an expression; the niqqud is the thing under revision.
 async function buildPool() {
   const all = [];
   for (const f of SOURCES) all.push(...(await poolFrom(f)));
   // First occurrence wins: earlier SOURCES are the more canonical lessons for a given form.
   const byHe = new Map();
-  for (const e of all) if (!byHe.has(e.he)) byHe.set(e.he, e);
+  for (const e of all) if (!byHe.has(strip(e.he))) byHe.set(strip(e.he), e);
   return byHe;
 }
 
@@ -96,18 +103,27 @@ async function build() {
   const problems = [];
 
   for (const [he, cur] of Object.entries(curation.expressions)) {
-    const p = pool.get(he);
+    const p = pool.get(strip(he));
     if (!p) { orphans.push(he); continue; }
     if (!cur.usage || !cur.usage.trim()) problems.push(`${he}: no usage note`);
     if (!catIds.has(cur.cat)) problems.push(`${he}: unknown category "${cur.cat}"`);
+    // `fix` corrects a vocalization the source lesson gets wrong. The same typo often recurs across
+    // unrelated lessons where context differs (a pausal form in a biblical quote is not the same
+    // call as in an idiom), so the lesson sweep is its own reviewed job; this ships correct Hebrew
+    // here meanwhile. `fix` must not change the consonants — that would be a different expression.
+    if (cur.fix && strip(cur.fix) !== strip(he)) problems.push(`${he}: fix "${cur.fix}" changes consonants, not just niqqud`);
     entries.push({
-      he,
-      translit: p.translit,
+      he: cur.fix || he,
+      translit: cur.translit_fix || p.translit,
       fr: p.fr,
+      // P4 (plan §5) branches showSRSReview on card type; without a discriminant it would have to
+      // retrofit or leave this layer out of SRS forever. One field now, cheap.
+      kind: 'expression',
       cat: cur.cat,
       register: cur.register || 'neutral',
       usage: cur.usage,
       ...(cur.literal ? { literal: cur.literal } : {}),
+      ...(cur.fix ? { lesson_he: he } : {}),
       src: p.src.replace('.html', ''),
     });
   }
@@ -152,28 +168,57 @@ async function morph(text, attempt = 0) {
   return data.tokens;
 }
 
-async function validate(entries) {
-  const bad = [];
+/* AUDIT (replaces the old --validate, which was vacuous).
+ *
+ * The previous guard stripped niqqud from BOTH sides before comparing, so it could only fail on a
+ * consonant mismatch — which never happens, since Dicta echoes back the consonants it was given.
+ * It reported "142/142 clean" while shipping 14 wrong vocalizations. It was a Worker health-check
+ * wearing a proof's clothes; the header claiming "morphology verified" was an overclaim.
+ *
+ * This compares the VOCALIZED strings, NFC-normalized (Hebrew combining marks are order-sensitive:
+ * bet+hiriq+dagesh and bet+dagesh+hiriq are the same text, unequal as raw code points).
+ *
+ * It reports; it does not gate. Dicta is an imperfect oracle, not truth: it adds meteg and ktiv-male
+ * (יֹוֽפִי, חֻוֽצְפָּה), "corrects" the correct מַה before dagesh, and invents a vocalization for a
+ * non-word rather than refusing. Roughly half of its diffs on this corpus are its artifacts. A hard
+ * gate on a ~50%-false-positive oracle would just get disabled. So: print, review by hand.
+ *
+ * What DOES gate: an incomplete audit. If the Worker is unreachable, the audit didn't run, and
+ * saying nothing would repeat the original sin of a guard that goes quiet when it matters.
+ */
+async function audit(entries) {
+  const N = (s) => (s || '').normalize('NFC').replace(/\s+/g, ' ').trim();
+  const diffs = [];
   const unverified = [];
   for (const e of entries) {
     try {
       const tokens = await morph(e.he);
       const words = tokens.filter((t) => !t.sep);
       const missing = words.filter((t) => !t.voc);
-      const recon = strip(words.map((t) => t.voc || '').join(''));
-      if (missing.length || recon !== strip(e.he)) {
-        bad.push(e.he);
-        console.error(`✗ ${e.he} — ${missing.length ? 'unvocalized: ' + missing.map((t) => t.word).join(',') : 'reconstruction mismatch'}`);
+      const dicta = words.map((t) => t.voc || '').join(' ');
+      // Dicta drops terminal punctuation into separator tokens; compare on the words alone.
+      const mine = e.he.replace(/[?!.,]/g, '');
+      if (missing.length) {
+        diffs.push({ he: e.he, note: 'unvocalized: ' + missing.map((t) => t.word).join(',') });
+      } else if (N(dicta) !== N(mine)) {
+        diffs.push({ he: e.he, note: 'dicta reads: ' + dicta });
       }
     } catch (err) {
       unverified.push(e.he);
-      console.error(`? ${e.he} — ${err.message}`);
     }
     await sleep(250); // pace the Worker rather than trip its rate limit
   }
-  const clean = entries.length - bad.length - unverified.length;
-  console.log(`\nDicta round-trip: ${clean}/${entries.length} clean · ${bad.length} malformed · ${unverified.length} unverified (network/rate-limit).`);
-  return bad.length;
+  console.log(`\nNiqqud audit: ${entries.length - diffs.length - unverified.length}/${entries.length} match Dicta · ${diffs.length} to review · ${unverified.length} unverified.`);
+  if (diffs.length) {
+    console.log('\nDisagreements (review by hand — Dicta is an oracle, not truth):');
+    diffs.forEach((d) => console.log(`   ${d.he}\n     ${d.note}`));
+  }
+  if (unverified.length) {
+    console.error(`\n✗ ${unverified.length} entries could not be reached — the audit is INCOMPLETE, so it proves nothing.`);
+    unverified.forEach((u) => console.error('   ' + u));
+    return 1;
+  }
+  return 0;
 }
 
 const args = process.argv.slice(2);
@@ -194,9 +239,9 @@ if (args.includes('--report')) {
 
 const { curation, entries } = await build();
 
-if (args.includes('--validate')) {
-  const bad = await validate(entries);
-  if (bad) process.exit(1);
+if (args.includes('--audit') || args.includes('--validate')) {
+  const incomplete = await audit(entries);
+  if (incomplete) process.exit(1);
 }
 
 const outIdx = args.indexOf('--out');
