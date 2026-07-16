@@ -130,6 +130,45 @@ const PHRASES = [
   { he: 'אֲנִי שׁוֹאֵל מִישֶׁהוּ אַחֵר', translit: 'ani sho\'el mishehu acher', fr: "I'll ask someone else (m.)" },
   { he: 'הַמַּפָּה שֶׁלִּי לֹא עוֹבֶדֶת', translit: 'ha-mapa sheli lo ovedet', fr: "my map isn't working" }
 ];
+/* --- Production practice (Phase 2) — reused-and-validated (see 14-restaurant-food.html header) --- */
+window.SENTENCES = [
+  { he: 'הָלַכְתִּי לְאִבּוּד',             translit: 'halachti le-ibud',      fr: "I'm lost",
+    chunks: ['הָלַכְתִּי', 'לְאִבּוּד'],          distractors: ['אֲנִי', 'אֶת'],        focus: 'pronoun' },
+  { he: 'אֲנִי לֹא מַכִּיר אֶת הָאֵזוֹר',    translit: 'ani lo makir et ha-ezor', fr: "I don't know the area (m.)",
+    chunks: ['אֲנִי', 'לֹא', 'מַכִּיר', 'אֶת', 'הָאֵזוֹר'], distractors: ['מַכִּירָה', 'כֵּן'], focus: 'agreement:gender' },
+  { he: 'אֲנִי שׁוֹאֵל מִישֶׁהוּ אַחֵר',    translit: "ani sho'el mishehu acher", fr: "I'll ask someone else (m.)",
+    chunks: ['אֲנִי', 'שׁוֹאֵל', 'מִישֶׁהוּ', 'אַחֵר'], distractors: ['שׁוֹאֶלֶת', 'אֶת'], focus: 'agreement:gender' },
+  { he: 'תּוּכַל לְהַסְבִּיר לִי שׁוּב?',    translit: 'tuchal lehasbir li shuv?', fr: 'can you explain it again? (m.)',
+    chunks: ['תּוּכַל', 'לְהַסְבִּיר', 'לִי', 'שׁוּב?'], distractors: ['תּוּכְלִי', 'אֶת'], focus: 'agreement:gender' },
+  { he: 'יָמִינָה אַחֲרֵי הַתַּחֲנָה',       translit: 'yamina acharey ha-tachana', fr: 'right after the station',
+    chunks: ['יָמִינָה', 'אַחֲרֵי', 'הַתַּחֲנָה'], distractors: ['שְׂמֹאלָה', 'לִפְנֵי'], focus: 'preposition' },
+  { he: 'לְלֶכֶת בָּרֶגֶל',                 translit: 'laleket ba-regel',      fr: 'to walk (on foot)',
+    chunks: ['לְלֶכֶת', 'בָּרֶגֶל'],              distractors: ['לִנְסוֹעַ', 'בְּ'],    focus: 'preposition' },
+  { he: 'הַאִם זֶה רָחוֹק?',                translit: "ha'im ze rachok?",      fr: 'is it far?',
+    chunks: ['הַאִם', 'זֶה', 'רָחוֹק?'],          distractors: ['אֶת', 'קָרוֹב'],       focus: 'word-order' },
+  { he: 'יֵשׁ מַפָּה?',                     translit: 'yesh mapa?',            fr: 'is there a map?',
+    chunks: ['יֵשׁ', 'מַפָּה?'],                  distractors: ['אֵין', 'אֵיפֹה'],     focus: 'word-order' },
+  { he: 'אֵיזֶה אוֹטוֹבּוּס לוֹקֵחַ אוֹתִי לְשָׁם?', translit: "eyze otobus loke'ach oti le-sham?", fr: 'which bus takes me there?',
+    chunks: ['אֵיזֶה', 'אוֹטוֹבּוּס', 'לוֹקֵחַ', 'אוֹתִי', 'לְשָׁם?'], distractors: ['אֵיפֹה', 'אֶת'], focus: 'word-order' }
+];
+
+window.FRAMES = [
+  { frame: 'תִּפְנֶה ___', translit: 'tifne ___', fr: 'turn ___ (m.)',
+    slots: [ { he: 'יָמִינָה', fr: 'right' }, { he: 'שְׂמֹאלָה', fr: 'left' } ] },
+  { frame: 'זֶה ___', translit: 'ze ___', fr: 'it is ___',
+    slots: [ { he: 'קָרוֹב', fr: 'close' }, { he: 'רָחוֹק', fr: 'far' } ] },
+  { frame: 'אֲנִי הוֹלֵךְ ___', translit: 'ani holech ___', fr: 'I go ___ (m.)',
+    slots: [ { he: 'יָשָׁר', fr: 'straight' }, { he: 'יָמִינָה', fr: 'right' }, { he: 'שְׂמֹאלָה', fr: 'left' } ] }
+];
+
+window.SITUATIONS = [
+  { q: "You're lost. You say…", options: ['הָלַכְתִּי לְאִבּוּד', 'יֵשׁ מַפָּה?', 'הַאִם זֶה רָחוֹק?', 'אֲנִי שׁוֹאֵל מִישֶׁהוּ אַחֵר'], answer: 0, he: 'הָלַכְתִּי לְאִבּוּד', explain: "halachti le-ibud = I'm lost" },
+  { q: '"Turn right" — which word?', options: ['יָמִינָה', 'שְׂמֹאלָה', 'יָשָׁר', 'אָחוֹרָה'], answer: 0, he: 'יָמִינָה', explain: 'yamina = to the right' },
+  { q: 'You want to know if it is a long walk. You ask…', options: ['הַאִם זֶה רָחוֹק?', 'יֵשׁ מַפָּה?', 'אֲנִי שׁוֹאֵל מִישֶׁהוּ אַחֵר', 'יָמִינָה אַחֲרֵי הַתַּחֲנָה'], answer: 0, he: 'הַאִם זֶה רָחוֹק?', explain: "ha'im ze rachok? = is it far?" },
+  { q: "You didn't understand the directions. You say…", options: ['תּוּכַל לְהַסְבִּיר לִי שׁוּב?', 'אֲנִי לֹא מַכִּיר אֶת הָאֵזוֹר', 'הָלַכְתִּי לְאִבּוּד', 'יֵשׁ מַפָּה?'], answer: 0, he: 'תּוּכַל לְהַסְבִּיר לִי שׁוּב?', explain: 'tuchal lehasbir li shuv? = can you explain again?' },
+  { q: '"Across from" the bank — which word?', options: ['מוּל', 'לְיַד', 'אַחֲרֵי', 'בֵּין'], answer: 0, he: 'מוּל', explain: 'mul = across from / opposite' }
+];
+
 function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
 R('asking', ASKING); R('directions', DIRECTIONS); R('verbs', VERBS); R('landmarks', LANDMARKS); R('distance', DISTANCE); R('transit', TRANSIT); R('phrases', PHRASES);
 

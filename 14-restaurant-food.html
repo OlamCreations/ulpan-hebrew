@@ -212,6 +212,51 @@ const PHRASES = [
   { he: 'בְּתֵאָבוֹן',                         translit: 'beteavon',                        fr: 'bon appétit' }
 ];
 
+/* --- Production practice (Phase 2) -------------------------------------------------
+   Sentences REUSE the lesson's own vocalized phrases verbatim (their `he` is copied, not
+   re-vocalized). `chunks` came from the Dicta morphology Worker's real token boundaries
+   (tools/gen-sentences.mjs), and every `he` + distractor was validated through Dicta.
+   Distractors are real Hebrew words that are wrong-in-context (opposite-gender verb form,
+   a parasitic preposition, another lesson word) — they ARE the grammar lesson. Read via
+   window.* so the .word-row vocab scraper never touches them. */
+window.SENTENCES = [
+  { he: 'אֲנִי רוֹצֶה לְהַזְמִין',            translit: 'ani rotze lehazmin',      fr: 'I want to order (m.)',
+    chunks: ['אֲנִי', 'רוֹצֶה', 'לְהַזְמִין'],    distractors: ['רוֹצָה', 'אֶת'],       focus: 'agreement:gender' },
+  { he: 'אֲנִי צִמְחוֹנִי',                   translit: 'ani tzimchoni',           fr: 'I am vegetarian (m.)',
+    chunks: ['אֲנִי', 'צִמְחוֹנִי'],              distractors: ['צִמְחוֹנִית', 'אַתָּה'], focus: 'agreement:gender' },
+  { he: 'זֶה כָּשֵׁר?',                       translit: 'ze kasher?',              fr: 'is this kosher?',
+    chunks: ['זֶה', 'כָּשֵׁר?'],                  distractors: ['כְּשֵׁרָה', 'הִיא'],   focus: 'agreement:gender' },
+  { he: 'הָיָה טָעִים מְאֹד',                 translit: "haya ta'im me'od",        fr: 'it was very tasty',
+    chunks: ['הָיָה', 'טָעִים', 'מְאֹד'],         distractors: ['הָיְתָה', 'טְעִימָה'], focus: 'agreement:gender' },
+  { he: 'בְּלִי בָּשָׂר, בְּבַקָּשָׁה',       translit: 'bli basar, bevakasha',    fr: 'no meat, please',
+    chunks: ['בְּלִי', 'בָּשָׂר', 'בְּבַקָּשָׁה'], distractors: ['אֶת', 'כָּשֵׁר'],      focus: 'preposition' },
+  { he: 'שֻׁלְחָן לִשְׁנַיִם, בְּבַקָּשָׁה',  translit: 'shulchan lishnayim, bevakasha', fr: 'a table for two, please',
+    chunks: ['שֻׁלְחָן', 'לִשְׁנַיִם', 'בְּבַקָּשָׁה'], distractors: ['שְׁנַיִם', 'אֶת'], focus: 'preposition' },
+  { he: 'מָה הַמָּנָה שֶׁל הַיּוֹם?',         translit: 'ma ha-mana shel ha-yom?', fr: "what's today's special?",
+    chunks: ['מָה', 'הַמָּנָה', 'שֶׁל', 'הַיּוֹם?'], distractors: ['אֶת', 'שֶׁלִּי'],   focus: 'word-order' },
+  { he: 'אֶפְשָׁר אֶת הַתַּפְרִיט?',          translit: 'efshar et ha-tafrit?',    fr: 'may I have the menu?',
+    chunks: ['אֶפְשָׁר', 'אֶת', 'הַתַּפְרִיט?'],  distractors: ['שֶׁל', 'לְ'],          focus: 'preposition' }
+];
+
+/* A frame is a slot to fill: one shape, many sentences. Each result is a real lesson phrase. */
+window.FRAMES = [
+  { frame: 'אֲנִי רוֹצֶה ___', translit: 'ani rotze ___', fr: 'I want ___',
+    slots: [ { he: 'קָפֶה', fr: 'coffee' }, { he: 'מַיִם', fr: 'water' }, { he: 'פִּיתָה', fr: 'pita' } ] },
+  { frame: '___ בְּבַקָּשָׁה', translit: '___ bevakasha', fr: '___ please',
+    slots: [ { he: 'מַיִם', fr: 'water' }, { he: 'לֶחֶם', fr: 'bread' }, { he: 'הַחֶשְׁבּוֹן', fr: 'the bill' } ] },
+  { frame: 'זֶה ___?', translit: 'ze ___?', fr: 'is this ___?',
+    slots: [ { he: 'כָּשֵׁר', fr: 'kosher' }, { he: 'טָרִי', fr: 'fresh' }, { he: 'חָרִיף', fr: 'spicy' } ] }
+];
+
+/* Situations: right phrase, right moment. Options are lesson phrases. */
+window.SITUATIONS = [
+  { q: 'You want to pay. You say…', options: ['הַחֶשְׁבּוֹן בְּבַקָּשָׁה', 'בְּתֵאָבוֹן', 'אֲנִי צִמְחוֹנִי', 'זֶה כָּשֵׁר?'], answer: 0, he: 'הַחֶשְׁבּוֹן בְּבַקָּשָׁה', explain: 'ha-cheshbon bevakasha = the bill, please' },
+  { q: "You don't eat meat. You tell the waiter…", options: ['אֲנִי צִמְחוֹנִי', 'אֲנִי רוֹצֶה לְהַזְמִין', 'הָיָה טָעִים מְאֹד', 'בְּתֵאָבוֹן'], answer: 0, he: 'אֲנִי צִמְחוֹנִי', explain: 'ani tzimchoni = I am vegetarian' },
+  { q: 'The food arrives. Before eating, Israelis say…', options: ['בְּתֵאָבוֹן', 'הַחֶשְׁבּוֹן בְּבַקָּשָׁה', 'זֶה כָּשֵׁר?', 'שֻׁלְחָן לִשְׁנַיִם'], answer: 0, he: 'בְּתֵאָבוֹן', explain: 'beteavon = bon appétit' },
+  { q: 'You want to see the menu. You ask…', options: ['אֶפְשָׁר אֶת הַתַּפְרִיט?', 'זֶה כָּשֵׁר?', 'הַחֶשְׁבּוֹן בְּבַקָּשָׁה', 'מָה הַמָּנָה שֶׁל הַיּוֹם?'], answer: 0, he: 'אֶפְשָׁר אֶת הַתַּפְרִיט?', explain: 'efshar et ha-tafrit = may I have the menu?' },
+  { q: 'The meal was excellent. You tell them…', options: ['הָיָה טָעִים מְאֹד', 'אֲנִי צִמְחוֹנִי', 'בְּלִי בָּשָׂר', 'שֻׁלְחָן לִשְׁנַיִם'], answer: 0, he: 'הָיָה טָעִים מְאֹד', explain: "haya ta'im me'od = it was very tasty" }
+];
+
 function renderRows(elementId, items) {
   const list = document.getElementById(elementId);
   items.forEach(w => {

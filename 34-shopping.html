@@ -108,6 +108,45 @@ const PHRASES = [
   { he: 'אֶפְשָׁר תַּשְׁלוּמִים?', translit: 'efshar tashlumim?', fr: 'can I pay in installments?' },
   { he: 'אֲנִי רוֹצֶה לְהַחֲזִיר אֶת זֶה', translit: 'ani rotze lehachzir et ze', fr: 'I want to return this (m.)' }
 ];
+/* --- Production practice (Phase 2) — reused-and-validated (see 14-restaurant-food.html header) --- */
+window.SENTENCES = [
+  { he: 'אֲנִי רוֹצֶה לִקְנוֹת',        translit: 'ani rotze liknot',   fr: 'I want to buy (m.)',
+    chunks: ['אֲנִי', 'רוֹצֶה', 'לִקְנוֹת'],    distractors: ['רוֹצָה', 'אֶת'],       focus: 'agreement:gender' },
+  { he: 'אֲנִי רַק מִסְתַּכֵּל',       translit: 'ani rak mistakel',   fr: "I'm just looking (m.)",
+    chunks: ['אֲנִי', 'רַק', 'מִסְתַּכֵּל'],    distractors: ['מִסְתַּכֶּלֶת', 'אַתָּה'], focus: 'agreement:gender' },
+  { he: 'תֵּן לִי הַנָּחָה',           translit: 'ten li hanacha',     fr: 'give me a discount (m.)',
+    chunks: ['תֵּן', 'לִי', 'הַנָּחָה'],        distractors: ['תְּנִי', 'אֶת'],       focus: 'agreement:gender' },
+  { he: 'יָקָר מִדַּי',                translit: 'yakar miday',        fr: 'too expensive',
+    chunks: ['יָקָר', 'מִדַּי'],                distractors: ['יְקָרָה', 'זוֹל'],     focus: 'agreement:gender' },
+  { he: 'יֵשׁ הַנָּחָה?',              translit: 'yesh hanacha?',      fr: 'is there a discount?',
+    chunks: ['יֵשׁ', 'הַנָּחָה?'],              distractors: ['אֵין', 'בְּ'],         focus: 'word-order' },
+  { he: 'מָה הַמָּחִיר?',              translit: 'ma ha-mechir?',      fr: "what's the price?",
+    chunks: ['מָה', 'הַמָּחִיר?'],              distractors: ['מִי', 'שֶׁל'],         focus: 'word-order' },
+  { he: 'אֵיפֹה הַקּוּפָּה?',          translit: 'eyfo ha-kupa?',      fr: "where's the cashier?",
+    chunks: ['אֵיפֹה', 'הַקּוּפָּה?'],          distractors: ['מָתַי', 'שֶׁל'],       focus: 'word-order' },
+  { he: 'אֶפְשָׁר תַּשְׁלוּמִים?',     translit: 'efshar tashlumim?',  fr: 'can I pay in installments?',
+    chunks: ['אֶפְשָׁר', 'תַּשְׁלוּמִים?'],     distractors: ['אֶת', 'בְּ'],          focus: 'preposition' },
+  { he: 'אֲנִי רוֹצֶה לְהַחֲזִיר אֶת זֶה', translit: 'ani rotze lehachzir et ze', fr: 'I want to return this (m.)',
+    chunks: ['אֲנִי', 'רוֹצֶה', 'לְהַחֲזִיר', 'אֶת', 'זֶה'], distractors: ['רוֹצָה', 'לִקְנוֹת'], focus: 'agreement:gender' }
+];
+
+window.FRAMES = [
+  { frame: 'אֲנִי רוֹצֶה לִקְנוֹת ___', translit: 'ani rotze liknot ___', fr: 'I want to buy ___',
+    slots: [ { he: 'תַּפּוּחַ', fr: 'an apple' }, { he: 'בָּנָנָה', fr: 'a banana' }, { he: 'עֲנָבִים', fr: 'grapes' } ] },
+  { frame: 'יֵשׁ ___?', translit: 'yesh ___?', fr: 'do you have ___?',
+    slots: [ { he: 'הַנָּחָה', fr: 'a discount' }, { he: 'קַבָּלָה', fr: 'a receipt' }, { he: 'מִבְצָע', fr: 'a sale' } ] },
+  { frame: 'זֶה ___', translit: 'ze ___', fr: 'it is ___',
+    slots: [ { he: 'יָקָר', fr: 'expensive' }, { he: 'זוֹל', fr: 'cheap' }, { he: 'מְעֻלֶּה', fr: 'excellent' } ] }
+];
+
+window.SITUATIONS = [
+  { q: 'The price is too high. You say…', options: ['יָקָר מִדַּי', 'אֵיפֹה הַקּוּפָּה?', 'אֲנִי רַק מִסְתַּכֵּל', 'יֵשׁ הַנָּחָה?'], answer: 0, he: 'יָקָר מִדַּי', explain: 'yakar miday = too expensive' },
+  { q: "Just browsing, you don't want help. You say…", options: ['אֲנִי רַק מִסְתַּכֵּל', 'תֵּן לִי הַנָּחָה', 'מָה הַמָּחִיר?', 'אֶפְשָׁר תַּשְׁלוּמִים?'], answer: 0, he: 'אֲנִי רַק מִסְתַּכֵּל', explain: "ani rak mistakel = I'm just looking" },
+  { q: 'You want to pay monthly. You ask…', options: ['אֶפְשָׁר תַּשְׁלוּמִים?', 'מָה הַמָּחִיר?', 'יֵשׁ הַנָּחָה?', 'אֵיפֹה הַקּוּפָּה?'], answer: 0, he: 'אֶפְשָׁר תַּשְׁלוּמִים?', explain: 'efshar tashlumim = can I pay in installments?' },
+  { q: 'Haggling at the shuk, you say…', options: ['תֵּן לִי הַנָּחָה', 'אֲנִי רַק מִסְתַּכֵּל', 'מָה הַמָּחִיר?', 'יָקָר מִדַּי'], answer: 0, he: 'תֵּן לִי הַנָּחָה', explain: 'ten li hanacha = give me a discount' },
+  { q: 'Ready to pay, you look for the…', options: ['קוּפָּה', 'תּוֹר', 'מַעֲלִית', 'קוֹמָה'], answer: 0, he: 'קוּפָּה', explain: 'kupa = cash register' }
+];
+
 function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
 R('shops', SHOPS); R('mall', MALL); R('bargain', BARGAIN); R('sizes', SIZES); R('money', MONEY); R('returns', RETURNS); R('phrases', PHRASES);
 addExtraVocab('Fruits & Vegetables (Shuk Edition)', [

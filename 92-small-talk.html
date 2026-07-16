@@ -122,6 +122,45 @@ const PHRASES = [
   { he: 'הָעִבְרִית שֶׁלִּי עוֹד לֹא מֻשְׁלֶמֶת', translit: 'ha-ivrit sheli od lo mushlemet', fr: "my Hebrew isn't perfect yet" },
   { he: 'נִתְרָאֶה בְּפַעַם הַבָּאָה!', translit: 'nitra\'e ba-pa\'am ha-ba\'a!', fr: 'see you next time!' }
 ];
+/* --- Production practice (Phase 2) — reused-and-validated (see 14-restaurant-food.html header).
+   Small talk lives on m./f. agreement (you address a man vs a woman), so nearly every distractor
+   here is the opposite-gender form — the exact trap for an olé. --- */
+window.SENTENCES = [
+  { he: 'מֵאַיִן אַתָּה?',            translit: 'me-ayin ata?',      fr: 'where are you from? (m.)',
+    chunks: ['מֵאַיִן', 'אַתָּה?'],           distractors: ['אַתְּ', 'אֶת'],        focus: 'agreement:gender' },
+  { he: 'אַתָּה נָשׂוּי?',            translit: 'ata nasuy?',        fr: 'are you married? (m.)',
+    chunks: ['אַתָּה', 'נָשׂוּי?'],           distractors: ['אַתְּ', 'נְשׂוּאָה'],  focus: 'agreement:gender' },
+  { he: 'בֶּן כַּמָּה אַתָּה?',       translit: 'ben kama ata?',     fr: 'how old are you? (m.)',
+    chunks: ['בֶּן', 'כַּמָּה', 'אַתָּה?'],   distractors: ['בַּת', 'אַתְּ'],       focus: 'agreement:gender' },
+  { he: 'יֵשׁ לְךָ יְלָדִים?',        translit: 'yesh lecha yeladim?', fr: 'do you have kids? (m.)',
+    chunks: ['יֵשׁ', 'לְךָ', 'יְלָדִים?'],    distractors: ['לָךְ', 'אֶת'],         focus: 'agreement:gender' },
+  { he: 'אֲנִי לֹא מַסְכִּים',        translit: 'ani lo maskim',     fr: 'I disagree (m.)',
+    chunks: ['אֲנִי', 'לֹא', 'מַסְכִּים'],    distractors: ['מַסְכִּימָה', 'כֵּן'], focus: 'agreement:gender' },
+  { he: 'אֲנִי מֵבִין אוֹתְךָ',       translit: 'ani mevin otcha',   fr: 'I get you (m.)',
+    chunks: ['אֲנִי', 'מֵבִין', 'אוֹתְךָ'],   distractors: ['מְבִינָה', 'אוֹתָךְ'], focus: 'agreement:gender' },
+  { he: 'תִּשְׁמֹר עַל עַצְמְךָ',     translit: 'tishmor al atzmecha', fr: 'take care (m.)',
+    chunks: ['תִּשְׁמֹר', 'עַל', 'עַצְמְךָ'], distractors: ['תִּשְׁמְרִי', 'עַצְמֵךְ'], focus: 'agreement:gender' },
+  { he: 'מָה אַתָּה עוֹשֶׂה הָעֶרֶב?', translit: 'ma ata ose ha-erev?', fr: 'what are you doing tonight? (m.)',
+    chunks: ['מָה', 'אַתָּה', 'עוֹשֶׂה', 'הָעֶרֶב?'], distractors: ['עוֹשָׂה', 'אַתְּ'], focus: 'agreement:gender' }
+];
+
+window.FRAMES = [
+  { frame: 'אַתָּה ___?', translit: 'ata ___?', fr: 'are you ___? (m.)',
+    slots: [ { he: 'נָשׂוּי', fr: 'married' }, { he: 'רַוָּק', fr: 'single' }, { he: 'חָדָשׁ', fr: 'new' } ] },
+  { frame: 'מָה אַתָּה ___?', translit: 'ma ata ___?', fr: 'what do you ___? (m.)',
+    slots: [ { he: 'עוֹשֶׂה', fr: 'doing' }, { he: 'אוֹמֵר', fr: 'saying' }, { he: 'חוֹשֵׁב', fr: 'thinking' } ] },
+  { frame: 'אֵיךְ ___?', translit: 'eich ___?', fr: 'how is ___?',
+    slots: [ { he: 'הַחַיִּים', fr: 'life' }, { he: 'הָעֲבוֹדָה', fr: 'work' }, { he: 'הַשַּׁבָּת', fr: 'Shabbat' } ] }
+];
+
+window.SITUATIONS = [
+  { q: 'You want to ask a woman if she is married. You say…', options: ['אַתְּ נְשׂוּאָה?', 'אַתָּה נָשׂוּי?', 'מֵאַיִן אַתָּה?', 'בֶּן כַּמָּה אַתָּה?'], answer: 0, he: 'אַתְּ נְשׂוּאָה?', explain: 'to a woman: at nesua? (not ata nasuy?)' },
+  { q: 'Ending warmly with a man, you say…', options: ['תִּשְׁמֹר עַל עַצְמְךָ', 'מֵאַיִן אַתָּה?', 'אֲנִי לֹא מַסְכִּים', 'בֶּן כַּמָּה אַתָּה?'], answer: 0, he: 'תִּשְׁמֹר עַל עַצְמְךָ', explain: 'tishmor al atzmecha = take care (m.)' },
+  { q: 'You disagree with someone. You say…', options: ['אֲנִי לֹא מַסְכִּים', 'אֲנִי מֵבִין אוֹתְךָ', 'נָעִים מְאֹד', 'מֵאַיִן אַתָּה?'], answer: 0, he: 'אֲנִי לֹא מַסְכִּים', explain: 'ani lo maskim = I disagree' },
+  { q: 'You strongly agree. You say…', options: ['בְּדִיּוּק', 'מָה פִּתְאוֹם!', 'לֹא נָכוֹן!', 'אֲנִי לֹא מַסְכִּים'], answer: 0, he: 'בְּדִיּוּק', explain: 'bediyuk = exactly' },
+  { q: 'Meeting someone for the first time, you say…', options: ['נָעִים מְאֹד', 'דְּרִישַׁת שָׁלוֹם לַמִּשְׁפָּחָה', 'מָה נִשְׁמָע?', 'יוֹם נֶהֱדָר'], answer: 0, he: 'נָעִים מְאֹד', explain: "na'im me'od = pleased to meet you" }
+];
+
 function R(id, items) { const list = document.getElementById(id); items.forEach(w => { const r = document.createElement('div'); r.className = 'word-row'; r.innerHTML = `<div class="he">${w.he}</div><div class="translit">${w.translit}</div><div class="fr">${w.fr}</div><button class="btn icon-btn">▶</button>`; r.querySelector('button').addEventListener('click', () => speak(w.he, 0.85)); list.appendChild(r); }); }
 R('opening', OPENING); R('personal', PERSONAL); R('reacting', REACTING); R('disagree', DISAGREE); R('fillers', FILLERS); R('closing', CLOSING); R('phrases', PHRASES);
 
