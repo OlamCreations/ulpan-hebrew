@@ -4,8 +4,10 @@
 //   2. French / Spanish → Hebrew  (same call: sl=auto detects fr, es, and any language)
 //   3. Transliterated Hebrew → Hebrew word(s), with candidates when unsure ("si hésitation")
 //        (Google Input Tools he-t-i0-und, ranked; offline reverse-match against the phrasebook)
-// Every Hebrew result is transliterated from Google's own romanization (gtx dt=rm); Dicta
-// Nakdan is CORS-blocked in the browser. A curated offline phrasebook is the plane-mode fallback.
+// Hebrew results are transliterated by the app's own translit.js when the Hebrew is vocalized
+// (measured 90% vs Google dt=rm's 80% against the curated phrasebook — see bestTranslit), with
+// Google's romanization as the fallback. Dicta Nakdan is CORS-blocked in the browser.
+// A curated offline phrasebook is the plane-mode fallback.
 // Reuses the app's speak() (Web Speech + voice selector) when present.
 (function () {
   'use strict';
@@ -190,6 +192,29 @@
     });
   }
 
+  // Pick the transliteration shown to the learner.
+  //
+  // We used to display Google's own romanization (gtx dt=rm) on the theory that Dicta is
+  // CORS-blocked so rm was the only option. But the app already ships a Hebrew transliterator
+  // (translit.js), and measured against the curated, hand-verified `tr` in phrasebook.json
+  // (n=60 single words) it is simply better:
+  //     translit.js  54/60 (90%)   |   Google dt=rm  48/60 (80%)
+  // Google's misses are systematic vowel mangling, which is exactly what reads as "approximate":
+  //     סָבָּא -> "sibea" (not saba) · סַבתָא -> "sivata" (savta) · קָפֶה -> "kafa" (kafe)
+  //     לֹא -> "lea" (lo) · יָשָׁר -> "yisher" (yashar) · לֶחֶם -> "lachem" (lechem)
+  // The catch: translit.js needs niqqud — on bare סבא it returns "sv". gtx returns vocalized
+  // Hebrew, so it applies there; MyMemory returns bare Hebrew, so rm (or nothing) stays the
+  // fallback. Raw rm is still kept on the result for looksTransliterated(), which needs the
+  // sound-echo of the SOURCE and would be broken by a good Hebrew transliteration.
+  function bestTranslit(he, rm) {
+    const T = window.Translit;
+    if (T && /[֑-ׇ]/.test(he || '')) {
+      const t = T.transliterate(he);
+      if (t) return t;
+    }
+    return rm || null;
+  }
+
   // --- Forward: EN/FR (any language) -> Hebrew. sl=auto is what makes French work. ---
   function fetchGoogle(q, signal, sl) {
     const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + (sl || 'auto') + '&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
@@ -204,7 +229,9 @@
         if (!he) return null;
         const src = (typeof j[2] === 'string') ? j[2] : null;    // detected source language
         const conf = (typeof j[6] === 'number') ? j[6] : null;   // detection confidence
-        return { he: he, tr: rm || null, en: q, src: src, conf: conf };
+        // tr = what the learner reads (translit.js when the Hebrew is vocalized); rm = Google's
+        // raw romanization, kept only for the source-echo test in looksTransliterated().
+        return { he: he, tr: bestTranslit(he, rm), rm: rm || null, en: q, src: src, conf: conf };
       });
   }
 
@@ -222,7 +249,9 @@
       .then(j => {
         const he = j && j.responseData && j.responseData.translatedText;
         if (!he || !/[֐-׿]/.test(he)) return null;
-        return { he: he.trim(), tr: null, en: q, src: (langpair || '').split('|')[0] || null, conf: null };
+        // MyMemory returns bare (unvocalized) Hebrew, where translit.js is unreliable (סבא -> "sv"),
+        // so bestTranslit yields null rather than a confident-looking wrong answer.
+        return { he: he.trim(), tr: bestTranslit(he.trim(), null), rm: null, en: q, src: (langpair || '').split('|')[0] || null, conf: null };
       });
   }
 
@@ -256,7 +285,9 @@
         const rm = segs.filter(s => s && !s[0]).map(s => s[3] || s[2]).filter(Boolean).join(' ').trim();
         const meaning = (t && t.toLowerCase() !== he.toLowerCase()) ? t : '';
         if (!meaning && !rm) return null;
-        return { en: meaning, tr: rm || null };
+        // Same call: prefer translit.js over Google's romanization for the phonetic candidates too
+        // (Input Tools returns vocalized Hebrew, which is where translit.js is strong).
+        return { en: meaning, tr: bestTranslit(he, rm) };
       });
   }
 
@@ -274,15 +305,16 @@
       .then(res => {
         // sl=auto echoed the sound (bonjour->בונז'ור) rather than translating it: retry with
         // explicit romance sources and keep the first result that isn't itself a transliteration.
-        if (!res || !single || !looksTransliterated(q, res.tr)) return res;
+        // Compare against Google's RAW rm (the source-side sound echo), not the display `tr`:
+        // tr is now a good Hebrew transliteration, which would no longer resemble the typed
+        // input and would silently disable this retry.
+        if (!res || !single || !looksTransliterated(q, res.rm)) return res;
         return Promise.all(retrySls().map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
-          .then(alts => alts.find(a => a && a.he && !looksTransliterated(q, a.tr)) || res);
+          .then(alts => alts.find(a => a && a.he && !looksTransliterated(q, a.rm)) || res);
       });
     return withTimeout(run, CFG.tTranslate)
       .then(res => {
         if (!res) return null;
-        // Google's own romanization (dt=rm) is the transliteration. Nakdan is CORS-blocked in
-        // the browser, so we keep the raw rm rather than chase a call that always fails.
         transCache.set(key, res);
         return res;
       });
