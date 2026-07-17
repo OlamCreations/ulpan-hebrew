@@ -4,10 +4,11 @@
 //   2. French / Spanish → Hebrew  (same call: sl=auto detects fr, es, and any language)
 //   3. Transliterated Hebrew → Hebrew word(s), with candidates when unsure ("si hésitation")
 //        (Google Input Tools he-t-i0-und, ranked; offline reverse-match against the phrasebook)
-// Hebrew results are transliterated by the app's own translit.js when the Hebrew is vocalized
-// (measured 90% vs Google dt=rm's 80% against the curated phrasebook — see bestTranslit), with
-// Google's romanization as the fallback. Dicta Nakdan is CORS-blocked in the browser.
-// A curated offline phrasebook is the plane-mode fallback.
+// Hebrew results are transliterated by the app's own translit.js, which needs niqqud: gtx points
+// single words but not phrases, and Input Tools points nothing, so bare Hebrew is vocalized via
+// the Dicta Worker first (see vocalizeBare — Dicta is CORS-blocked direct, but the Worker relays
+// it). Google's own romanization (dt=rm) is only the last-resort fallback; it is bad (סָבָּא ->
+// "sibea"). A curated offline phrasebook is the plane-mode fallback.
 // Reuses the app's speak() (Web Speech + voice selector) when present.
 (function () {
   'use strict';
@@ -21,7 +22,14 @@
     tTranslate: 8000,   // ms budget: forward EN/FR -> HE
     tPhon: 5000,        // ms budget: Input Tools phonetic candidates
     tGloss: 6000,       // ms budget: HE -> meaning + romanization gloss
-    tMorph: 9000        // ms budget: word-by-word morphology (the Worker + its two upstreams)
+    tMorph: 9000,       // ms budget: word-by-word morphology (the Worker + its two upstreams)
+    // Enrichment budgets. These are ADDITIVE on top of tTranslate, so they stay tight: each
+    // one only buys a nicety (the other reading / a good transliteration) over an answer we
+    // already have, and must never hold the card hostage. The Worker answers in 86-355ms warm
+    // and caches 7 days; when Dicta is having a bad day it 502s at ~6s, so 4s bails out to
+    // Google's rm instead of making the learner watch "Translating" for 14 seconds.
+    tAlts: 5000,        // ms budget: the "as French" second reading
+    tVocalize: 4000     // ms budget: pointing bare Hebrew via the Worker
   };
 
   // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
@@ -73,10 +81,17 @@
   // retry with an explicit source language. Compared against Google's rm, not translit.js
   // (which drops vowels and renders ו as v — too noisy to compare a sound against).
   const consSkel = s => romNorm(s).replace(/[aeiou]/g, '');
+  // Strict: same consonant skeleton = the Hebrew is the input's SOUND, not its meaning
+  // (bonjour/bonejeor -> bnjr == bnjr). No vowel-level fuzziness, so a real translation that
+  // merely rhymes (chat -> chatul) is never mistaken for an echo.
+  function isSoundEcho(input, rm) {
+    const a = consSkel(romNorm(input)), b = consSkel(romNorm(rm));
+    return !!a && !!b && a.length >= 2 && a === b;
+  }
   function looksTransliterated(input, rm) {
     const a = romNorm(input), b = romNorm(rm);
     if (!a || !b) return false;
-    if (consSkel(a).length >= 2 && consSkel(a) === consSkel(b)) return true;
+    if (isSoundEcho(input, rm)) return true;
     return levSim(a, b) >= 0.5;
   }
 
@@ -194,25 +209,29 @@
 
   // Pick the transliteration shown to the learner.
   //
-  // We used to display Google's own romanization (gtx dt=rm) on the theory that Dicta is
-  // CORS-blocked so rm was the only option. But the app already ships a Hebrew transliterator
-  // (translit.js), and measured against the curated, hand-verified `tr` in phrasebook.json
-  // (n=60 single words) it is simply better:
-  //     translit.js  54/60 (90%)   |   Google dt=rm  48/60 (80%)
-  // Google's misses are systematic vowel mangling, which is exactly what reads as "approximate":
-  //     סָבָּא -> "sibea" (not saba) · סַבתָא -> "sivata" (savta) · קָפֶה -> "kafa" (kafe)
-  //     לֹא -> "lea" (lo) · יָשָׁר -> "yisher" (yashar) · לֶחֶם -> "lachem" (lechem)
-  // The catch: translit.js needs niqqud — on bare סבא it returns "sv". gtx returns vocalized
-  // Hebrew, so it applies there; MyMemory returns bare Hebrew, so rm (or nothing) stays the
-  // fallback. Raw rm is still kept on the result for looksTransliterated(), which needs the
-  // sound-echo of the SOURCE and would be broken by a good Hebrew transliteration.
+  // We used to display Google's own romanization (gtx dt=rm). The app already ships a better
+  // Hebrew transliterator (translit.js) and was throwing it away. Measured head-to-head on gtx's
+  // OWN output for single words (the population where this actually applies): translit.js 17/20,
+  // Google rm 6/20. Google's misses are systematic vowel mangling — which is exactly what reads
+  // as "approximate":  סָבָּא -> "sibea" (saba) · סַבתָא -> "sivata" (savta) · קָפֶה -> "kafa"
+  // (kafe) · לֹא -> "lea" (lo) · לֶחֶם -> "lachem" (lechem).
+  //
+  // The catch: translit.js needs niqqud. On BARE Hebrew it emits vowel-less garbage
+  // (שלום -> "shlvm", סבא -> "sv") on 68/68 of the phrasebook — never let it near unpointed text.
+  // Hence the per-word niqqud test below. Per-WORD, not per-string: one pointed word in a bare
+  // sentence used to let it loose on the whole thing ("אני רוצה לֶחֶם" -> "ny rvtz lechem").
+  // Mixed input falls back to rm rather than shipping a half-garbage line.
+  //
+  // Raw rm is still kept on the result for looksTransliterated(), which needs the SOURCE-side
+  // sound echo and would be broken by a good Hebrew transliteration.
+  const hasNiqqud = s => /[֑-ׇ]/.test(s || '');
   function bestTranslit(he, rm) {
     const T = window.Translit;
-    if (T && /[֑-ׇ]/.test(he || '')) {
-      const t = T.transliterate(he);
-      if (t) return t;
-    }
-    return rm || null;
+    if (!T || !he) return rm || null;
+    const words = he.trim().split(/\s+/).filter(Boolean);
+    if (!words.length || !words.every(hasNiqqud)) return rm || null;
+    const out = words.map(w => T.transliterate(w)).filter(Boolean);
+    return out.length === words.length ? out.join(' ') : (rm || null);
   }
 
   // --- Forward: EN/FR (any language) -> Hebrew. sl=auto is what makes French work. ---
@@ -285,15 +304,92 @@
         const rm = segs.filter(s => s && !s[0]).map(s => s[3] || s[2]).filter(Boolean).join(' ').trim();
         const meaning = (t && t.toLowerCase() !== he.toLowerCase()) ? t : '';
         if (!meaning && !rm) return null;
-        // Same call: prefer translit.js over Google's romanization for the phonetic candidates too
-        // (Input Tools returns vocalized Hebrew, which is where translit.js is strong).
-        return { en: meaning, tr: bestTranslit(he, rm) };
+        // NOTE: Input Tools returns BARE Hebrew (measured 0/6 with niqqud), so bestTranslit's
+        // niqqud test always fails here and this path falls back to Google's rm — which is how
+        // the app came to answer "beseder" with "basder", contradicting what the user just typed.
+        // vocalizeCandidate() (below) points the word through the Worker first so translit.js
+        // can actually read it; rm stays the fallback when the Worker is unreachable.
+        return { en: meaning, tr: bestTranslit(he, rm), rm: rm || null };
       });
   }
 
   // Retry sources when sl=auto transliterates a short foreign word instead of translating.
   // Only the romance/cyrillic sources the user actually types (prefs) are worth retrying.
   const retrySls = () => ['fr', 'es', 'ru'].filter(l => prefLangs().indexOf(l) >= 0);
+
+  const LANG_NAME = { en: 'English', fr: 'French', es: 'Spanish', ru: 'Russian', iw: 'Hebrew', he: 'Hebrew' };
+
+  // --- Homograph rescue: the SILENT wrong answer -------------------------------------------
+  // looksTransliterated() only catches the LOUD failure — gtx echoing the sound (bonjour ->
+  // בונז'ור). It cannot catch the silent one: a French word that is also an English word, which
+  // gtx confidently translates as English and never echoes. Measured, all with src=en conf=1.0,
+  // so no existing retry fires:
+  //     pain -> כְּאֵב (ache, not bread) · chat -> לְשׂוֹחֵחַ (to chat, not cat)
+  //     main -> רָאשִׁי (chief, not hand) · coin -> מַטְבֵּעַ (a coin, not corner) · eau -> או
+  // A French oleh types the most basic word he knows and is told, fluently and confidently, the
+  // wrong thing. So: for a single word, also ask the user's own languages explicitly, and when
+  // the reading DIFFERS, show both instead of silently picking. Noise cost measured at zero —
+  // on 7/7 genuine English words (grandfather, bread, dog, water, house, coffee, thanks) sl=fr
+  // returns the identical Hebrew, so no alternate is produced.
+  function addLangAlts(res, q, signal, single) {
+    if (!res || !single || !res.he) return Promise.resolve(res);
+    const cands = retrySls().filter(l => l !== res.src);
+    if (!cands.length) return Promise.resolve(res);
+    return Promise.all(cands.map(sl =>
+      fetchGoogle(q, signal, sl).then(r => (r && r.he) ? Object.assign({}, r, { sl: sl }) : null).catch(() => null)
+    )).then(list => {
+      const seen = new Set([stripNiqqud(res.he)]);
+      const alts = [];
+      list.forEach(a => {
+        if (!a) return;
+        const k = stripNiqqud(a.he);
+        if (seen.has(k)) return;              // same reading -> nothing to disambiguate
+        // Drop alternates that are just the SOUND echoed back in Hebrew letters rather than a
+        // translation: sl=es on "bonjour" yields בונז'ור, and an "(as Spanish)" card for it is
+        // pure noise. Use the STRICT half of the echo test (identical consonant skeleton), not
+        // looksTransliterated's full rule: its levSim>=0.5 branch flags chat->חתול ("chatul",
+        // 0.67) as an echo and would drop the correct French reading — the exact answer this
+        // whole function exists to surface. The costs are asymmetric: a stray echo card is mild
+        // noise, hiding the right word is the bug. Prefer showing too much.
+        if (isSoundEcho(q, a.rm)) return;
+        seen.add(k);
+        alts.push(Object.assign({}, a, { en: q + ' (as ' + (LANG_NAME[a.sl] || a.sl) + ')' }));
+      });
+      if (!alts.length) return res;
+      // Name the language on the primary card too, so the pair reads as a real choice.
+      return Object.assign({}, res, {
+        en: q + ' (as ' + (LANG_NAME[res.src] || res.src || 'detected') + ')',
+        alts: alts
+      });
+    });
+  }
+
+  // --- Vocalize bare Hebrew through the Dicta Worker, so translit.js can read it ------------
+  // gtx returns vocalized Hebrew for single words (19/20) but BARE Hebrew for every phrase
+  // (0/10), which is most of the value. On that path the learner was shown Google's rm:
+  //     הספר -> "hisper" (hasefer) · מים קרים -> "mim krim" (mayim karim)
+  //     אני רוצה לקנות לחם -> "ani rotza lekanot lecham" (ani rotze liknot lechem)
+  // The old comment said Dicta was CORS-blocked so rm was the only option. That has been false
+  // since the morphology Worker shipped: it relays Dicta and returns per-word `voc`. Routing
+  // bare Hebrew through it and then translit.js scored 7/7 where Google's rm scored 0/7, and it
+  // structurally fixes shva na / qamats qatan, which translit.js guesses at from letters alone
+  // (Dicta actually knows the morphology). Cached 7 days by the Worker.
+  function vocalizeBare(res, signal) {
+    if (!res || !res.he || !isHeb(res.he) || hasNiqqud(res.he)) return Promise.resolve(res);
+    const bare = s => stripNiqqud(s).replace(/\s+/g, '');
+    // Dicta 502s on some cold calls and succeeds on retry — but the 502 itself can take ~6s, so
+    // the retry lives INSIDE one shared budget rather than doubling the wall clock. Fail fast to
+    // Google's rm; the Worker's 7-day cache means the next attempt at this phrase is ~90ms.
+    const once = () => fetchMorph(res.he, signal);
+    return withTimeout(once().catch(() => once()), CFG.tVocalize)
+      .then(toks => {
+        const voc = (toks || []).filter(t => t && !t.sep && t.voc).map(t => t.voc).join(' ').trim();
+        // Never let the Worker rewrite the answer: it may only ADD niqqud, never change letters.
+        if (!voc || bare(voc) !== bare(res.he)) return res;
+        return Object.assign({}, res, { he: voc, tr: bestTranslit(voc, res.rm) });
+      })
+      .catch(() => res);   // offline / Dicta down -> keep Google's rm rather than nothing
+  }
 
   function translateOnline(q, signal) {
     const key = q.toLowerCase();
@@ -312,7 +408,13 @@
         return Promise.all(retrySls().map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
           .then(alts => alts.find(a => a && a.he && !looksTransliterated(q, a.rm)) || res);
       });
+    // Staged budgets, not one big one. The translation itself gets tTranslate; each enrichment
+    // then gets its own short budget and degrades to the answer we already have. Folding these
+    // into a single withTimeout made every phrase hang: vocalizeBare could burn the whole
+    // tTranslate on a Dicta 502, and the learner just watched "Translating" forever.
     return withTimeout(run, CFG.tTranslate)
+      .then(res => res && withTimeout(addLangAlts(res, q, signal, single), CFG.tAlts).then(r => r || res))
+      .then(res => res && withTimeout(vocalizeBare(res, signal), CFG.tVocalize).then(r => r || res))
       .then(res => {
         if (!res) return null;
         transCache.set(key, res);
@@ -333,7 +435,12 @@
       const top = cands.slice(0, CFG.enrichTop);
       return Promise.all(top.map(c =>
         withTimeout(fetchGloss(c, signal), CFG.tGloss)
-          .then(gl => ({ he: c, tr: (gl && gl.tr) || null, en: (gl && gl.en) || '', bare: c }))
+          .then(gl => ({ he: c, tr: (gl && gl.tr) || null, rm: (gl && gl.rm) || null, en: (gl && gl.en) || '', bare: c }))
+          // Input Tools hands back bare Hebrew, so point it through the Worker before showing a
+          // transliteration — otherwise the app answers "beseder" with Google's "basder" and
+          // contradicts the very spelling the learner typed.
+          .then(p => vocalizeBare(p, signal).then(v => Object.assign({}, v, { bare: c })))
+          .catch(() => ({ he: c, tr: null, en: '', bare: c }))
       )).then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
     });
   }
@@ -452,6 +559,13 @@
   function transSectionHtml(fwd, fwdOffline, dupeSet) {
     const cards = [];
     if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) { cards.push(card(fwd, 'online')); dupeSet.add(stripNiqqud(fwd.he)); }
+    // Homograph alternates (pain = ache in English, bread in French): show the other reading
+    // rather than silently betting on Google's language detection.
+    if (fwd && fwd.alts) fwd.alts.forEach(a => {
+      const k = stripNiqqud(a.he);
+      if (dupeSet.has(k)) return;
+      dupeSet.add(k); cards.push(card(a, 'online'));
+    });
     // Skip curated matches already shown in the phonetic "did you mean?" section (e.g. "beseder"
     // surfaces both as romanized-Hebrew and as a keyword) so the same card isn't listed twice.
     fwdOffline.forEach(p => {
