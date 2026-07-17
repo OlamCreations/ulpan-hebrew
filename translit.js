@@ -79,6 +79,7 @@
     let res = '';
     let lastVowel = null;      // last vowel sound emitted (for matres yod)
     let prevHadVowel = false;  // did the previous consonant carry a vowel?
+    let prevWasSheva = false;  // did the previous letter carry a sheva? (2nd of two = na)
     const letters = us.filter(u => u.base);
 
     for (let i = 0; i < us.length; i++) {
@@ -88,20 +89,28 @@
       const idxLetters = letters.indexOf(u);
       const isFirst = idxLetters === 0;
       const isLast = idxLetters === letters.length - 1;
+      const nextLetter = idxLetters >= 0 ? letters[idxLetters + 1] : null;
+      const wasSheva = prevWasSheva;
 
       // vowel mark on this letter (first vowel mark found)
       let vmark = null;
       for (const x of m) if (VOWELS.has(x)) { vmark = x; break; }
+      // Record for the NEXT letter before any branch returns: two consecutive shevas mean the
+      // second one is na (עַצְמְךָ = atz-me-cha). `wasSheva` above already holds the previous state.
+      prevWasSheva = (vmark === SHEVA);
 
       // --- VAV ---
       if (c === 0x05D5) {
         const hasHolam = m.has(HOLAM) || m.has(HOLAM_HASER);
         if (hasHolam) { res += 'o'; lastVowel = 'o'; prevHadVowel = true; continue; }     // holam male: וֹ = o
         if (dagesh && vmark === null) { res += 'u'; lastVowel = 'u'; prevHadVowel = true; continue; } // shuruk: וּ = u
-        // bare vav after a vowel = mater lectionis (defective holam, e.g. בֹּוקֶר = boker), silent
-        if (vmark === null && prevHadVowel) continue;
+        // A bare vav after a vowel is only a mater lectionis when it spells that vowel — i.e. a
+        // defective holam/shuruk (בֹּוקֶר = boker). After any OTHER vowel it is a real consonant,
+        // and dropping it deleted a whole letter: עַכְשָׁיו -> "achshai" (achshav), תָּו -> "ta"
+        // (tav), סְתָיו -> "stai" (stav).
+        if (vmark === null && prevHadVowel && (lastVowel === 'o' || lastVowel === 'u')) continue;
         // consonantal vav
-        let v = vmark === SHEVA ? shevaSound(c, isFirst) : vowelSound(vmark);
+        let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
         res += 'v' + v; lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
       }
 
@@ -109,6 +118,13 @@
       if (c === 0x05D9) {
         // geminated yod (dagesh) is a real consonant, not a glide: הַיּוֹם = ha-yom
         const bareOrShevaGlide = !dagesh && (vmark === null || vmark === SHEVA) && !m.has(SHIN_DOT) && !m.has(SIN_DOT);
+        // The ־ָיו ending: yod + final bare vav spells plain "av", the yod is silent
+        // (עַכְשָׁיו = achshav, סְתָיו = stav — not "achshaiv"/"staiv").
+        if (bareOrShevaGlide && vmark === null && nextLetter && nextLetter.base === 0x05D5 &&
+            !nextLetter.marks.has(DAGESH) && ![...nextLetter.marks].some(x => VOWELS.has(x)) &&
+            letters.indexOf(nextLetter) === letters.length - 1) {
+          prevHadVowel = true; continue;
+        }
         if (bareOrShevaGlide) {
           // mater / glide based on the previous vowel
           if (lastVowel === 'e' || lastVowel === 'a' || lastVowel === 'o' || lastVowel === 'u') {
@@ -117,14 +133,14 @@
           if (lastVowel === 'i') { prevHadVowel = true; continue; } // hiriq male, already 'i'
           if (vmark === null) { res += 'y'; prevHadVowel = false; continue; } // consonantal yod
         }
-        let v = vmark === SHEVA ? shevaSound(c, isFirst) : vowelSound(vmark);
+        let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
         res += 'y' + v; lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
       }
 
       // --- SHIN / SIN ---
       if (c === 0x05E9) {
         const cons = m.has(SIN_DOT) ? 's' : 'sh';
-        let v = vmark === SHEVA ? shevaSound(c, isFirst) : vowelSound(vmark);
+        let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
         res += cons + v; lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
       }
 
@@ -146,7 +162,7 @@
       if (!pair) { if (u.nonletter) res += u.nonletter; continue; }
       const cons = dagesh ? pair[1] : pair[0];
       let v;
-      if (vmark === SHEVA) v = shevaSound(c, isFirst);
+      if (vmark === SHEVA) v = shevaSound(u, isFirst, nextLetter, wasSheva);
       else v = vowelSound(vmark);
       res += cons + v;
       if (v) { lastVowel = v; prevHadVowel = true; }
@@ -155,13 +171,76 @@
     return res;
   }
 
-  // sheva: in modern Israeli speech most shevas are silent. The reliably-pronounced
-  // case is the initial one-letter proclitic prefixes be/ve/ke/le/me (ב ו כ ל מ),
-  // e.g. לְךָ = le-cha. Everything else (root-initial clusters like סְלִיחָה = slicha,
-  // and medial shevas) is dropped. Shin is excluded on purpose (root שׁל = shl, not she).
-  const PREFIX_SHEVA = new Set([0x05D1, 0x05D5, 0x05DB, 0x05DC, 0x05DE]);
-  function shevaSound(letter, isFirst) {
-    if (isFirst && PREFIX_SHEVA.has(letter)) return 'e';
+  /* sheva na (pronounced "e") vs sheva nach (silent).
+   *
+   * The old rule keyed on letter IDENTITY — "word-initial ב ו כ ל מ = e" — as a proxy for "is
+   * this a proclitic prefix?". It cannot be: the SAME letter goes both ways (בְּלִי = bli but
+   * בְּסֵדֶר = beseder), so it failed in both directions at once:
+   *     false 'e': כְּנִיסָה->kenisa (knisa) · בְּלִי->beli (bli) · בְּרָכָה->beracha (bracha)
+   *     missed 'e': יְלָדִים->yladim (yeladim) · נְדַבֵּר->ndaber · רְחוֹב->rchov (rechov)
+   *
+   * Nor can the Dicta Worker fix it, despite the obvious hope: Nakdan returns an IDENTICAL plain
+   * sheva for כְּנִיסָה (silent) and יְלָדִים (pronounced) — verified against its raw API, whose
+   * per-word payload is only [vocalized, [[morphcode, lemma, bool]]]. There is no na/nach flag to
+   * read. The distinction is not in the niqqud at all.
+   *
+   * What actually governs it in Israeli Hebrew is PHONOTACTICS: the sheva goes silent only when
+   * the two consonants form a pronounceable onset cluster. Derived from the 33 word-initial sheva
+   * cases in the curated phrasebook (hand-authored `tr` = ground truth), four forces decide:
+   *   1. sibilant onset — s/sh + anything is always legal (סְלִיחָה slicha, שְׁתַּיִם shtayim,
+   *      שְׁמוֹנֶה shmone, שְׂמֹאלָה smola), even where sonority falls;
+   *   2. gutturals never cluster (בְּעָיָה be-aya, מְאוֹד me-od, רְחוֹב rechov, לְךָ lecha);
+   *   3. homorganic pairs are blocked — same place of articulation can't cluster
+   *      (בְּבַקָּשָׁה be-vakasha b+v both labial; תְּדַבֵּר te-daber t+d both alveolar);
+   *   4. otherwise the cluster needs RISING sonority (bli 1<4, knisa 1<3, ktsat 1<2), or a
+   *      same-voicing stop plateau (כְּתוֹבֶת ktovet k+t both voiceless — while בְּתֵאָבוֹן
+   *      be-teavon is blocked, b voiced + t voiceless).
+   * Medially, the classical rule applies and IS readable from the niqqud: the second of two
+   * consecutive shevas is na (עַצְמְךָ = atz-me-cha).
+   */
+  const SONORITY = { b: 1, g: 1, d: 1, t: 1, k: 1, p: 1,
+                     v: 2, z: 2, ch: 2, s: 2, sh: 2, f: 2, tz: 2, h: 2,
+                     m: 3, n: 3, l: 4, r: 4, y: 5 };
+  const PLACE = { b: 'lab', v: 'lab', f: 'lab', p: 'lab', m: 'lab',
+                  d: 'alv', t: 'alv', s: 'alv', z: 'alv', tz: 'alv', n: 'alv', l: 'alv', r: 'alv',
+                  sh: 'post', y: 'pal', g: 'vel', k: 'vel', ch: 'vel', h: 'glo' };
+  const VOICED = new Set(['b', 'g', 'd', 'v', 'z', 'm', 'n', 'l', 'r', 'y']);
+
+  // Resolve a letter-unit to its consonant sound, so clusters can be tested before the main
+  // loop reaches the second letter.
+  function consOf(u) {
+    if (!u || !u.base) return '';
+    const c = u.base;
+    if (c === 0x05E9) return u.marks.has(SIN_DOT) ? 's' : 'sh';
+    if (c === 0x05D9) return 'y';
+    const pair = CONS[c];
+    if (!pair) return '';
+    return u.marks.has(DAGESH) ? pair[1] : pair[0];
+  }
+
+  function clusterOk(c1, c2) {
+    if (!c1 || !c2) return false;                 // alef/ayin resolve to '' -> never cluster
+    if (c1 === 's' || c1 === 'sh') return true;   // 1. sibilant onset
+    if (c2 === 'h' || c2 === 'ch') return false;  // 2. guttural second member
+    if (PLACE[c1] && PLACE[c1] === PLACE[c2]) return false;  // 3. homorganic
+    const s1 = SONORITY[c1], s2 = SONORITY[c2];
+    if (!s1 || !s2) return false;
+    // 4. Sonority must rise, and a rise of only ONE step (stop -> fricative) is too shallow to
+    //    carry the cluster on its own: it also needs voicing agreement. That single distinction
+    //    separates קְצָת ktsat (k+tz, both voiceless) from בְּסֵדֶר be-seder (b voiced + s
+    //    voiceless), and כְּתוֹבֶת ktovet (k+t) from בְּתֵאָבוֹן be-teavon (b+t) at the plateau.
+    if (s2 - s1 >= 2) return true;                                       // clear rise: bli, knisa
+    if (s2 - s1 === 1) return VOICED.has(c1) === VOICED.has(c2);         // shallow rise
+    if (s1 === s2 && s1 === 1) return VOICED.has(c1) === VOICED.has(c2); // stop plateau
+    return false;
+  }
+
+  function shevaSound(u, isFirst, next, prevWasSheva) {
+    // Word-initially and after another sheva, the sheva is only silent if the resulting cluster
+    // is pronounceable. The classical rule ("second of two shevas is na") is right about WHERE to
+    // look but too absolute for modern speech: אַנְגְּלִית is anglit, not an-ge-lit, because g+l
+    // clusters happily — while עַצְמְךָ is atz-me-cha, because m+ch cannot.
+    if (isFirst || prevWasSheva) return clusterOk(consOf(u), consOf(next)) ? '' : 'e';
     return '';
   }
 
