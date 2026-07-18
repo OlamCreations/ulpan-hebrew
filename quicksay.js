@@ -162,7 +162,11 @@
     else if (kind === 'phonetic') tag = '<span class="qs-tag qs-tag-phonetic" title="Matched from what you typed phonetically">phonetic</span>';
     else if (kind === 'phonetic-lesson') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
     else if (p.cat) tag = '<span class="qs-tag">' + escapeHtml(p.cat) + '</span>';
-    const tr = (p.tr && (!window.QSPrefs || window.QSPrefs.translit())) ? '<div class="qs-tr">' + escapeHtml(p.tr) + '</div>' : '';
+    // Spell digits out in the transliteration: "ani ben 33" -> "ani ben shloshim ve shalosh".
+    // A learner needs to know how to SAY the number, not just see the glyph. The Hebrew keeps the
+    // digit (that's how Hebrew writes numbers); only the romanization is spelled.
+    const trText = (window.Translit && window.Translit.spellNumbersInText) ? window.Translit.spellNumbersInText(p.tr) : p.tr;
+    const tr = (trText && (!window.QSPrefs || window.QSPrefs.translit())) ? '<div class="qs-tr">' + escapeHtml(trText) + '</div>' : '';
     const meaning = (p.en || '').trim();
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
@@ -229,7 +233,10 @@
     const T = window.Translit;
     if (!T || !he) return rm || null;
     const words = he.trim().split(/\s+/).filter(Boolean);
-    if (!words.length || !words.every(hasNiqqud)) return rm || null;
+    // Every HEBREW word must be vocalized (translit.js garbles bare Hebrew). Non-Hebrew tokens —
+    // a number like "45", punctuation — are fine and pass through; without this exception a single
+    // digit in a phrase forced the whole line back to Google's rm ("hisper" for hasefer).
+    if (!words.length || !words.every(w => hasNiqqud(w) || !isHeb(w))) return rm || null;
     const out = words.map(w => T.transliterate(w)).filter(Boolean);
     return out.length === words.length ? out.join(' ') : (rm || null);
   }
@@ -388,7 +395,12 @@
     const once = () => fetchMorph(res.he, signal);
     return withTimeout(once().catch(() => once()), CFG.tVocalize)
       .then(toks => {
-        const voc = (toks || []).filter(t => t && !t.sep && t.voc).map(t => t.voc).join(' ').trim();
+        if (!toks || !toks.length) return res;
+        // Rebuild KEEPING the separator tokens (digits, punctuation) in place; only the word
+        // tokens get vocalized. Dicta returns "45" and "," as separators — filtering them out
+        // dropped numbers from the Hebrew ("הספר עולה 45" lost its 45) AND made the skeleton
+        // guard below misfire, falling back to Google's bad rm ("hisper" for hasefer).
+        const voc = toks.map(t => t.sep ? (t.word || '') : (t.voc || t.word || '')).join('').replace(/\s+/g, ' ').trim();
         // Never let the Worker rewrite the answer: it may only ADD niqqud, never change letters.
         if (!voc || bare(voc) !== bare(res.he)) return res;
         return Object.assign({}, res, { he: voc, tr: bestTranslit(voc, res.rm) });

@@ -277,7 +277,71 @@
     return out.replace(/\s+/g, ' ').trim();
   }
 
-  const api = { transliterate };
+  // --- Numbers -> Hebrew words -------------------------------------------------------------
+  // The translator shows "ani ben 33"; a learner needs "ani ben shloshim ve shalosh". We spell
+  // the integer in vocalized Hebrew (feminine / absolute forms — the counting default, and what
+  // age takes: בן שלושים ושלוש) and let transliterate() romanize it, so the number reads in the
+  // app's own scheme. 0-999; larger values are left as digits (construct plurals like שלושת
+  // אלפים are irregular and rare in the translator — not worth teaching a wrong form).
+  const NUM_UNITS = ['אֶפֶס', 'אַחַת', 'שְׁתַּיִם', 'שָׁלוֹשׁ', 'אַרְבַּע', 'חָמֵשׁ', 'שֵׁשׁ', 'שֶׁבַע', 'שְׁמוֹנֶה', 'תֵּשַׁע'];
+  const NUM_TEENS = ['עֶשֶׂר', 'אַחַת עֶשְׂרֵה', 'שְׁתֵּים עֶשְׂרֵה', 'שְׁלוֹשׁ עֶשְׂרֵה', 'אַרְבַּע עֶשְׂרֵה', 'חֲמֵשׁ עֶשְׂרֵה', 'שֵׁשׁ עֶשְׂרֵה', 'שְׁבַע עֶשְׂרֵה', 'שְׁמוֹנֶה עֶשְׂרֵה', 'תְּשַׁע עֶשְׂרֵה'];
+  const NUM_TENS = ['', '', 'עֶשְׂרִים', 'שְׁלוֹשִׁים', 'אַרְבָּעִים', 'חֲמִשִּׁים', 'שִׁשִּׁים', 'שִׁבְעִים', 'שְׁמוֹנִים', 'תִּשְׁעִים'];
+  const NUM_HUNDREDS = ['', 'מֵאָה', 'מָאתַיִם', 'שְׁלוֹשׁ מֵאוֹת', 'אַרְבַּע מֵאוֹת', 'חֲמֵשׁ מֵאוֹת', 'שֵׁשׁ מֵאוֹת', 'שְׁבַע מֵאוֹת', 'שְׁמוֹנֶה מֵאוֹת', 'תְּשַׁע מֵאוֹת'];
+
+  // The conjunctive vav on the last component: וְ, but וּ before a shva and וַ/וֶ before a chataf.
+  function conjVav(w) {
+    if (/^[א-ת][ּׁׂ]*ְ/.test(w)) return 'וּ' + w;
+    if (/^[א-ת][ּׁׂ]*ֲ/.test(w)) return 'וַ' + w;
+    if (/^[א-ת][ּׁׂ]*ֱ/.test(w)) return 'וֶ' + w;
+    return 'וְ' + w;
+  }
+
+  // Components of n (0..999) as vocalized Hebrew words WITHOUT the conjunctive vav, or null.
+  function numberParts(n) {
+    if (!Number.isInteger(n) || n < 0 || n > 999) return null;
+    if (n === 0) return ['אֶפֶס'];
+    const parts = [];
+    const h = Math.floor(n / 100), rem = n % 100;
+    if (h) parts.push(NUM_HUNDREDS[h]);
+    if (rem >= 10 && rem <= 19) parts.push(NUM_TEENS[rem - 10]);
+    else {
+      const t = Math.floor(rem / 10), u = rem % 10;
+      if (t) parts.push(NUM_TENS[t]);
+      if (u) parts.push(NUM_UNITS[u]);
+    }
+    return parts;
+  }
+
+  // { he, tr } for an integer, or null. The Hebrew keeps the conjunctive vav attached to the last
+  // word (correct orthography: וְשָׁלוֹשׁ). The romanization spaces it — "shloshim ve shalosh" —
+  // because that reads far better for a learner than the glued "veshalosh".
+  function spellNumber(n) {
+    const parts = numberParts(n);
+    if (!parts) return null;
+    const last = parts[parts.length - 1];
+    const he = parts.length === 1 ? parts[0]
+      : parts.slice(0, -1).join(' ') + ' ' + conjVav(last);
+    const trParts = parts.map(transliterate);
+    let tr;
+    if (trParts.length === 1) tr = trParts[0];
+    else {
+      const conj = /^[א-ת][ּׁׂ]*ְ/.test(last) ? 'u' : /^[א-ת][ּׁׂ]*ֲ/.test(last) ? 'va' : 've';
+      tr = trParts.slice(0, -1).join(' ') + ' ' + conj + ' ' + trParts[trParts.length - 1];
+    }
+    return { he, tr };
+  }
+
+  // Replace standalone integer runs in a romanization with their spelled form (for the
+  // translator: "ani ben 33" -> "ani ben shloshim ve shalosh"). Out-of-range digits stay.
+  function spellNumbersInText(tr) {
+    return (tr || '').replace(/\d+/g, (d) => {
+      if (d.length > 1 && d[0] === '0') return d;   // 054, 007 -> phone/id, read digit by digit
+      const s = spellNumber(parseInt(d, 10));
+      return s ? s.tr : d;
+    });
+  }
+
+  const api = { transliterate, spellNumber, spellNumbersInText };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.Translit = api;
 })(typeof window !== 'undefined' ? window : globalThis);
