@@ -420,6 +420,7 @@ if ('speechSynthesis' in window) {
 
 window.addEventListener('DOMContentLoaded', () => {
   setupNiqqudToggle();
+  setupCursiveToggle();
   setTimeout(() => { if (!voiceCheckDone) setupAudioButtons(); }, 1000);
   setTimeout(() => { autoInjectExercises(); recordDailyStreak(); injectFloatingControls(); enableTextBlockAutoPlay(); setupRevealToggle(); enhanceIndexNavTooltips(); a11yIconButtons(); }, 250);
 });
@@ -1256,8 +1257,46 @@ function setupNiqqudToggle() {
   applyNiqqudStripping();
 }
 
+// Handwriting (ktav yad) toggle — same shape as the niqqud toggle. Israelis write in cursive,
+// not print, so a learner needs to practice reading it. Cursive fonts carry no niqqud glyphs
+// (the whole codebase strips niqqud wherever it shows cursive), so turning cursive ON also forces
+// the vowel marks off for display — see applyNiqqudStripping.
+function setupCursiveToggle() {
+  const lesson = location.pathname.split(/[\\/]/).pop().replace('.html', '');
+  if (lesson === 'index' || lesson === '01-alefbet' || lesson === '02-niqqud') return;
+
+  const header = document.querySelector('header');
+  if (!header) return;
+
+  const toggle = document.createElement('button');
+  toggle.className = 'cursive-toggle';
+  toggle.title = 'Toggle handwriting (ktav yad) — how Israelis actually write by hand';
+  toggle.setAttribute('aria-pressed', 'false');
+  toggle.innerHTML = '<span class="dot"></span> Cursive OFF';
+
+  if (localStorage.getItem('cursive-on') === '1') {
+    document.body.classList.add('cursive');
+    toggle.setAttribute('aria-pressed', 'true');
+    toggle.innerHTML = '<span class="dot"></span> Cursive ON';
+  }
+
+  toggle.addEventListener('click', () => {
+    const on = document.body.classList.toggle('cursive');
+    toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+    toggle.innerHTML = on ? '<span class="dot"></span> Cursive ON' : '<span class="dot"></span> Cursive OFF';
+    localStorage.setItem('cursive-on', on ? '1' : '0');
+    applyNiqqudStripping();   // cursive font can't render niqqud -> re-strip
+  });
+
+  header.appendChild(toggle);
+  // Re-strip on init: this runs after setupNiqqudToggle already stripped, so a persisted
+  // cursive-on state needs another pass to drop the niqqud the ktav yad font can't render.
+  applyNiqqudStripping();
+}
+
 function applyNiqqudStripping() {
-  const off = document.body.classList.contains('no-niqqud');
+  // Cursive mode implies no-niqqud: the ktav yad font has no vowel-mark glyphs.
+  const off = document.body.classList.contains('no-niqqud') || document.body.classList.contains('cursive');
   document.querySelectorAll('.he').forEach(el => {
     if (el.dataset.tokenized) {
       el.querySelectorAll('.word-token').forEach(tok => {
@@ -1668,7 +1707,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1784391016648';
+  var SHARED_V = '1784391522277';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

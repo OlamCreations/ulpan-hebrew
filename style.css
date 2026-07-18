@@ -796,6 +796,34 @@ a.btn.icon-btn.forvo-link:hover {
   background: var(--text-faint);
 }
 
+/* Cursive (ktav yad) toggle — same chrome as the niqqud toggle */
+.cursive-toggle {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s;
+}
+.cursive-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.cursive-toggle .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-faint); display: inline-block; }
+.cursive-toggle[aria-pressed="true"] .dot { background: var(--accent); }
+
+/* When cursive is on, lesson Hebrew renders in the handwriting font. Scoped to the same .he
+   content the niqqud toggle already governs; index/home have no toggle so body.cursive is never
+   set there. Nudge the size up: KtavYad reads smaller than Frank Ruhl at the same px. */
+body.cursive .word-row .he,
+body.cursive .tb-he,
+body.cursive .stich-words .he,
+body.cursive .mini-quiz .he { font-family: 'KtavYad', cursive; font-size: 1.15em; }
+
 body.no-niqqud .he,
 body.no-niqqud [style*="direction: rtl"] {
   letter-spacing: 0.5px;
@@ -903,7 +931,7 @@ body.no-niqqud [style*="direction: rtl"] {
 }
 .fc-btn:hover { border-color: var(--accent); color: var(--accent); }
 .fc-btn.fc-home { text-decoration: none; margin-right: auto; }
-@media print { #floating-controls, .niqqud-toggle, .nav, footer button, .ex-tabs, #ex-stage, #exercises-block, #voice-banner { display: none !important; } body { background: white !important; color: black !important; padding-top: 32px !important; } .he, .word-row { color: black !important; } .word-row .translit, .word-row .fr { filter: none !important; color: inherit !important; text-shadow: none !important; background: transparent !important; } }
+@media print { #floating-controls, .niqqud-toggle, .cursive-toggle, .nav, footer button, .ex-tabs, #ex-stage, #exercises-block, #voice-banner { display: none !important; } body { background: white !important; color: black !important; padding-top: 32px !important; } .he, .word-row { color: black !important; } .word-row .translit, .word-row .fr { filter: none !important; color: inherit !important; text-shadow: none !important; background: transparent !important; } }
 @media (max-width: 600px) {
   #floating-controls { padding: 8px 10px; gap: 4px; flex-wrap: wrap; }
   .fc-btn { font-size: 11px; padding: 6px 10px; }
@@ -1515,6 +1543,7 @@ html.light .hub-overlay { background: rgba(0,0,0,0.32); }
 
 /* Home uses the hamburger hub; the per-lesson niqqud pill has nothing to act on here. */
 body.home .niqqud-toggle { display: none; }
+body.home .cursive-toggle { display: none; }
 
 /* The hamburger hub replaces the floating control bar on every page; its buttons stay in the
    DOM (hidden) so the menu can trigger them. */
@@ -1585,6 +1614,7 @@ body.home .niqqud-toggle { display: none; }
   header.lesson-topbar > .hub-actions { order: 2; }
   header.lesson-topbar > .nav { order: 3; flex: 0 1 auto; }
   header.lesson-topbar > .niqqud-toggle { order: 4; margin-left: auto; }
+  header.lesson-topbar > .cursive-toggle { order: 5; }
 }
 
 /* =====================================================================
