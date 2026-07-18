@@ -376,7 +376,12 @@
   // (Dicta actually knows the morphology). Cached 7 days by the Worker.
   function vocalizeBare(res, signal) {
     if (!res || !res.he || !isHeb(res.he) || hasNiqqud(res.he)) return Promise.resolve(res);
-    const bare = s => stripNiqqud(s).replace(/\s+/g, '');
+    // Consonant skeleton for the "Dicta didn't rewrite the word" guard: strip niqqud, whitespace
+    // AND punctuation. Dicta returns commas/periods/? as separator tokens that we filter out, so a
+    // guard that keeps punctuation on one side only sees a phantom mismatch on EVERY sentence with
+    // a "," or "?" — and silently falls back to Google's bad romanization (le/mura). This is why
+    // single words worked and full sentences didn't.
+    const bare = s => stripNiqqud(s).replace(/[\s,.?!;:'"״׳()־-]/g, '');
     // Dicta 502s on some cold calls and succeeds on retry — but the 502 itself can take ~6s, so
     // the retry lives INSIDE one shared budget rather than doubling the wall clock. Fail fast to
     // Google's rm; the Worker's 7-day cache means the next attempt at this phrase is ~90ms.
