@@ -244,9 +244,27 @@
     return '';
   }
 
+  // Dicta (via the morphology Worker) encodes holam-male and shuruk as a vowel on the CONSONANT
+  // plus a bare mater vav — תָּוכְנִית for תּוֹכְנִית, הָאֻולְפָּן for הָאוּלְפָּן — and sprinkles
+  // meteg. Fed that raw, translit.js read the qamats as "a" and the vav as a consonant, turning
+  // tochnit into "tavchnit" on every phrase the live translator routes through the Worker. Rewrite
+  // Dicta's spelling to standard before the main loop. The vav must be a bare mater (no mark of its
+  // own) with a letter after it, which leaves word-final consonantal vav — תָּו (tav), סְתָיו
+  // (stav) — untouched.
+  function normalizeDicta(s) {
+    s = s.normalize('NFC').replace(/ֽ/g, '');                                     // strip meteg
+    // Order-agnostic on the marks around the qamats/qubuts: NFC sorts combining marks by class, so
+    // a dagesh lands BETWEEN the qamats and the vav (תּ -> tav, qamats, dagesh, vav). A regex that
+    // expects dagesh-then-qamats matches nothing — the exact trap that silently defeated the first
+    // version of this fold. Keep every mark except the qamats/qubuts, drop that, holam/shuruk the vav.
+    s = s.replace(/([א-ת])([֑-ׇ]*)ָ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-ת])/g, (_, c, a, b) => c + a + b + 'וֹ'); // holam male
+    s = s.replace(/([א-ת])([֑-ׇ]*)ֻ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-ת])/g, (_, c, a, b) => c + a + b + 'וּ'); // shuruk
+    return s.normalize('NFC');
+  }
+
   function transliterate(text) {
     if (!text) return '';
-    const us = units(text);
+    const us = units(normalizeDicta(text));
     // split on non-letters into words, transliterate each, rejoin with the separators
     let out = '';
     let buf = [];
