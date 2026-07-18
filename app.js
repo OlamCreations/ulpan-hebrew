@@ -1261,6 +1261,27 @@ function setupNiqqudToggle() {
 // not print, so a learner needs to practice reading it. Cursive fonts carry no niqqud glyphs
 // (the whole codebase strips niqqud wherever it shows cursive), so turning cursive ON also forces
 // the vowel marks off for display — see applyNiqqudStripping.
+//
+// ONE shared state: localStorage 'qs-cursive', the key the live translator already reads via
+// window.QSPrefs.cursive(). So enabling cursive anywhere — this lesson button OR the translator's
+// Preferences panel — flips the same switch, and the translator shows its cursive echo of the
+// result too. That is exactly the request: type a romanized phrase, get the whole thing in Hebrew
+// script, and in cursive when cursive is on.
+function cursiveOn() { return localStorage.getItem('qs-cursive') === 'on'; }
+
+function applyCursive() {
+  const on = cursiveOn();
+  document.body.classList.toggle('cursive', on);
+  const btn = document.querySelector('.cursive-toggle');
+  if (btn) {
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.innerHTML = on ? '<span class="dot"></span> Cursive ON' : '<span class="dot"></span> Cursive OFF';
+  }
+  applyNiqqudStripping();   // cursive font can't render niqqud -> re-strip
+}
+// hub.js Preferences toggle calls this so a change there updates the lesson body live too.
+if (typeof window !== 'undefined') window.applyCursive = applyCursive;
+
 function setupCursiveToggle() {
   const lesson = location.pathname.split(/[\\/]/).pop().replace('.html', '');
   if (lesson === 'index' || lesson === '01-alefbet' || lesson === '02-niqqud') return;
@@ -1268,30 +1289,23 @@ function setupCursiveToggle() {
   const header = document.querySelector('header');
   if (!header) return;
 
+  // Migrate the one-commit-old key so a user who already turned cursive on keeps it.
+  if (localStorage.getItem('cursive-on') === '1' && !localStorage.getItem('qs-cursive')) {
+    localStorage.setItem('qs-cursive', 'on');
+  }
+
   const toggle = document.createElement('button');
   toggle.className = 'cursive-toggle';
   toggle.title = 'Toggle handwriting (ktav yad) — how Israelis actually write by hand';
-  toggle.setAttribute('aria-pressed', 'false');
   toggle.innerHTML = '<span class="dot"></span> Cursive OFF';
-
-  if (localStorage.getItem('cursive-on') === '1') {
-    document.body.classList.add('cursive');
-    toggle.setAttribute('aria-pressed', 'true');
-    toggle.innerHTML = '<span class="dot"></span> Cursive ON';
-  }
-
   toggle.addEventListener('click', () => {
-    const on = document.body.classList.toggle('cursive');
-    toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
-    toggle.innerHTML = on ? '<span class="dot"></span> Cursive ON' : '<span class="dot"></span> Cursive OFF';
-    localStorage.setItem('cursive-on', on ? '1' : '0');
-    applyNiqqudStripping();   // cursive font can't render niqqud -> re-strip
+    localStorage.setItem('qs-cursive', cursiveOn() ? 'off' : 'on');
+    applyCursive();
   });
 
   header.appendChild(toggle);
-  // Re-strip on init: this runs after setupNiqqudToggle already stripped, so a persisted
-  // cursive-on state needs another pass to drop the niqqud the ktav yad font can't render.
-  applyNiqqudStripping();
+  // Init from the shared pref (also re-strips niqqud; runs after setupNiqqudToggle).
+  applyCursive();
 }
 
 function applyNiqqudStripping() {
@@ -1707,7 +1721,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1784391522277';
+  var SHARED_V = '1784392391313';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

@@ -188,7 +188,9 @@
             setter(on);
           });
         };
-        wireSwitch('pref-cursive', v => { Prefs.setCursive(v); refreshTranslator(); });
+        // Cursive is one shared switch: also drive the lesson body (app.js) so a lesson page
+        // updates live, not just the translator.
+        wireSwitch('pref-cursive', v => { Prefs.setCursive(v); if (window.applyCursive) window.applyCursive(); refreshTranslator(); });
         wireSwitch('pref-niqqud', v => { Prefs.setNiqqud(v); refreshTranslator(); });
         wireSwitch('pref-translit', v => { Prefs.setTranslit(v); refreshTranslator(); });
         wireSwitch('pref-root', v => { Prefs.setRoot(v); refreshTranslator(); });
