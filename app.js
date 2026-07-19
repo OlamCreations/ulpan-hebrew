@@ -1690,10 +1690,8 @@ function openSituations(situations, lessonId) {
   try {
     var head = document.head;
     function addOnce(sel, make) { if (!document.querySelector(sel)) head.appendChild(make()); }
-    // Load the signature Hebrew face (Frank Ruhl Libre), referenced app-wide but
-    // otherwise never fetched, so Hebrew was falling back to generic serif.
-    addOnce('link[data-font="frl"]', function () { var l = document.createElement('link'); l.rel = 'preconnect'; l.href = 'https://fonts.gstatic.com'; l.crossOrigin = 'anonymous'; l.setAttribute('data-font', 'frl'); return l; });
-    addOnce('link[href*="Frank+Ruhl"]', function () { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&display=swap'; return l; });
+    // Frank Ruhl Libre (the signature Hebrew face) is now self-hosted via @font-face in style.css
+    // — no external Google Fonts fetch, so the CSP can forbid external style/font hosts entirely.
     addOnce('link[rel="manifest"]', function () { var l = document.createElement('link'); l.rel = 'manifest'; l.href = 'manifest.json'; return l; });
     addOnce('meta[name="theme-color"]', function () { var m = document.createElement('meta'); m.name = 'theme-color'; m.content = '#0a0a0a'; return m; });
     addOnce('link[rel="apple-touch-icon"]', function () { var a = document.createElement('link'); a.rel = 'apple-touch-icon'; a.href = 'icon-192.png'; return a; });
