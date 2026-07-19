@@ -28,7 +28,11 @@ function allowOrigin(origin) {
   try {
     if (!origin) return 'https://olamcreations.github.io';
     const h = new URL(origin).hostname;
-    if (/\.github\.io$/.test(h) || h === 'localhost' || h === '127.0.0.1') return origin;
+    // ONLY our Pages origin + local dev. This used to allow any *.github.io, but MORPH_URL is
+    // hardcoded to this deployment in the (open-source) front-end, so a fork deployed to another
+    // github.io could freeload on our Workers AI neuron budget from its visitors' browsers.
+    // Self-hosters deploy their own Worker and point MORPH_URL at it (see README).
+    if (h === 'olamcreations.github.io' || h === 'localhost' || h === '127.0.0.1') return origin;
   } catch (e) {}
   return 'https://olamcreations.github.io';
 }

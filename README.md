@@ -27,6 +27,19 @@ Validation script for new lessons:
 node _validate.js   # uses Playwright headless
 ```
 
+## The morphology / translation Worker
+
+The word-by-word breakdown, the bare-Hebrew vocalization, and the "natural version"
+button call a small Cloudflare Worker (`worker/`) that relays Dicta Nakdan, UDPipe,
+and Workers AI. The front-end (`quicksay.js`, `track.js`) points `MORPH_URL` at our
+deployment. If you fork and host this yourself, **deploy your own Worker** and change
+`MORPH_URL` to your own `*.workers.dev` URL — our deployment only accepts requests
+from `olamcreations.github.io`, so a fork will not reach it. Deploy with:
+
+```bash
+cd worker && npx wrangler deploy   # needs your own Cloudflare account (free tier is fine)
+```
+
 ## License
 
 - **Code** (HTML/CSS/JS, `tools/`, service worker): MIT — see [LICENSE](LICENSE).
