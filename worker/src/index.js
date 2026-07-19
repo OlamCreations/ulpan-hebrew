@@ -8,6 +8,20 @@ const UDPIPE = 'https://lindat.mff.cuni.cz/services/udpipe/api/process';
 const UPSTREAM_TIMEOUT = 6000;   // ms; a hung upstream degrades instead of hanging the request
 const CACHE_TTL = 604800;        // 7 days — the vocabulary is effectively static
 
+// Workers AI model for the "natural version" layer (/nat). Google Translate under the live
+// translator produces literal calques on idiomatic phrases and gets register/gender wrong
+// ("c'est ma professeure" -> masculine מורה). A 70B instruct model gives the idiomatic Hebrew a
+// native actually says (זו מורתי). Measured: 8/10 phrases natural at temperature 0 with a strict
+// "translate faithfully, do not invent" prompt; the 8B model is unusable and higher temperature
+// hallucinates (savivon/dreidel for "tour du monde"). We take ONLY the consonantal Hebrew from
+// it — its self-generated transliteration is wrong (yoter -> "odar") and its niqqud is patchy,
+// so the client strips both and re-vocalizes through Dicta + translit.js like any other result.
+const NAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const NAT_SYS = `You are a careful Hebrew translator for a French/English speaker learning Hebrew at ulpan. Translate the user's sentence FAITHFULLY into natural, modern spoken Israeli Hebrew. Preserve the exact meaning, register, gender and number — do not invent, add, or drop ideas. Prefer how a native Israeli actually says it over a word-for-word calque; if the phrase is idiomatic, give the idiomatic Hebrew, not the literal one.
+Give up to 2 options, most natural first (a second only if it is a genuinely different, correct way to say it — e.g. a feminine-speaker form). Output ONLY these lines and nothing else, one option per line:
+HEBREW | short note in French on register or usage
+Do not number the lines. Do not write anything before or after the list.`;
+
 // CORS restricted to the app origins (still open to direct curl — that's a rate-limit concern,
 // not a CORS one — but this stops other sites embedding the endpoint in visitors' browsers).
 function allowOrigin(origin) {
@@ -159,6 +173,36 @@ async function analyze(text) {
   return out;
 }
 
+// Natural-version translation via Workers AI. Returns only { he, note } per option: the Hebrew
+// (which the client re-vocalizes through Dicta so the niqqud/translit come from the trusted path,
+// not from the LLM) and a short French usage note. Bad/hallucinated lines are filtered out here —
+// a line only survives if column 1 actually contains Hebrew letters and is not a duplicate of one
+// already kept (by consonantal skeleton).
+async function natTranslate(text, env) {
+  if (!env || !env.AI) throw new Error('no AI binding');
+  const r = await env.AI.run(NAT_MODEL, {
+    messages: [{ role: 'system', content: NAT_SYS }, { role: 'user', content: text }],
+    temperature: 0, max_tokens: 400
+  });
+  const raw = (r && (r.response || r.result || '')) || '';
+  const seen = new Set();
+  const options = [];
+  for (let line of raw.split('\n')) {
+    line = line.trim();
+    if (line.indexOf('|') === -1) continue;
+    const parts = line.split('|').map(s => s.trim());
+    const he = (parts[0] || '').replace(/^\d+[.)]\s*/, '').trim();
+    const note = (parts[1] || '').trim();
+    if (!HEB.test(he)) continue;
+    const skel = he.replace(/[֑-ׇ\s.,?!;:'"״׳()־-]/g, '');
+    if (!skel || seen.has(skel)) continue;
+    seen.add(skel);
+    options.push({ he, note });
+    if (options.length >= 2) break;   // top 2 only: the model ranks best-first and its rare
+  }                                    // hallucinations land in the 3rd slot — cut the tail.
+  return options;
+}
+
 // Anonymous usage analytics. The client batches events and POSTs them here (safelisted
 // text/plain, no preflight, sendBeacon on page hide). We write one Analytics Engine data point
 // per event: no cookies, no IP stored — country/device are derived, the only id is the client's
@@ -207,6 +251,25 @@ export default {
     if (new URL(request.url).pathname === '/track') {
       await track(request, env);
       return new Response(null, { status: 204, headers: cors(origin) });
+    }
+
+    // Natural-version layer: French/English -> idiomatic Hebrew via Workers AI. On-demand (the
+    // client only calls it when the learner asks), cached 7 days (temperature 0 is deterministic,
+    // and the neuron budget is real). Falls back to a 502 the client treats as "unavailable".
+    if (new URL(request.url).pathname === '/nat') {
+      let nb;
+      try { nb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
+      const nt = ((nb && nb.text) || '').toString().slice(0, 300);
+      if (!nt.trim()) return json({ options: [] }, 200, origin);
+      const nCache = caches.default;
+      const nKey = new Request('https://nat.cache/v2/' + encodeURIComponent(nt));
+      const nHit = await nCache.match(nKey);
+      if (nHit) return new Response(await nHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
+      let options;
+      try { options = await natTranslate(nt, env); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
+      const nPayload = JSON.stringify({ options });
+      if (options.length && ctx && ctx.waitUntil) ctx.waitUntil(nCache.put(nKey, new Response(nPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
+      return new Response(nPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
     }
 
     let body;

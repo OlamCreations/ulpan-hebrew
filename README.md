@@ -38,5 +38,7 @@ node _validate.js   # uses Playwright headless
 
 **Honest note:** the content is authored and curated by Jonas Nephtali with LLM
 assistance, then hand-corrected. It is a work in progress, not a vetted textbook —
-expect residual niqqud errors, and the live translator runs on Google Translate, so
-it produces literal calques on idiomatic phrases. Corrections welcome.
+expect residual niqqud errors. The live translator's default pass is Google Translate
+(literal on idiomatic phrases); an opt-in "natural version" button routes the phrase
+through a larger model for the idiomatic reading, which is better but not infallible.
+Corrections welcome.

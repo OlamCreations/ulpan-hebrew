@@ -29,7 +29,8 @@
     // and caches 7 days; when Dicta is having a bad day it 502s at ~6s, so 4s bails out to
     // Google's rm instead of making the learner watch "Translating" for 14 seconds.
     tAlts: 5000,        // ms budget: the "as French" second reading
-    tVocalize: 4000     // ms budget: pointing bare Hebrew via the Worker
+    tVocalize: 4000,    // ms budget: pointing bare Hebrew via the Worker
+    tNat: 16000         // ms budget: the on-demand "natural version" (70B model, can be slow cold)
   };
 
   // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
@@ -490,8 +491,64 @@
   // Config: the Cloudflare Worker that relays Dicta Nakdan (CORS-blocked in the browser) and
   // returns per-word vocalization + root (lemma). Point this at another deployment to move it.
   const MORPH_URL = 'https://ulpan-morph.olamcreations.workers.dev';
+  const NAT_URL = MORPH_URL + '/nat';
   const isHeb = s => /[֐-׿]/.test(s || '');
   const morphCache = new Map();
+  const natCache = new Map();
+
+  // --- Natural version (on-demand LLM layer) --------------------------------------
+  // Google Translate under the live translator gives literal calques on idiomatic phrases and
+  // gets register/gender wrong ("c'est ma professeure" -> masculine מורה). The Worker's /nat
+  // endpoint runs a 70B model that returns the idiomatic Hebrew a native actually says
+  // (זו מורתי). It's opt-in (a button, not every keystroke): the model is slow and the neuron
+  // budget is real. We take ONLY the model's consonantal Hebrew — its niqqud is patchy and its
+  // transliteration is wrong — then re-vocalize each option through the same Dicta + translit.js
+  // path as any other result, so the pointing and romanization stay from the trusted source.
+  function fetchNatural(q, signal) {
+    const key = 'n:' + q.toLowerCase();
+    if (natCache.has(key)) return Promise.resolve(natCache.get(key));
+    const run = fetch(NAT_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: q }), signal: signal
+    })
+      .then(r => { if (!r.ok) throw new Error('nat ' + r.status); return r.json(); })
+      .then(j => (j && j.options) || []);
+    return withTimeout(run, CFG.tNat).then(opts => {
+      const o = opts || [];
+      if (o.length) natCache.set(key, o);
+      return o;
+    });
+  }
+
+  function wireNat(container) {
+    container.querySelectorAll('.qs-nat-btn').forEach(b => {
+      if (b._wired) return; b._wired = true;
+      b.addEventListener('click', () => {
+        const wrap = b.closest('.qs-nat');
+        const out = wrap && wrap.querySelector('.qs-nat-out');
+        if (!out || b.classList.contains('loading')) return;
+        const q = b.dataset.q || '';
+        b.classList.add('loading'); b.textContent = 'Version naturelle…';
+        if (window.track) track('nat_used');
+        const sig = new AbortController().signal;
+        const fail = () => { out.innerHTML = '<div class="qs-hint">Version naturelle indisponible pour l’instant.</div>'; b.classList.remove('loading'); b.textContent = '✦ version naturelle'; };
+        fetchNatural(q, sig).then(opts => {
+          if (!opts || !opts.length) return fail();
+          // Strip the model's niqqud and re-point each option through Dicta + translit.js.
+          return Promise.all(opts.map(o => {
+            // en = the phrase the learner typed (the meaning — so Save stores it right); the
+            // French register note becomes the tag. Strip the model's niqqud; Dicta re-points it.
+            const res = { he: stripNiqqud(o.he), rm: null, en: q, cat: o.note ? ('✦ ' + o.note) : '✦ naturel' };
+            return withTimeout(vocalizeBare(res, sig), CFG.tVocalize).then(v => v || res);
+          })).then(cards => {
+            out.innerHTML = '<div class="qs-sub">Version naturelle</div>' + cards.map(c => card(c)).join('');
+            wirePlay(out);
+            b.style.display = 'none';
+          });
+        }).catch(fail);
+      });
+    });
+  }
 
   function fetchMorph(text, signal) {
     const key = 'm:' + text;
@@ -660,8 +717,17 @@
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
       if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
+      // On-demand "natural version": only for a translation query (not Hebrew-you-heard, where the
+      // learner already has the word). Idiomatic phrases are exactly where Google calques and this
+      // 70B layer earns its keep — but it's slow and metered, so it stays a button, not automatic.
+      if (!isHeb(nq)) {
+        html += '<div class="qs-nat">' +
+          '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">✦ version naturelle</button>' +
+          '<div class="qs-nat-out"></div></div>';
+      }
       container.innerHTML = html;
       wirePlay(container);
+      wireNat(container);
     });
   }
 
