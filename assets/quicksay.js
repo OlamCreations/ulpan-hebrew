@@ -404,7 +404,12 @@
         const voc = toks.map(t => t.sep ? (t.word || '') : (t.voc || t.word || '')).join('').replace(/\s+/g, ' ').trim();
         // Never let the Worker rewrite the answer: it may only ADD niqqud, never change letters.
         if (!voc || bare(voc) !== bare(res.he)) return res;
-        return Object.assign({}, res, { he: voc, tr: bestTranslit(voc, res.rm) });
+        // Clean Dicta's encoding before it reaches the screen, not only before transliteration.
+        // transliterate() folds this internally, so the romanization was always right while the
+        // Hebrew shown carried a stray meteg and a holam sitting on the consonant instead of the
+        // vav (בֹּוֽקֶר for בּוֹקֶר) — wrong for anyone learning to read niqqud, which is the point here.
+        const clean = (window.Translit && window.Translit.cleanDictaForDisplay) ? window.Translit.cleanDictaForDisplay(voc) : voc;
+        return Object.assign({}, res, { he: clean, tr: bestTranslit(clean, res.rm) });
       })
       .catch(() => res);   // offline / Dicta down -> keep Google's rm rather than nothing
   }
@@ -565,7 +570,10 @@
   // translit.js), meaning, and the root / dictionary form (√lemma) when it differs.
   function morphWordHtml(tok, gloss) {
     const prefs = window.QSPrefs;
-    const voc = tok.voc || tok.word || '';
+    const raw = tok.voc || tok.word || '';
+    // Same Dicta encoding cleanup as vocalizeBare: the breakdown is where a learner looks at the
+    // niqqud most closely, so it is the last place that should show the raw encoding.
+    const voc = (window.Translit && window.Translit.cleanDictaForDisplay) ? window.Translit.cleanDictaForDisplay(raw) : raw;
     const heShown = (!prefs || prefs.niqqud()) ? voc : stripNiqqud(voc);
     const cursive = (prefs && prefs.cursive())
       ? '<div class="mw-cursive" dir="rtl" lang="he">' + escapeHtml(stripNiqqud(voc)) + '</div>' : '';

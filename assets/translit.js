@@ -341,7 +341,31 @@
     });
   }
 
-  const api = { transliterate, spellNumber, spellNumbersInText };
+  /*
+   * The conservative subset of the fold above, safe to apply to Hebrew we SHOW.
+   *
+   * normalizeDicta itself must stay internal to transliterate(). Its qamats/qubuts rules cannot
+   * tell a mater lectionis from a consonantal vav, so they rewrite double-vav loanwords —
+   * שָׁווַרְמָה becomes שׁוֹוַרְמָה, וָואלָּה becomes ווֹאלָּה. Measured on 8956 verified strings from the
+   * phrasebook, the expressions and the lessons: 31 such rewrites. Harmless while the fold only
+   * ever fed romanization, corrupting the moment it reaches the screen.
+   *
+   * What IS safe to show:
+   *  - stripping the stray meteg (zero legitimate metegs in those same 8956 strings)
+   *  - moving a holam parked on the consonant onto the bare vav that follows it (בֹּוקֶר -> בּוֹקֶר)
+   *
+   * The bearer is matched as [א-הז-ת] — every Hebrew letter EXCEPT vav. Without that exclusion the
+   * rule re-matches the וֹ it just produced and folds it again on the next pass: not idempotent,
+   * and it eats the same double-vav words. Idempotence is asserted in tools/translit-test.cjs.
+   */
+  function cleanDictaForDisplay(s) {
+    if (!s) return s;
+    s = s.normalize('NFC').replace(/ֽ/g, '');
+    s = s.replace(/([א-הז-ת])([֑-ׇ]*)ֹ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-ת])/g, (_, c, a, b) => c + a + b + 'וֹ');
+    return s.normalize('NFC');
+  }
+
+  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.Translit = api;
 })(typeof window !== 'undefined' ? window : globalThis);
