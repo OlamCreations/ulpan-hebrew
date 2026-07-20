@@ -41,8 +41,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
+import { ROOT, lessonPages, reportPath } from './paths.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, '..');
 const NAKDAN = process.env.NAKDAN_URL || 'https://nakdan-u1-0.loadbalancer.dicta.org.il/api';
 const MIN_OPTIONS = 3;   // below this, Dicta is guessing at a word it does not know
 const BATCH = 24;        // words per Dicta call
@@ -72,7 +73,7 @@ const isForeignShape = (s) => /['"׳״\-–]/.test(s);
 
 async function lessonWords(only) {
   const files = only ? [only]
-    : (await readdir(ROOT)).filter((f) => /^\d+-.*\.html$/.test(f)).sort();
+    : await lessonPages();
   const seen = new Map();
   for (const f of files) {
     const src = await readFile(join(ROOT, f), 'utf8');
@@ -149,7 +150,7 @@ console.log(`FLAGGED (spelling in no option)  : ${flagged.length}` +
   (known ? `  (${(100 * flagged.length / known).toFixed(1)}% of known)` : ''));
 
 flagged.sort((a, b) => b.files.length - a.files.length);
-const out = join(ROOT, 'lesson-niqqud-report.json');
+const out = reportPath('lesson-niqqud-report.json');
 await writeFile(out, JSON.stringify({
   _note: 'Suspect lesson niqqud. FLAGGED = the shipped spelling matches NONE of Dicta\'s valid vocalizations for that skeleton, and Dicta knows the word. Review by hand before changing anything: Dicta is an oracle, not truth. Blind spot: context-dependent errors (חָבָל vs חֲבָל) are invisible to a per-word check.',
   generated: new Date().toISOString().slice(0, 10),

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cursive 01: The Handwritten Alphabet</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="../assets/style.css?v=1777896495151">
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>The Handwritten Alphabet</h1>
+    <div class="subtitle">Cursive 01 · כְּתָב יָד</div>
+  </div>
+  <div class="nav">
+    <a href="../index.html">Home</a>
+    <a href="cursive-001-letters-en.html" class="active">C1</a>
+    <a href="cursive-002-reading-en.html">C2</a>
+    <a href="cursive-003-real-en.html">C3</a>
+  </div>
+</header>
+
+<p class="intro">
+  Israelis do not handprint. The block letters you have learned (כְּתָב דְּפוּס, print) are for screens and books. By hand, a shopping list, a note on the fridge, a teacher at the whiteboard, a form you fill at the Misrad HaPnim, everyone writes in cursive (כְּתָב יָד, "hand script"). If you cannot read it, half of daily Hebrew stays closed to you. This lesson maps every print letter to its cursive twin. Same letter, same sound, different shape.
+</p>
+
+<div class="tip">
+  <strong>No stroke-order rules</strong>, Unlike Chinese or Japanese, Hebrew has no fixed stroke order, in print or cursive. There is a common way most people form each letter, but it varies person to person. The shapes below are the standard Ashkenazi cursive taught in Israeli schools. To write: copy the shape on paper, find a motion that feels natural, repeat.
+</div>
+
+<div class="tip">
+  <strong>The font is real handwriting</strong>, Every cursive letter on this page is rendered in KtavYadCLM, an actual Israeli handwriting typeface. What you see is what a neat Israeli hand looks like. Tap any card to hear the letter.
+</div>
+
+<div class="toolbar">
+  <button class="btn" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Go to recognition quiz ↓</button>
+</div>
+
+<h2>22 Letters: Print and Cursive</h2>
+<div class="cur-grid" id="letters-grid"></div>
+
+<h2>5 Final Forms (sofit): Print and Cursive</h2>
+<div class="cur-grid" id="finals-grid"></div>
+
+<div class="tip">
+  <strong>Final forms drop below the line</strong>, In cursive the sofit letters (ך ם ן ף ץ) are even clearer than in print: most send a long tail under the baseline. When you see a stroke dropping low at the end of a word, it is almost always a final letter.
+</div>
+
+<h2>Dangerous look-alikes</h2>
+<p class="intro" style="margin-bottom:8px">These are the pairs that trip up every reader of handwriting. Tap to hear each.</p>
+<div class="cur-grid" id="lookalikes-grid"></div>
+
+<hr class="section-divider">
+
+<h2>Read it: handwritten words</h2>
+<p class="intro" style="margin-bottom:8px">Words you already know, now in cursive. Read the handwriting first, then tap the row to reveal the print form and meaning, and hear it.</p>
+<div class="cur-read" id="read-drill"></div>
+
+<hr class="section-divider">
+
+<div class="quiz" id="quiz">
+  <div class="score" id="score">Score: 0/0</div>
+  <h2 style="margin-top:0">Recognition: Which letter is this?</h2>
+  <p style="color:var(--text-dim);font-size:13px;margin:0 0 4px">Shown in cursive. Pick the name.</p>
+  <div class="cur-quiz-glyph" id="quiz-glyph">?</div>
+  <div class="options" id="quiz-options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div style="margin-top:24px;">
+    <button class="btn btn-primary" onclick="newQuestion()">New question</button>
+    <button class="btn" onclick="resetQuiz()">Reset</button>
+  </div>
+</div>
+
+<footer>
+  Cursive 01 · 22 letters + 5 finals · <a href="cursive-002-reading-en.html" style="color:var(--accent)">Next: Reading handwriting →</a>
+</footer>
+
+</div>
+
+<script src="../assets/app.js?v=1777896495151"></script>
+<script>
+// he = the Unicode letter (rendered cursive via KtavYad font, print via serif font)
+const LETTERS = [
+  { he: 'א', name: 'Alef',   translit: "'",      hint: "reversed N, a curve meeting a slash" },
+  { he: 'ב', name: 'Bet',    translit: 'b / v',  hint: "like the digit 2" },
+  { he: 'ג', name: 'Gimel',  translit: 'g',      hint: "a curl that drops a short tail" },
+  { he: 'ד', name: 'Dalet',  translit: 'd',      hint: "a hook sitting over a stroke" },
+  { he: 'ה', name: 'He',     translit: 'h',      hint: "an arch with a separate floating left leg" },
+  { he: 'ו', name: 'Vav',    translit: 'v / o / u', hint: "one top-down stroke, near to print" },
+  { he: 'ז', name: 'Zayin',  translit: 'z',      hint: "a wavy stroke, like a script z" },
+  { he: 'ח', name: 'Chet',   translit: 'ch',     hint: "a rounded arch, like an n" },
+  { he: 'ט', name: 'Tet',    translit: 't',      hint: "a loop opening upward, like a G" },
+  { he: 'י', name: 'Yod',    translit: 'y / i',  hint: "a tiny comma up near the top" },
+  { he: 'כ', name: 'Kaf',    translit: 'k / kh', hint: "an open backwards c" },
+  { he: 'ל', name: 'Lamed',  translit: 'l',      hint: "a tall loop rising above the line" },
+  { he: 'מ', name: 'Mem',    translit: 'm',      hint: "like a script capital N" },
+  { he: 'נ', name: 'Nun',    translit: 'n',      hint: "a small J hook" },
+  { he: 'ס', name: 'Samech', translit: 's',      hint: "a closed round loop, like o" },
+  { he: 'ע', name: 'Ayin',   translit: "'",      hint: "two strokes meeting low, like a y" },
+  { he: 'פ', name: 'Pe',     translit: 'p / f',  hint: "a spiral curling inward" },
+  { he: 'צ', name: 'Tzadi',  translit: 'tz',     hint: "a script 3 with a tail" },
+  { he: 'ק', name: 'Kuf',    translit: 'k',      hint: "a loop with a long tail below the line" },
+  { he: 'ר', name: 'Resh',   translit: 'r',      hint: "one soft curved stroke" },
+  { he: 'ש', name: 'Shin',   translit: 'sh / s', hint: "an open loop, like a script e" },
+  { he: 'ת', name: 'Tav',    translit: 't',      hint: "a rounded top with a left foot" }
+];
+
+const FINALS = [
+  { he: 'ך', name: 'Khaf sofit',  translit: 'kh', hint: "open curve with a long tail dropping below" },
+  { he: 'ם', name: 'Mem sofit',   translit: 'm',  hint: "a fully closed loop (sits on the line)" },
+  { he: 'ן', name: 'Nun sofit',   translit: 'n',  hint: "a straight stroke dropping well below" },
+  { he: 'ף', name: 'Pe sofit',    translit: 'f',  hint: "a spiral with a tail descending below" },
+  { he: 'ץ', name: 'Tzadi sofit', translit: 'tz', hint: "a loop with a long curved descender" }
+];
+
+// confusion clusters: each item lists the letters that look alike in cursive
+const LOOKALIKES = [
+  { he: 'ו', name: 'Vav',  translit: 'v/o/u', hint: "short stroke ON the line" },
+  { he: 'ז', name: 'Zayin', translit: 'z',    hint: "vav but with a wave/head" },
+  { he: 'ן', name: 'Nun sofit', translit: 'n', hint: "vav but DROPS far below, a final" },
+  { he: 'ד', name: 'Dalet', translit: 'd',    hint: "hook over a flat stroke" },
+  { he: 'ר', name: 'Resh',  translit: 'r',    hint: "dalet without the top hook, softer" },
+  { he: 'ס', name: 'Samech', translit: 's',   hint: "round closed loop, on the line" },
+  { he: 'ם', name: 'Mem sofit', translit: 'm', hint: "samech but flatter / more closed" },
+  { he: 'ב', name: 'Bet',   translit: 'b/v',  hint: "a 2 with a clear base" },
+  { he: 'כ', name: 'Kaf',   translit: 'k/kh', hint: "open c, no base, easy to confuse with bet" }
+];
+
+const READ_WORDS = [
+  { he: 'שָׁלוֹם', translit: 'shalom', fr: 'hello / peace' },
+  { he: 'תּוֹדָה',  translit: 'toda',   fr: 'thank you' },
+  { he: 'כֵּן',     translit: 'ken',    fr: 'yes' },
+  { he: 'אַבָּא',   translit: 'aba',    fr: 'dad' },
+  { he: 'מַיִם',    translit: 'mayim',  fr: 'water' },
+  { he: 'בַּיִת',   translit: 'bayit',  fr: 'house' },
+  { he: 'סֵפֶר',    translit: 'sefer',  fr: 'book' },
+  { he: 'יְרוּשָׁלַיִם', translit: 'yerushalayim', fr: 'Jerusalem' }
+];
+
+function renderCurGrid(elementId, items) {
+  const grid = document.getElementById(elementId);
+  items.forEach(l => {
+    const card = document.createElement('div');
+    card.className = 'cur-card';
+    card.innerHTML = `
+      <div class="cc-listen">▶</div>
+      <div class="cc-cursive">${l.he}</div>
+      <div class="cc-print">${l.he}</div>
+      <div class="cc-name">${l.name}</div>
+      <div class="cc-translit">${l.translit}</div>
+      <div class="cc-hint">${l.hint}</div>
+    `;
+    card.addEventListener('click', () => speak(l.he, 0.7));
+    grid.appendChild(card);
+  });
+}
+
+renderCurGrid('letters-grid', LETTERS);
+renderCurGrid('finals-grid', FINALS);
+renderCurGrid('lookalikes-grid', LOOKALIKES);
+
+// handwriting carries no niqqud, strip vowel points/cantillation for cursive display
+const bare = s => s.replace(/[֑-ׇ]/g, '');
+
+// reading drill
+const readDrill = document.getElementById('read-drill');
+READ_WORDS.forEach(w => {
+  const row = document.createElement('div');
+  row.className = 'cur-read-row';
+  row.innerHTML = `
+    <div class="crr-cursive">${bare(w.he)}</div>
+    <div class="crr-print">${w.he}</div>
+    <div class="crr-fr">${w.translit} · ${w.fr}</div>
+    <button class="btn icon-btn" title="Listen" aria-label="Listen">▶</button>
+  `;
+  row.addEventListener('click', () => { row.classList.add('revealed'); speak(w.he, 0.8); });
+  row.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); row.classList.add('revealed'); speak(w.he, 0.8); });
+  readDrill.appendChild(row);
+});
+
+// recognition quiz, show cursive glyph, pick the name
+const ALL = [...LETTERS, ...FINALS];
+let quizScore = { correct: 0, total: 0 };
+let currentQuestion = null;
+
+function newQuestion() {
+  const target = ALL[Math.floor(Math.random() * ALL.length)];
+  currentQuestion = target;
+  let options = [target];
+  while (options.length < 4) {
+    const cand = ALL[Math.floor(Math.random() * ALL.length)];
+    if (!options.find(o => o.name === cand.name)) options.push(cand);
+  }
+  options = shuffle(options);
+
+  document.getElementById('quiz-glyph').textContent = target.he;
+  const opts = document.getElementById('quiz-options');
+  opts.innerHTML = '';
+  options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = o.name;
+    btn.onclick = () => answer(o, btn);
+    opts.appendChild(btn);
+  });
+  document.getElementById('feedback').textContent = '';
+  speak(target.he, 0.7);
+}
+
+function answer(option, btn) {
+  quizScore.total++;
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  if (option.name === currentQuestion.name) {
+    quizScore.correct++;
+    btn.classList.add('correct');
+    document.getElementById('feedback').textContent =
+      `Correct, ${currentQuestion.name} (${currentQuestion.translit}). ${currentQuestion.hint}.`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-option').forEach(b => {
+      if (b.textContent === currentQuestion.name) b.classList.add('correct');
+    });
+    document.getElementById('feedback').textContent =
+      `Not quite, it was ${currentQuestion.name} (${currentQuestion.translit}). ${currentQuestion.hint}.`;
+  }
+  document.getElementById('score').textContent = `Score: ${quizScore.correct}/${quizScore.total}`;
+  if (quizScore.total >= 10 && quizScore.correct / quizScore.total >= 0.7) {
+    markLessonDone('cursive-001');
+  }
+}
+
+function resetQuiz() {
+  quizScore = { correct: 0, total: 0 };
+  document.getElementById('score').textContent = 'Score: 0/0';
+  newQuestion();
+}
+
+newQuestion();
+
+addMiniQuiz('Cursive, concepts', [
+  { q: 'When do Israelis use cursive (ktav yad) instead of print?', options: ['Only in religious texts', 'Almost all handwriting, notes, lists, forms, the whiteboard', 'Only on official documents', 'Never anymore'], answer: 1, explain: 'Print is for screens and books; the hand writes cursive.' },
+  { q: 'Is there a strict stroke order in Hebrew cursive?', options: ['Yes, like Chinese', 'No fixed rule, a common way with personal variation', 'Yes, set by the Academy of the Hebrew Language', 'Only for final letters'], answer: 1, explain: 'There is a usual way to form each letter, but no enforced order.' },
+  { q: 'Does the cursive form change the sound of a letter?', options: ['Yes', 'No, same letter, same sound, different shape', 'Only for ש', 'Only for the finals'], answer: 1 },
+  { q: 'The cursive ב (bet) looks most like…', options: ['the letter o', 'the digit 2', 'a straight line', 'a triangle'], answer: 1 },
+  { q: 'A stroke that drops well below the baseline at the END of a word is usually…', options: ['a vav', 'a yod', 'a final letter (sofit)', 'a mistake'], answer: 2, explain: 'ך ן ף ץ send a tail below the line.' },
+  { q: 'Which pair is easiest to confuse in cursive?', options: ['Vav ו and Nun-sofit ן (both vertical, but the final drops far below)', 'Alef and Tav', 'Shin and Lamed', 'He and Kuf'], answer: 0 }
+]);
+</script>
+
+</body>
+</html>

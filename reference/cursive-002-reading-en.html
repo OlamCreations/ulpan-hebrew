@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cursive 02: Reading Handwriting</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="../assets/style.css?v=1777896495151">
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Reading Handwriting</h1>
+    <div class="subtitle">Cursive 02 · לִקְרֹא כְּתָב יָד</div>
+  </div>
+  <div class="nav">
+    <a href="../index.html">Home</a>
+    <a href="cursive-001-letters-en.html">C1</a>
+    <a href="cursive-002-reading-en.html" class="active">C2</a>
+    <a href="cursive-003-real-en.html">C3</a>
+  </div>
+</header>
+
+<p class="intro">
+  Knowing the 27 shapes is not yet reading. Reading is fast, and a few letters look almost identical in a hurried hand. This lesson drills the confusion clusters that cause every misread, then has you read whole words and phrases in cursive. Tap to reveal print and meaning, and to hear it.
+</p>
+
+<h2>The confusion clusters</h2>
+<p class="intro" style="margin-bottom:8px">Each box is a group of letters that look alike in cursive. Read the "tell them apart" cue, it is the single feature that separates them. Tap any letter to hear it.</p>
+<div id="clusters"></div>
+
+<hr class="section-divider">
+
+<h2>Which word is it?</h2>
+<p class="intro" style="margin-bottom:8px">A handwritten word, four choices. Read it, then pick the meaning.</p>
+<div class="quiz" id="wordquiz">
+  <div class="score" id="wq-score">Score: 0/0</div>
+  <div class="cur-quiz-glyph" id="wq-word" style="font-size:72px">?</div>
+  <div class="options" id="wq-options"></div>
+  <div class="feedback" id="wq-feedback"></div>
+  <div style="margin-top:20px;">
+    <button class="btn btn-primary" onclick="wqNew()">New word</button>
+    <button class="btn" onclick="wqReset()">Reset</button>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<h2>Read the phrases</h2>
+<p class="intro" style="margin-bottom:8px">Everyday phrases in cursive. Read first, then tap to reveal print, transliteration, meaning, and hear it.</p>
+<div class="cur-read" id="phrase-drill"></div>
+
+<hr class="section-divider">
+
+<h2>Read the sentences</h2>
+<p class="intro" style="margin-bottom:8px">Now full sentences. Same drill, read the handwriting before you reveal.</p>
+<div class="cur-read" id="sentence-drill"></div>
+
+<footer>
+  Cursive 02 · look-alikes + reading · <a href="cursive-003-real-en.html" style="color:var(--accent)">Next: Real handwritten Hebrew →</a>
+</footer>
+
+</div>
+
+<script src="../assets/app.js?v=1777896495151"></script>
+<script>
+// handwriting carries no niqqud, strip vowel points/cantillation for cursive display
+const bare = s => s.replace(/[֑-ׇ]/g, '');
+
+// confusion clusters, letters that look alike in cursive + the distinguishing cue
+const CLUSTERS = [
+  { title: 'Vertical strokes', tell: 'Length and tail decide. Vav sits on the line; zayin adds a head; final nun drops far below.',
+    letters: [ {he:'ו',name:'Vav',t:'v/o/u'}, {he:'ז',name:'Zayin',t:'z'}, {he:'ן',name:'Nun sofit',t:'n (final)'} ] },
+  { title: 'Hook over a stroke', tell: 'Dalet has a top hook (a corner). Resh is the same stroke but smooth, no hook.',
+    letters: [ {he:'ד',name:'Dalet',t:'d'}, {he:'ר',name:'Resh',t:'r'} ] },
+  { title: 'Open curves with a base', tell: 'Bet closes with a flat base on the line. Kaf stays open, no base.',
+    letters: [ {he:'ב',name:'Bet',t:'b/v'}, {he:'כ',name:'Kaf',t:'k/kh'} ] },
+  { title: 'Closed loops', tell: 'Samech is a full round loop. Final mem is flatter and squarer. Tet opens at the top.',
+    letters: [ {he:'ס',name:'Samech',t:'s'}, {he:'ם',name:'Mem sofit',t:'m (final)'}, {he:'ט',name:'Tet',t:'t'} ] },
+  { title: 'Arches', tell: 'He has a detached floating left leg. Chet is one solid arch. Tav adds a foot kicking left.',
+    letters: [ {he:'ה',name:'He',t:'h'}, {he:'ח',name:'Chet',t:'ch'}, {he:'ת',name:'Tav',t:'t'} ] },
+  { title: 'Tails below the line', tell: 'These all dive under the baseline, a strong signal they are kuf or a final letter.',
+    letters: [ {he:'ק',name:'Kuf',t:'k'}, {he:'ך',name:'Khaf sofit',t:'kh'}, {he:'ף',name:'Pe sofit',t:'f'}, {he:'ץ',name:'Tzadi sofit',t:'tz'} ] }
+];
+
+const clustersEl = document.getElementById('clusters');
+CLUSTERS.forEach(c => {
+  const box = document.createElement('div');
+  box.className = 'tip';
+  box.style.marginBottom = '14px';
+  const cells = c.letters.map(l =>
+    `<span class="cl-letter" data-he="${l.he}" style="cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;margin:0 14px;">
+       <span class="ktav" style="font-size:52px;line-height:1">${l.he}</span>
+       <span style="font-size:12px;color:var(--text-dim)">${l.name} · ${l.t}</span>
+     </span>`).join('');
+  box.innerHTML = `<strong>${c.title}</strong><div style="display:flex;flex-wrap:wrap;align-items:flex-end;margin:10px 0">${cells}</div><div style="font-size:13px;color:var(--text-dim)">Tell them apart, ${c.tell}</div>`;
+  clustersEl.appendChild(box);
+  box.querySelectorAll('.cl-letter').forEach(s => s.addEventListener('click', () => speak(s.dataset.he, 0.6)));
+});
+
+// word bank for "which word is it"
+const WORDS = [
+  { he: 'שָׁלוֹם', t: 'shalom', fr: 'hello / peace' },
+  { he: 'תּוֹדָה',  t: 'toda',   fr: 'thank you' },
+  { he: 'בְּבַקָּשָׁה', t: 'bevakasha', fr: 'please / you are welcome' },
+  { he: 'אֹכֶל',    t: 'ochel',  fr: 'food' },
+  { he: 'מַיִם',    t: 'mayim',  fr: 'water' },
+  { he: 'כֶּסֶף',   t: 'kesef',  fr: 'money' },
+  { he: 'בַּיִת',   t: 'bayit',  fr: 'house' },
+  { he: 'רְחוֹב',   t: 'rechov', fr: 'street' },
+  { he: 'חָבֵר',    t: 'chaver', fr: 'friend' },
+  { he: 'עֲבוֹדָה', t: 'avoda',  fr: 'work' },
+  { he: 'אֹטוֹבּוּס', t: 'otobus', fr: 'bus' },
+  { he: 'מִשְׂרָד', t: 'misrad', fr: 'office' }
+];
+
+let wqScore = { correct: 0, total: 0 };
+let wqCurrent = null;
+function wqNew() {
+  wqCurrent = WORDS[Math.floor(Math.random() * WORDS.length)];
+  let opts = [wqCurrent];
+  while (opts.length < 4) {
+    const c = WORDS[Math.floor(Math.random() * WORDS.length)];
+    if (!opts.find(o => o.fr === c.fr)) opts.push(c);
+  }
+  opts = shuffle(opts);
+  document.getElementById('wq-word').textContent = bare(wqCurrent.he);
+  const box = document.getElementById('wq-options');
+  box.innerHTML = '';
+  opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'quiz-option';
+    b.textContent = o.fr;
+    b.onclick = () => wqAnswer(o, b);
+    box.appendChild(b);
+  });
+  document.getElementById('wq-feedback').textContent = '';
+  speak(wqCurrent.he, 0.75);
+}
+function wqAnswer(o, b) {
+  wqScore.total++;
+  document.querySelectorAll('#wq-options .quiz-option').forEach(x => x.disabled = true);
+  if (o.fr === wqCurrent.fr) {
+    wqScore.correct++;
+    b.classList.add('correct');
+    document.getElementById('wq-feedback').textContent = `Correct, ${wqCurrent.he} (${wqCurrent.t}) = ${wqCurrent.fr}`;
+  } else {
+    b.classList.add('wrong');
+    document.querySelectorAll('#wq-options .quiz-option').forEach(x => { if (x.textContent === wqCurrent.fr) x.classList.add('correct'); });
+    document.getElementById('wq-feedback').textContent = `It was ${wqCurrent.he} (${wqCurrent.t}) = ${wqCurrent.fr}`;
+  }
+  document.getElementById('wq-score').textContent = `Score: ${wqScore.correct}/${wqScore.total}`;
+  if (wqScore.total >= 10 && wqScore.correct / wqScore.total >= 0.7) markLessonDone('cursive-002');
+}
+function wqReset() { wqScore = { correct: 0, total: 0 }; document.getElementById('wq-score').textContent = 'Score: 0/0'; wqNew(); }
+wqNew();
+
+// reveal drill builder
+function buildDrill(elId, items) {
+  const el = document.getElementById(elId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'cur-read-row';
+    row.innerHTML = `
+      <div class="crr-cursive">${bare(w.he)}</div>
+      <div class="crr-print">${w.he}</div>
+      <div class="crr-fr">${w.t} · ${w.fr}</div>
+      <button class="btn icon-btn" title="Listen" aria-label="Listen">▶</button>
+    `;
+    row.addEventListener('click', () => { row.classList.add('revealed'); speak(w.he, 0.85); });
+    row.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); row.classList.add('revealed'); speak(w.he, 0.85); });
+    el.appendChild(row);
+  });
+}
+
+const PHRASES = [
+  { he: 'מָה שְׁלוֹמְךָ?', t: 'ma shlomcha?', fr: 'how are you? (to a man)' },
+  { he: 'אֲנִי לֹא יוֹדֵעַ', t: 'ani lo yodea', fr: "I don't know" },
+  { he: 'כַּמָּה זֶה עוֹלֶה?', t: 'kama ze ole?', fr: 'how much does it cost?' },
+  { he: 'אֵיפֹה הַשֵּׁרוּתִים?', t: 'eyfo hasherutim?', fr: 'where is the bathroom?' },
+  { he: 'רֶגַע אֶחָד', t: 'rega echad', fr: 'one moment' },
+  { he: 'אֵין בְּעָיָה', t: 'eyn beaya', fr: 'no problem' }
+];
+buildDrill('phrase-drill', PHRASES);
+
+const SENTENCES = [
+  { he: 'אֲנִי גָּר בְּתֵל אָבִיב וְלוֹמֵד עִבְרִית', t: 'ani gar be-Tel Aviv ve-lomed ivrit', fr: 'I live in Tel Aviv and study Hebrew' },
+  { he: 'מָחָר אֲנִי הוֹלֵךְ לָעֲבוֹדָה', t: 'machar ani holech la-avoda', fr: 'tomorrow I go to work' },
+  { he: 'יֵשׁ לְךָ דַּקָּה לְדַבֵּר?', t: 'yesh lecha daka ledaber?', fr: 'do you have a minute to talk?' },
+  { he: 'הָאֹטוֹבּוּס מַגִּיעַ בְּעוֹד עֶשֶׂר דַּקּוֹת', t: 'ha-otobus magia be-od eser dakot', fr: 'the bus arrives in ten minutes' }
+];
+buildDrill('sentence-drill', SENTENCES);
+
+addMiniQuiz('Reading cursive, check', [
+  { q: 'In cursive, the difference between Dalet ד and Resh ר is…', options: ['the size', 'Dalet has a top hook/corner, Resh is smooth', 'Resh has a tail below', 'they are identical'], answer: 1 },
+  { q: 'A vertical stroke that drops far below the baseline is most likely…', options: ['a vav', 'a yod', 'a final nun ן', 'a dalet'], answer: 2 },
+  { q: 'Bet ב vs Kaf כ, the giveaway is…', options: ['Bet has a flat base, Kaf is open', 'Kaf has niqqud', 'Bet is taller', 'no difference'], answer: 0 },
+  { q: 'Reading speed comes from…', options: ['memorizing each letter slowly forever', 'recognizing whole word shapes, not single letters', 'reading right to left only', 'using niqqud'], answer: 1, explain: 'Like in any script, fluent readers see word shapes.' },
+  { q: 'Handwritten Hebrew normally has…', options: ['full niqqud', 'no niqqud (you infer vowels from context)', 'niqqud only on verbs', 'English subtitles'], answer: 1 }
+]);
+</script>
+
+</body>
+</html>

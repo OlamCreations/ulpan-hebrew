@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 3: מִזְמוֹר לְדָוִד</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<style>
+  /* Tehilim, chant-friendly verse layout */
+  .t-intro {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 28px;
+    margin-bottom: 24px;
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .t-intro strong { color: var(--text); }
+
+  .t-chord {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-dim);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 32px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .t-chord .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .t-chord .label {
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: -apple-system, 'Inter', sans-serif;
+  }
+  .t-chord .progression {
+    color: var(--text);
+    font-size: 16px;
+    letter-spacing: 2px;
+    line-height: 1.6;
+  }
+  .t-chord .meta-line { font-size: 12px; margin-top: 8px; color: var(--text-faint); font-family: -apple-system, 'Inter', sans-serif; }
+  .t-chord .tuning-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 12px;
+  }
+  .t-chord .tuning-row .tuning-label {
+    color: var(--accent);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .t-chord .tuning-row select, .t-chord .tuning-row input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+  }
+  .t-chord .tuning-row select:hover, .t-chord .tuning-row select:focus,
+  .t-chord .tuning-row input:hover, .t-chord .tuning-row input:focus { border-color: var(--accent); }
+  .t-chord .tuning-row input { width: 130px; cursor: text; }
+  .t-chord .tuning-row .tuning-current {
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-left: auto;
+  }
+
+  .t-tuning {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  .t-tuning .tuning-label {
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .t-tuning select, .t-tuning input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .t-tuning select:hover, .t-tuning input:hover, .t-tuning select:focus, .t-tuning input:focus {
+    border-color: var(--accent);
+  }
+  .t-tuning input { width: 160px; cursor: text; }
+  .t-tuning .tuning-current {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-left: auto;
+  }
+
+  .link-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .link-btn:hover { color: var(--accent); }
+
+  /* Active voicings panel */
+  .active-voicings {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 32px;
+  }
+  .active-voicings .av-title {
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .active-voicings .av-hint {
+    color: var(--text-faint);
+    font-size: 11px;
+    margin-top: 12px;
+    font-style: italic;
+  }
+  .voicings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  .voicing-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 8px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .voicing-card:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+  .voicing-card .voicing-name {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+  }
+  .voicing-card .voicing-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 110px;
+  }
+  .voicing-card .voicing-diagram svg { max-width: 110px; height: auto; }
+  .voicing-card .voicing-label {
+    color: var(--text-dim);
+    font-size: 10px;
+    margin-top: 4px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .voicing-card .voicing-empty {
+    color: var(--text-faint);
+    font-size: 10px;
+    padding: 32px 4px;
+  }
+  .voicing-card { position: relative; }
+  .voicing-unpin {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0 0 1px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    opacity: 0;
+    z-index: 2;
+  }
+  .voicing-card:hover .voicing-unpin { opacity: 1; }
+  .voicing-unpin:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+  /* ★ pin star inside popup */
+  .chord-tooltip .tt-pin {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+  .chord-tooltip .tt-pin:hover { color: #fbbf24; border-color: #fbbf24; }
+  .chord-tooltip .tt-pin.pinned { color: #fbbf24; border-color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+
+  /* Print styles, print EVERYTHING (full HTML page), just recolor for paper */
+  @media print {
+    @page { margin: 10mm; }
+    body { background: #fff !important; color: #000 !important; padding: 0 !important; font-size: 11pt; }
+    .container { max-width: 100% !important; padding: 0 !important; }
+    /* Hide only truly UI-only chrome that has no value on paper */
+    .chord-tooltip, #print-btn { display: none !important; }
+    .back { display: none !important; }
+    /* Recolor cards/blocks to white-on-black-text */
+    .t-intro, .t-chord, .active-voicings, .verse, .voicing-card, .chant-tip {
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #aaa !important;
+      box-shadow: none !important;
+      page-break-inside: avoid;
+    }
+    .verse, .active-voicings, .voicing-card { page-break-inside: avoid; }
+    .verse { margin-bottom: 14px; padding: 14px 16px; }
+    .verse-num { color: #000 !important; border-color: #000 !important; background: #f0f0f0 !important; }
+    .verse-full { color: #000 !important; border-color: #888 !important; }
+    .word .he { color: #000 !important; }
+    .word .tr { color: #444 !important; }
+    .word .tr b { color: #000 !important; }
+    .word .fr { color: #555 !important; }
+    .stich-translation { color: #444 !important; border-color: #888 !important; }
+    .verse-summary { background: #f7f7f7 !important; border-color: #888 !important; color: #000 !important; }
+    .verse-summary strong { color: #000 !important; }
+    .label, .av-title, .voicing-name, .verse-num, .tuning-label, .meta-line, .chant-tip h3 { color: #000 !important; }
+    .meta-line, .av-hint, .chant-tip { color: #333 !important; }
+    .chant-tip ul li { color: #000 !important; }
+    .tuning-row select, .tuning-row input { background: #fff !important; color: #000 !important; border-color: #888 !important; }
+    .progression { color: #000 !important; }
+    .progression .chord { color: #000 !important; border-bottom: 1px dotted #444; background: transparent !important; }
+    /* Voicing-card unpin × not useful on paper */
+    .voicing-unpin { display: none !important; }
+    /* Convert green SVG elements to black/grey for print */
+    svg text { fill: #000 !important; }
+    svg line { stroke: #555 !important; }
+    svg rect[fill="#4A9EDB"], svg rect[fill="#ccc"] { fill: #444 !important; }
+    svg circle[fill="#4A9EDB"] { fill: #000 !important; stroke: #000 !important; }
+    svg circle[stroke="#4A9EDB"] { stroke: #000 !important; }
+    h1 { color: #000 !important; font-size: 18pt; }
+    .subtitle { color: #444 !important; }
+    a { color: #000 !important; text-decoration: none !important; }
+    header { border-bottom: 1px solid #000 !important; }
+    .nav { display: none !important; }
+  }
+
+  .verse {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px 28px 26px;
+    margin-bottom: 28px;
+  }
+  .verse-num {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent-dim);
+    border-radius: 50px;
+    padding: 4px 12px;
+    margin-bottom: 18px;
+  }
+
+  .verse-full {
+    font-family: 'Frank Ruhl Libre', 'David', 'David CLM', serif;
+    direction: rtl;
+    font-size: 30px;
+    line-height: 1.7;
+    text-align: right;
+    color: var(--text);
+    margin-bottom: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .stich {
+    margin-bottom: 22px;
+  }
+  .stich:last-of-type { margin-bottom: 14px; }
+
+  .stich-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px 28px;
+    direction: rtl;
+    margin-bottom: 10px;
+  }
+
+  .word {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    direction: rtl;
+    min-width: 40px;
+  }
+  .word .he {
+    font-family: 'Frank Ruhl Libre', 'David', serif;
+    font-size: 30px;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 4px;
+    direction: rtl;
+  }
+  .word .tr {
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+    direction: ltr;
+    margin-bottom: 4px;
+  }
+  .word .tr b { color: #fff; font-weight: 700; }
+  html.light .word .tr b { color: #000; }
+  .word .fr {
+    font-size: 13px;
+    color: var(--text-dim);
+    direction: ltr;
+    font-style: italic;
+    line-height: 1.3;
+    max-width: 130px;
+  }
+
+  .stich-translation {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-style: italic;
+    padding-right: 12px;
+    border-right: 2px solid var(--accent-dim);
+    margin-top: 14px;
+    line-height: 1.5;
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: plaintext;
+  }
+
+  .verse-summary {
+    background: rgba(74, 158, 219, 0.05);
+    border-right: 3px solid var(--accent);
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    border-radius: 4px 0 0 4px;
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: plaintext;
+  }
+  .verse-summary strong { color: var(--accent); }
+
+  .chant-tip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 28px;
+    margin-top: 32px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+  .chant-tip h3 { color: var(--text); margin-bottom: 12px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+  .chant-tip ul { padding-left: 22px; margin-top: 10px; }
+  .chant-tip li { margin-bottom: 6px; }
+
+  /* Chord hover tooltips with fretboard diagram */
+  .chord {
+    cursor: help;
+    color: var(--accent);
+    border-bottom: 1px dotted var(--accent-dim);
+    font-weight: 700;
+    padding: 0 2px;
+    transition: all 0.15s;
+  }
+  .chord:hover {
+    color: #fff;
+    background: rgba(74, 158, 219, 0.18);
+    border-bottom-color: var(--accent);
+    border-radius: 3px;
+  }
+  html.light .chord:hover { color: #000; }
+
+  .chord-tooltip {
+    position: absolute;
+    background: #0a0a0a;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 14px 10px;
+    z-index: 1000;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(74, 158, 219, 0.15);
+    font-family: -apple-system, 'Inter', sans-serif;
+    pointer-events: auto;
+    width: 240px;
+    box-sizing: border-box;
+  }
+  html.light .chord-tooltip { background: #fff; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18); }
+  .chord-tooltip .tt-name {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chord-tooltip svg { display: block; margin: 0 auto; }
+  .chord-tooltip .tt-fretboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  .chord-tooltip .tt-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .chord-tooltip .tt-arrow {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 0 2px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-family: -apple-system, 'Inter', sans-serif;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .chord-tooltip .tt-arrow:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+  .chord-tooltip .tt-arrow:active { transform: scale(0.92); }
+  .chord-tooltip .tt-pos {
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    flex-grow: 1;
+    text-align: center;
+  }
+  .chord-tooltip .tt-dots {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .chord-tooltip .tt-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .chord-tooltip .tt-dot:hover { background: var(--text-dim); }
+  .chord-tooltip .tt-dot.active { background: var(--accent); }
+
+  /* Tuning bar inside tooltip */
+  .chord-tooltip .tt-tuning {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .chord-tooltip .tt-tuning select {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 11px;
+    outline: none;
+    cursor: pointer;
+  }
+  .chord-tooltip .tt-tuning select:hover, .chord-tooltip .tt-tuning select:focus {
+    border-color: var(--accent);
+  }
+  .chord-tooltip .tt-tuning input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--accent-dim);
+    color: var(--text);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 11px;
+    outline: none;
+  }
+  .chord-tooltip .tt-tuning input:focus { border-color: var(--accent); }
+  .chord-tooltip .tt-tuning .tt-tuning-label {
+    color: var(--accent);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* Action buttons row */
+  .chord-tooltip .tt-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .chord-tooltip .tt-action-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 11px;
+    transition: all 0.15s;
+  }
+  .chord-tooltip .tt-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .chord-tooltip .tt-action-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(74, 158, 219, 0.1); }
+
+  /* Custom voicing form */
+  .chord-tooltip .tt-add-form {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chord-tooltip .tt-add-form input {
+    background: var(--bg);
+    border: 1px solid var(--accent-dim);
+    color: var(--text);
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+  .chord-tooltip .tt-add-form input:focus { border-color: var(--accent); }
+  .chord-tooltip .tt-add-form .tt-form-label {
+    color: var(--text-faint);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+  .chord-tooltip .tt-add-form .tt-form-buttons {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .chord-tooltip .tt-add-form button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 11px;
+    transition: all 0.15s;
+  }
+  .chord-tooltip .tt-add-form button.save { color: var(--accent); border-color: var(--accent); }
+  .chord-tooltip .tt-add-form button:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  /* Custom voicing badge in name */
+  .chord-tooltip .tt-name .tt-custom-badge {
+    color: #fbbf24;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+  .chord-tooltip .tt-delete-btn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 6px;
+    margin-top: 4px;
+    border-radius: 3px;
+    text-align: center;
+    width: 100%;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+  .chord-tooltip .tt-delete-btn:hover { opacity: 1; background: rgba(239, 68, 68, 0.1); }
+
+  /* Harmonic panel */
+  .chord-tooltip .tt-harm-panel {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chord-tooltip .tt-harm-tabs {
+    display: flex;
+    gap: 3px;
+  }
+  .chord-tooltip .tt-harm-tab {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    padding: 4px 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 10px;
+    transition: all 0.15s;
+  }
+  .chord-tooltip .tt-harm-tab:hover { color: var(--accent); border-color: var(--accent-dim); }
+  .chord-tooltip .tt-harm-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(74, 158, 219, 0.1); }
+  .chord-tooltip .tt-harm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .chord-tooltip .tt-harm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: -apple-system, 'Inter', sans-serif;
+    font-size: 11px;
+    transition: all 0.15s;
+    text-align: left;
+  }
+  .chord-tooltip .tt-harm-item:hover { background: rgba(74, 158, 219, 0.1); border-color: var(--accent); }
+  .chord-tooltip .tt-harm-item .h-chord {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .chord-tooltip .tt-harm-item .h-label {
+    color: var(--text-faint);
+    font-size: 10px;
+  }
+
+  /* Wider tooltip for popup-tuning UI */
+  .chord-tooltip { width: 280px; }
+
+  /* Close X button */
+  .chord-tooltip .tt-close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 0 1px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    z-index: 2;
+  }
+  .chord-tooltip .tt-close:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+  /* Interactive fretboard editor */
+  .fret-editor {
+    margin: 10px auto 0;
+    user-select: none;
+  }
+  .fret-editor svg { cursor: pointer; }
+  .fret-editor .edit-cell rect { fill: transparent; transition: fill 0.1s; }
+  .fret-editor .edit-cell:hover rect { fill: rgba(74, 158, 219, 0.15); }
+  .fret-editor .edit-toggle rect { transition: fill 0.1s; }
+  .fret-editor .edit-toggle:hover rect { fill: rgba(74, 158, 219, 0.2); }
+  .fret-editor .edit-toggle.active rect { fill: var(--accent); }
+
+  @media (max-width: 600px) {
+    .verse-full { font-size: 24px; }
+    .word .he { font-size: 24px; }
+    .stich-words { gap: 16px 18px; }
+  }
+
+  /* Compact one-screen layout, verses in 3 RTL columns, no full Hebrew block, no per-verse summary (moved to PARDES card) */
+  .verse-full { display: none; }
+
+  .verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+  .verses-grid .verse-summary { display: none; }  /* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+  /* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .verses-grid .stich { margin-bottom: 10px; }
+  .verses-grid .stich:last-of-type { margin-bottom: 4px; }
+  .verses-grid .stich-words {
+    gap: 8px 12px;
+    margin-bottom: 6px;
+  }
+  .verses-grid .word { min-width: 32px; }
+  .verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  .verses-grid .word .tr {
+    font-size: 11px;
+    margin-bottom: 2px;
+    letter-spacing: 0.2px;
+  }
+  .verses-grid .word .fr {
+    font-size: 11px;
+    line-height: 1.25;
+    max-width: 100px;
+  }
+  .verses-grid .stich-translation {
+    font-size: 12px;
+    line-height: 1.4;
+    padding-right: 8px;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+  @media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+
+  /* PARDES analysis card */
+  .pardes-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 30px;
+    margin-top: 28px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+  .pardes-card > h3 {
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .pardes-card .pardes-intro {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-faint);
+    margin-bottom: 20px;
+  }
+  .pardes-level {
+    border-left: 2px solid var(--accent-dim);
+    padding-left: 14px;
+    margin-bottom: 18px;
+    text-align: justify;
+    direction: ltr;
+    unicode-bidi: plaintext;
+  }
+  .pardes-level:last-child { margin-bottom: 0; }
+  .pardes-level h4 {
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .pardes-level p { margin: 0; }
+  .pardes-level strong { color: var(--text); }
+  .pardes-level em { color: var(--text); font-style: italic; }
+</style>
+
+<body><div class="container">
+
+<a href="../index.html" class="back">← Retour aux leçons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 3: L'Éternel est un bouclier autour de moi</h1>
+    <div class="subtitle">תְּהִלִּים ג · מִזְמוֹר לְדָוִד</div>
+  </div>
+  <div class="nav"><a href="../index.html">Accueil</a><a href="#" class="active">Ps 3</a></div>
+</header>
+
+<div class="t-intro">
+  Premier psaume doté d'une <strong>suscription</strong> : un psaume du matin, David fuyant son propre fils Absalom. Les ennemis se multiplient de tous côtés, et pourtant le psalmiste se couche, dort et se réveille sans crainte, car l'Éternel est un <em>bouclier</em> autour de lui. Neuf versets qui passent de la menace (v.2-3) à la confiance (v.4-7), puis à un cri de délivrance et une bénédiction finale sur le peuple (v.8-9). Récité dans certains rites au réveil, comme le psaume de ceux qui, encerclés, dorment quand même.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Suggestion guitare, survole un accord pour explorer ou modifier</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Accordage</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ ton plus bas (Eb…)</option>
+      <option value="full-down">1 ton plus bas (D G C F A D)</option>
+      <option value="custom">Personnalisé…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="ex: D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · arpège doux pouce-index-majeur · une mesure par stique, deux mesures par verset · pour réinitialiser la progression : <button id="prog-reset" class="link-btn" type="button">↺ remettre par défaut</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Doigtés actifs · imprimable
+    <button id="print-btn" class="link-btn" type="button">🖶 imprimer</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">Le doigté affiché par accord est celui que tu as sélectionné dans son popup. Navigue avec les flèches du popup pour changer.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSET 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">מִזְמוֹר לְדָוִד<br>
+  בְּבׇרְחוֹ מִפְּנֵי אַבְשָׁלוֹם בְּנוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">un psaume</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">de David</div></div>
+    </div>
+    <div class="stich-translation">Un psaume de David</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּבׇרְחוֹ</div><div class="tr">be-vor-<b>CHO</b></div><div class="fr">lorsqu'il fuyait</div></div>
+      <div class="word"><div class="he">מִפְּנֵי</div><div class="tr">mip-pe-<b>NEI</b></div><div class="fr">devant</div></div>
+      <div class="word"><div class="he">אַבְשָׁלוֹם</div><div class="tr">av-sha-<b>LOM</b></div><div class="fr">Absalom</div></div>
+      <div class="word"><div class="he">בְּנוֹ</div><div class="tr">be-<b>NO</b></div><div class="fr">son fils</div></div>
+    </div>
+    <div class="stich-translation">lorsqu'il fuyait devant Absalom son fils.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>La première suscription du livre</strong>. Elle date le psaume de la fuite de David devant son fils Absalom (2 Samuel 15-18), la trahison la plus basse et la plus intime de sa vie. Tout le psaume se lit sur cette toile de fond : pas l'armée d'un étranger, mais la révolte de son propre enfant.
+  </div>
+</div>
+
+
+<!-- VERSET 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">יְהֹוָה מָה רַבּוּ צָרָי<br>
+  רַבִּים קָמִים עָלָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">ô Éternel</div></div>
+      <div class="word"><div class="he">מָה</div><div class="tr"><b>MA</b></div><div class="fr">comme</div></div>
+      <div class="word"><div class="he">רַבּוּ</div><div class="tr">rab-<b>BU</b></div><div class="fr">sont nombreux</div></div>
+      <div class="word"><div class="he">צָרָי</div><div class="tr">tza-<b>RAI</b></div><div class="fr">mes ennemis</div></div>
+    </div>
+    <div class="stich-translation">Ô Éternel, comme mes ennemis sont nombreux !</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבִּים</div><div class="tr">rab-<b>BIM</b></div><div class="fr">nombreux</div></div>
+      <div class="word"><div class="he">קָמִים</div><div class="tr">ka-<b>MIM</b></div><div class="fr">se dressent</div></div>
+      <div class="word"><div class="he">עָלָי</div><div class="tr">a-<b>LAI</b></div><div class="fr">contre moi</div></div>
+    </div>
+    <div class="stich-translation">Nombreux sont ceux qui se dressent contre moi.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>La plainte s'ouvre sur la racine רבב (rav, « nombreux »)</strong>, qui retentira trois fois en deux versets. Le danger est nommé non par sa qualité mais par sa <em>quantité</em> : pas un ennemi fort, mais une multitude qui se dresse. Le premier mot est le Nom lui-même : le cri commence par se tourner vers Dieu.
+  </div>
+</div>
+
+
+<!-- VERSET 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">רַבִּים אֹמְרִים לְנַפְשִׁי<br>
+  אֵין יְשׁוּעָתָה לּוֹ בֵאלֹהִים סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבִּים</div><div class="tr">rab-<b>BIM</b></div><div class="fr">nombreux</div></div>
+      <div class="word"><div class="he">אֹמְרִים</div><div class="tr">om-<b>RIM</b></div><div class="fr">disent</div></div>
+      <div class="word"><div class="he">לְנַפְשִׁי</div><div class="tr">le-naf-<b>SHI</b></div><div class="fr">de mon âme</div></div>
+    </div>
+    <div class="stich-translation">Nombreux disent de mon âme :</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵין</div><div class="tr"><b>EIN</b></div><div class="fr">il n'y a pas de</div></div>
+      <div class="word"><div class="he">יְשׁוּעָתָה</div><div class="tr">ye-shu-a-<b>TA</b></div><div class="fr">salut</div></div>
+      <div class="word"><div class="he">לּוֹ</div><div class="tr"><b>LO</b></div><div class="fr">pour lui</div></div>
+      <div class="word"><div class="he">בֵאלֹהִים</div><div class="tr">be-lo-<b>HIM</b></div><div class="fr">en Dieu</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr"><b>SE</b>-la</div><div class="fr">Sélah</div></div>
+    </div>
+    <div class="stich-translation">« Il n'y a pour lui aucun salut en Dieu. » Sélah.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>Le troisième « nombreux », et l'attaque la plus cruelle</strong> : pas une épée, mais une <em>parole</em>. Ils parlent « à mon âme » (לְנַפְשִׁי), disant que même Dieu ne le sauvera pas. Le premier <strong>סֶלָה (Sélah)</strong> tombe ici, pause tenue sur la pire accusation, avant que le psaume y réponde.
+  </div>
+</div>
+
+
+<!-- VERSET 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">וְאַתָּה יְהֹוָה מָגֵן בַּעֲדִי<br>
+  כְּבוֹדִי וּמֵרִים רֹאשִׁי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאַתָּה</div><div class="tr">ve-at-<b>TA</b></div><div class="fr">mais Toi</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">ô Éternel</div></div>
+      <div class="word"><div class="he">מָגֵן</div><div class="tr">ma-<b>GEN</b></div><div class="fr">[es] un bouclier</div></div>
+      <div class="word"><div class="he">בַּעֲדִי</div><div class="tr">ba-a-<b>DI</b></div><div class="fr">autour de moi</div></div>
+    </div>
+    <div class="stich-translation">Mais Toi, ô Éternel, tu es un bouclier autour de moi,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּבוֹדִי</div><div class="tr">ke-vo-<b>DI</b></div><div class="fr">ma gloire</div></div>
+      <div class="word"><div class="he">וּמֵרִים</div><div class="tr">u-me-<b>RIM</b></div><div class="fr">et celui qui relève</div></div>
+      <div class="word"><div class="he">רֹאשִׁי</div><div class="tr">ro-<b>SHI</b></div><div class="fr">ma tête</div></div>
+    </div>
+    <div class="stich-translation">ma gloire, celui qui relève ma tête.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>Le pivot du psaume</strong>. Face au « nombreux » des ennemis se tient un seul <em>וְאַתָּה</em> emphatique (« Mais <strong>Toi</strong> »). L'Éternel est <strong>מָגֵן בַּעֲדִי (magen ba'adi)</strong> : non un bouclier dans la main, mais un bouclier <em>autour</em>, une protection qui encercle. Et il est <em>merim roshi</em>, celui qui relève la tête que le fugitif avait couverte de honte.
+  </div>
+</div>
+
+
+<!-- VERSET 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">קוֹלִי אֶל יְהֹוָה אֶקְרָא<br>
+  וַיַּעֲנֵנִי מֵהַר קׇדְשׁוֹ סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קוֹלִי</div><div class="tr">ko-<b>LI</b></div><div class="fr">ma voix</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr"><b>EL</b></div><div class="fr">vers</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">l'Éternel</div></div>
+      <div class="word"><div class="he">אֶקְרָא</div><div class="tr">ek-<b>RA</b></div><div class="fr">je crie</div></div>
+    </div>
+    <div class="stich-translation">De ma voix je crie vers l'Éternel,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַיַּעֲנֵנִי</div><div class="tr">vai-ya-a-<b>NE</b>-ni</div><div class="fr">et il me répond</div></div>
+      <div class="word"><div class="he">מֵהַר</div><div class="tr">me-<b>HAR</b></div><div class="fr">de la montagne de</div></div>
+      <div class="word"><div class="he">קׇדְשׁוֹ</div><div class="tr">kod-<b>SHO</b></div><div class="fr">sa sainteté</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr"><b>SE</b>-la</div><div class="fr">Sélah</div></div>
+    </div>
+    <div class="stich-translation">et il me répond de sa montagne sainte. Sélah.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>Prière exaucée</strong>. Le cri est charnel (<em>ma voix</em>, קוֹלִי) et la réponse vient « de sa montagne sainte » (Sion, le Temple), le lieu même que David a dû abandonner dans sa fuite. Le second <strong>סֶלָה (Sélah)</strong> marque le soulagement : la voix montée a été entendue.
+  </div>
+</div>
+
+
+<!-- VERSET 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">אֲנִי שָׁכַבְתִּי וָאִישָׁנָה<br>
+  הֱקִיצוֹתִי כִּי יְהֹוָה יִסְמְכֵנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">moi</div></div>
+      <div class="word"><div class="he">שָׁכַבְתִּי</div><div class="tr">sha-<b>KHAV</b>-ti</div><div class="fr">me suis couché</div></div>
+      <div class="word"><div class="he">וָאִישָׁנָה</div><div class="tr">va-i-<b>SHA</b>-na</div><div class="fr">et j'ai dormi</div></div>
+    </div>
+    <div class="stich-translation">Moi, je me suis couché et j'ai dormi ;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֱקִיצוֹתִי</div><div class="tr">he-ki-<b>TZO</b>-ti</div><div class="fr">je me suis réveillé</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr"><b>KI</b></div><div class="fr">car</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">l'Éternel</div></div>
+      <div class="word"><div class="he">יִסְמְכֵנִי</div><div class="tr">yis-me-<b>KHE</b>-ni</div><div class="fr">me soutient</div></div>
+    </div>
+    <div class="stich-translation">je me suis réveillé, car l'Éternel me soutient.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>La confession de foi du corps</strong>. Trois verbes à la suite (<em>je me suis couché, j'ai dormi, je me suis réveillé</em>) disent ce qu'aucun argument ne pourrait : dormir au milieu des ennemis, c'est faire confiance. Le sommeil est une vulnérabilité choisie librement, car <em>יִסְמְכֵנִי</em> (yism'kheni, « il me soutient », de la racine <em>s'appuyer, étayer</em>) tient debout celui qui dort.
+  </div>
+</div>
+
+
+<!-- VERSET 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">לֹא אִירָא מֵרִבְבוֹת עָם<br>
+  אֲשֶׁר סָבִיב שָׁתוּ עָלָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr"><b>LO</b></div><div class="fr">je ne…pas</div></div>
+      <div class="word"><div class="he">אִירָא</div><div class="tr">i-<b>RA</b></div><div class="fr">craindrai</div></div>
+      <div class="word"><div class="he">מֵרִבְבוֹת</div><div class="tr">me-riv-<b>VOT</b></div><div class="fr">les myriades de</div></div>
+      <div class="word"><div class="he">עָם</div><div class="tr"><b>AM</b></div><div class="fr">peuple</div></div>
+    </div>
+    <div class="stich-translation">Je ne craindrai pas les myriades de gens</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲשֶׁר</div><div class="tr">a-<b>SHER</b></div><div class="fr">qui</div></div>
+      <div class="word"><div class="he">סָבִיב</div><div class="tr">sa-<b>VIV</b></div><div class="fr">tout autour</div></div>
+      <div class="word"><div class="he">שָׁתוּ</div><div class="tr"><b>SHA</b>-tu</div><div class="fr">se sont postés</div></div>
+      <div class="word"><div class="he">עָלָי</div><div class="tr">a-<b>LAI</b></div><div class="fr">contre moi</div></div>
+    </div>
+    <div class="stich-translation">qui se sont postés contre moi de tous côtés.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>De « nombreux » à « myriades »</strong> : רִבְבוֹת (rivvot, dix-milliers), la même racine רבב poussée à l'extrême, et pourtant le verbe est <em>לֹא אִירָא</em>, « je ne craindrai pas ». La menace a grandi, la peur a disparu. Les ennemis sont rangés <em>סָבִיב</em> (« tout autour »), ils encerclent, mais le v.4 a déjà donné un bouclier qui encercle en retour.
+  </div>
+</div>
+
+
+<!-- VERSET 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">קוּמָה יְהֹוָה הוֹשִׁיעֵנִי אֱלֹהַי<br>
+  כִּי הִכִּיתָ אֶת כׇּל אֹיְבַי לֶחִי<br>
+  שִׁנֵּי רְשָׁעִים שִׁבַּרְתָּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קוּמָה</div><div class="tr"><b>KU</b>-ma</div><div class="fr">lève-toi</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">ô Éternel</div></div>
+      <div class="word"><div class="he">הוֹשִׁיעֵנִי</div><div class="tr">ho-shi-<b>E</b>-ni</div><div class="fr">sauve-moi</div></div>
+      <div class="word"><div class="he">אֱלֹהַי</div><div class="tr">e-lo-<b>HAI</b></div><div class="fr">mon Dieu</div></div>
+    </div>
+    <div class="stich-translation">Lève-toi, ô Éternel ! Sauve-moi, mon Dieu !</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr"><b>KI</b></div><div class="fr">car</div></div>
+      <div class="word"><div class="he">הִכִּיתָ</div><div class="tr">hik-<b>KI</b>-ta</div><div class="fr">Tu as frappé</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr"><b>ET</b></div><div class="fr">[objet direct]</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr"><b>KOL</b></div><div class="fr">tous</div></div>
+      <div class="word"><div class="he">אֹיְבַי</div><div class="tr">o-ye-<b>VAI</b></div><div class="fr">mes ennemis</div></div>
+      <div class="word"><div class="he">לֶחִי</div><div class="tr"><b>LE</b>-chi</div><div class="fr">[à la] joue</div></div>
+    </div>
+    <div class="stich-translation">car Tu as frappé tous mes ennemis à la joue ;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁנֵּי</div><div class="tr">shin-<b>NEI</b></div><div class="fr">les dents de</div></div>
+      <div class="word"><div class="he">רְשָׁעִים</div><div class="tr">re-sha-<b>IM</b></div><div class="fr">méchants</div></div>
+      <div class="word"><div class="he">שִׁבַּרְתָּ</div><div class="tr">shib-<b>BAR</b>-ta</div><div class="fr">Tu as brisé</div></div>
+    </div>
+    <div class="stich-translation">Tu as brisé les dents des méchants.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>Le cri de délivrance, ancré dans la mémoire</strong>. « Lève-toi, sauve-moi » s'appuie sur un passé : <em>כִּי הִכִּיתָ</em>, « car Tu <em>as</em> frappé ». Le coup tombe sur la <strong>לֶחִי (lechi, joue/mâchoire)</strong> et les <em>dents</em>, les organes de la parole, car l'arme véritable des ennemis était le mot du v.3. Dieu brise la calomnie à sa bouche.
+  </div>
+</div>
+
+
+<!-- VERSET 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">לַיהֹוָה הַיְשׁוּעָה<br>
+  עַל עַמְּךָ בִרְכָתֶךָ סֶּלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">la-a-do-<b>NAY</b></div><div class="fr">à l'Éternel [appartient]</div></div>
+      <div class="word"><div class="he">הַיְשׁוּעָה</div><div class="tr">ha-ye-shu-<b>A</b></div><div class="fr">le salut</div></div>
+    </div>
+    <div class="stich-translation">Le salut appartient à l'Éternel ;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr"><b>AL</b></div><div class="fr">sur</div></div>
+      <div class="word"><div class="he">עַמְּךָ</div><div class="tr">am-me-<b>KHA</b></div><div class="fr">Ton peuple</div></div>
+      <div class="word"><div class="he">בִרְכָתֶךָ</div><div class="tr">vir-kha-te-<b>KHA</b></div><div class="fr">Ta bénédiction</div></div>
+      <div class="word"><div class="he">סֶּלָה</div><div class="tr"><b>SE</b>-la</div><div class="fr">Sélah</div></div>
+    </div>
+    <div class="stich-translation">Que Ta bénédiction soit sur Ton peuple ! Sélah.</div>
+  </div>
+
+  <div class="verse-summary">
+    <strong>Le psaume se retourne vers le dehors à la clôture</strong>. Le <em>לַיהוָה</em> placé en tête le dit avec force : le salut <em>appartient</em> à l'Éternel, il n'est pas au psalmiste de le saisir. Et le dernier mot n'est pas « moi » mais <em>עַמְּךָ</em>, « Ton peuple » ; l'homme qui commençait encerclé d'ennemis finit en bénissant la multitude. Le troisième <strong>סֶלָה (Sélah)</strong> le scelle.
+  </div>
+</div>
+</div><!-- /.verses-grid -->
+
+
+<div class="pardes-card">
+  <h3>♦ Analyse PARDES: פרדס</h3>
+  <div class="pardes-intro">Les quatre niveaux de lecture juive du texte sacré : פשט Peshat (sens littéral), רמז Remez (allusion symbolique), דרש Drash (interprétation midrashique), סוד Sod (sens mystique). Le mot פרדס signifie « verger », chaque niveau est un fruit.</div>
+
+  <div class="pardes-level">
+    <h4>פשט · Peshat: sens littéral</h4>
+    <p><strong>V.1</strong> : la suscription plante le décor ; David fuit Absalom son fils, le point le plus bas de son règne. <strong>V.2-3</strong> : la plainte ; les ennemis sont <em>nombreux</em> (la racine רבב, multitude, martelée trois fois en deux versets), et ils disent qu'il n'y a pour lui aucun salut en Dieu. <strong>V.4</strong> : le pivot, « Mais Toi, Éternel, tu es un bouclier autour de moi, ma gloire, celui qui relève ma tête. » <strong>V.5</strong> : il crie et reçoit réponse depuis la montagne sainte. <strong>V.6</strong> : il se couche, dort et se réveille, preuve de sa confiance. <strong>V.7</strong> : il ne craindra pas les myriades dressées contre lui. <strong>V.8</strong> : un cri, « Lève-toi, Éternel, sauve-moi », rappelant les délivrances passées. <strong>V.9</strong> : la clôture ; le salut appartient à l'Éternel ; que la bénédiction soit sur le peuple.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Le mot <strong>מָגֵן (magen, v.4)</strong> n'est pas un bouclier tenu à la main mais un bouclier <em>autour</em> : בַּעֲדִי, « en ma faveur, qui m'encercle. » La même racine nomme la bénédiction patriarcale <em>Magen Avraham</em>. Et l'Éternel est appelé celui qui <strong>מֵרִים רֹאשִׁי (merim roshi, v.4)</strong>, « relève ma tête », exact renversement du fugitif qui s'était couvert la tête et pleurait en montant le mont des Oliviers (2 Samuel 15:30). Le verbe <strong>שָׁכַבְתִּי (shakhavti, v.6)</strong>, « je me suis couché », est le verbe de celui qui peut se permettre d'être sans défense : dormir au milieu des ennemis est la confession de foi du corps.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: interprétation</h4>
+    <p>Les sages demandent pourquoi David <em>chante</em> à son heure la plus sombre. <strong>V.2</strong> : « mes ennemis sont nombreux ». Le Midrash y lit un soulagement, pas un désespoir : mieux vaut tomber face à un fils qui peut encore se repentir qu'à un étranger endurci. <strong>V.6</strong> : « je me couche et je dors, je me réveille » se lit comme la confiance en la résurrection de chaque nuit ; le sommeil est un soixantième de la mort, et se réveiller chaque matin est un petit retour de l'âme. <strong>V.8</strong> : « tu frappes tous mes ennemis à la joue » ; la <em>joue</em>, organe de la parole, car l'arme véritable des ennemis était le mot du v.3, « il n'y a pas de salut pour lui. » Dieu brise la calomnie à sa bouche.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: sens mystique</h4>
+    <p>Trois fois le psaume respire <strong>סֶלָה (Sélah, v.3, v.5, v.9)</strong>, la pause tenue où la voix se lève et laisse monter le non-dit. L'arc est une descente et une remontée : <em>nuit</em> des ennemis (v.2-3) → le bouclier qui <em>encercle</em> comme la lumière environnante de Sovev Kol Almin (v.4) → le cri qui grimpe vers la <em>montagne sainte</em> (v.5) → le sommeil qui est une petite mort et le réveil qui est une petite rédemption (v.6). <strong>V.9</strong> retourne tout le psaume vers le dehors : <em>la-Adonaï ha-yeshouah</em>, le salut n'est pas à moi de le saisir, il <em>appartient</em> à l'Un ; ma part est seulement de laisser couler la bénédiction <em>sur Ton peuple</em>. L'homme encerclé apprend à se reposer dans l'encerclement, car un Plus profond encercle ceux qui encerclent.</p>
+  </div>
+</div>
+
+<footer>Tehilim 3 · מִזְמוֹר לְדָוִד · <a href="../index.html" style="color:var(--accent)">Retour aux leçons →</a></footer>
+
+</div>
+
+<script>
+// Chord library, frets array order: [low E (6th), A, D, G, B, high E (1st)]
+// -1 = muted (×), 0 = open (○), N = press at fret N
+const CHORDS = {
+  Am: [
+    { name: 'Am · triade open', frets: [-1, 0, 2, 2, 1, 0], baseFret: 1, barre: null },
+    { name: 'Am7', frets: [-1, 0, 2, 0, 1, 0], baseFret: 1, barre: null },
+    { name: 'Am(maj7)', frets: [-1, 0, 2, 1, 1, 0], baseFret: 1, barre: null },
+    { name: 'Am6', frets: [-1, 0, 2, 2, 1, 2], baseFret: 1, barre: null },
+    { name: 'Am(add9)', frets: [-1, 0, 2, 4, 1, 0], baseFret: 1, barre: null },
+    { name: 'Am9', frets: [-1, 0, 5, 5, 5, 7], baseFret: 5, barre: null },
+    { name: 'Am11 · barré 5e', frets: [5, 5, 5, 5, 5, 5], baseFret: 5, barre: 5 },
+    { name: 'A° (Adim)', frets: [-1, 0, 1, 2, 1, -1], baseFret: 1, barre: null },
+    { name: 'Am · barré 5e (E-shape)', frets: [5, 7, 7, 5, 5, 5], baseFret: 5, barre: 5 }
+  ],
+  Em: [
+    { name: 'Em · triade open', frets: [0, 2, 2, 0, 0, 0], baseFret: 1, barre: null },
+    { name: 'Em7', frets: [0, 2, 2, 0, 3, 0], baseFret: 1, barre: null },
+    { name: 'Em(maj7)', frets: [0, 2, 1, 0, 0, 0], baseFret: 1, barre: null },
+    { name: 'Em6', frets: [0, 2, 2, 0, 2, 0], baseFret: 1, barre: null },
+    { name: 'Em(add9)', frets: [0, 2, 2, 0, 0, 2], baseFret: 1, barre: null },
+    { name: 'Em9', frets: [0, 2, 2, 0, 3, 2], baseFret: 1, barre: null },
+    { name: 'Em11 · drone modal', frets: [0, 0, 0, 0, 7, 0], baseFret: 1, barre: null },
+    { name: 'Em11 · barré 7e (1 doigt)', frets: [-1, 7, 7, 7, 7, 7], baseFret: 7, barre: 7 },
+    { name: 'E° (Edim)', frets: [0, 1, 2, 0, -1, -1], baseFret: 1, barre: null },
+    { name: 'Em · barré 7e (A-shape)', frets: [-1, 7, 9, 9, 8, 7], baseFret: 7, barre: 7 }
+  ],
+  Dm: [
+    { name: 'Dm · triade open', frets: [-1, -1, 0, 2, 3, 1], baseFret: 1, barre: null },
+    { name: 'Dm7', frets: [-1, -1, 0, 2, 1, 1], baseFret: 1, barre: null },
+    { name: 'Dm(maj7)', frets: [-1, -1, 0, 2, 2, 1], baseFret: 1, barre: null },
+    { name: 'Dm6', frets: [-1, -1, 0, 2, 0, 1], baseFret: 1, barre: null },
+    { name: 'Dm9', frets: [-1, 5, 3, 5, 5, 5], baseFret: 3, barre: null },
+    { name: 'Dm11 · barré 5e', frets: [-1, 5, 5, 5, 5, 5], baseFret: 5, barre: 5 },
+    { name: 'D° (Ddim)', frets: [-1, -1, 0, 1, 3, 1], baseFret: 1, barre: null },
+    { name: 'Dm · barré 5e (A-shape)', frets: [-1, 5, 7, 7, 6, 5], baseFret: 5, barre: 5 }
+  ],
+  F: [
+    { name: 'F · petit triade', frets: [-1, -1, 3, 2, 1, 1], baseFret: 1, barre: null },
+    { name: 'Fmaj7', frets: [-1, -1, 3, 2, 1, 0], baseFret: 1, barre: null },
+    { name: 'F7 · barré 1ere', frets: [1, 3, 1, 2, 1, 1], baseFret: 1, barre: 1 },
+    { name: 'F6', frets: [-1, -1, 3, 2, 3, 1], baseFret: 1, barre: null },
+    { name: 'F(add9)', frets: [-1, -1, 3, 2, 1, 3], baseFret: 1, barre: null },
+    { name: 'F9 · barré 1ere', frets: [1, 3, 1, 2, 4, 3], baseFret: 1, barre: 1 },
+    { name: 'F11 · modal', frets: [-1, -1, 3, 3, 4, 3], baseFret: 3, barre: null },
+    { name: 'F° (Fdim7)', frets: [-1, -1, 3, 4, 3, 4], baseFret: 3, barre: null },
+    { name: 'F · barré 1ere (E-shape)', frets: [1, 3, 3, 2, 1, 1], baseFret: 1, barre: 1 }
+  ],
+  C: [
+    { name: 'C · triade open', frets: [-1, 3, 2, 0, 1, 0], baseFret: 1, barre: null },
+    { name: 'Cmaj7', frets: [-1, 3, 2, 0, 0, 0], baseFret: 1, barre: null },
+    { name: 'C7', frets: [-1, 3, 2, 3, 1, 0], baseFret: 1, barre: null },
+    { name: 'C6', frets: [-1, 3, 2, 2, 1, 0], baseFret: 1, barre: null },
+    { name: 'Cadd9', frets: [-1, 3, 2, 0, 3, 0], baseFret: 1, barre: null },
+    { name: 'C9', frets: [-1, 3, 2, 3, 3, 0], baseFret: 1, barre: null },
+    { name: 'Cmaj9', frets: [-1, 3, 2, 4, 3, 0], baseFret: 1, barre: null },
+    { name: 'C11 · barré 3e', frets: [-1, 3, 3, 3, 3, 3], baseFret: 3, barre: 3 },
+    { name: 'C° (Cdim)', frets: [-1, 3, 4, 5, 4, -1], baseFret: 3, barre: null },
+    { name: 'C · barré 3e (A-shape)', frets: [-1, 3, 5, 5, 5, 3], baseFret: 3, barre: 3 }
+  ],
+  G: [
+    { name: 'G · triade open', frets: [3, 2, 0, 0, 0, 3], baseFret: 1, barre: null },
+    { name: 'G (variante moderne)', frets: [3, 2, 0, 0, 3, 3], baseFret: 1, barre: null },
+    { name: 'Gmaj7', frets: [3, 2, 0, 0, 0, 2], baseFret: 1, barre: null },
+    { name: 'G7', frets: [3, 2, 0, 0, 0, 1], baseFret: 1, barre: null },
+    { name: 'G6', frets: [3, 2, 0, 0, 0, 0], baseFret: 1, barre: null },
+    { name: 'Gadd9', frets: [3, 0, 0, 2, 0, 3], baseFret: 1, barre: null },
+    { name: 'G9 · barré 3e', frets: [3, 5, 3, 4, 3, 5], baseFret: 3, barre: 3 },
+    { name: 'G · barré 3e (E-shape)', frets: [3, 5, 5, 4, 3, 3], baseFret: 3, barre: 3 }
+  ],
+  D: [
+    { name: 'D · triade open', frets: [-1, -1, 0, 2, 3, 2], baseFret: 1, barre: null },
+    { name: 'Dmaj7', frets: [-1, -1, 0, 2, 2, 2], baseFret: 1, barre: null },
+    { name: 'D7', frets: [-1, -1, 0, 2, 1, 2], baseFret: 1, barre: null },
+    { name: 'D6', frets: [-1, -1, 0, 2, 0, 2], baseFret: 1, barre: null },
+    { name: 'Dadd9', frets: [-1, -1, 0, 2, 3, 0], baseFret: 1, barre: null },
+    { name: 'Dsus4', frets: [-1, -1, 0, 2, 3, 3], baseFret: 1, barre: null },
+    { name: 'Dsus2', frets: [-1, -1, 0, 2, 3, 0], baseFret: 1, barre: null },
+    { name: 'D · barré 5e (A-shape)', frets: [-1, 5, 7, 7, 7, 5], baseFret: 5, barre: 5 }
+  ],
+  A: [
+    { name: 'A · triade open', frets: [-1, 0, 2, 2, 2, 0], baseFret: 1, barre: null },
+    { name: 'Amaj7', frets: [-1, 0, 2, 1, 2, 0], baseFret: 1, barre: null },
+    { name: 'A7', frets: [-1, 0, 2, 0, 2, 0], baseFret: 1, barre: null },
+    { name: 'A6', frets: [-1, 0, 2, 2, 2, 2], baseFret: 1, barre: null },
+    { name: 'Aadd9', frets: [-1, 0, 2, 4, 2, 0], baseFret: 1, barre: null },
+    { name: 'Asus4', frets: [-1, 0, 2, 2, 3, 0], baseFret: 1, barre: null },
+    { name: 'Asus2', frets: [-1, 0, 2, 2, 0, 0], baseFret: 1, barre: null },
+    { name: 'A · barré 5e (E-shape)', frets: [5, 7, 7, 6, 5, 5], baseFret: 5, barre: 5 }
+  ],
+  E: [
+    { name: 'E · triade open', frets: [0, 2, 2, 1, 0, 0], baseFret: 1, barre: null },
+    { name: 'Emaj7', frets: [0, 2, 1, 1, 0, 0], baseFret: 1, barre: null },
+    { name: 'E7', frets: [0, 2, 0, 1, 0, 0], baseFret: 1, barre: null },
+    { name: 'E6', frets: [0, 2, 2, 1, 2, 0], baseFret: 1, barre: null },
+    { name: 'Eadd9', frets: [0, 2, 4, 1, 0, 0], baseFret: 1, barre: null },
+    { name: 'Esus4', frets: [0, 2, 2, 2, 0, 0], baseFret: 1, barre: null },
+    { name: 'E · barré 7e (A-shape)', frets: [-1, 7, 9, 9, 9, 7], baseFret: 7, barre: 7 }
+  ],
+  Bm: [
+    { name: 'Bm · barré 2e', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2, barre: 2 },
+    { name: 'Bm7 · barré 2e', frets: [-1, 2, 4, 2, 3, 2], baseFret: 2, barre: 2 },
+    { name: 'Bm (3 cordes)', frets: [-1, -1, -1, 4, 3, 2], baseFret: 1, barre: null },
+    { name: 'Bm · barré 7e (E-shape)', frets: [7, 9, 9, 7, 7, 7], baseFret: 7, barre: 7 }
+  ],
+  Gm: [
+    { name: 'Gm · barré 3e', frets: [3, 5, 5, 3, 3, 3], baseFret: 3, barre: 3 },
+    { name: 'Gm7 · barré 3e', frets: [3, 5, 3, 3, 3, 3], baseFret: 3, barre: 3 },
+    { name: 'Gm (3 cordes)', frets: [-1, -1, -1, 3, 3, 3], baseFret: 1, barre: null },
+    { name: 'Gm · barré 10e (A-shape)', frets: [-1, 10, 12, 12, 11, 10], baseFret: 10, barre: 10 }
+  ]
+};
+
+function renderFretboard(chord) {
+  const stringSpacing = 18;
+  const fretSpacing = 22;
+  const offsetX = 28;
+  const offsetY = 36;
+  const baseFret = chord.baseFret;
+  const STR_COUNT = 6;
+
+  // Auto-compute number of frets to fit all fretted notes (min 4)
+  const fretted = chord.frets.filter(f => f > 0);
+  const maxFret = fretted.length > 0 ? Math.max(...fretted) : baseFret + 3;
+  const numFrets = Math.max(4, maxFret - baseFret + 1);
+
+  const W = offsetX * 2 + stringSpacing * (STR_COUNT - 1);
+  const H = offsetY + numFrets * fretSpacing + 22;
+
+  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Nut (if open position) or fret number indicator
+  if (baseFret === 1) {
+    svg += `<rect x="${offsetX - 1}" y="${offsetY - 4}" width="${stringSpacing * (STR_COUNT - 1) + 2}" height="5" fill="#ccc"/>`;
+  } else {
+    svg += `<text x="${offsetX - 10}" y="${offsetY + 14}" fill="#4A9EDB" font-size="11" text-anchor="end" font-family="monospace" font-weight="600">${baseFret}fr</text>`;
+  }
+
+  // Frets (horizontal lines)
+  for (let i = 0; i <= numFrets; i++) {
+    svg += `<line x1="${offsetX}" y1="${offsetY + i * fretSpacing}" x2="${offsetX + (STR_COUNT - 1) * stringSpacing}" y2="${offsetY + i * fretSpacing}" stroke="#444" stroke-width="1"/>`;
+  }
+
+  // Strings (vertical lines)
+  for (let i = 0; i < STR_COUNT; i++) {
+    svg += `<line x1="${offsetX + i * stringSpacing}" y1="${offsetY}" x2="${offsetX + i * stringSpacing}" y2="${offsetY + numFrets * fretSpacing}" stroke="#666" stroke-width="1"/>`;
+  }
+
+  // Open / muted indicators above strings
+  for (let i = 0; i < STR_COUNT; i++) {
+    const f = chord.frets[i];
+    const x = offsetX + i * stringSpacing;
+    if (f === -1) {
+      svg += `<text x="${x}" y="${offsetY - 8}" fill="#666" font-size="14" text-anchor="middle" font-weight="600">×</text>`;
+    } else if (f === 0) {
+      svg += `<circle cx="${x}" cy="${offsetY - 10}" r="5" fill="none" stroke="#4A9EDB" stroke-width="1.5"/>`;
+    }
+  }
+
+  // Barre (if any), drawn before dots so dots appear on top
+  if (chord.barre) {
+    const barreFret = chord.barre;
+    let firstStr = -1, lastStr = -1;
+    for (let i = 0; i < STR_COUNT; i++) {
+      if (chord.frets[i] === barreFret) {
+        if (firstStr === -1) firstStr = i;
+        lastStr = i;
+      }
+    }
+    if (firstStr !== -1 && lastStr > firstStr) {
+      const fretRel = barreFret - baseFret;
+      const yPos = offsetY + (fretRel + 0.5) * fretSpacing;
+      svg += `<rect x="${offsetX + firstStr * stringSpacing - 8}" y="${yPos - 8}" width="${(lastStr - firstStr) * stringSpacing + 16}" height="16" rx="8" fill="#4A9EDB" opacity="0.9"/>`;
+      const midX = offsetX + (firstStr + lastStr) / 2 * stringSpacing;
+      const fontSize = barreFret >= 10 ? 9 : 10;
+      svg += `<text x="${midX}" y="${yPos + 3.5}" fill="#0a0a0a" font-size="${fontSize}" text-anchor="middle" font-weight="700" font-family="monospace">${barreFret}</text>`;
+    }
+  }
+
+  // Finger dots (skip those that are part of the barre rectangle)
+  for (let i = 0; i < STR_COUNT; i++) {
+    const f = chord.frets[i];
+    if (f > 0) {
+      const fretRel = f - baseFret;
+      if (fretRel < 0 || fretRel >= numFrets) continue;
+      if (chord.barre && f === chord.barre) continue;
+      const x = offsetX + i * stringSpacing;
+      const y = offsetY + (fretRel + 0.5) * fretSpacing;
+      svg += `<circle cx="${x}" cy="${y}" r="8" fill="#4A9EDB" stroke="#0a0a0a" stroke-width="1"/>`;
+      const fontSize = f >= 10 ? 9 : 10;
+      svg += `<text x="${x}" y="${y + 3.5}" fill="#0a0a0a" font-size="${fontSize}" text-anchor="middle" font-weight="700" font-family="monospace">${f}</text>`;
+    }
+  }
+
+  // String labels at the bottom, uses the current tuning (mutable global)
+  for (let i = 0; i < STR_COUNT; i++) {
+    svg += `<text x="${offsetX + i * stringSpacing}" y="${offsetY + numFrets * fretSpacing + 14}" fill="#555" font-size="9" text-anchor="middle" font-family="monospace">${TUNING[i] || ''}</text>`;
+  }
+
+  svg += `</svg>`;
+  return svg;
+}
+
+// ====== TUNING (mutable) ======
+let TUNING = ['E', 'A', 'D', 'G', 'B', 'E'];
+
+const TUNING_PRESETS = {
+  'standard':  ['E', 'A', 'D', 'G', 'B', 'E'],
+  'drop-d':    ['D', 'A', 'D', 'G', 'B', 'E'],
+  'dadgad':    ['D', 'A', 'D', 'G', 'A', 'D'],
+  'open-d':    ['D', 'A', 'D', 'F#', 'A', 'D'],
+  'open-g':    ['D', 'G', 'D', 'G', 'B', 'D'],
+  'open-c':    ['C', 'G', 'C', 'G', 'C', 'E'],
+  'half-down': ['Eb', 'Ab', 'Db', 'Gb', 'Bb', 'Eb'],
+  'full-down': ['D', 'G', 'C', 'F', 'A', 'D']
+};
+
+function setTuning(arr) {
+  if (Array.isArray(arr) && arr.length === 6) {
+    TUNING = arr.slice();
+    try { localStorage.setItem('tehilim-tuning', JSON.stringify(TUNING)); } catch (e) {}
+    const cur = document.getElementById('tuning-current');
+    if (cur) cur.textContent = TUNING.join(' ');
+    if (typeof renderActiveVoicings === 'function') renderActiveVoicings();
+  }
+}
+
+function tuningKey() { return TUNING.join(' '); }
+
+function parseTuningString(str) {
+  const tokens = str.trim().split(/[\s,]+/).filter(Boolean);
+  return tokens.length === 6 ? tokens : null;
+}
+
+function findTuningPreset(arr) {
+  for (const [k, v] of Object.entries(TUNING_PRESETS)) {
+    if (v.join(' ') === arr.join(' ')) return k;
+  }
+  return null;
+}
+
+// ====== PINNED VOICINGS per (chord, tuning) ======
+// Multiple voicings can be pinned per chord, each pinned voicing renders as a card in the panel.
+let ACTIVE_POS = {}; // { 'Am|E A D G B E': [0, 4, 6], ... }, array of position indices
+
+function loadActivePos() {
+  try {
+    const raw = localStorage.getItem('tehilim-activePos');
+    if (!raw) { ACTIVE_POS = {}; return; }
+    const parsed = JSON.parse(raw);
+    ACTIVE_POS = {};
+    for (const k in parsed) {
+      const v = parsed[k];
+      if (typeof v === 'number') ACTIVE_POS[k] = [v]; // legacy migration
+      else if (Array.isArray(v)) ACTIVE_POS[k] = v.slice();
+    }
+  } catch (e) { ACTIVE_POS = {}; }
+}
+
+function saveActivePos() {
+  try { localStorage.setItem('tehilim-activePos', JSON.stringify(ACTIVE_POS)); } catch (e) {}
+}
+
+function getPinned(chordName) {
+  const k = chordName + '|' + tuningKey();
+  const arr = ACTIVE_POS[k];
+  if (Array.isArray(arr) && arr.length > 0) return arr.slice().sort((a, b) => a - b);
+  return [0]; // default: show first voicing
+}
+
+function isPinned(chordName, idx) {
+  const k = chordName + '|' + tuningKey();
+  const arr = ACTIVE_POS[k];
+  if (Array.isArray(arr)) return arr.includes(idx);
+  return idx === 0; // default: only index 0 considered pinned
+}
+
+function togglePin(chordName, idx) {
+  const k = chordName + '|' + tuningKey();
+  // If no entry yet, the implicit pinned set is [0]. Make it explicit before toggling.
+  if (!Array.isArray(ACTIVE_POS[k])) ACTIVE_POS[k] = [0];
+  const arr = ACTIVE_POS[k];
+  const at = arr.indexOf(idx);
+  if (at >= 0) arr.splice(at, 1);
+  else arr.push(idx);
+  if (arr.length === 0) delete ACTIVE_POS[k];
+  saveActivePos();
+}
+
+// ====== CHORD LOOKUP (handles Gmaj7, Am7, Cdim, etc. by searching root variations) ======
+function variationPrimaryName(name) {
+  const idx = name.search(/[\s·]/);
+  return idx === -1 ? name : name.slice(0, idx);
+}
+
+function nameMatchesChord(variationName, chordName) {
+  const primary = variationPrimaryName(variationName);
+  if (primary === chordName) return true;
+  const parens = variationName.match(/\(([^)]+)\)/);
+  if (parens && parens[1].trim() === chordName) return true;
+  return false;
+}
+
+function lookupChord(chordName) {
+  // 1. Direct top-level key (e.g. 'Am', 'G')
+  if (CHORDS[chordName]) return CHORDS[chordName];
+
+  // 2. Search variations within the root chord
+  const root = chordRoot(chordName);
+  if (!root) return [];
+
+  const candidates = [];
+  if (chordIsMinor(chordName)) candidates.push(root + 'm');
+  candidates.push(root);
+
+  for (const key of candidates) {
+    const entries = CHORDS[key];
+    if (!entries) continue;
+    const matches = entries.filter(v => nameMatchesChord(v.name, chordName));
+    if (matches.length > 0) return matches;
+  }
+
+  return [];
+}
+
+// ====== USER VOICINGS (per chord, per tuning) ======
+let USER_VOICINGS = {}; // { 'Am|E A D G B E': [{name, frets, baseFret, barre}, ...] }
+
+function loadUserVoicings() {
+  try {
+    const raw = localStorage.getItem('tehilim-userVoicings');
+    if (raw) USER_VOICINGS = JSON.parse(raw) || {};
+  } catch (e) { USER_VOICINGS = {}; }
+}
+
+function saveUserVoicings() {
+  try { localStorage.setItem('tehilim-userVoicings', JSON.stringify(USER_VOICINGS)); } catch (e) {}
+}
+
+function getUserVoicings(chordName) {
+  const k = chordName + '|' + tuningKey();
+  return USER_VOICINGS[k] || [];
+}
+
+function addUserVoicing(chordName, voicing) {
+  const k = chordName + '|' + tuningKey();
+  if (!USER_VOICINGS[k]) USER_VOICINGS[k] = [];
+  USER_VOICINGS[k].push(voicing);
+  saveUserVoicings();
+}
+
+function removeUserVoicing(chordName, indexInUserList) {
+  const k = chordName + '|' + tuningKey();
+  if (USER_VOICINGS[k] && USER_VOICINGS[k][indexInUserList]) {
+    USER_VOICINGS[k].splice(indexInUserList, 1);
+    if (USER_VOICINGS[k].length === 0) delete USER_VOICINGS[k];
+    saveUserVoicings();
+  }
+}
+
+function parseFretsString(str) {
+  const tokens = str.trim().split(/[\s,\-]+/).filter(Boolean);
+  if (tokens.length !== 6) return null;
+  const frets = tokens.map(t => {
+    const lo = t.toLowerCase();
+    if (lo === 'x' || lo === '-' || lo === 'm') return -1;
+    if (lo === 'o') return 0;
+    const n = parseInt(t, 10);
+    return isNaN(n) ? null : n;
+  });
+  if (frets.some(f => f === null)) return null;
+  return frets;
+}
+
+function buildVoicingFromFrets(frets, name) {
+  const fretted = frets.filter(f => f > 0);
+  const hasOpens = frets.some(f => f === 0);
+  const baseFret = (hasOpens || fretted.length === 0) ? 1 : Math.min(...fretted);
+  return { name: name || 'Custom', frets, baseFret, barre: null, _user: true };
+}
+
+// ====== CHORD THEORY ======
+const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const FLAT_TO_SHARP = { 'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#' };
+
+function noteToIdx(n) {
+  if (NOTE_NAMES.indexOf(n) >= 0) return NOTE_NAMES.indexOf(n);
+  if (FLAT_TO_SHARP[n]) return NOTE_NAMES.indexOf(FLAT_TO_SHARP[n]);
+  return -1;
+}
+
+function transposeNote(note, semitones) {
+  const idx = noteToIdx(note);
+  if (idx < 0) return note;
+  return NOTE_NAMES[(idx + semitones + 120) % 12];
+}
+
+function chordRoot(name) {
+  const m = name.match(/^([A-G][#b]?)/);
+  return m ? m[1] : null;
+}
+
+function chordIsMinor(name) {
+  const after = name.slice(1).replace(/^[#b]/, '');
+  return /^m(?!aj)/.test(after) || after.startsWith('dim') || after.startsWith('°');
+}
+
+function getHarmonic(chordName, type) {
+  const root = chordRoot(chordName);
+  if (!root) return [];
+  const isMin = chordIsMinor(chordName);
+  const T = (n, suffix) => transposeNote(root, n) + (suffix || '');
+
+  switch (type) {
+    case 'diatonique':
+      return isMin ? [
+        { chord: T(2, 'dim'),  label: 'ii° · supertonique' },
+        { chord: T(3),         label: 'bIII · relatif majeur' },
+        { chord: T(5, 'm'),    label: 'iv · sous-dominante' },
+        { chord: T(7, 'm'),    label: 'v · dominante (mineur naturel)' },
+        { chord: T(7),         label: 'V · dominante (mineur harm.)' },
+        { chord: T(8),         label: 'bVI' },
+        { chord: T(10),        label: 'bVII' }
+      ] : [
+        { chord: T(2, 'm'),    label: 'ii · supertonique' },
+        { chord: T(4, 'm'),    label: 'iii · médiante' },
+        { chord: T(5),         label: 'IV · sous-dominante' },
+        { chord: T(7),         label: 'V · dominante' },
+        { chord: T(9, 'm'),    label: 'vi · relatif mineur' },
+        { chord: T(11, 'dim'), label: 'vii° · sensible' }
+      ];
+
+    case 'quintes':
+      return [
+        { chord: T(7, isMin ? 'm' : ''), label: 'Quinte (V), sens horaire' },
+        { chord: T(5, isMin ? 'm' : ''), label: 'Quarte (IV), sens anti-horaire' },
+        { chord: T(7),                   label: 'Dominante V (majeur, tension)' },
+        { chord: T(0, isMin ? '' : 'm'), label: isMin ? 'Parallèle majeur (même tonique)' : 'Parallèle mineur (même tonique)' },
+        { chord: isMin ? T(3) : T(9, 'm'), label: isMin ? 'Relatif majeur (3 demi-tons +)' : 'Relatif mineur (3 demi-tons -)' },
+        { chord: T(2, isMin ? 'dim' : 'm'), label: 'ii, accord de couleur' }
+      ];
+
+    case 'jazz':
+      return isMin ? [
+        { chord: chordName + (chordName.includes('7') ? '' : '7'),  label: 'Ajouter 7e (m7)' },
+        { chord: chordName.replace(/m\d*/, 'm9') || (chordName + '9'), label: 'm9 (lush)' },
+        { chord: chordName.replace(/m\d*/, 'm11') || (chordName + '11'), label: 'm11 (modal)' },
+        { chord: T(3, 'maj7'), label: 'bIIImaj7, sub relatif majeur' },
+        { chord: T(5, 'm7'),   label: 'iv7, II-V vers bVII' },
+        { chord: T(7, '7'),    label: 'V7, dominante mineur harm.' },
+        { chord: T(1, '7'),    label: 'bII7, sub tritonique de V' }
+      ] : [
+        { chord: chordName + (chordName.includes('maj') ? '' : 'maj7'), label: 'Ajouter 7e maj' },
+        { chord: chordName + '9',  label: 'Ajouter 9e' },
+        { chord: chordName + '13', label: 'Ajouter 13e (lush)' },
+        { chord: T(9, 'm7'),       label: 'vim7, sub relatif mineur' },
+        { chord: T(2, 'm7'),       label: 'iim7, pour II-V-I' },
+        { chord: T(7, '7'),        label: 'V7, dominante' },
+        { chord: T(1, '7'),        label: 'bII7, sub tritonique de V' }
+      ];
+
+    case 'modes':
+      return isMin ? [
+        { chord: T(0, 'm'),    label: 'Aeolien (mineur naturel) · vous êtes là' },
+        { chord: T(5),         label: 'Dorien · IV majeur (au lieu de iv)' },
+        { chord: T(1),         label: 'Phrygien · bII majeur (couleur sombre)' },
+        { chord: T(2),         label: 'Dorien · II majeur' },
+        { chord: T(7),         label: 'Mineur harm · V majeur' },
+        { chord: T(2, 'dim'),  label: 'Locrien · ii° (rare)' }
+      ] : [
+        { chord: T(0),         label: 'Ionien (majeur) · vous êtes là' },
+        { chord: T(6),         label: 'Lydien · #IV majeur (couleur lumineuse)' },
+        { chord: T(10),        label: 'Mixolydien · bVII majeur (rock/folk)' },
+        { chord: T(8),         label: 'Aeolien · bVI majeur (ténébreux)' },
+        { chord: T(3),         label: 'Phrygien · bIII majeur' },
+        { chord: T(1),         label: 'Phrygien · bII majeur (espagnol)' }
+      ];
+  }
+  return [];
+}
+
+// ====== PROGRESSION ======
+const DEFAULT_PROGRESSION = '| Am Am | Em Em | Am Dm | Em Am |';
+let CURRENT_PROGRESSION = DEFAULT_PROGRESSION;
+
+const CHORD_TOKEN_RE = /^[A-G][#b]?(?:m(?!aj)|maj|min|sus|aug|dim|add|°)?[0-9]*(?:[#b]?[0-9]*)?(?:sus[24]?|add[0-9]+|°)?/;
+
+function tokenizeProgression(text) {
+  const tokens = [];
+  let i = 0;
+  while (i < text.length) {
+    const sub = text.slice(i);
+    const m = sub.match(CHORD_TOKEN_RE);
+    if (m && m[0].length > 0) {
+      tokens.push({ type: 'chord', name: m[0] });
+      i += m[0].length;
+    } else {
+      tokens.push({ type: 'sep', text: text[i] });
+      i++;
+    }
+  }
+  return tokens;
+}
+
+function progressionToHTML(text) {
+  const tokens = tokenizeProgression(text);
+  let html = '';
+  let chordIdx = 0;
+  for (const t of tokens) {
+    if (t.type === 'chord') {
+      html += `<span class="chord" data-chord="${t.name}" data-prog-idx="${chordIdx}">${t.name}</span>`;
+      chordIdx++;
+    } else {
+      const c = t.text;
+      if (c === '<') html += '&lt;';
+      else if (c === '>') html += '&gt;';
+      else if (c === '&') html += '&amp;';
+      else html += c;
+    }
+  }
+  return html;
+}
+
+function applyProgression(text) {
+  CURRENT_PROGRESSION = text;
+  const display = document.getElementById('progression-display');
+  display.innerHTML = progressionToHTML(text);
+  attachChordTooltips(display);
+  renderActiveVoicings();
+}
+
+function getUniqueProgressionChords() {
+  const tokens = tokenizeProgression(CURRENT_PROGRESSION);
+  const seen = new Set();
+  const unique = [];
+  for (const t of tokens) {
+    if (t.type === 'chord' && !seen.has(t.name)) {
+      seen.add(t.name);
+      unique.push(t.name);
+    }
+  }
+  return unique;
+}
+
+function renderActiveVoicings() {
+  const grid = document.getElementById('active-voicings-grid');
+  if (!grid) return;
+  const chords = getUniqueProgressionChords();
+  let html = '';
+  for (const name of chords) {
+    const lib = lookupChord(name);
+    const user = getUserVoicings(name);
+    const all = [...lib, ...user];
+    if (all.length === 0) {
+      html += `
+        <div class="voicing-card" data-chord="${name}">
+          <div class="voicing-name">${name}</div>
+          <div class="voicing-empty">Aucun voicing.<br>Hover pour ajouter.</div>
+        </div>`;
+      continue;
+    }
+    let pinned = getPinned(name).filter(i => i < all.length);
+    if (pinned.length === 0) pinned = [0];
+    for (const idx of pinned) {
+      const v = all[idx];
+      const labelStr = v.name + (all.length > 1 ? ` · ${idx + 1}/${all.length}` : '');
+      html += `
+        <div class="voicing-card" data-chord="${name}" data-pin-idx="${idx}">
+          <button class="voicing-unpin" data-chord="${name}" data-idx="${idx}" type="button" title="Retirer du panneau">×</button>
+          <div class="voicing-name">${name}</div>
+          <div class="voicing-diagram">${renderFretboard(v)}</div>
+          <div class="voicing-label" title="${labelStr}">${labelStr}</div>
+        </div>
+      `;
+    }
+  }
+  grid.innerHTML = html;
+  // Unpin × handlers
+  grid.querySelectorAll('.voicing-unpin').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      togglePin(btn.dataset.chord, parseInt(btn.dataset.idx, 10));
+      renderActiveVoicings();
+    });
+  });
+  // Cards hoverable → opens popup for that chord
+  grid.querySelectorAll('.voicing-card').forEach(card => card.classList.add('chord'));
+  attachChordTooltips(grid);
+}
+
+function replaceChordAtIdx(progIdx, newChord) {
+  const tokens = tokenizeProgression(CURRENT_PROGRESSION);
+  let counter = 0;
+  for (const t of tokens) {
+    if (t.type === 'chord') {
+      if (counter === progIdx) { t.name = newChord; break; }
+      counter++;
+    }
+  }
+  CURRENT_PROGRESSION = tokens.map(t => t.type === 'chord' ? t.name : t.text).join('');
+  try { localStorage.setItem('tehilim-progression', CURRENT_PROGRESSION); } catch (e) {}
+
+  // Update only the specific span (not full re-render, keeps the popup's `el` ref valid)
+  const span = document.querySelector(`#progression-display .chord[data-prog-idx="${progIdx}"]`);
+  if (span) {
+    span.textContent = newChord;
+    span.dataset.chord = newChord;
+  }
+}
+
+function chordMaxFretboardHeight(positions) {
+  let maxH = 0;
+  for (const p of positions) {
+    const fretted = p.frets.filter(f => f > 0);
+    const maxFret = fretted.length > 0 ? Math.max(...fretted) : p.baseFret + 3;
+    const numFrets = Math.max(4, maxFret - p.baseFret + 1);
+    const H = 36 + numFrets * 22 + 22; // matches renderFretboard layout
+    if (H > maxH) maxH = H;
+  }
+  return maxH;
+}
+
+function renderFretboardEditor(draftFrets, numEditFrets) {
+  numEditFrets = numEditFrets || 7;
+  const stringSpacing = 22;
+  const fretSpacing = 24;
+  const offsetX = 30;
+  const offsetY = 50;
+  const STR_COUNT = 6;
+  const W = offsetX * 2 + stringSpacing * (STR_COUNT - 1);
+  const H = offsetY + numEditFrets * fretSpacing + 40;
+
+  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // X / O toggles for each string above the diagram
+  for (let i = 0; i < STR_COUNT; i++) {
+    const x = offsetX + i * stringSpacing;
+    const isMuted = draftFrets[i] === -1;
+    const isOpen = draftFrets[i] === 0;
+
+    // X (mute)
+    svg += `<g class="edit-toggle ${isMuted ? 'active' : ''}" data-string="${i}" data-fret="-1">`;
+    svg += `<rect x="${x - 9}" y="${offsetY - 44}" width="18" height="14" rx="2" stroke="#444" stroke-width="0.5"/>`;
+    svg += `<text x="${x}" y="${offsetY - 33}" fill="${isMuted ? '#000' : '#888'}" font-size="11" text-anchor="middle" font-weight="700" pointer-events="none">×</text>`;
+    svg += `</g>`;
+
+    // O (open)
+    svg += `<g class="edit-toggle ${isOpen ? 'active' : ''}" data-string="${i}" data-fret="0">`;
+    svg += `<rect x="${x - 9}" y="${offsetY - 26}" width="18" height="14" rx="2" stroke="#444" stroke-width="0.5"/>`;
+    svg += `<text x="${x}" y="${offsetY - 15}" fill="${isOpen ? '#000' : '#888'}" font-size="11" text-anchor="middle" font-weight="700" pointer-events="none">○</text>`;
+    svg += `</g>`;
+  }
+
+  // Nut
+  svg += `<rect x="${offsetX - 1}" y="${offsetY - 4}" width="${stringSpacing * (STR_COUNT - 1) + 2}" height="5" fill="#ccc"/>`;
+
+  // Frets
+  for (let i = 0; i <= numEditFrets; i++) {
+    svg += `<line x1="${offsetX}" y1="${offsetY + i * fretSpacing}" x2="${offsetX + (STR_COUNT - 1) * stringSpacing}" y2="${offsetY + i * fretSpacing}" stroke="#444" stroke-width="1"/>`;
+  }
+  // Strings
+  for (let i = 0; i < STR_COUNT; i++) {
+    svg += `<line x1="${offsetX + i * stringSpacing}" y1="${offsetY}" x2="${offsetX + i * stringSpacing}" y2="${offsetY + numEditFrets * fretSpacing}" stroke="#666" stroke-width="1"/>`;
+  }
+
+  // Click cells (one rect per string per fret)
+  for (let s = 0; s < STR_COUNT; s++) {
+    for (let f = 1; f <= numEditFrets; f++) {
+      const x = offsetX + s * stringSpacing - stringSpacing / 2;
+      const y = offsetY + (f - 1) * fretSpacing;
+      svg += `<g class="edit-cell" data-string="${s}" data-fret="${f}">`;
+      svg += `<rect x="${x}" y="${y}" width="${stringSpacing}" height="${fretSpacing}"/>`;
+      svg += `</g>`;
+    }
+  }
+
+  // Render selected positions
+  for (let i = 0; i < STR_COUNT; i++) {
+    const f = draftFrets[i];
+    if (f > 0) {
+      const x = offsetX + i * stringSpacing;
+      const y = offsetY + (f - 0.5) * fretSpacing;
+      svg += `<circle cx="${x}" cy="${y}" r="9" fill="#4A9EDB" stroke="#0a0a0a" stroke-width="1" pointer-events="none"/>`;
+      const fontSize = f >= 10 ? 9 : 10;
+      svg += `<text x="${x}" y="${y + 3.5}" fill="#0a0a0a" font-size="${fontSize}" text-anchor="middle" font-weight="700" font-family="monospace" pointer-events="none">${f}</text>`;
+    }
+  }
+
+  // Fret number indicators on the right side of the diagram
+  for (let i = 1; i <= numEditFrets; i++) {
+    svg += `<text x="${offsetX + (STR_COUNT - 1) * stringSpacing + 14}" y="${offsetY + (i - 0.5) * fretSpacing + 3}" fill="#444" font-size="9" text-anchor="middle" font-family="monospace">${i}</text>`;
+  }
+
+  // Bottom: tuning labels
+  for (let i = 0; i < STR_COUNT; i++) {
+    svg += `<text x="${offsetX + i * stringSpacing}" y="${offsetY + numEditFrets * fretSpacing + 14}" fill="#4A9EDB" font-size="9" text-anchor="middle" font-family="monospace">${TUNING[i] || ''}</text>`;
+    const f = draftFrets[i];
+    let label = f === -1 ? '×' : f === 0 ? '○' : f.toString();
+    svg += `<text x="${offsetX + i * stringSpacing}" y="${offsetY + numEditFrets * fretSpacing + 28}" fill="#666" font-size="10" text-anchor="middle" font-family="monospace" font-weight="600">${label}</text>`;
+  }
+
+  svg += `</svg>`;
+  return svg;
+}
+
+// ====== Single tooltip global ======
+let CURRENT_TOOLTIP_CLOSE = null;
+
+function attachChordTooltips(root) {
+  root = root || document;
+  const chords = root.querySelectorAll('.chord');
+  chords.forEach(el => attachOneChord(el, el.dataset.chord));
+}
+
+function attachOneChord(el, chordNameInit) {
+  // State that lives across re-renders for THIS tooltip session
+  let chordName = chordNameInit;
+  let posIndex = 0;
+  let tooltip = null;
+  let mode = 'view';                   // 'view' | 'add' | 'harmonic'
+  let harmTab = 'diatonique';
+  let draftFrets = [-1, -1, -1, -1, -1, -1];
+  let draftName = '';
+
+  function getAllPositions() {
+    const lib = lookupChord(chordName);
+    const user = getUserVoicings(chordName).map(v => Object.assign({ _user: true }, v));
+    return [...lib, ...user];
+  }
+
+  function maxHeight() {
+    const positions = getAllPositions();
+    if (positions.length === 0) return 165;
+    let maxH = 0;
+    for (const p of positions) {
+      const fretted = p.frets.filter(f => f > 0);
+      const maxFret = fretted.length > 0 ? Math.max(...fretted) : p.baseFret + 3;
+      const numFrets = Math.max(4, maxFret - p.baseFret + 1);
+      const H = 36 + numFrets * 22 + 22;
+      if (H > maxH) maxH = H;
+    }
+    return maxH;
+  }
+
+  function position() {
+    if (!tooltip) return;
+    const rect = el.getBoundingClientRect();
+    const ttRect = tooltip.getBoundingClientRect();
+    let left = rect.left + window.scrollX + rect.width / 2 - ttRect.width / 2;
+    const maxLeft = window.scrollX + window.innerWidth - ttRect.width - 12;
+    const minLeft = window.scrollX + 12;
+    if (left > maxLeft) left = maxLeft;
+    if (left < minLeft) left = minLeft;
+    let top = rect.bottom + window.scrollY + 10;
+    if (rect.bottom + ttRect.height + 20 > window.innerHeight) {
+      top = rect.top + window.scrollY - ttRect.height - 10;
+    }
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  }
+
+  function renderActionsBar() {
+    const inProg = el.dataset.progIdx !== undefined;
+    const replaceBtn = inProg
+      ? `<button class="tt-action-btn ${mode === 'rename' ? 'active' : ''}" data-mode="rename" type="button">✎ remplacer</button>`
+      : '';
+    return `
+      <div class="tt-actions">
+        ${replaceBtn}
+        <button class="tt-action-btn ${mode === 'add' ? 'active' : ''}" data-mode="add" type="button">+ doigté</button>
+        <button class="tt-action-btn ${mode === 'harmonic' ? 'active' : ''}" data-mode="harmonic" type="button">⚇ harmonique</button>
+      </div>
+    `;
+  }
+
+  function renderRenameForm() {
+    return `
+      <div class="tt-name">✎ Remplacer ${chordName} par…</div>
+      <div class="tt-add-form">
+        <input class="tt-rename-input" type="text" placeholder="ex: G, Am7, F#m, Cmaj9…" value="">
+        <span class="tt-form-label" style="color:var(--text-faint);font-size:10px">
+          Tape n'importe quel nom d'accord (les inconnus s'affichent sans diagramme).
+          La progression sera mise à jour automatiquement.
+        </span>
+        <div class="tt-form-buttons">
+          <button class="tt-rename-cancel" type="button">✕ annuler</button>
+          <button class="save tt-rename-save" type="button">✓ remplacer</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function setCurrentChord(newName, alsoReplaceInProgression) {
+    if (alsoReplaceInProgression && el.dataset.progIdx !== undefined) {
+      const idx = parseInt(el.dataset.progIdx, 10);
+      replaceChordAtIdx(idx, newName);
+      // The span's data-chord and textContent are now updated.
+      // Keep `el` in sync with the (now mutated) span, same reference still valid.
+    }
+    chordName = newName;
+    posIndex = 0;
+    mode = 'view';
+    update();
+  }
+
+  function renderViewBody() {
+    const positions = getAllPositions();
+    if (positions.length === 0) {
+      return `
+        <div class="tt-name">${chordName}</div>
+        <div class="tt-fretboard" style="height: auto; min-height: 80px;">
+          <div style="color: var(--text-faint); font-size: 12px; text-align: center; padding: 16px 8px; line-height: 1.5;">
+            Aucun voicing dans la bibliothèque pour <strong style="color:var(--text)">${chordName}</strong>
+            <br>en accordage <strong style="color:var(--text)">${tuningKey()}</strong>.
+            <br><br>
+            Clique <strong style="color:var(--accent)">+ doigté</strong> pour entrer le tien.
+          </div>
+        </div>
+      `;
+    }
+    const p = positions[posIndex];
+    const isUser = p._user;
+    const pinned = isPinned(chordName, posIndex);
+    const dots = positions.map((_, i) => `<span class="tt-dot${i === posIndex ? ' active' : ''}${isPinned(chordName, i) ? ' pinned' : ''}" data-i="${i}"></span>`).join('');
+    const userBadge = isUser ? '<span class="tt-custom-badge">★ custom</span>' : '';
+    const deleteBtn = isUser ? `<button class="tt-delete-btn" type="button">supprimer ce doigté</button>` : '';
+    return `
+      <div class="tt-name">${chordName}, ${p.name}${userBadge}</div>
+      <div class="tt-fretboard" style="height: ${maxHeight()}px;">${renderFretboard(p)}</div>
+      <div class="tt-controls">
+        <button class="tt-arrow tt-prev" type="button">‹</button>
+        <span class="tt-pos">${posIndex + 1} / ${positions.length}</span>
+        <button class="tt-arrow tt-next" type="button">›</button>
+        <button class="tt-pin ${pinned ? 'pinned' : ''}" type="button" title="${pinned ? 'Retirer du panneau' : 'Épingler au panneau imprimable'}">★</button>
+      </div>
+      <div class="tt-dots">${dots}</div>
+      ${deleteBtn}
+    `;
+  }
+
+  function renderAddForm() {
+    return `
+      <div class="tt-name">+ Doigté · ${chordName} · ${tuningKey()}</div>
+      <div class="fret-editor">${renderFretboardEditor(draftFrets, 7)}</div>
+      <div class="tt-add-form">
+        <input class="tt-add-name" type="text" placeholder="Nom (optionnel)" value="${draftName.replace(/"/g, '&quot;')}">
+        <div class="tt-form-buttons">
+          <button class="tt-add-clear" type="button">↺ vider</button>
+          <button class="tt-add-cancel" type="button">✕ annuler</button>
+          <button class="save tt-add-save" type="button">✓ ajouter</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderHarmonicPanel() {
+    const types = [
+      ['diatonique', 'Diatonique'],
+      ['quintes',    'Quintes'],
+      ['jazz',       'Jazz'],
+      ['modes',      'Modes']
+    ];
+    const tabs = types.map(([k, lab]) =>
+      `<button class="tt-harm-tab ${harmTab === k ? 'active' : ''}" data-tab="${k}" type="button">${lab}</button>`
+    ).join('');
+    const items = getHarmonic(chordName, harmTab).map(it =>
+      `<button class="tt-harm-item" data-chord="${it.chord}" type="button"><span class="h-chord">${it.chord}</span><span class="h-label">${it.label}</span></button>`
+    ).join('');
+    return `
+      <div class="tt-name">⚇ ${chordName}, voisins ${harmTab}</div>
+      <div class="tt-harm-panel">
+        <div class="tt-harm-tabs">${tabs}</div>
+        <div class="tt-harm-list">${items || '<div style="color:var(--text-faint);font-size:11px;text-align:center;padding:8px;">Aucune suggestion</div>'}</div>
+      </div>
+    `;
+  }
+
+  function update() {
+    if (!tooltip) return;
+    let body;
+    if (mode === 'add') body = renderAddForm();
+    else if (mode === 'harmonic') body = renderHarmonicPanel();
+    else if (mode === 'rename') body = renderRenameForm();
+    else body = renderViewBody();
+
+    tooltip.innerHTML = `<button class="tt-close" type="button" aria-label="Fermer">×</button>` + body + renderActionsBar();
+    bindEvents();
+  }
+
+  function bindEvents() {
+    // Close button
+    const closeBtn = tooltip.querySelector('.tt-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeTooltip);
+
+    // View mode controls, navigate (no auto-pin)
+    const prev = tooltip.querySelector('.tt-prev');
+    if (prev) prev.addEventListener('click', e => {
+      e.stopPropagation();
+      const positions = getAllPositions();
+      posIndex = (posIndex - 1 + positions.length) % positions.length;
+      update();
+    });
+    const next = tooltip.querySelector('.tt-next');
+    if (next) next.addEventListener('click', e => {
+      e.stopPropagation();
+      const positions = getAllPositions();
+      posIndex = (posIndex + 1) % positions.length;
+      update();
+    });
+    tooltip.querySelectorAll('.tt-dot').forEach(d => {
+      d.addEventListener('click', e => {
+        posIndex = parseInt(e.target.dataset.i, 10);
+        update();
+      });
+    });
+    // ★ Pin toggle, adds/removes current voicing from the printable panel
+    const pinBtn = tooltip.querySelector('.tt-pin');
+    if (pinBtn) pinBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      togglePin(chordName, posIndex);
+      renderActiveVoicings();
+      update();
+    });
+
+    // Delete custom voicing
+    const delBtn = tooltip.querySelector('.tt-delete-btn');
+    if (delBtn) delBtn.addEventListener('click', () => {
+      const lib = lookupChord(chordName);
+      const userIdx = posIndex - lib.length;
+      if (userIdx >= 0) {
+        removeUserVoicing(chordName, userIdx);
+        posIndex = Math.max(0, posIndex - 1);
+        renderActiveVoicings();
+        update();
+      }
+    });
+
+    // Action buttons
+    tooltip.querySelectorAll('.tt-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const m = btn.dataset.mode;
+        if (mode === m) {
+          mode = 'view';
+        } else {
+          mode = m;
+          if (mode === 'add') {
+            // Pre-fill draft from current displayed voicing if any
+            const positions = getAllPositions();
+            if (positions[posIndex]) {
+              draftFrets = positions[posIndex].frets.slice();
+            } else {
+              draftFrets = [-1, -1, -1, -1, -1, -1];
+            }
+            draftName = '';
+          }
+        }
+        update();
+      });
+    });
+
+    // Fretboard editor (interactive cells)
+    const editor = tooltip.querySelector('.fret-editor');
+    if (editor) {
+      editor.addEventListener('click', e => {
+        const target = e.target.closest('.edit-cell, .edit-toggle');
+        if (!target) return;
+        const s = parseInt(target.dataset.string, 10);
+        const f = parseInt(target.dataset.fret, 10);
+        if (isNaN(s) || isNaN(f)) return;
+        // Click on already-set cell: clear (set to muted)
+        if (draftFrets[s] === f && f !== -1) {
+          draftFrets[s] = -1;
+        } else {
+          draftFrets[s] = f;
+        }
+        // Re-render only the editor SVG, not the whole tooltip, to keep focus
+        const ed = tooltip.querySelector('.fret-editor');
+        if (ed) ed.innerHTML = renderFretboardEditor(draftFrets, 7);
+      });
+    }
+
+    // Add form save/cancel/clear
+    const addSave = tooltip.querySelector('.tt-add-save');
+    const addCancel = tooltip.querySelector('.tt-add-cancel');
+    const addClear = tooltip.querySelector('.tt-add-clear');
+    const addName = tooltip.querySelector('.tt-add-name');
+    if (addName) {
+      addName.addEventListener('input', () => { draftName = addName.value; });
+    }
+    if (addSave) addSave.addEventListener('click', () => {
+      // Validate: at least one string must have a fret >= 0 (open or fretted)
+      const playable = draftFrets.some(f => f >= 0);
+      if (!playable) {
+        addSave.textContent = '× rien à jouer';
+        setTimeout(() => { addSave.textContent = '✓ ajouter'; }, 1500);
+        return;
+      }
+      const v = buildVoicingFromFrets(draftFrets.slice(), draftName.trim() || 'Custom');
+      addUserVoicing(chordName, v);
+      const positions = getAllPositions();
+      posIndex = positions.length - 1;
+      // Auto-pin newly added custom voicing so it shows in panel right away
+      if (!isPinned(chordName, posIndex)) togglePin(chordName, posIndex);
+      renderActiveVoicings();
+      mode = 'view';
+      update();
+    });
+    if (addCancel) addCancel.addEventListener('click', () => { mode = 'view'; update(); });
+    if (addClear) addClear.addEventListener('click', () => {
+      draftFrets = [-1, -1, -1, -1, -1, -1];
+      const ed = tooltip.querySelector('.fret-editor');
+      if (ed) ed.innerHTML = renderFretboardEditor(draftFrets, 7);
+    });
+
+    // Harmonic tabs + items
+    tooltip.querySelectorAll('.tt-harm-tab').forEach(t => {
+      t.addEventListener('click', () => { harmTab = t.dataset.tab; update(); });
+    });
+    tooltip.querySelectorAll('.tt-harm-item').forEach(item => {
+      item.addEventListener('click', () => {
+        // If this chord is in the progression, replace it there too
+        setCurrentChord(item.dataset.chord, true);
+      });
+    });
+
+    // Rename form
+    const renameInput = tooltip.querySelector('.tt-rename-input');
+    const renameSave = tooltip.querySelector('.tt-rename-save');
+    const renameCancel = tooltip.querySelector('.tt-rename-cancel');
+    if (renameInput) {
+      renameInput.focus();
+      renameInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') renameSave.click();
+        if (e.key === 'Escape') renameCancel.click();
+      });
+    }
+    if (renameSave) renameSave.addEventListener('click', () => {
+      const v = renameInput.value.trim();
+      if (!v) return;
+      setCurrentChord(v, true);
+    });
+    if (renameCancel) renameCancel.addEventListener('click', () => { mode = 'view'; update(); });
+  }
+
+  function closeTooltip() {
+    if (tooltip) { tooltip.remove(); tooltip = null; }
+    if (CURRENT_TOOLTIP_CLOSE === closeTooltip) CURRENT_TOOLTIP_CLOSE = null;
+  }
+
+  function show() {
+    if (tooltip) return; // already open
+    // Close any other open tooltip first
+    if (CURRENT_TOOLTIP_CLOSE) CURRENT_TOOLTIP_CLOSE();
+    chordName = el.dataset.chord || chordNameInit;
+    // Open at the first pinned position for this chord (matches the panel)
+    const pinned = getPinned(chordName);
+    posIndex = pinned[0] || 0;
+    mode = 'view';
+    harmTab = 'diatonique';
+    draftFrets = [-1, -1, -1, -1, -1, -1];
+    draftName = '';
+    tooltip = document.createElement('div');
+    tooltip.className = 'chord-tooltip';
+    document.body.appendChild(tooltip);
+    update();
+    position();
+    CURRENT_TOOLTIP_CLOSE = closeTooltip;
+  }
+
+  // Open on hover (no auto-close on leave, user clicks × to close)
+  el.addEventListener('mouseenter', show);
+}
+
+// ====== INIT ======
+(function init() {
+  // Restore saved tuning
+  try {
+    const savedTuning = localStorage.getItem('tehilim-tuning');
+    if (savedTuning) {
+      const arr = JSON.parse(savedTuning);
+      if (Array.isArray(arr) && arr.length === 6) {
+        setTuning(arr);
+        const presetEl = document.getElementById('tuning-preset');
+        const customEl = document.getElementById('tuning-custom');
+        const matched = findTuningPreset(arr);
+        if (matched) {
+          presetEl.value = matched;
+        } else {
+          presetEl.value = 'custom';
+          customEl.hidden = false;
+          customEl.value = arr.join(' ');
+        }
+      }
+    } else {
+      // No saved tuning, ensure UI shows current
+      setTuning(TUNING);
+    }
+  } catch (e) {}
+
+  // Load user voicings + active positions
+  loadUserVoicings();
+  loadActivePos();
+
+  // Restore saved progression
+  let progression = DEFAULT_PROGRESSION;
+  try {
+    const savedProg = localStorage.getItem('tehilim-progression');
+    if (savedProg) progression = savedProg;
+  } catch (e) {}
+  applyProgression(progression);
+
+  // Attach tooltips for the rest of the page (chant-tip etc.)
+  attachChordTooltips(document.querySelector('.chant-tip'));
+
+  // ===== Tuning UI handlers =====
+  const presetEl = document.getElementById('tuning-preset');
+  const customEl = document.getElementById('tuning-custom');
+  presetEl.addEventListener('change', () => {
+    if (presetEl.value === 'custom') {
+      customEl.hidden = false;
+      customEl.focus();
+      customEl.value = TUNING.join(' ');
+    } else {
+      customEl.hidden = true;
+      const arr = TUNING_PRESETS[presetEl.value];
+      if (arr) setTuning(arr);
+    }
+  });
+  customEl.addEventListener('input', () => {
+    const arr = parseTuningString(customEl.value);
+    if (arr) setTuning(arr);
+  });
+
+  // Click outside chord/tooltip closes the open tooltip.
+  // Use CAPTURE phase so we evaluate the target BEFORE the tooltip's own
+  // click handlers replace innerHTML and detach the target from the DOM.
+  document.addEventListener('click', e => {
+    if (!CURRENT_TOOLTIP_CLOSE) return;
+    if (e.target.closest('.chord-tooltip') || e.target.closest('.chord')) return;
+    CURRENT_TOOLTIP_CLOSE();
+  }, true);
+
+  // ===== Progression reset =====
+  const resetBtn = document.getElementById('prog-reset');
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    applyProgression(DEFAULT_PROGRESSION);
+    try { localStorage.removeItem('tehilim-progression'); } catch (e) {}
+  });
+
+  // ===== Print button =====
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+})();
+</script>
+
+</body>
+</html>

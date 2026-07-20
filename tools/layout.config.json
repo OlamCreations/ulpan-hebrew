@@ -1,0 +1,49 @@
+{
+  "_comment": "Repo layout contract. Consumed by tools/migrate-layout.mjs (one-shot move + link rewrite), tools/build-sw.mjs (precache manifest) and tools/build-404.mjs (legacy-URL shim). Adding a new page family = adding a rule here, nothing else.",
+
+  "pageRules": [
+    { "folder": "",          "match": "^index\\.html$" },
+    { "folder": "lessons",   "match": "^\\d+-.+\\.html$" },
+    { "folder": "roots",     "match": "^root-.+\\.html$" },
+    { "folder": "liturgy",   "match": "^(prayers|shabbat|songs|tehilim)-.+\\.html$" },
+    { "folder": "reference", "match": "^(morpho|cursive|calendar)-.+\\.html$" },
+    { "folder": "reference", "match": "^expressions\\.html$" }
+  ],
+
+  "assets": {
+    "folder": "assets",
+    "files": [
+      "app.js", "style.css", "track.js", "translit.js", "quicksay.js", "hub.js",
+      "frank-ruhl-he.woff2", "frank-ruhl-lext.woff2", "frank-ruhl-lat.woff2",
+      "KtavYadCLM-MediumItalic.ttf", "icon-192.png", "icon-512.png"
+    ]
+  },
+
+  "_dataComment": "data/ holds only what the site itself fetches at runtime. Tool reports live in tools/reports/ so they never reach the precache.",
+  "data": {
+    "folder": "data",
+    "files": ["phrasebook.json", "expressions.json"]
+  },
+
+  "rootFiles": [
+    "index.html", "sw.js", "manifest.json", "404.html",
+    "README.md", "CURRICULUM.md", "MORPHOLOGIE-TRACK.md",
+    "LICENSE", "LICENSE-CONTENT", ".gitignore"
+  ],
+
+  "drop": ["_roots_build", "_tehilim_build"],
+
+  "_toolScopesComment": "Which folders the corpus tools walk. Consumed by tools/paths.mjs so no tool hardcodes a folder name.",
+  "toolScopes": {
+    "lessons": ["lessons"],
+    "allPages": ["", "lessons", "roots", "liturgy", "reference"]
+  },
+
+  "serviceWorker": {
+    "file": "sw.js",
+    "cachePrefix": "ulpan-v",
+    "precacheDirs": ["", "lessons", "roots", "liturgy", "reference", "assets", "data"],
+    "precacheExtensions": [".html", ".js", ".css", ".json", ".woff2", ".ttf", ".png"],
+    "precacheExclude": ["sw.js", "404.html"]
+  }
+}

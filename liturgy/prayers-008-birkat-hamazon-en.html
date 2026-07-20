@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birkat HaMazon: Grace After Meals</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<style>
+ /* Prayer page, hide all chord/guitar machinery */
+ .t-chord, .active-voicings, .stich-chords, .progression, .chord-popup, .chord-tooltip { display: none !important; }
+ /* Tehilim, chant-friendly verse layout */
+ .t-intro {
+ background: var(--bg-card);
+ border: 1px solid var(--border);
+ border-radius: 6px;
+ padding: 22px 28px;
+ margin-bottom: 24px;
+ color: var(--text-dim);
+ font-size: 15px;
+ line-height: 1.65;
+ }
+ .t-intro strong { color: var(--text); }
+
+ .t-chord {
+ background: var(--bg-card);
+ border: 1px solid var(--accent-dim);
+ border-radius: 6px;
+ padding: 18px 22px;
+ margin-bottom: 32px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 14px;
+ color: var(--text-dim);
+ }
+ .t-chord .label-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 10px;
+ gap: 12px;
+ flex-wrap: wrap;
+ }
+ .t-chord .label {
+ color: var(--accent);
+ font-size: 11px;
+ text-transform: uppercase;
+ letter-spacing: 1.5px;
+ font-family: -apple-system, 'Inter', sans-serif;
+ }
+ .t-chord .progression {
+ color: var(--text);
+ font-size: 16px;
+ letter-spacing: 2px;
+ line-height: 1.6;
+ }
+ .t-chord .meta-line { font-size: 12px; margin-top: 8px; color: var(--text-faint); font-family: -apple-system, 'Inter', sans-serif; }
+ .t-chord .tuning-row {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ margin-bottom: 12px;
+ flex-wrap: wrap;
+ font-family: -apple-system, 'Inter', sans-serif;
+ font-size: 12px;
+ }
+ .t-chord .tuning-row .tuning-label {
+ color: var(--accent);
+ font-size: 10px;
+ text-transform: uppercase;
+ letter-spacing: 1.5px;
+ font-weight: 600;
+ }
+ .t-chord .tuning-row select, .t-chord .tuning-row input {
+ background: var(--bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ padding: 4px 8px;
+ border-radius: 4px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 12px;
+ outline: none;
+ cursor: pointer;
+ }
+ .t-chord .tuning-row select:hover, .t-chord .tuning-row select:focus,
+ .t-chord .tuning-row input:hover, .t-chord .tuning-row input:focus { border-color: var(--accent); }
+ .t-chord .tuning-row input { width: 130px; cursor: text; }
+ .t-chord .tuning-row .tuning-current {
+ color: var(--text-faint);
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 11px;
+ letter-spacing: 1px;
+ margin-left: auto;
+ }
+
+ .t-tuning {
+ background: var(--bg-card);
+ border: 1px solid var(--border);
+ border-radius: 6px;
+ padding: 12px 18px;
+ margin-bottom: 12px;
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ flex-wrap: wrap;
+ font-family: -apple-system, 'Inter', sans-serif;
+ font-size: 13px;
+ }
+ .t-tuning .tuning-label {
+ color: var(--accent);
+ font-size: 11px;
+ text-transform: uppercase;
+ letter-spacing: 1.5px;
+ font-weight: 600;
+ }
+ .t-tuning select, .t-tuning input {
+ background: var(--bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ padding: 6px 10px;
+ border-radius: 4px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 13px;
+ outline: none;
+ cursor: pointer;
+ }
+ .t-tuning select:hover, .t-tuning input:hover, .t-tuning select:focus, .t-tuning input:focus {
+ border-color: var(--accent);
+ }
+ .t-tuning input { width: 160px; cursor: text; }
+ .t-tuning .tuning-current {
+ color: var(--text-dim);
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 12px;
+ letter-spacing: 1px;
+ margin-left: auto;
+ }
+
+ .link-btn {
+ background: transparent;
+ border: none;
+ color: var(--text-dim);
+ cursor: pointer;
+ font-family: inherit;
+ font-size: inherit;
+ text-decoration: underline;
+ padding: 0;
+ }
+ .link-btn:hover { color: var(--accent); }
+
+ /* Active voicings panel */
+ .active-voicings {
+ background: var(--bg-card);
+ border: 1px solid var(--border);
+ border-radius: 6px;
+ padding: 18px 22px;
+ margin-bottom: 32px;
+ }
+ .active-voicings .av-title {
+ color: var(--accent);
+ font-size: 11px;
+ text-transform: uppercase;
+ letter-spacing: 1.5px;
+ margin-bottom: 14px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ }
+ .active-voicings .av-hint {
+ color: var(--text-faint);
+ font-size: 11px;
+ margin-top: 12px;
+ font-style: italic;
+ }
+ .voicings-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+ gap: 12px;
+ }
+ .voicing-card {
+ background: var(--bg);
+ border: 1px solid var(--border);
+ border-radius: 6px;
+ padding: 10px 8px 6px;
+ text-align: center;
+ cursor: pointer;
+ transition: all 0.15s;
+ }
+ .voicing-card:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+ .voicing-card .voicing-name {
+ color: var(--accent);
+ font-weight: 700;
+ font-size: 16px;
+ margin-bottom: 4px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ }
+ .voicing-card .voicing-diagram {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ min-height: 110px;
+ }
+ .voicing-card .voicing-diagram svg { max-width: 110px; height: auto; }
+ .voicing-card .voicing-label {
+ color: var(--text-dim);
+ font-size: 10px;
+ margin-top: 4px;
+ line-height: 1.3;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+ }
+ .voicing-card .voicing-empty {
+ color: var(--text-faint);
+ font-size: 10px;
+ padding: 32px 4px;
+ }
+ .voicing-card { position: relative; }
+ .voicing-unpin {
+ position: absolute;
+ top: 4px;
+ right: 4px;
+ width: 18px;
+ height: 18px;
+ border-radius: 50%;
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--text-faint);
+ cursor: pointer;
+ font-size: 11px;
+ line-height: 1;
+ padding: 0 0 1px 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.15s;
+ opacity: 0;
+ z-index: 2;
+ }
+ .voicing-card:hover .voicing-unpin { opacity: 1; }
+ .voicing-unpin:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+ /* ★ pin star inside popup */
+ .chord-tooltip .tt-pin {
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--text-faint);
+ width: 28px;
+ height: 28px;
+ border-radius: 50%;
+ cursor: pointer;
+ font-size: 14px;
+ line-height: 1;
+ padding: 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.15s;
+ flex-shrink: 0;
+ margin-left: 4px;
+ }
+ .chord-tooltip .tt-pin:hover { color: #fbbf24; border-color: #fbbf24; }
+ .chord-tooltip .tt-pin.pinned { color: #fbbf24; border-color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+
+ /* Print styles, print EVERYTHING (full HTML page), just recolor for paper */
+ @media print {
+ @page { margin: 10mm; }
+ body { background: #fff !important; color: #000 !important; padding: 0 !important; font-size: 11pt; }
+ .container { max-width: 100% !important; padding: 0 !important; }
+ /* Hide only truly UI-only chrome that has no value on paper */
+ .chord-tooltip, #print-btn { display: none !important; }
+ .back { display: none !important; }
+ /* Recolor cards/blocks to white-on-black-text */
+ .t-intro, .t-chord, .active-voicings, .verse, .voicing-card, .chant-tip {
+ background: #fff !important;
+ color: #000 !important;
+ border: 1px solid #aaa !important;
+ box-shadow: none !important;
+ page-break-inside: avoid;
+ }
+ .verse, .active-voicings, .voicing-card { page-break-inside: avoid; }
+ .verse { margin-bottom: 14px; padding: 14px 16px; }
+ .verse-num { color: #000 !important; border-color: #000 !important; background: #f0f0f0 !important; }
+ .verse-full { color: #000 !important; border-color: #888 !important; }
+ .word .he { color: #000 !important; }
+ .word .tr { color: #444 !important; }
+ .word .tr b { color: #000 !important; }
+ .word .fr { color: #555 !important; }
+ .stich-translation { color: #444 !important; border-color: #888 !important; }
+ .verse-summary { background: #f7f7f7 !important; border-color: #888 !important; color: #000 !important; }
+ .verse-summary strong { color: #000 !important; }
+ .label, .av-title, .voicing-name, .verse-num, .tuning-label, .meta-line, .chant-tip h3 { color: #000 !important; }
+ .meta-line, .av-hint, .chant-tip { color: #333 !important; }
+ .chant-tip ul li { color: #000 !important; }
+ .tuning-row select, .tuning-row input { background: #fff !important; color: #000 !important; border-color: #888 !important; }
+ .progression { color: #000 !important; }
+ .progression .chord { color: #000 !important; border-bottom: 1px dotted #444; background: transparent !important; }
+ /* Voicing-card unpin × not useful on paper */
+ .voicing-unpin { display: none !important; }
+ /* Convert green SVG elements to black/grey for print */
+ svg text { fill: #000 !important; }
+ svg line { stroke: #555 !important; }
+ svg rect[fill="#4A9EDB"], svg rect[fill="#ccc"] { fill: #444 !important; }
+ svg circle[fill="#4A9EDB"] { fill: #000 !important; stroke: #000 !important; }
+ svg circle[stroke="#4A9EDB"] { stroke: #000 !important; }
+ h1 { color: #000 !important; font-size: 18pt; }
+ .subtitle { color: #444 !important; }
+ a { color: #000 !important; text-decoration: none !important; }
+ header { border-bottom: 1px solid #000 !important; }
+ .nav { display: none !important; }
+ }
+
+ .verse {
+ background: var(--bg-card);
+ border: 1px solid var(--border);
+ border-radius: 8px;
+ padding: 32px 28px 26px;
+ margin-bottom: 28px;
+ }
+ .verse-num {
+ display: inline-block;
+ font-size: 11px;
+ color: var(--accent);
+ font-weight: 600;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ border: 1px solid var(--accent-dim);
+ border-radius: 50px;
+ padding: 4px 12px;
+ margin-bottom: 18px;
+ }
+
+ .verse-full {
+ font-family: 'Frank Ruhl Libre', 'David', 'David CLM', serif;
+ direction: rtl;
+ font-size: 30px;
+ line-height: 1.7;
+ text-align: right;
+ color: var(--text);
+ margin-bottom: 24px;
+ padding-bottom: 22px;
+ border-bottom: 1px dashed var(--border);
+ }
+
+ .stich {
+ margin-bottom: 22px;
+ }
+ .stich:last-of-type { margin-bottom: 14px; }
+
+ .stich-words {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 22px 28px;
+ direction: rtl;
+ margin-bottom: 10px;
+ }
+
+ .word {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ text-align: center;
+ direction: rtl;
+ min-width: 40px;
+ }
+ .word .he {
+ font-family: 'Frank Ruhl Libre', 'David', serif;
+ font-size: 30px;
+ line-height: 1.2;
+ color: var(--text);
+ margin-bottom: 4px;
+ direction: rtl;
+ }
+ .word .tr {
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 13px;
+ color: var(--accent);
+ letter-spacing: 0.3px;
+ direction: ltr;
+ margin-bottom: 4px;
+ }
+ .word .tr b { color: #fff; font-weight: 700; }
+ html.light .word .tr b { color: #000; }
+ .word .fr {
+ font-size: 13px;
+ color: var(--text-dim);
+ direction: ltr;
+ font-style: italic;
+ line-height: 1.3;
+ max-width: 130px;
+ }
+
+ .stich-translation {
+ color: var(--text-dim);
+ font-size: 14px;
+ font-style: italic;
+ padding-right: 12px;
+ border-right: 2px solid var(--accent-dim);
+ margin-top: 14px;
+ line-height: 1.5;
+ text-align: right;
+ direction: rtl;
+ unicode-bidi: plaintext;
+ }
+
+ .verse-summary {
+ background: rgba(74, 158, 219, 0.05);
+ border-right: 3px solid var(--accent);
+ padding: 14px 18px;
+ margin-top: 18px;
+ font-size: 14px;
+ color: var(--text);
+ line-height: 1.6;
+ border-radius: 4px 0 0 4px;
+ text-align: right;
+ direction: rtl;
+ unicode-bidi: plaintext;
+ }
+ .verse-summary strong { color: var(--accent); }
+
+ .chant-tip {
+ background: var(--bg-card);
+ border: 1px solid var(--border);
+ border-radius: 6px;
+ padding: 22px 28px;
+ margin-top: 32px;
+ font-size: 14px;
+ line-height: 1.65;
+ color: var(--text-dim);
+ }
+ .chant-tip h3 { color: var(--text); margin-bottom: 12px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+ .chant-tip ul { padding-left: 22px; margin-top: 10px; }
+ .chant-tip li { margin-bottom: 6px; }
+
+ /* Chord hover tooltips with fretboard diagram */
+ .chord {
+ cursor: help;
+ color: var(--accent);
+ border-bottom: 1px dotted var(--accent-dim);
+ font-weight: 700;
+ padding: 0 2px;
+ transition: all 0.15s;
+ }
+ .chord:hover {
+ color: #fff;
+ background: rgba(74, 158, 219, 0.18);
+ border-bottom-color: var(--accent);
+ border-radius: 3px;
+ }
+ html.light .chord:hover { color: #000; }
+
+ .chord-tooltip {
+ position: absolute;
+ background: #0a0a0a;
+ border: 1px solid var(--accent);
+ border-radius: 8px;
+ padding: 14px 14px 10px;
+ z-index: 1000;
+ box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(74, 158, 219, 0.15);
+ font-family: -apple-system, 'Inter', sans-serif;
+ pointer-events: auto;
+ width: 240px;
+ box-sizing: border-box;
+ }
+ html.light .chord-tooltip { background: #fff; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18); }
+ .chord-tooltip .tt-name {
+ color: var(--accent);
+ font-size: 13px;
+ font-weight: 600;
+ margin-bottom: 8px;
+ text-align: center;
+ letter-spacing: 0.3px;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+ .chord-tooltip svg { display: block; margin: 0 auto; }
+ .chord-tooltip .tt-fretboard {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ margin: 0 auto;
+ }
+ .chord-tooltip .tt-controls {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 10px;
+ margin-top: 10px;
+ }
+ .chord-tooltip .tt-arrow {
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--accent);
+ width: 30px;
+ height: 30px;
+ border-radius: 50%;
+ cursor: pointer;
+ font-size: 18px;
+ line-height: 1;
+ padding: 0 0 2px 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.15s;
+ font-family: -apple-system, 'Inter', sans-serif;
+ flex-shrink: 0;
+ user-select: none;
+ }
+ .chord-tooltip .tt-arrow:hover {
+ background: var(--accent);
+ color: #000;
+ border-color: var(--accent);
+ }
+ .chord-tooltip .tt-arrow:active { transform: scale(0.92); }
+ .chord-tooltip .tt-pos {
+ color: var(--text-dim);
+ font-size: 11px;
+ letter-spacing: 1px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ flex-grow: 1;
+ text-align: center;
+ }
+ .chord-tooltip .tt-dots {
+ display: flex;
+ justify-content: center;
+ gap: 5px;
+ margin-top: 8px;
+ }
+ .chord-tooltip .tt-dot {
+ width: 6px;
+ height: 6px;
+ border-radius: 50%;
+ background: var(--border);
+ transition: background 0.2s;
+ cursor: pointer;
+ }
+ .chord-tooltip .tt-dot:hover { background: var(--text-dim); }
+ .chord-tooltip .tt-dot.active { background: var(--accent); }
+
+ /* Tuning bar inside tooltip */
+ .chord-tooltip .tt-tuning {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ padding-bottom: 8px;
+ margin-bottom: 8px;
+ border-bottom: 1px solid var(--border);
+ font-size: 11px;
+ }
+ .chord-tooltip .tt-tuning select {
+ flex: 1;
+ background: var(--bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ padding: 3px 6px;
+ border-radius: 4px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 11px;
+ outline: none;
+ cursor: pointer;
+ }
+ .chord-tooltip .tt-tuning select:hover, .chord-tooltip .tt-tuning select:focus {
+ border-color: var(--accent);
+ }
+ .chord-tooltip .tt-tuning input {
+ flex: 1;
+ background: var(--bg);
+ border: 1px solid var(--accent-dim);
+ color: var(--text);
+ padding: 3px 6px;
+ border-radius: 4px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 11px;
+ outline: none;
+ }
+ .chord-tooltip .tt-tuning input:focus { border-color: var(--accent); }
+ .chord-tooltip .tt-tuning .tt-tuning-label {
+ color: var(--accent);
+ font-size: 10px;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ font-weight: 600;
+ }
+
+ /* Action buttons row */
+ .chord-tooltip .tt-actions {
+ display: flex;
+ gap: 6px;
+ margin-top: 10px;
+ padding-top: 8px;
+ border-top: 1px solid var(--border);
+ }
+ .chord-tooltip .tt-action-btn {
+ flex: 1;
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--text-dim);
+ padding: 5px 8px;
+ border-radius: 4px;
+ cursor: pointer;
+ font-family: -apple-system, 'Inter', sans-serif;
+ font-size: 11px;
+ transition: all 0.15s;
+ }
+ .chord-tooltip .tt-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+ .chord-tooltip .tt-action-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(74, 158, 219, 0.1); }
+
+ /* Custom voicing form */
+ .chord-tooltip .tt-add-form {
+ margin-top: 8px;
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ }
+ .chord-tooltip .tt-add-form input {
+ background: var(--bg);
+ border: 1px solid var(--accent-dim);
+ color: var(--text);
+ padding: 5px 8px;
+ border-radius: 4px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 12px;
+ outline: none;
+ }
+ .chord-tooltip .tt-add-form input:focus { border-color: var(--accent); }
+ .chord-tooltip .tt-add-form .tt-form-label {
+ color: var(--text-faint);
+ font-size: 10px;
+ letter-spacing: 0.5px;
+ }
+ .chord-tooltip .tt-add-form .tt-form-buttons {
+ display: flex;
+ gap: 6px;
+ justify-content: flex-end;
+ }
+ .chord-tooltip .tt-add-form button {
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--text-dim);
+ padding: 4px 10px;
+ border-radius: 4px;
+ cursor: pointer;
+ font-family: -apple-system, 'Inter', sans-serif;
+ font-size: 11px;
+ transition: all 0.15s;
+ }
+ .chord-tooltip .tt-add-form button.save { color: var(--accent); border-color: var(--accent); }
+ .chord-tooltip .tt-add-form button:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+ /* Custom voicing badge in name */
+ .chord-tooltip .tt-name .tt-custom-badge {
+ color: #fbbf24;
+ font-size: 10px;
+ margin-left: 4px;
+ }
+ .chord-tooltip .tt-delete-btn {
+ background: transparent;
+ border: none;
+ color: #ef4444;
+ cursor: pointer;
+ font-size: 11px;
+ padding: 2px 6px;
+ margin-top: 4px;
+ border-radius: 3px;
+ text-align: center;
+ width: 100%;
+ opacity: 0.6;
+ transition: opacity 0.15s;
+ }
+ .chord-tooltip .tt-delete-btn:hover { opacity: 1; background: rgba(239, 68, 68, 0.1); }
+
+ /* Harmonic panel */
+ .chord-tooltip .tt-harm-panel {
+ margin-top: 8px;
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ }
+ .chord-tooltip .tt-harm-tabs {
+ display: flex;
+ gap: 3px;
+ }
+ .chord-tooltip .tt-harm-tab {
+ flex: 1;
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--text-faint);
+ padding: 4px 2px;
+ border-radius: 4px;
+ cursor: pointer;
+ font-family: -apple-system, 'Inter', sans-serif;
+ font-size: 10px;
+ transition: all 0.15s;
+ }
+ .chord-tooltip .tt-harm-tab:hover { color: var(--accent); border-color: var(--accent-dim); }
+ .chord-tooltip .tt-harm-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(74, 158, 219, 0.1); }
+ .chord-tooltip .tt-harm-list {
+ display: flex;
+ flex-direction: column;
+ gap: 3px;
+ max-height: 180px;
+ overflow-y: auto;
+ }
+ .chord-tooltip .tt-harm-item {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ background: var(--bg);
+ border: 1px solid var(--border);
+ color: var(--text);
+ padding: 6px 10px;
+ border-radius: 4px;
+ cursor: pointer;
+ font-family: -apple-system, 'Inter', sans-serif;
+ font-size: 11px;
+ transition: all 0.15s;
+ text-align: left;
+ }
+ .chord-tooltip .tt-harm-item:hover { background: rgba(74, 158, 219, 0.1); border-color: var(--accent); }
+ .chord-tooltip .tt-harm-item .h-chord {
+ color: var(--accent);
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-weight: 600;
+ font-size: 12px;
+ }
+ .chord-tooltip .tt-harm-item .h-label {
+ color: var(--text-faint);
+ font-size: 10px;
+ }
+
+ /* Wider tooltip for popup-tuning UI */
+ .chord-tooltip { width: 280px; }
+
+ /* Close X button */
+ .chord-tooltip .tt-close {
+ position: absolute;
+ top: 6px;
+ right: 6px;
+ width: 22px;
+ height: 22px;
+ border-radius: 50%;
+ background: transparent;
+ border: 1px solid var(--border);
+ color: var(--text-dim);
+ cursor: pointer;
+ font-size: 14px;
+ line-height: 1;
+ padding: 0 0 1px 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.15s;
+ z-index: 2;
+ }
+ .chord-tooltip .tt-close:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+ /* Interactive fretboard editor */
+ .fret-editor {
+ margin: 10px auto 0;
+ user-select: none;
+ }
+ .fret-editor svg { cursor: pointer; }
+ .fret-editor .edit-cell rect { fill: transparent; transition: fill 0.1s; }
+ .fret-editor .edit-cell:hover rect { fill: rgba(74, 158, 219, 0.15); }
+ .fret-editor .edit-toggle rect { transition: fill 0.1s; }
+ .fret-editor .edit-toggle:hover rect { fill: rgba(74, 158, 219, 0.2); }
+ .fret-editor .edit-toggle.active rect { fill: var(--accent); }
+
+ @media (max-width: 600px) {
+ .verse-full { font-size: 24px; }
+ .word .he { font-size: 24px; }
+ .stich-words { gap: 16px 18px; }
+ }
+
+ /* Compact one-screen layout, verses in 3 RTL columns, no full Hebrew block, no per-verse summary (moved to PARDES card) */
+ .verse-full { display: none; }
+
+ .verses-grid {
+ column-count: 3;
+ column-gap: 10px;
+ direction: rtl; /* columns flow right-to-left: verset 1 top-right */
+ }
+ .verses-grid .verse-summary { display: none; } /* moved to global PARDES card */
+ .verses-grid .verse {
+ position: relative;
+ break-inside: avoid;
+ -webkit-column-break-inside: avoid;
+ page-break-inside: avoid;
+ padding: 8px 12px 6px;
+ margin-bottom: 2px; /* tight card stacking */
+ border-radius: 4px;
+ }
+ /* Verse number: small inline header, reserved vertical space, no overlap */
+ .verses-grid .verse-num {
+ position: static;
+ display: block;
+ font-size: 10px;
+ letter-spacing: 1px;
+ padding: 0 0 6px;
+ margin: 0;
+ border: none;
+ background: transparent;
+ border-radius: 0;
+ color: var(--text-faint);
+ opacity: 0.7;
+ text-transform: uppercase;
+ }
+ .verses-grid .stich { margin-bottom: 10px; }
+ .verses-grid .stich:last-of-type { margin-bottom: 4px; }
+ .verses-grid .stich-words {
+ gap: 8px 12px;
+ margin-bottom: 6px;
+ }
+ .verses-grid .word { min-width: 32px; }
+ .verses-grid .word .he {
+ font-size: 20px;
+ margin-bottom: 2px;
+ line-height: 1.2;
+ }
+ .verses-grid .word .tr {
+ font-size: 11px;
+ margin-bottom: 2px;
+ letter-spacing: 0.2px;
+ }
+ .verses-grid .word .fr {
+ font-size: 11px;
+ line-height: 1.25;
+ max-width: 100px;
+ }
+ .verses-grid .stich-translation {
+ font-size: 12px;
+ line-height: 1.4;
+ padding-right: 8px;
+ margin-top: 6px;
+ }
+
+ @media (max-width: 1100px) {
+ .verses-grid { column-count: 2; }
+ }
+ @media (max-width: 700px) {
+ .verses-grid { column-count: 1; }
+ }
+
+ /* PARDES analysis card */
+ .pardes-card {
+ background: var(--bg-card);
+ border: 1px solid var(--border);
+ border-radius: 6px;
+ padding: 24px 30px;
+ margin-top: 28px;
+ font-size: 13.5px;
+ line-height: 1.6;
+ color: var(--text-dim);
+ }
+ .pardes-card > h3 {
+ color: var(--text);
+ margin-bottom: 6px;
+ font-size: 15px;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ }
+ .pardes-card .pardes-intro {
+ font-size: 12px;
+ font-style: italic;
+ color: var(--text-faint);
+ margin-bottom: 20px;
+ }
+ .pardes-level {
+ border-left: 2px solid var(--accent-dim);
+ padding-left: 14px;
+ margin-bottom: 18px;
+ text-align: justify;
+ direction: ltr;
+ unicode-bidi: plaintext;
+ }
+ .pardes-level:last-child { margin-bottom: 0; }
+ .pardes-level h4 {
+ color: var(--accent);
+ font-size: 13px;
+ margin-bottom: 8px;
+ font-weight: 600;
+ letter-spacing: 0.5px;
+ }
+ .pardes-level p { margin: 0; }
+ .pardes-level strong { color: var(--text); }
+ .pardes-level em { color: var(--text); font-style: italic; }
+
+ /* Chord line, songbook style, placed directly under the Hebrew text (above English translation) */
+ .verses-grid .stich {
+ display: flex !important;
+ flex-direction: column !important;
+ direction: ltr !important; /* reset for flex layout, Hebrew children keep their own direction */
+ align-items: flex-end !important; /* push all children to the right edge */
+ }
+ .verses-grid .stich > * {
+ direction: rtl; /* restore RTL for content elements that need it */
+ }
+ .verses-grid .stich-words {
+ width: 100%; /* word grid still takes full width to wrap properly */
+ }
+ .verses-grid .stich-translation {
+ width: 100%; /* keep translation full-width so right-align inside it works */
+ }
+ .verses-grid .stich-words { order: 1; }
+ .verses-grid .stich-chords { order: 2; } /* directly under Hebrew text */
+ .verses-grid .stich-translation { order: 3; }
+
+ /* Allow long verses to break across columns; keep each stich intact */
+ .verses-grid .verse {
+ break-inside: auto !important;
+ -webkit-column-break-inside: auto !important;
+ page-break-inside: auto !important;
+ }
+ .verses-grid .stich {
+ break-inside: avoid;
+ -webkit-column-break-inside: avoid;
+ page-break-inside: avoid;
+ margin-bottom: 6px !important;
+ }
+
+ /* Compact: smaller fonts and gaps so 3 cols hold on screen */
+ .verses-grid .word .he { font-size: 17px !important; }
+ .verses-grid .word .tr { font-size: 10px !important; }
+ .verses-grid .word .fr { font-size: 10px !important; max-width: 90px; }
+ .verses-grid .stich-words { gap: 6px 9px !important; margin-bottom: 3px !important; }
+ .verses-grid .stich-translation {
+ font-size: 11px !important;
+ margin-top: 3px !important;
+ padding-right: 6px;
+ }
+
+ /* Force 3 cols on all desktop. Mobile only collapses */
+ .verses-grid {
+ column-count: 3 !important;
+ column-gap: 10px !important;
+ }
+ @media (max-width: 700px) {
+ .verses-grid { column-count: 2 !important; }
+ }
+ @media (max-width: 500px) {
+ .verses-grid { column-count: 1 !important; }
+ }
+
+ .verses-grid .stich-chords {
+ direction: ltr !important;
+ text-align: left !important; /* chord chips read LTR inside the box */
+ width: fit-content !important;
+ max-width: 100%;
+ margin-top: 2px !important;
+ padding: 3px 8px !important;
+ background: rgba(74, 158, 219, 0.08);
+ border-right: 2px solid var(--accent) !important;
+ border-left: none !important;
+ border-radius: 3px 0 0 3px;
+ font-family: 'JetBrains Mono', 'Consolas', monospace;
+ font-size: 10px !important;
+ letter-spacing: 1px;
+ line-height: 1.3;
+ color: var(--text-dim);
+ }
+ .verses-grid .stich-chords .chord {
+ color: var(--accent);
+ font-weight: 700;
+ padding: 0 3px;
+ border-bottom: 1px dotted var(--accent-dim);
+ cursor: help;
+ transition: all 0.15s;
+ }
+ .verses-grid .stich-chords .chord:hover {
+ color: var(--text);
+ background: rgba(74, 158, 219, 0.18);
+ border-bottom-color: var(--accent);
+ border-radius: 2px;
+ }
+ html.light .verses-grid .stich-chords .chord:hover { color: #000; }
+ .verses-grid .stich-chords .sep {
+ color: var(--text-faint);
+ margin: 0 2px;
+ }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+ <div>
+ <h1>Birkat HaMazon: Grace After Meals</h1>
+ <div class="subtitle"><bdi>בִּרְכַּת הַמָּזוֹן</bdi> · after any bread-meal · 4 blessings · biblical command (Deut 8:10)</div>
+ </div>
+ <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Birkat HaMazon</a></div>
+</header>
+
+<div class="t-intro">
+ <strong>Grace After Meals</strong>, said after eating bread at any meal. Four blessings, ~5-10 minutes when said fully, ~2-3 minutes when abbreviated. The four blessings: (1) <em>HaZan</em>, the universal blessing for food; (2) <em>HaAretz</em>, thanks for the land of Israel; (3) <em>Boneh Yerushalayim</em>, the prayer for Jerusalem; (4) <em>HaTov v'HaMetiv</em>, the goodness blessing, added by the Sages after a specific historical event (the burial of the slain of Beitar in 135 CE). The four blessings are remarkable for their grounding: from generic gratitude → particular gratitude for the land → eschatological hope for Jerusalem → historical memory. Eating becomes an exercise in Jewish historical consciousness. On Shabbat and holidays the text expands; weekdays use a shorter form. This page teaches the first blessing only, the universal opening.
+</div>
+
+<div class="t-chord">
+ <div class="label-row">
+ <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+ </div>
+ <div class="tuning-row">
+ <span class="tuning-label">♪ Tuning</span>
+ <select id="tuning-preset">
+ <option value="standard">Standard (E A D G B E)</option>
+ <option value="drop-d">Drop D (D A D G B E)</option>
+ <option value="dadgad">DADGAD (D A D G A D)</option>
+ <option value="open-d">Open D (D A D F# A D)</option>
+ <option value="open-g">Open G (D G D G B D)</option>
+ <option value="open-c">Open C (C G C G C E)</option>
+ <option value="half-down">½ step down (Eb…)</option>
+ <option value="full-down">Whole step down (D G C F A D)</option>
+ <option value="custom">Custom…</option>
+ </select>
+ <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+ <span class="tuning-current" id="tuning-current">E A D G B E</span>
+ </div>
+ <div class="progression" id="progression-display"><strong>Key: A minor Mizrahi voicings suggested progression:</strong>&nbsp;&nbsp; <span class="chord" data-chord="Am">Am</span><span class="chord" data-chord="F">F</span><span class="chord" data-chord="G">G</span><span class="chord" data-chord="Dm">Dm</span><span class="chord" data-chord="E">E</span><span class="chord" data-chord="C">C</span></div>
+ <div class="meta-line">Mid-tempo · 4/4 contemporary Mizrahi-Israeli worship the verses sit on <span class="chord" data-chord="Am">Am</span> with <span class="chord" data-chord="F">F</span>/<span class="chord" data-chord="G">G</span> answer the <em>"Mi chamocha"</em> question (V4) lifts toward <span class="chord" data-chord="C">C</span>/<span class="chord" data-chord="G">G</span> before falling back to <span class="chord" data-chord="Am">Am</span>the <span class="chord" data-chord="E">E</span> functions as V of <span class="chord" data-chord="Am">Am</span> giving the cadences their Mizrahi-Phrygian color (<em>freygish/Ahava Rabbah</em> when emphasized) this is a <strong>suggested progression</strong>, listen to Aviv Alush's recording and adjust by ear to reset: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+ <div class="av-title">Active voicings printable
+ <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+ </div>
+ <div class="voicings-grid" id="active-voicings-grid"></div>
+ <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<div class="verse">
+ <span class="verse-num">part 1 opening of the first blessing (HaZan)</span>
+
+ <div class="stich">
+ <div class="stich-words">
+ <div class="word"><div class="he">בָּרוּךְ</div><div class="tr">ba-<b>RUCH</b></div><div class="fr">blessed</div></div>
+ <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TAH</b></div><div class="fr">You</div></div>
+ <div class="word"><div class="he">יְהוָה</div><div class="tr">a-do-<b>NAI</b></div><div class="fr">the LORD</div></div>
+ <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-<b>HEI</b>-nu</div><div class="fr">our God</div></div>
+ <div class="word"><div class="he">מֶלֶךְ</div><div class="tr"><b>ME</b>-lech</div><div class="fr">King</div></div>
+ <div class="word"><div class="he">הָעוֹלָם</div><div class="tr">ha-o-<b>LAM</b></div><div class="fr">the universe</div></div>
+ </div>
+ <div class="stich-translation">Blessed are You, LORD our God, King of the universe,</div>
+ </div>
+</div>
+
+<div class="verse">
+ <span class="verse-num">part 2 who feeds the whole world</span>
+
+ <div class="stich">
+ <div class="stich-words">
+ <div class="word"><div class="he">הַזָּן</div><div class="tr">ha-<b>ZAN</b></div><div class="fr">the feeder (qal ptcp.)</div></div>
+ <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(def. obj.)</div></div>
+ <div class="word"><div class="he">הָעוֹלָם</div><div class="tr">ha-o-<b>LAM</b></div><div class="fr">the world</div></div>
+ <div class="word"><div class="he">כֻּלּוֹ</div><div class="tr">ku-<b>LO</b></div><div class="fr">all of it</div></div>
+ <div class="word"><div class="he">בְּטוּבוֹ</div><div class="tr">be-tu-<b>VO</b></div><div class="fr">in His goodness</div></div>
+ </div>
+ <div class="stich-translation">who feeds the entire world in His goodness,</div>
+ </div>
+
+ <div class="stich">
+ <div class="stich-words">
+ <div class="word"><div class="he">בְּחֵן</div><div class="tr">be-<b>CHEN</b></div><div class="fr">with grace</div></div>
+ <div class="word"><div class="he">בְּחֶסֶד</div><div class="tr">be-<b>CHE</b>-sed</div><div class="fr">with kindness</div></div>
+ <div class="word"><div class="he">וּבְרַחֲמִים</div><div class="tr">u-ve-ra-cha-<b>MIM</b></div><div class="fr">and with mercy</div></div>
+ </div>
+ <div class="stich-translation">with grace, kindness, and mercy.</div>
+ </div>
+</div>
+
+<div class="verse">
+ <span class="verse-num">part 3 the closing</span>
+
+ <div class="stich">
+ <div class="stich-words">
+ <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">He</div></div>
+ <div class="word"><div class="he">נֹתֵן</div><div class="tr">no-<b>TEN</b></div><div class="fr">gives (qal ptcp.)</div></div>
+ <div class="word"><div class="he">לֶחֶם</div><div class="tr"><b>LE</b>-chem</div><div class="fr">bread</div></div>
+ <div class="word"><div class="he">לְכָל</div><div class="tr">le-<b>CHOL</b></div><div class="fr">to all</div></div>
+ <div class="word"><div class="he">בָּשָׂר</div><div class="tr">ba-<b>SAR</b></div><div class="fr">flesh</div></div>
+ </div>
+ <div class="stich-translation">He gives bread to all flesh,</div>
+ </div>
+
+ <div class="stich">
+ <div class="stich-words">
+ <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+ <div class="word"><div class="he">לְעוֹלָם</div><div class="tr">le-o-<b>LAM</b></div><div class="fr">forever</div></div>
+ <div class="word"><div class="he">חַסְדּוֹ</div><div class="tr">chas-<b>DO</b></div><div class="fr">is His lovingkindness</div></div>
+ </div>
+ <div class="stich-translation">for His kindness endures forever. <em>(Ps 136)</em></div>
+ </div>
+
+ <div class="stich">
+ <div class="stich-words">
+ <div class="word"><div class="he">בָּרוּךְ</div><div class="tr">ba-<b>RUCH</b></div><div class="fr">blessed</div></div>
+ <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TAH</b></div><div class="fr">You</div></div>
+ <div class="word"><div class="he">יְהוָה</div><div class="tr">a-do-<b>NAI</b></div><div class="fr">the LORD</div></div>
+ <div class="word"><div class="he">הַזָּן</div><div class="tr">ha-<b>ZAN</b></div><div class="fr">the feeder of</div></div>
+ <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(def. obj.)</div></div>
+ <div class="word"><div class="he">הַכֹּל</div><div class="tr">ha-<b>KOL</b></div><div class="fr">all</div></div>
+ </div>
+ <div class="stich-translation">Blessed are You, LORD, who feeds all.</div>
+ </div>
+</div>
+</div><!-- /.verses-grid -->
+<div class="chant-tip">
+ <h3>♦ Lesson</h3>
+ <ul>
+ <li><strong>When</strong>, after any meal that included bread. If no bread was eaten, a shorter blessing called <em>Beracha Acharona</em> is said instead. Birkat HaMazon is for bread-meals specifically.</li>
+ <li><strong>The four blessings</strong>:
+ <ol style="margin-top:6px;">
+ <li><strong>HaZan</strong> (this page), the universal blessing: God feeds the entire world.</li>
+ <li><strong>HaAretz</strong>, thanks specifically for the Land of Israel, where the wheat for the bread grew. Includes thanks for the covenant (Brit) and the Torah.</li>
+ <li><strong>Boneh Yerushalayim</strong>, "Builder of Jerusalem", petition for the rebuilding of Jerusalem and the Temple. On Shabbat, this section includes the <em>Retzeh</em> (a longer paragraph about Shabbat's specialness).</li>
+ <li><strong>HaTov v'HaMetiv</strong>, "the Good and the Doer of Good", added by the Sages after the Bar Kokhba revolt (135 CE), when the dead of Beitar were finally allowed by the Romans to be buried. The added blessing thanks God for that mercy.</li>
+ </ol>
+ </li>
+ <li><strong>The Zimun</strong>, when 3 or more adult Jewish males eat together, they begin Birkat HaMazon with a public invitation: the leader says <em>"Rabotai, n'varech!"</em> ("Gentlemen, let us bless!") and the group responds. With 10 or more, the leader inserts <em>"Eloheinu"</em> in the invitation, raising the level. The Zimun turns a private meal into a communal acknowledgment.</li>
+ <li><strong>Why specifically the land</strong>, the rabbis emphasize that Birkat HaMazon is the only blessing explicitly required by the Torah (Deut 8:10: <em>"You shall eat, be satisfied, and bless the LORD your God <strong>for the good land</strong> He has given you"</em>). The blessing was originally just for the land; the universal HaZan and the messianic HaYerushalayim blessings were added by the rabbis to bracket the original commandment.</li>
+ <li><strong>Vocabulary</strong>:
+ <ul style="margin-top:6px;">
+ <li><em>ha-zan</em> (הַזָּן), "the one who feeds". Qal participle of ז.ו.ן (to nourish, sustain). Same root as <em>mazon</em> (food).</li>
+ <li><em>tuv</em> (טוּב), "goodness". Same root as <em>tov</em>. <em>B'tuvo</em> = "with His goodness".</li>
+ <li><em>chen / chesed / rachamim</em> (חֵן · חֶסֶד · רַחֲמִים), three modes of divine kindness: <em>chen</em> (grace, unmerited favor), <em>chesed</em> (covenantal loyalty), <em>rachamim</em> (mercy, from <em>rechem</em> = womb).</li>
+ <li><em>basar</em> (בָּשָׂר), "flesh". Used here in the inclusive sense "every living creature". The blessing is universal, God doesn't only feed humans, He feeds animals too.</li>
+ </ul>
+ </li>
+ <li><strong>Length</strong>:
+ <ul style="margin-top:6px;">
+ <li>Weekday full: ~5-10 min recited at conversational pace.</li>
+ <li>Weekday abbreviated (Birkat HaMazon Kitzur): ~2 min, used when time is short or for children.</li>
+ <li>Shabbat / Yom Tov: longer, with the Retzeh insertion + Yaaleh v'Yavo (for holidays).</li>
+ </ul>
+ </li>
+ </ul>
+</div>
+
+<div class="pardes-card">
+ <h3>♦ About this prayer</h3>
+ <div class="pardes-intro">The longest blessing of Jewish daily life. Four blessings stacked over the residue of every bread-meal. The biblical commandment that turns eating into history.</div>
+
+ <div class="pardes-level">
+ <h4>The biblical command: Deuteronomy 8:10</h4>
+ <p>The Torah explicitly commands: <em>"You shall eat, be satisfied, and bless the LORD your God for the good land He has given you."</em> This is the only post-meal blessing the Torah itself requires; all other blessings (HaMotzi before, the various pre-fruit blessings, etc.) are rabbinic additions. The Deut 8:10 verse names three conditions: eating, being satisfied, and the land. "For the good land", the original direction was specifically toward gratitude for the Land of Israel, where the wheat grew. The Sages later expanded this into the four-blessing structure.</p>
+ </div>
+
+ <div class="pardes-level">
+ <h4>The four-layered theology</h4>
+ <p>The structure of Birkat HaMazon is one of the great architectural achievements of Jewish liturgy:</p>
+ <p><strong>Blessing 1 (HaZan)</strong>: universal scope. God feeds all flesh, all creatures, in all places. Cosmic gratitude.</p>
+ <p><strong>Blessing 2 (HaAretz)</strong>: particular scope. Israel thanks for the land that produced this specific bread. Covenantal gratitude.</p>
+ <p><strong>Blessing 3 (Boneh Yerushalayim)</strong>: future scope. The full meal is incomplete until Jerusalem is rebuilt. Eschatological hope.</p>
+ <p><strong>Blessing 4 (HaTov v'HaMetiv)</strong>: historical scope. A specific 135 CE event becomes part of the daily meal-grace. Historical consciousness.</p>
+ <p>Eating, in Jewish tradition, is supposed to engage all four dimensions: gratitude that the universe nourishes its creatures, that the land of Israel specifically did so today, that the world is incomplete until restoration, and that history is full of small mercies worth remembering. Most people who say Birkat HaMazon every day don't articulate this theology consciously, but it's all there, every meal.</p>
+ </div>
+
+ <div class="pardes-level">
+ <h4>The Bar Kokhba addition: Blessing 4</h4>
+ <p>The fourth blessing (<em>HaTov v'HaMetiv</em>) was added by the Sanhedrin of Yavneh after a specific historical moment. After the failure of the <strong>Bar Kokhba revolt</strong> against Rome (132-135 CE), the Roman emperor Hadrian initially refused to allow the Jewish dead of the city of Beitar to be buried, leaving the bodies exposed as a warning. Years later, after Hadrian's death, his successor Antoninus Pius granted permission for burial. Additionally, the bodies had miraculously not decomposed in the intervening years. The Sanhedrin marked the moment with a new blessing thanking God for two miracles: <em>HaTov</em> (the Good, that they did not decompose) and <em>HaMetiv</em> (the Doer of Good, that permission was finally given to bury them). The blessing has been said at every Jewish meal ever since.</p>
+ <p>This is one of the very few places where Jewish liturgy preserves a specific dated historical event in its standard text.</p>
+ </div>
+</div>
+<footer>Birkat HaMazon · בִּרְכַּת הַמָּזוֹן grace after meals<a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<script>
+// Chord library, frets array order: [low E (6th), A, D, G, B, high E (1st)]
+// -1 = muted (×), 0 = open (○), N = press at fret N
+const CHORDS = {
+ Am: [
+ { name: 'Am triade open', frets: [-1, 0, 2, 2, 1, 0], baseFret: 1, barre: null },
+ { name: 'Am7', frets: [-1, 0, 2, 0, 1, 0], baseFret: 1, barre: null },
+ { name: 'Am(maj7)', frets: [-1, 0, 2, 1, 1, 0], baseFret: 1, barre: null },
+ { name: 'Am6', frets: [-1, 0, 2, 2, 1, 2], baseFret: 1, barre: null },
+ { name: 'Am(add9)', frets: [-1, 0, 2, 4, 1, 0], baseFret: 1, barre: null },
+ { name: 'Am9', frets: [-1, 0, 5, 5, 5, 7], baseFret: 5, barre: null },
+ { name: 'Am11 barré 5e', frets: [5, 5, 5, 5, 5, 5], baseFret: 5, barre: 5 },
+ { name: 'A° (Adim)', frets: [-1, 0, 1, 2, 1, -1], baseFret: 1, barre: null },
+ { name: 'Am barré 5e (E-shape)', frets: [5, 7, 7, 5, 5, 5], baseFret: 5, barre: 5 }
+ ],
+ Em: [
+ { name: 'Em triade open', frets: [0, 2, 2, 0, 0, 0], baseFret: 1, barre: null },
+ { name: 'Em7', frets: [0, 2, 2, 0, 3, 0], baseFret: 1, barre: null },
+ { name: 'Em(maj7)', frets: [0, 2, 1, 0, 0, 0], baseFret: 1, barre: null },
+ { name: 'Em6', frets: [0, 2, 2, 0, 2, 0], baseFret: 1, barre: null },
+ { name: 'Em(add9)', frets: [0, 2, 2, 0, 0, 2], baseFret: 1, barre: null },
+ { name: 'Em9', frets: [0, 2, 2, 0, 3, 2], baseFret: 1, barre: null },
+ { name: 'Em11 drone modal', frets: [0, 0, 0, 0, 7, 0], baseFret: 1, barre: null },
+ { name: 'Em11 barré 7e (1 doigt)', frets: [-1, 7, 7, 7, 7, 7], baseFret: 7, barre: 7 },
+ { name: 'E° (Edim)', frets: [0, 1, 2, 0, -1, -1], baseFret: 1, barre: null },
+ { name: 'Em barré 7e (A-shape)', frets: [-1, 7, 9, 9, 8, 7], baseFret: 7, barre: 7 }
+ ],
+ Dm: [
+ { name: 'Dm triade open', frets: [-1, -1, 0, 2, 3, 1], baseFret: 1, barre: null },
+ { name: 'Dm7', frets: [-1, -1, 0, 2, 1, 1], baseFret: 1, barre: null },
+ { name: 'Dm(maj7)', frets: [-1, -1, 0, 2, 2, 1], baseFret: 1, barre: null },
+ { name: 'Dm6', frets: [-1, -1, 0, 2, 0, 1], baseFret: 1, barre: null },
+ { name: 'Dm9', frets: [-1, 5, 3, 5, 5, 5], baseFret: 3, barre: null },
+ { name: 'Dm11 barré 5e', frets: [-1, 5, 5, 5, 5, 5], baseFret: 5, barre: 5 },
+ { name: 'D° (Ddim)', frets: [-1, -1, 0, 1, 3, 1], baseFret: 1, barre: null },
+ { name: 'Dm barré 5e (A-shape)', frets: [-1, 5, 7, 7, 6, 5], baseFret: 5, barre: 5 }
+ ],
+ F: [
+ { name: 'F petit triade', frets: [-1, -1, 3, 2, 1, 1], baseFret: 1, barre: null },
+ { name: 'Fmaj7', frets: [-1, -1, 3, 2, 1, 0], baseFret: 1, barre: null },
+ { name: 'F7 barré 1ere', frets: [1, 3, 1, 2, 1, 1], baseFret: 1, barre: 1 },
+ { name: 'F6', frets: [-1, -1, 3, 2, 3, 1], baseFret: 1, barre: null },
+ { name: 'F(add9)', frets: [-1, -1, 3, 2, 1, 3], baseFret: 1, barre: null },
+ { name: 'F9 barré 1ere', frets: [1, 3, 1, 2, 4, 3], baseFret: 1, barre: 1 },
+ { name: 'F11 modal', frets: [-1, -1, 3, 3, 4, 3], baseFret: 3, barre: null },
+ { name: 'F° (Fdim7)', frets: [-1, -1, 3, 4, 3, 4], baseFret: 3, barre: null },
+ { name: 'F barré 1ere (E-shape)', frets: [1, 3, 3, 2, 1, 1], baseFret: 1, barre: 1 }
+ ],
+ C: [
+ { name: 'C triade open', frets: [-1, 3, 2, 0, 1, 0], baseFret: 1, barre: null },
+ { name: 'Cmaj7', frets: [-1, 3, 2, 0, 0, 0], baseFret: 1, barre: null },
+ { name: 'C7', frets: [-1, 3, 2, 3, 1, 0], baseFret: 1, barre: null },
+ { name: 'C6', frets: [-1, 3, 2, 2, 1, 0], baseFret: 1, barre: null },
+ { name: 'Cadd9', frets: [-1, 3, 2, 0, 3, 0], baseFret: 1, barre: null },
+ { name: 'C9', frets: [-1, 3, 2, 3, 3, 0], baseFret: 1, barre: null },
+ { name: 'Cmaj9', frets: [-1, 3, 2, 4, 3, 0], baseFret: 1, barre: null },
+ { name: 'C11 barré 3e', frets: [-1, 3, 3, 3, 3, 3], baseFret: 3, barre: 3 },
+ { name: 'C° (Cdim)', frets: [-1, 3, 4, 5, 4, -1], baseFret: 3, barre: null },
+ { name: 'C barré 3e (A-shape)', frets: [-1, 3, 5, 5, 5, 3], baseFret: 3, barre: 3 }
+ ],
+ G: [
+ { name: 'G triade open', frets: [3, 2, 0, 0, 0, 3], baseFret: 1, barre: null },
+ { name: 'G (variante moderne)', frets: [3, 2, 0, 0, 3, 3], baseFret: 1, barre: null },
+ { name: 'Gmaj7', frets: [3, 2, 0, 0, 0, 2], baseFret: 1, barre: null },
+ { name: 'G7', frets: [3, 2, 0, 0, 0, 1], baseFret: 1, barre: null },
+ { name: 'G6', frets: [3, 2, 0, 0, 0, 0], baseFret: 1, barre: null },
+ { name: 'Gadd9', frets: [3, 0, 0, 2, 0, 3], baseFret: 1, barre: null },
+ { name: 'G9 barré 3e', frets: [3, 5, 3, 4, 3, 5], baseFret: 3, barre: 3 },
+ { name: 'G barré 3e (E-shape)', frets: [3, 5, 5, 4, 3, 3], baseFret: 3, barre: 3 }
+ ],
+ D: [
+ { name: 'D triade open', frets: [-1, -1, 0, 2, 3, 2], baseFret: 1, barre: null },
+ { name: 'Dmaj7', frets: [-1, -1, 0, 2, 2, 2], baseFret: 1, barre: null },
+ { name: 'D7', frets: [-1, -1, 0, 2, 1, 2], baseFret: 1, barre: null },
+ { name: 'D6', frets: [-1, -1, 0, 2, 0, 2], baseFret: 1, barre: null },
+ { name: 'Dadd9', frets: [-1, -1, 0, 2, 3, 0], baseFret: 1, barre: null },
+ { name: 'Dsus4', frets: [-1, -1, 0, 2, 3, 3], baseFret: 1, barre: null },
+ { name: 'Dsus2', frets: [-1, -1, 0, 2, 3, 0], baseFret: 1, barre: null },
+ { name: 'D barré 5e (A-shape)', frets: [-1, 5, 7, 7, 7, 5], baseFret: 5, barre: 5 }
+ ],
+ A: [
+ { name: 'A triade open', frets: [-1, 0, 2, 2, 2, 0], baseFret: 1, barre: null },
+ { name: 'Amaj7', frets: [-1, 0, 2, 1, 2, 0], baseFret: 1, barre: null },
+ { name: 'A7', frets: [-1, 0, 2, 0, 2, 0], baseFret: 1, barre: null },
+ { name: 'A6', frets: [-1, 0, 2, 2, 2, 2], baseFret: 1, barre: null },
+ { name: 'Aadd9', frets: [-1, 0, 2, 4, 2, 0], baseFret: 1, barre: null },
+ { name: 'Asus4', frets: [-1, 0, 2, 2, 3, 0], baseFret: 1, barre: null },
+ { name: 'Asus2', frets: [-1, 0, 2, 2, 0, 0], baseFret: 1, barre: null },
+ { name: 'A barré 5e (E-shape)', frets: [5, 7, 7, 6, 5, 5], baseFret: 5, barre: 5 }
+ ],
+ E: [
+ { name: 'E triade open', frets: [0, 2, 2, 1, 0, 0], baseFret: 1, barre: null },
+ { name: 'Emaj7', frets: [0, 2, 1, 1, 0, 0], baseFret: 1, barre: null },
+ { name: 'E7', frets: [0, 2, 0, 1, 0, 0], baseFret: 1, barre: null },
+ { name: 'E6', frets: [0, 2, 2, 1, 2, 0], baseFret: 1, barre: null },
+ { name: 'Eadd9', frets: [0, 2, 4, 1, 0, 0], baseFret: 1, barre: null },
+ { name: 'Esus4', frets: [0, 2, 2, 2, 0, 0], baseFret: 1, barre: null },
+ { name: 'E barré 7e (A-shape)', frets: [-1, 7, 9, 9, 9, 7], baseFret: 7, barre: 7 }
+ ],
+ Bm: [
+ { name: 'Bm barré 2e', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2, barre: 2 },
+ { name: 'Bm7 barré 2e', frets: [-1, 2, 4, 2, 3, 2], baseFret: 2, barre: 2 },
+ { name: 'Bm (3 cordes)', frets: [-1, -1, -1, 4, 3, 2], baseFret: 1, barre: null },
+ { name: 'Bm barré 7e (E-shape)', frets: [7, 9, 9, 7, 7, 7], baseFret: 7, barre: 7 }
+ ],
+ Gm: [
+ { name: 'Gm barré 3e', frets: [3, 5, 5, 3, 3, 3], baseFret: 3, barre: 3 },
+ { name: 'Gm7 barré 3e', frets: [3, 5, 3, 3, 3, 3], baseFret: 3, barre: 3 },
+ { name: 'Gm (3 cordes)', frets: [-1, -1, -1, 3, 3, 3], baseFret: 1, barre: null },
+ { name: 'Gm barré 10e (A-shape)', frets: [-1, 10, 12, 12, 11, 10], baseFret: 10, barre: 10 }
+ ]
+};
+
+function renderFretboard(chord) {
+ const stringSpacing = 18;
+ const fretSpacing = 22;
+ const offsetX = 28;
+ const offsetY = 36;
+ const baseFret = chord.baseFret;
+ const STR_COUNT = 6;
+
+ // Auto-compute number of frets to fit all fretted notes (min 4)
+ const fretted = chord.frets.filter(f => f > 0);
+ const maxFret = fretted.length > 0 ? Math.max(...fretted) : baseFret + 3;
+ const numFrets = Math.max(4, maxFret - baseFret + 1);
+
+ const W = offsetX * 2 + stringSpacing * (STR_COUNT - 1);
+ const H = offsetY + numFrets * fretSpacing + 22;
+
+ let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+ // Nut (if open position) or fret number indicator
+ if (baseFret === 1) {
+ svg += `<rect x="${offsetX - 1}" y="${offsetY - 4}" width="${stringSpacing * (STR_COUNT - 1) + 2}" height="5" fill="#ccc"/>`;
+ } else {
+ svg += `<text x="${offsetX - 10}" y="${offsetY + 14}" fill="#4A9EDB" font-size="11" text-anchor="end" font-family="monospace" font-weight="600">${baseFret}fr</text>`;
+ }
+
+ // Frets (horizontal lines)
+ for (let i = 0; i <= numFrets; i++) {
+ svg += `<line x1="${offsetX}" y1="${offsetY + i * fretSpacing}" x2="${offsetX + (STR_COUNT - 1) * stringSpacing}" y2="${offsetY + i * fretSpacing}" stroke="#444" stroke-width="1"/>`;
+ }
+
+ // Strings (vertical lines)
+ for (let i = 0; i < STR_COUNT; i++) {
+ svg += `<line x1="${offsetX + i * stringSpacing}" y1="${offsetY}" x2="${offsetX + i * stringSpacing}" y2="${offsetY + numFrets * fretSpacing}" stroke="#666" stroke-width="1"/>`;
+ }
+
+ // Open / muted indicators above strings
+ for (let i = 0; i < STR_COUNT; i++) {
+ const f = chord.frets[i];
+ const x = offsetX + i * stringSpacing;
+ if (f === -1) {
+ svg += `<text x="${x}" y="${offsetY - 8}" fill="#666" font-size="14" text-anchor="middle" font-weight="600">×</text>`;
+ } else if (f === 0) {
+ svg += `<circle cx="${x}" cy="${offsetY - 10}" r="5" fill="none" stroke="#4A9EDB" stroke-width="1.5"/>`;
+ }
+ }
+
+ // Barre (if any), drawn before dots so dots appear on top
+ if (chord.barre) {
+ const barreFret = chord.barre;
+ let firstStr = -1, lastStr = -1;
+ for (let i = 0; i < STR_COUNT; i++) {
+ if (chord.frets[i] === barreFret) {
+ if (firstStr === -1) firstStr = i;
+ lastStr = i;
+ }
+ }
+ if (firstStr !== -1 && lastStr > firstStr) {
+ const fretRel = barreFret - baseFret;
+ const yPos = offsetY + (fretRel + 0.5) * fretSpacing;
+ svg += `<rect x="${offsetX + firstStr * stringSpacing - 8}" y="${yPos - 8}" width="${(lastStr - firstStr) * stringSpacing + 16}" height="16" rx="8" fill="#4A9EDB" opacity="0.9"/>`;
+ const midX = offsetX + (firstStr + lastStr) / 2 * stringSpacing;
+ const fontSize = barreFret >= 10 ? 9 : 10;
+ svg += `<text x="${midX}" y="${yPos + 3.5}" fill="#0a0a0a" font-size="${fontSize}" text-anchor="middle" font-weight="700" font-family="monospace">${barreFret}</text>`;
+ }
+ }
+
+ // Finger dots (skip those that are part of the barre rectangle)
+ for (let i = 0; i < STR_COUNT; i++) {
+ const f = chord.frets[i];
+ if (f > 0) {
+ const fretRel = f - baseFret;
+ if (fretRel < 0 || fretRel >= numFrets) continue;
+ if (chord.barre && f === chord.barre) continue;
+ const x = offsetX + i * stringSpacing;
+ const y = offsetY + (fretRel + 0.5) * fretSpacing;
+ svg += `<circle cx="${x}" cy="${y}" r="8" fill="#4A9EDB" stroke="#0a0a0a" stroke-width="1"/>`;
+ const fontSize = f >= 10 ? 9 : 10;
+ svg += `<text x="${x}" y="${y + 3.5}" fill="#0a0a0a" font-size="${fontSize}" text-anchor="middle" font-weight="700" font-family="monospace">${f}</text>`;
+ }
+ }
+
+ // String labels at the bottom, uses the current tuning (mutable global)
+ for (let i = 0; i < STR_COUNT; i++) {
+ svg += `<text x="${offsetX + i * stringSpacing}" y="${offsetY + numFrets * fretSpacing + 14}" fill="#555" font-size="9" text-anchor="middle" font-family="monospace">${TUNING[i] || ''}</text>`;
+ }
+
+ svg += `</svg>`;
+ return svg;
+}
+
+// ====== TUNING (mutable) ======
+let TUNING = ['E', 'A', 'D', 'G', 'B', 'E'];
+
+const TUNING_PRESETS = {
+ 'standard': ['E', 'A', 'D', 'G', 'B', 'E'],
+ 'drop-d': ['D', 'A', 'D', 'G', 'B', 'E'],
+ 'dadgad': ['D', 'A', 'D', 'G', 'A', 'D'],
+ 'open-d': ['D', 'A', 'D', 'F#', 'A', 'D'],
+ 'open-g': ['D', 'G', 'D', 'G', 'B', 'D'],
+ 'open-c': ['C', 'G', 'C', 'G', 'C', 'E'],
+ 'half-down': ['Eb', 'Ab', 'Db', 'Gb', 'Bb', 'Eb'],
+ 'full-down': ['D', 'G', 'C', 'F', 'A', 'D']
+};
+
+function setTuning(arr) {
+ if (Array.isArray(arr) && arr.length === 6) {
+ TUNING = arr.slice();
+ try { localStorage.setItem('tehilim-tuning', JSON.stringify(TUNING)); } catch (e) {}
+ const cur = document.getElementById('tuning-current');
+ if (cur) cur.textContent = TUNING.join(' ');
+ if (typeof renderActiveVoicings === 'function') renderActiveVoicings();
+ }
+}
+
+function tuningKey() { return TUNING.join(' '); }
+
+function parseTuningString(str) {
+ const tokens = str.trim().split(/[\s,]+/).filter(Boolean);
+ return tokens.length === 6 ? tokens : null;
+}
+
+function findTuningPreset(arr) {
+ for (const [k, v] of Object.entries(TUNING_PRESETS)) {
+ if (v.join(' ') === arr.join(' ')) return k;
+ }
+ return null;
+}
+
+// ====== PINNED VOICINGS per (chord, tuning) ======
+// Multiple voicings can be pinned per chord, each pinned voicing renders as a card in the panel.
+let ACTIVE_POS = {}; // { 'Am|E A D G B E': [0, 4, 6], ... }, array of position indices
+
+function loadActivePos() {
+ try {
+ const raw = localStorage.getItem('tehilim-activePos');
+ if (!raw) { ACTIVE_POS = {}; return; }
+ const parsed = JSON.parse(raw);
+ ACTIVE_POS = {};
+ for (const k in parsed) {
+ const v = parsed[k];
+ if (typeof v === 'number') ACTIVE_POS[k] = [v]; // legacy migration
+ else if (Array.isArray(v)) ACTIVE_POS[k] = v.slice();
+ }
+ } catch (e) { ACTIVE_POS = {}; }
+}
+
+function saveActivePos() {
+ try { localStorage.setItem('tehilim-activePos', JSON.stringify(ACTIVE_POS)); } catch (e) {}
+}
+
+function getPinned(chordName) {
+ const k = chordName + '|' + tuningKey();
+ const arr = ACTIVE_POS[k];
+ if (Array.isArray(arr) && arr.length > 0) return arr.slice().sort((a, b) => a - b);
+ return [0]; // default: show first voicing
+}
+
+function isPinned(chordName, idx) {
+ const k = chordName + '|' + tuningKey();
+ const arr = ACTIVE_POS[k];
+ if (Array.isArray(arr)) return arr.includes(idx);
+ return idx === 0; // default: only index 0 considered pinned
+}
+
+function togglePin(chordName, idx) {
+ const k = chordName + '|' + tuningKey();
+ // If no entry yet, the implicit pinned set is [0]. Make it explicit before toggling.
+ if (!Array.isArray(ACTIVE_POS[k])) ACTIVE_POS[k] = [0];
+ const arr = ACTIVE_POS[k];
+ const at = arr.indexOf(idx);
+ if (at >= 0) arr.splice(at, 1);
+ else arr.push(idx);
+ if (arr.length === 0) delete ACTIVE_POS[k];
+ saveActivePos();
+}
+
+// ====== CHORD LOOKUP (handles Gmaj7, Am7, Cdim, etc. by searching root variations) ======
+function variationPrimaryName(name) {
+ const idx = name.search(/[\s·]/);
+ return idx === -1 ? name : name.slice(0, idx);
+}
+
+function nameMatchesChord(variationName, chordName) {
+ const primary = variationPrimaryName(variationName);
+ if (primary === chordName) return true;
+ const parens = variationName.match(/\(([^)]+)\)/);
+ if (parens && parens[1].trim() === chordName) return true;
+ return false;
+}
+
+function lookupChord(chordName) {
+ // 1. Direct top-level key (e.g. 'Am', 'G')
+ if (CHORDS[chordName]) return CHORDS[chordName];
+
+ // 2. Search variations within the root chord
+ const root = chordRoot(chordName);
+ if (!root) return [];
+
+ const candidates = [];
+ if (chordIsMinor(chordName)) candidates.push(root + 'm');
+ candidates.push(root);
+
+ for (const key of candidates) {
+ const entries = CHORDS[key];
+ if (!entries) continue;
+ const matches = entries.filter(v => nameMatchesChord(v.name, chordName));
+ if (matches.length > 0) return matches;
+ }
+
+ return [];
+}
+
+// ====== USER VOICINGS (per chord, per tuning) ======
+let USER_VOICINGS = {}; // { 'Am|E A D G B E': [{name, frets, baseFret, barre}, ...] }
+
+function loadUserVoicings() {
+ try {
+ const raw = localStorage.getItem('tehilim-userVoicings');
+ if (raw) USER_VOICINGS = JSON.parse(raw) || {};
+ } catch (e) { USER_VOICINGS = {}; }
+}
+
+function saveUserVoicings() {
+ try { localStorage.setItem('tehilim-userVoicings', JSON.stringify(USER_VOICINGS)); } catch (e) {}
+}
+
+function getUserVoicings(chordName) {
+ const k = chordName + '|' + tuningKey();
+ return USER_VOICINGS[k] || [];
+}
+
+function addUserVoicing(chordName, voicing) {
+ const k = chordName + '|' + tuningKey();
+ if (!USER_VOICINGS[k]) USER_VOICINGS[k] = [];
+ USER_VOICINGS[k].push(voicing);
+ saveUserVoicings();
+}
+
+function removeUserVoicing(chordName, indexInUserList) {
+ const k = chordName + '|' + tuningKey();
+ if (USER_VOICINGS[k] && USER_VOICINGS[k][indexInUserList]) {
+ USER_VOICINGS[k].splice(indexInUserList, 1);
+ if (USER_VOICINGS[k].length === 0) delete USER_VOICINGS[k];
+ saveUserVoicings();
+ }
+}
+
+function parseFretsString(str) {
+ const tokens = str.trim().split(/[\s,\-]+/).filter(Boolean);
+ if (tokens.length !== 6) return null;
+ const frets = tokens.map(t => {
+ const lo = t.toLowerCase();
+ if (lo === 'x' || lo === '-' || lo === 'm') return -1;
+ if (lo === 'o') return 0;
+ const n = parseInt(t, 10);
+ return isNaN(n) ? null : n;
+ });
+ if (frets.some(f => f === null)) return null;
+ return frets;
+}
+
+function buildVoicingFromFrets(frets, name) {
+ const fretted = frets.filter(f => f > 0);
+ const hasOpens = frets.some(f => f === 0);
+ const baseFret = (hasOpens || fretted.length === 0) ? 1 : Math.min(...fretted);
+ return { name: name || 'Custom', frets, baseFret, barre: null, _user: true };
+}
+
+// ====== CHORD THEORY ======
+const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const FLAT_TO_SHARP = { 'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#' };
+
+function noteToIdx(n) {
+ if (NOTE_NAMES.indexOf(n) >= 0) return NOTE_NAMES.indexOf(n);
+ if (FLAT_TO_SHARP[n]) return NOTE_NAMES.indexOf(FLAT_TO_SHARP[n]);
+ return -1;
+}
+
+function transposeNote(note, semitones) {
+ const idx = noteToIdx(note);
+ if (idx < 0) return note;
+ return NOTE_NAMES[(idx + semitones + 120) % 12];
+}
+
+function chordRoot(name) {
+ const m = name.match(/^([A-G][#b]?)/);
+ return m ? m[1] : null;
+}
+
+function chordIsMinor(name) {
+ const after = name.slice(1).replace(/^[#b]/, '');
+ return /^m(?!aj)/.test(after) || after.startsWith('dim') || after.startsWith('°');
+}
+
+function getHarmonic(chordName, type) {
+ const root = chordRoot(chordName);
+ if (!root) return [];
+ const isMin = chordIsMinor(chordName);
+ const T = (n, suffix) => transposeNote(root, n) + (suffix || '');
+
+ switch (type) {
+ case 'diatonique':
+ return isMin ? [
+ { chord: T(2, 'dim'), label: 'ii° supertonique' },
+ { chord: T(3), label: 'bIII relatif majeur' },
+ { chord: T(5, 'm'), label: 'iv sous-dominante' },
+ { chord: T(7, 'm'), label: 'v dominante (mineur naturel)' },
+ { chord: T(7), label: 'V dominante (mineur harm.)' },
+ { chord: T(8), label: 'bVI' },
+ { chord: T(10), label: 'bVII' }
+ ] : [
+ { chord: T(2, 'm'), label: 'ii supertonique' },
+ { chord: T(4, 'm'), label: 'iii médiante' },
+ { chord: T(5), label: 'IV sous-dominante' },
+ { chord: T(7), label: 'V dominante' },
+ { chord: T(9, 'm'), label: 'vi relatif mineur' },
+ { chord: T(11, 'dim'), label: 'vii° sensible' }
+ ];
+
+ case 'quintes':
+ return [
+ { chord: T(7, isMin ? 'm' : ''), label: 'Quinte (V), sens horaire' },
+ { chord: T(5, isMin ? 'm' : ''), label: 'Quarte (IV), sens anti-horaire' },
+ { chord: T(7), label: 'Dominante V (majeur, tension)' },
+ { chord: T(0, isMin ? '' : 'm'), label: isMin ? 'Parallèle majeur (même tonique)' : 'Parallèle mineur (même tonique)' },
+ { chord: isMin ? T(3) : T(9, 'm'), label: isMin ? 'Relatif majeur (3 demi-tons +)' : 'Relatif mineur (3 demi-tons -)' },
+ { chord: T(2, isMin ? 'dim' : 'm'), label: 'ii, accord de couleur' }
+ ];
+
+ case 'jazz':
+ return isMin ? [
+ { chord: chordName + (chordName.includes('7') ? '' : '7'), label: 'Ajouter 7e (m7)' },
+ { chord: chordName.replace(/m\d*/, 'm9') || (chordName + '9'), label: 'm9 (lush)' },
+ { chord: chordName.replace(/m\d*/, 'm11') || (chordName + '11'), label: 'm11 (modal)' },
+ { chord: T(3, 'maj7'), label: 'bIIImaj7, sub relatif majeur' },
+ { chord: T(5, 'm7'), label: 'iv7, II-V vers bVII' },
+ { chord: T(7, '7'), label: 'V7, dominante mineur harm.' },
+ { chord: T(1, '7'), label: 'bII7, sub tritonique de V' }
+ ] : [
+ { chord: chordName + (chordName.includes('maj') ? '' : 'maj7'), label: 'Ajouter 7e maj' },
+ { chord: chordName + '9', label: 'Ajouter 9e' },
+ { chord: chordName + '13', label: 'Ajouter 13e (lush)' },
+ { chord: T(9, 'm7'), label: 'vim7, sub relatif mineur' },
+ { chord: T(2, 'm7'), label: 'iim7, pour II-V-I' },
+ { chord: T(7, '7'), label: 'V7, dominante' },
+ { chord: T(1, '7'), label: 'bII7, sub tritonique de V' }
+ ];
+
+ case 'modes':
+ return isMin ? [
+ { chord: T(0, 'm'), label: 'Aeolien (mineur naturel) vous êtes là' },
+ { chord: T(5), label: 'Dorien IV majeur (au lieu de iv)' },
+ { chord: T(1), label: 'Phrygien bII majeur (couleur sombre)' },
+ { chord: T(2), label: 'Dorien II majeur' },
+ { chord: T(7), label: 'Mineur harm V majeur' },
+ { chord: T(2, 'dim'), label: 'Locrien ii° (rare)' }
+ ] : [
+ { chord: T(0), label: 'Ionien (majeur) vous êtes là' },
+ { chord: T(6), label: 'Lydien · #IV majeur (couleur lumineuse)' },
+ { chord: T(10), label: 'Mixolydien bVII majeur (rock/folk)' },
+ { chord: T(8), label: 'Aeolien bVI majeur (ténébreux)' },
+ { chord: T(3), label: 'Phrygien bIII majeur' },
+ { chord: T(1), label: 'Phrygien bII majeur (espagnol)' }
+ ];
+ }
+ return [];
+}
+
+// ====== PROGRESSION ======
+const DEFAULT_PROGRESSION = '| Am | F G | Am Dm | E Am |';
+let CURRENT_PROGRESSION = DEFAULT_PROGRESSION;
+
+const CHORD_TOKEN_RE = /^[A-G][#b]?(?:m(?!aj)|maj|min|sus|aug|dim|add|°)?[0-9]*(?:[#b]?[0-9]*)?(?:sus[24]?|add[0-9]+|°)?/;
+
+function tokenizeProgression(text) {
+ const tokens = [];
+ let i = 0;
+ while (i < text.length) {
+ const sub = text.slice(i);
+ const m = sub.match(CHORD_TOKEN_RE);
+ if (m && m[0].length > 0) {
+ tokens.push({ type: 'chord', name: m[0] });
+ i += m[0].length;
+ } else {
+ tokens.push({ type: 'sep', text: text[i] });
+ i++;
+ }
+ }
+ return tokens;
+}
+
+function progressionToHTML(text) {
+ const tokens = tokenizeProgression(text);
+ let html = '';
+ let chordIdx = 0;
+ for (const t of tokens) {
+ if (t.type === 'chord') {
+ html += `<span class="chord" data-chord="${t.name}" data-prog-idx="${chordIdx}">${t.name}</span>`;
+ chordIdx++;
+ } else {
+ const c = t.text;
+ if (c === '<') html += '&lt;';
+ else if (c === '>') html += '&gt;';
+ else if (c === '&') html += '&amp;';
+ else html += c;
+ }
+ }
+ return html;
+}
+
+function applyProgression(text) {
+ CURRENT_PROGRESSION = text;
+ const display = document.getElementById('progression-display');
+ display.innerHTML = progressionToHTML(text);
+ attachChordTooltips(display);
+ renderActiveVoicings();
+}
+
+function getUniqueProgressionChords() {
+ const tokens = tokenizeProgression(CURRENT_PROGRESSION);
+ const seen = new Set();
+ const unique = [];
+ for (const t of tokens) {
+ if (t.type === 'chord' && !seen.has(t.name)) {
+ seen.add(t.name);
+ unique.push(t.name);
+ }
+ }
+ return unique;
+}
+
+function renderActiveVoicings() {
+ const grid = document.getElementById('active-voicings-grid');
+ if (!grid) return;
+ const chords = getUniqueProgressionChords();
+ let html = '';
+ for (const name of chords) {
+ const lib = lookupChord(name);
+ const user = getUserVoicings(name);
+ const all = [...lib, ...user];
+ if (all.length === 0) {
+ html += `
+ <div class="voicing-card" data-chord="${name}">
+ <div class="voicing-name">${name}</div>
+ <div class="voicing-empty">Aucun voicing.<br>Hover pour ajouter.</div>
+ </div>`;
+ continue;
+ }
+ let pinned = getPinned(name).filter(i => i < all.length);
+ if (pinned.length === 0) pinned = [0];
+ for (const idx of pinned) {
+ const v = all[idx];
+ const labelStr = v.name + (all.length > 1 ? ` · ${idx + 1}/${all.length}` : '');
+ html += `
+ <div class="voicing-card" data-chord="${name}" data-pin-idx="${idx}">
+ <button class="voicing-unpin" data-chord="${name}" data-idx="${idx}" type="button" title="Retirer du panneau">×</button>
+ <div class="voicing-name">${name}</div>
+ <div class="voicing-diagram">${renderFretboard(v)}</div>
+ <div class="voicing-label" title="${labelStr}">${labelStr}</div>
+ </div>
+ `;
+ }
+ }
+ grid.innerHTML = html;
+ // Unpin × handlers
+ grid.querySelectorAll('.voicing-unpin').forEach(btn => {
+ btn.addEventListener('click', e => {
+ e.stopPropagation();
+ togglePin(btn.dataset.chord, parseInt(btn.dataset.idx, 10));
+ renderActiveVoicings();
+ });
+ });
+ // Cards hoverable → opens popup for that chord
+ grid.querySelectorAll('.voicing-card').forEach(card => card.classList.add('chord'));
+ attachChordTooltips(grid);
+}
+
+function replaceChordAtIdx(progIdx, newChord) {
+ const tokens = tokenizeProgression(CURRENT_PROGRESSION);
+ let counter = 0;
+ for (const t of tokens) {
+ if (t.type === 'chord') {
+ if (counter === progIdx) { t.name = newChord; break; }
+ counter++;
+ }
+ }
+ CURRENT_PROGRESSION = tokens.map(t => t.type === 'chord' ? t.name : t.text).join('');
+ try { localStorage.setItem('tehilim-progression', CURRENT_PROGRESSION); } catch (e) {}
+
+ // Update only the specific span (not full re-render, keeps the popup's `el` ref valid)
+ const span = document.querySelector(`#progression-display .chord[data-prog-idx="${progIdx}"]`);
+ if (span) {
+ span.textContent = newChord;
+ span.dataset.chord = newChord;
+ }
+}
+
+function chordMaxFretboardHeight(positions) {
+ let maxH = 0;
+ for (const p of positions) {
+ const fretted = p.frets.filter(f => f > 0);
+ const maxFret = fretted.length > 0 ? Math.max(...fretted) : p.baseFret + 3;
+ const numFrets = Math.max(4, maxFret - p.baseFret + 1);
+ const H = 36 + numFrets * 22 + 22; // matches renderFretboard layout
+ if (H > maxH) maxH = H;
+ }
+ return maxH;
+}
+
+function renderFretboardEditor(draftFrets, numEditFrets) {
+ numEditFrets = numEditFrets || 7;
+ const stringSpacing = 22;
+ const fretSpacing = 24;
+ const offsetX = 30;
+ const offsetY = 50;
+ const STR_COUNT = 6;
+ const W = offsetX * 2 + stringSpacing * (STR_COUNT - 1);
+ const H = offsetY + numEditFrets * fretSpacing + 40;
+
+ let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+ // X / O toggles for each string above the diagram
+ for (let i = 0; i < STR_COUNT; i++) {
+ const x = offsetX + i * stringSpacing;
+ const isMuted = draftFrets[i] === -1;
+ const isOpen = draftFrets[i] === 0;
+
+ // X (mute)
+ svg += `<g class="edit-toggle ${isMuted ? 'active' : ''}" data-string="${i}" data-fret="-1">`;
+ svg += `<rect x="${x - 9}" y="${offsetY - 44}" width="18" height="14" rx="2" stroke="#444" stroke-width="0.5"/>`;
+ svg += `<text x="${x}" y="${offsetY - 33}" fill="${isMuted ? '#000' : '#888'}" font-size="11" text-anchor="middle" font-weight="700" pointer-events="none">×</text>`;
+ svg += `</g>`;
+
+ // O (open)
+ svg += `<g class="edit-toggle ${isOpen ? 'active' : ''}" data-string="${i}" data-fret="0">`;
+ svg += `<rect x="${x - 9}" y="${offsetY - 26}" width="18" height="14" rx="2" stroke="#444" stroke-width="0.5"/>`;
+ svg += `<text x="${x}" y="${offsetY - 15}" fill="${isOpen ? '#000' : '#888'}" font-size="11" text-anchor="middle" font-weight="700" pointer-events="none">○</text>`;
+ svg += `</g>`;
+ }
+
+ // Nut
+ svg += `<rect x="${offsetX - 1}" y="${offsetY - 4}" width="${stringSpacing * (STR_COUNT - 1) + 2}" height="5" fill="#ccc"/>`;
+
+ // Frets
+ for (let i = 0; i <= numEditFrets; i++) {
+ svg += `<line x1="${offsetX}" y1="${offsetY + i * fretSpacing}" x2="${offsetX + (STR_COUNT - 1) * stringSpacing}" y2="${offsetY + i * fretSpacing}" stroke="#444" stroke-width="1"/>`;
+ }
+ // Strings
+ for (let i = 0; i < STR_COUNT; i++) {
+ svg += `<line x1="${offsetX + i * stringSpacing}" y1="${offsetY}" x2="${offsetX + i * stringSpacing}" y2="${offsetY + numEditFrets * fretSpacing}" stroke="#666" stroke-width="1"/>`;
+ }
+
+ // Click cells (one rect per string per fret)
+ for (let s = 0; s < STR_COUNT; s++) {
+ for (let f = 1; f <= numEditFrets; f++) {
+ const x = offsetX + s * stringSpacing - stringSpacing / 2;
+ const y = offsetY + (f - 1) * fretSpacing;
+ svg += `<g class="edit-cell" data-string="${s}" data-fret="${f}">`;
+ svg += `<rect x="${x}" y="${y}" width="${stringSpacing}" height="${fretSpacing}"/>`;
+ svg += `</g>`;
+ }
+ }
+
+ // Render selected positions
+ for (let i = 0; i < STR_COUNT; i++) {
+ const f = draftFrets[i];
+ if (f > 0) {
+ const x = offsetX + i * stringSpacing;
+ const y = offsetY + (f - 0.5) * fretSpacing;
+ svg += `<circle cx="${x}" cy="${y}" r="9" fill="#4A9EDB" stroke="#0a0a0a" stroke-width="1" pointer-events="none"/>`;
+ const fontSize = f >= 10 ? 9 : 10;
+ svg += `<text x="${x}" y="${y + 3.5}" fill="#0a0a0a" font-size="${fontSize}" text-anchor="middle" font-weight="700" font-family="monospace" pointer-events="none">${f}</text>`;
+ }
+ }
+
+ // Fret number indicators on the right side of the diagram
+ for (let i = 1; i <= numEditFrets; i++) {
+ svg += `<text x="${offsetX + (STR_COUNT - 1) * stringSpacing + 14}" y="${offsetY + (i - 0.5) * fretSpacing + 3}" fill="#444" font-size="9" text-anchor="middle" font-family="monospace">${i}</text>`;
+ }
+
+ // Bottom: tuning labels
+ for (let i = 0; i < STR_COUNT; i++) {
+ svg += `<text x="${offsetX + i * stringSpacing}" y="${offsetY + numEditFrets * fretSpacing + 14}" fill="#4A9EDB" font-size="9" text-anchor="middle" font-family="monospace">${TUNING[i] || ''}</text>`;
+ const f = draftFrets[i];
+ let label = f === -1 ? '×' : f === 0 ? '○' : f.toString();
+ svg += `<text x="${offsetX + i * stringSpacing}" y="${offsetY + numEditFrets * fretSpacing + 28}" fill="#666" font-size="10" text-anchor="middle" font-family="monospace" font-weight="600">${label}</text>`;
+ }
+
+ svg += `</svg>`;
+ return svg;
+}
+
+// ====== Single tooltip global ======
+let CURRENT_TOOLTIP_CLOSE = null;
+
+function attachChordTooltips(root) {
+ root = root || document;
+ const chords = root.querySelectorAll('.chord');
+ chords.forEach(el => attachOneChord(el, el.dataset.chord));
+}
+
+function attachOneChord(el, chordNameInit) {
+ // State that lives across re-renders for THIS tooltip session
+ let chordName = chordNameInit;
+ let posIndex = 0;
+ let tooltip = null;
+ let mode = 'view'; // 'view' | 'add' | 'harmonic'
+ let harmTab = 'diatonique';
+ let draftFrets = [-1, -1, -1, -1, -1, -1];
+ let draftName = '';
+
+ function getAllPositions() {
+ const lib = lookupChord(chordName);
+ const user = getUserVoicings(chordName).map(v => Object.assign({ _user: true }, v));
+ return [...lib, ...user];
+ }
+
+ function maxHeight() {
+ const positions = getAllPositions();
+ if (positions.length === 0) return 165;
+ let maxH = 0;
+ for (const p of positions) {
+ const fretted = p.frets.filter(f => f > 0);
+ const maxFret = fretted.length > 0 ? Math.max(...fretted) : p.baseFret + 3;
+ const numFrets = Math.max(4, maxFret - p.baseFret + 1);
+ const H = 36 + numFrets * 22 + 22;
+ if (H > maxH) maxH = H;
+ }
+ return maxH;
+ }
+
+ function position() {
+ if (!tooltip) return;
+ const rect = el.getBoundingClientRect();
+ const ttRect = tooltip.getBoundingClientRect();
+ let left = rect.left + window.scrollX + rect.width / 2 - ttRect.width / 2;
+ const maxLeft = window.scrollX + window.innerWidth - ttRect.width - 12;
+ const minLeft = window.scrollX + 12;
+ if (left > maxLeft) left = maxLeft;
+ if (left < minLeft) left = minLeft;
+ let top = rect.bottom + window.scrollY + 10;
+ if (rect.bottom + ttRect.height + 20 > window.innerHeight) {
+ top = rect.top + window.scrollY - ttRect.height - 10;
+ }
+ tooltip.style.left = `${left}px`;
+ tooltip.style.top = `${top}px`;
+ }
+
+ function renderActionsBar() {
+ const inProg = el.dataset.progIdx !== undefined;
+ const replaceBtn = inProg
+ ? `<button class="tt-action-btn ${mode === 'rename' ? 'active' : ''}" data-mode="rename" type="button">✎ remplacer</button>`
+ : '';
+ return `
+ <div class="tt-actions">
+ ${replaceBtn}
+ <button class="tt-action-btn ${mode === 'add' ? 'active' : ''}" data-mode="add" type="button">+ doigté</button>
+ <button class="tt-action-btn ${mode === 'harmonic' ? 'active' : ''}" data-mode="harmonic" type="button">⚇ harmonique</button>
+ </div>
+ `;
+ }
+
+ function renderRenameForm() {
+ return `
+ <div class="tt-name">✎ Remplacer ${chordName} par…</div>
+ <div class="tt-add-form">
+ <input class="tt-rename-input" type="text" placeholder="ex: G, Am7, F#m, Cmaj9…" value="">
+ <span class="tt-form-label" style="color:var(--text-faint);font-size:10px">
+ Tape n'importe quel nom d'accord (les inconnus s'affichent sans diagramme).
+ La progression sera mise à jour automatiquement.
+ </span>
+ <div class="tt-form-buttons">
+ <button class="tt-rename-cancel" type="button">✕ annuler</button>
+ <button class="save tt-rename-save" type="button">✓ remplacer</button>
+ </div>
+ </div>
+ `;
+ }
+
+ function setCurrentChord(newName, alsoReplaceInProgression) {
+ if (alsoReplaceInProgression && el.dataset.progIdx !== undefined) {
+ const idx = parseInt(el.dataset.progIdx, 10);
+ replaceChordAtIdx(idx, newName);
+ // The span's data-chord and textContent are now updated.
+ // Keep `el` in sync with the (now mutated) span, same reference still valid.
+ }
+ chordName = newName;
+ posIndex = 0;
+ mode = 'view';
+ update();
+ }
+
+ function renderViewBody() {
+ const positions = getAllPositions();
+ if (positions.length === 0) {
+ return `
+ <div class="tt-name">${chordName}</div>
+ <div class="tt-fretboard" style="height: auto; min-height: 80px;">
+ <div style="color: var(--text-faint); font-size: 12px; text-align: center; padding: 16px 8px; line-height: 1.5;">
+ Aucun voicing dans la bibliothèque pour <strong style="color:var(--text)">${chordName}</strong>
+ <br>en accordage <strong style="color:var(--text)">${tuningKey()}</strong>.
+ <br><br>
+ Clique <strong style="color:var(--accent)">+ doigté</strong> pour entrer le tien.
+ </div>
+ </div>
+ `;
+ }
+ const p = positions[posIndex];
+ const isUser = p._user;
+ const pinned = isPinned(chordName, posIndex);
+ const dots = positions.map((_, i) => `<span class="tt-dot${i === posIndex ? ' active' : ''}${isPinned(chordName, i) ? ' pinned' : ''}" data-i="${i}"></span>`).join('');
+ const userBadge = isUser ? '<span class="tt-custom-badge">★ custom</span>' : '';
+ const deleteBtn = isUser ? `<button class="tt-delete-btn" type="button">supprimer ce doigté</button>` : '';
+ return `
+ <div class="tt-name">${chordName}, ${p.name}${userBadge}</div>
+ <div class="tt-fretboard" style="height: ${maxHeight()}px;">${renderFretboard(p)}</div>
+ <div class="tt-controls">
+ <button class="tt-arrow tt-prev" type="button">‹</button>
+ <span class="tt-pos">${posIndex + 1} / ${positions.length}</span>
+ <button class="tt-arrow tt-next" type="button">›</button>
+ <button class="tt-pin ${pinned ? 'pinned' : ''}" type="button" title="${pinned ? 'Retirer du panneau' : 'Épingler au panneau imprimable'}">★</button>
+ </div>
+ <div class="tt-dots">${dots}</div>
+ ${deleteBtn}
+ `;
+ }
+
+ function renderAddForm() {
+ return `
+ <div class="tt-name">+ Doigté · ${chordName} · ${tuningKey()}</div>
+ <div class="fret-editor">${renderFretboardEditor(draftFrets, 7)}</div>
+ <div class="tt-add-form">
+ <input class="tt-add-name" type="text" placeholder="Nom (optionnel)" value="${draftName.replace(/"/g, '&quot;')}">
+ <div class="tt-form-buttons">
+ <button class="tt-add-clear" type="button">↺ vider</button>
+ <button class="tt-add-cancel" type="button">✕ annuler</button>
+ <button class="save tt-add-save" type="button">✓ ajouter</button>
+ </div>
+ </div>
+ `;
+ }
+
+ function renderHarmonicPanel() {
+ const types = [
+ ['diatonique', 'Diatonique'],
+ ['quintes', 'Quintes'],
+ ['jazz', 'Jazz'],
+ ['modes', 'Modes']
+ ];
+ const tabs = types.map(([k, lab]) =>
+ `<button class="tt-harm-tab ${harmTab === k ? 'active' : ''}" data-tab="${k}" type="button">${lab}</button>`
+ ).join('');
+ const items = getHarmonic(chordName, harmTab).map(it =>
+ `<button class="tt-harm-item" data-chord="${it.chord}" type="button"><span class="h-chord">${it.chord}</span><span class="h-label">${it.label}</span></button>`
+ ).join('');
+ return `
+ <div class="tt-name">⚇ ${chordName}, voisins ${harmTab}</div>
+ <div class="tt-harm-panel">
+ <div class="tt-harm-tabs">${tabs}</div>
+ <div class="tt-harm-list">${items || '<div style="color:var(--text-faint);font-size:11px;text-align:center;padding:8px;">Aucune suggestion</div>'}</div>
+ </div>
+ `;
+ }
+
+ function update() {
+ if (!tooltip) return;
+ let body;
+ if (mode === 'add') body = renderAddForm();
+ else if (mode === 'harmonic') body = renderHarmonicPanel();
+ else if (mode === 'rename') body = renderRenameForm();
+ else body = renderViewBody();
+
+ tooltip.innerHTML = `<button class="tt-close" type="button" aria-label="Fermer">×</button>` + body + renderActionsBar();
+ bindEvents();
+ }
+
+ function bindEvents() {
+ // Close button
+ const closeBtn = tooltip.querySelector('.tt-close');
+ if (closeBtn) closeBtn.addEventListener('click', closeTooltip);
+
+ // View mode controls, navigate (no auto-pin)
+ const prev = tooltip.querySelector('.tt-prev');
+ if (prev) prev.addEventListener('click', e => {
+ e.stopPropagation();
+ const positions = getAllPositions();
+ posIndex = (posIndex - 1 + positions.length) % positions.length;
+ update();
+ });
+ const next = tooltip.querySelector('.tt-next');
+ if (next) next.addEventListener('click', e => {
+ e.stopPropagation();
+ const positions = getAllPositions();
+ posIndex = (posIndex + 1) % positions.length;
+ update();
+ });
+ tooltip.querySelectorAll('.tt-dot').forEach(d => {
+ d.addEventListener('click', e => {
+ posIndex = parseInt(e.target.dataset.i, 10);
+ update();
+ });
+ });
+ // ★ Pin toggle, adds/removes current voicing from the printable panel
+ const pinBtn = tooltip.querySelector('.tt-pin');
+ if (pinBtn) pinBtn.addEventListener('click', e => {
+ e.stopPropagation();
+ togglePin(chordName, posIndex);
+ renderActiveVoicings();
+ update();
+ });
+
+ // Delete custom voicing
+ const delBtn = tooltip.querySelector('.tt-delete-btn');
+ if (delBtn) delBtn.addEventListener('click', () => {
+ const lib = lookupChord(chordName);
+ const userIdx = posIndex - lib.length;
+ if (userIdx >= 0) {
+ removeUserVoicing(chordName, userIdx);
+ posIndex = Math.max(0, posIndex - 1);
+ renderActiveVoicings();
+ update();
+ }
+ });
+
+ // Action buttons
+ tooltip.querySelectorAll('.tt-action-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+ const m = btn.dataset.mode;
+ if (mode === m) {
+ mode = 'view';
+ } else {
+ mode = m;
+ if (mode === 'add') {
+ // Pre-fill draft from current displayed voicing if any
+ const positions = getAllPositions();
+ if (positions[posIndex]) {
+ draftFrets = positions[posIndex].frets.slice();
+ } else {
+ draftFrets = [-1, -1, -1, -1, -1, -1];
+ }
+ draftName = '';
+ }
+ }
+ update();
+ });
+ });
+
+ // Fretboard editor (interactive cells)
+ const editor = tooltip.querySelector('.fret-editor');
+ if (editor) {
+ editor.addEventListener('click', e => {
+ const target = e.target.closest('.edit-cell, .edit-toggle');
+ if (!target) return;
+ const s = parseInt(target.dataset.string, 10);
+ const f = parseInt(target.dataset.fret, 10);
+ if (isNaN(s) || isNaN(f)) return;
+ // Click on already-set cell: clear (set to muted)
+ if (draftFrets[s] === f && f !== -1) {
+ draftFrets[s] = -1;
+ } else {
+ draftFrets[s] = f;
+ }
+ // Re-render only the editor SVG, not the whole tooltip, to keep focus
+ const ed = tooltip.querySelector('.fret-editor');
+ if (ed) ed.innerHTML = renderFretboardEditor(draftFrets, 7);
+ });
+ }
+
+ // Add form save/cancel/clear
+ const addSave = tooltip.querySelector('.tt-add-save');
+ const addCancel = tooltip.querySelector('.tt-add-cancel');
+ const addClear = tooltip.querySelector('.tt-add-clear');
+ const addName = tooltip.querySelector('.tt-add-name');
+ if (addName) {
+ addName.addEventListener('input', () => { draftName = addName.value; });
+ }
+ if (addSave) addSave.addEventListener('click', () => {
+ // Validate: at least one string must have a fret >= 0 (open or fretted)
+ const playable = draftFrets.some(f => f >= 0);
+ if (!playable) {
+ addSave.textContent = '× rien à jouer';
+ setTimeout(() => { addSave.textContent = '✓ ajouter'; }, 1500);
+ return;
+ }
+ const v = buildVoicingFromFrets(draftFrets.slice(), draftName.trim() || 'Custom');
+ addUserVoicing(chordName, v);
+ const positions = getAllPositions();
+ posIndex = positions.length - 1;
+ // Auto-pin newly added custom voicing so it shows in panel right away
+ if (!isPinned(chordName, posIndex)) togglePin(chordName, posIndex);
+ renderActiveVoicings();
+ mode = 'view';
+ update();
+ });
+ if (addCancel) addCancel.addEventListener('click', () => { mode = 'view'; update(); });
+ if (addClear) addClear.addEventListener('click', () => {
+ draftFrets = [-1, -1, -1, -1, -1, -1];
+ const ed = tooltip.querySelector('.fret-editor');
+ if (ed) ed.innerHTML = renderFretboardEditor(draftFrets, 7);
+ });
+
+ // Harmonic tabs + items
+ tooltip.querySelectorAll('.tt-harm-tab').forEach(t => {
+ t.addEventListener('click', () => { harmTab = t.dataset.tab; update(); });
+ });
+ tooltip.querySelectorAll('.tt-harm-item').forEach(item => {
+ item.addEventListener('click', () => {
+ // If this chord is in the progression, replace it there too
+ setCurrentChord(item.dataset.chord, true);
+ });
+ });
+
+ // Rename form
+ const renameInput = tooltip.querySelector('.tt-rename-input');
+ const renameSave = tooltip.querySelector('.tt-rename-save');
+ const renameCancel = tooltip.querySelector('.tt-rename-cancel');
+ if (renameInput) {
+ renameInput.focus();
+ renameInput.addEventListener('keydown', e => {
+ if (e.key === 'Enter') renameSave.click();
+ if (e.key === 'Escape') renameCancel.click();
+ });
+ }
+ if (renameSave) renameSave.addEventListener('click', () => {
+ const v = renameInput.value.trim();
+ if (!v) return;
+ setCurrentChord(v, true);
+ });
+ if (renameCancel) renameCancel.addEventListener('click', () => { mode = 'view'; update(); });
+ }
+
+ function closeTooltip() {
+ if (tooltip) { tooltip.remove(); tooltip = null; }
+ if (CURRENT_TOOLTIP_CLOSE === closeTooltip) CURRENT_TOOLTIP_CLOSE = null;
+ }
+
+ function show() {
+ if (tooltip) return; // already open
+ // Close any other open tooltip first
+ if (CURRENT_TOOLTIP_CLOSE) CURRENT_TOOLTIP_CLOSE();
+ chordName = el.dataset.chord || chordNameInit;
+ // Open at the first pinned position for this chord (matches the panel)
+ const pinned = getPinned(chordName);
+ posIndex = pinned[0] || 0;
+ mode = 'view';
+ harmTab = 'diatonique';
+ draftFrets = [-1, -1, -1, -1, -1, -1];
+ draftName = '';
+ tooltip = document.createElement('div');
+ tooltip.className = 'chord-tooltip';
+ document.body.appendChild(tooltip);
+ update();
+ position();
+ CURRENT_TOOLTIP_CLOSE = closeTooltip;
+ }
+
+ // Open on hover (no auto-close on leave, user clicks × to close)
+ el.addEventListener('mouseenter', show);
+}
+
+// ====== INIT ======
+(function init() {
+ // Restore saved tuning
+ try {
+ const savedTuning = localStorage.getItem('tehilim-tuning');
+ if (savedTuning) {
+ const arr = JSON.parse(savedTuning);
+ if (Array.isArray(arr) && arr.length === 6) {
+ setTuning(arr);
+ const presetEl = document.getElementById('tuning-preset');
+ const customEl = document.getElementById('tuning-custom');
+ const matched = findTuningPreset(arr);
+ if (matched) {
+ presetEl.value = matched;
+ } else {
+ presetEl.value = 'custom';
+ customEl.hidden = false;
+ customEl.value = arr.join(' ');
+ }
+ }
+ } else {
+ // No saved tuning, ensure UI shows current
+ setTuning(TUNING);
+ }
+ } catch (e) {}
+
+ // Load user voicings + active positions
+ loadUserVoicings();
+ loadActivePos();
+
+ // Restore saved progression
+ let progression = DEFAULT_PROGRESSION;
+ try {
+ const savedProg = localStorage.getItem('tehilim-progression');
+ if (savedProg) progression = savedProg;
+ } catch (e) {}
+ applyProgression(progression);
+
+ // Attach tooltips for the rest of the page (chant-tip etc.)
+ attachChordTooltips(document.querySelector('.chant-tip'));
+
+ // ===== Tuning UI handlers =====
+ const presetEl = document.getElementById('tuning-preset');
+ const customEl = document.getElementById('tuning-custom');
+ presetEl.addEventListener('change', () => {
+ if (presetEl.value === 'custom') {
+ customEl.hidden = false;
+ customEl.focus();
+ customEl.value = TUNING.join(' ');
+ } else {
+ customEl.hidden = true;
+ const arr = TUNING_PRESETS[presetEl.value];
+ if (arr) setTuning(arr);
+ }
+ });
+ customEl.addEventListener('input', () => {
+ const arr = parseTuningString(customEl.value);
+ if (arr) setTuning(arr);
+ });
+
+ // Click outside chord/tooltip closes the open tooltip.
+ // Use CAPTURE phase so we evaluate the target BEFORE the tooltip's own
+ // click handlers replace innerHTML and detach the target from the DOM.
+ document.addEventListener('click', e => {
+ if (!CURRENT_TOOLTIP_CLOSE) return;
+ if (e.target.closest('.chord-tooltip') || e.target.closest('.chord')) return;
+ CURRENT_TOOLTIP_CLOSE();
+ }, true);
+
+ // ===== Progression reset =====
+ const resetBtn = document.getElementById('prog-reset');
+ if (resetBtn) resetBtn.addEventListener('click', () => {
+ applyProgression(DEFAULT_PROGRESSION);
+ try { localStorage.removeItem('tehilim-progression'); } catch (e) {}
+ });
+
+ // ===== Print button =====
+ const printBtn = document.getElementById('print-btn');
+ if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+})();
+</script>
+
+</body>
+</html>

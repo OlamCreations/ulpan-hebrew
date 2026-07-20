@@ -12,12 +12,13 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
+import { ROOT, lessonPages, reportPath } from './paths.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, '..');
-const src = await readFile(join(ROOT, 'translit.js'), 'utf8');
+const src = await readFile(join(ROOT, 'assets', 'translit.js'), 'utf8');
 const win = {}; new Function('window', src)(win); const T = win.Translit;
 
-const report = JSON.parse(await readFile(join(ROOT, 'lesson-niqqud-report.json'), 'utf8'));
+const report = JSON.parse(await readFile(reportPath('lesson-niqqud-report.json'), 'utf8'));
 const HEB = /[֐-׿]/;
 const holamFold = (s) => (s || '').replace(/([א-ת])([֑-ׇ]*)ֹ([֑-ׇ]*)ו(?![ֹּ])/g, (_, c, a, b) => c + a + b + 'וֹ');
 const shurukFold = (s) => (s || '').replace(/([א-ת])([֑-ׇ]*)ֻ([֑-ׇ]*)ו(?![ֹּ])/g, (_, c, a, b) => c + a + b + 'וּ');
@@ -25,7 +26,7 @@ const N = (s) => shurukFold(holamFold((s || '').normalize('NFC').replace(/[ֽ|]/
 
 // Collect every {he, translit, fr} row so a flagged word can be shown in situ.
 const rows = [];
-const files = (await readdir(ROOT)).filter((f) => /^\d+-.*\.html$/.test(f));
+const files = await lessonPages();
 for (const f of files) {
   const s = await readFile(join(ROOT, f), 'utf8');
   const re = /(?:const|var|let)\s+([A-Z_]{2,})\s*=\s*(\[[\s\S]*?\]);/g;
@@ -61,7 +62,7 @@ for (const flag of report.flagged) {
 }
 out.sort((a, b) => b.files - a.files || b.standalone - a.standalone);
 const top = out.slice(0, +(process.argv[2] || 120));
-await writeFile(join(ROOT, 'adjudication-batch.json'), JSON.stringify({
+await writeFile(reportPath('adjudication-batch.json'), JSON.stringify({
   _note: 'Candidate lesson niqqud errors WITH context, for human/Fable adjudication. reads_now = what translit.js says with the shipped niqqud; would_read = with Dicta\'s. embedded>0 means the string also occurs glued inside longer words, where the shipped form may be CORRECT (see כֵן / לָכֵן). Dicta is an oracle, not truth: it mangles proper nouns (Vichy -> veyishai) and loanwords.',
   total_audible: out.length, in_this_batch: top.length, candidates: top,
 }, null, 1) + '\n', 'utf8');

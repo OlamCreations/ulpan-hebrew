@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cursive 03: Real Handwritten Hebrew</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script><link rel="stylesheet" href="../assets/style.css?v=1777896495151">
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Real Handwritten Hebrew</h1>
+    <div class="subtitle">Cursive 03 · כְּתָב יָד בַּחַיִּים</div>
+  </div>
+  <div class="nav">
+    <a href="../index.html">Home</a>
+    <a href="cursive-001-letters-en.html">C1</a>
+    <a href="cursive-002-reading-en.html">C2</a>
+    <a href="cursive-003-real-en.html" class="active">C3</a>
+  </div>
+</header>
+
+<p class="intro">
+  This is what cursive is for. A note on the fridge, a shopping list, a form at the clinic, a date scribbled on a calendar. Read each one in handwriting first. Reveal the meaning only after you have tried. By the end you read what Israelis actually write.
+</p>
+
+<h2>The shopping list: רְשִׁימַת קְנִיּוֹת</h2>
+<p class="intro" style="margin-bottom:8px">Someone left this on the counter. Read each item, tap to confirm.</p>
+<div class="cur-read" id="shopping"></div>
+
+<h2>A note on the fridge: פֶּתֶק</h2>
+<p class="intro" style="margin-bottom:8px">Read the whole note in cursive, then reveal.</p>
+<div id="note1"></div>
+
+<h2>A form: טֹפֶס</h2>
+<p class="intro" style="margin-bottom:8px">Printed labels, handwritten answers, exactly like a real form. The label is in print, the filled-in value is in cursive. Tap a row to reveal.</p>
+<div class="cur-read" id="form"></div>
+
+<h2>Days and dates by hand</h2>
+<p class="intro" style="margin-bottom:8px">Israelis write numbers with the same digits you know (3, 6, 2026). The day names are handwritten. Tap to hear and reveal.</p>
+<div class="cur-read" id="days"></div>
+<div class="tip">
+  <strong>Reading a handwritten date</strong>, A date like <span class="ktav" style="font-size:24px">יום שלישי, 3.6.2026</span> is "Tuesday, 3 June 2026". The weekday is spelled out in cursive; the numbers stay as digits. Day-of-month comes before month (3.6 = 3 June), as in France, not the US.
+</div>
+
+<h2>A longer note: comprehension</h2>
+<p class="intro" style="margin-bottom:8px">Read it fully before revealing. This is your graduation read.</p>
+<div id="note2"></div>
+
+<footer>
+  Cursive 03 · real handwritten Hebrew · you can now read what Israelis write by hand
+</footer>
+
+</div>
+
+<script src="../assets/app.js?v=1777896495151"></script>
+<script>
+// handwriting carries no niqqud, strip vowel points/cantillation for cursive display
+const bare = s => s.replace(/[֑-ׇ]/g, '');
+
+// reusable reveal-row drill (cursive -> print + meaning)
+function buildDrill(elId, items, rate) {
+  const el = document.getElementById(elId);
+  items.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'cur-read-row';
+    row.innerHTML = `
+      <div class="crr-cursive">${bare(w.he)}</div>
+      <div class="crr-print">${w.he}</div>
+      <div class="crr-fr">${w.t} · ${w.fr}</div>
+      <button class="btn icon-btn" title="Listen" aria-label="Listen">▶</button>
+    `;
+    row.addEventListener('click', () => { row.classList.add('revealed'); speak(w.he, rate || 0.85); });
+    row.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); row.classList.add('revealed'); speak(w.he, rate || 0.85); });
+    el.appendChild(row);
+  });
+}
+
+// form rows: printed label + handwritten value
+function buildForm(elId, rows) {
+  const el = document.getElementById(elId);
+  rows.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'cur-read-row';
+    row.style.gridTemplateColumns = 'auto 1.2fr 1fr auto';
+    row.innerHTML = `
+      <div style="font-family:'Frank Ruhl Libre','David',serif;direction:rtl;font-size:20px;color:var(--text-dim)">${r.label}:</div>
+      <div class="crr-cursive">${bare(r.he)}</div>
+      <div class="crr-fr">${r.t} · ${r.fr}</div>
+      <button class="btn icon-btn" title="Listen" aria-label="Listen">▶</button>
+    `;
+    row.addEventListener('click', () => { row.classList.add('revealed'); speak(r.he, 0.85); });
+    row.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); row.classList.add('revealed'); speak(r.he, 0.85); });
+    el.appendChild(row);
+  });
+}
+
+// a full handwritten note panel with a reveal toggle
+function buildNote(elId, note) {
+  const el = document.getElementById(elId);
+  const panel = document.createElement('div');
+  panel.className = 'tip';
+  panel.style.cssText = 'background:var(--bg-card);border-left:3px solid var(--accent);padding:20px 22px';
+  panel.innerHTML = `
+    <div class="ktav" style="font-size:34px;line-height:1.7;color:var(--text);margin-bottom:14px">${bare(note.he)}</div>
+    <div class="note-reveal" style="display:none">
+      <div style="font-family:'Frank Ruhl Libre','David',serif;direction:rtl;font-size:22px;line-height:1.7;color:var(--text);border-top:1px solid var(--border);padding-top:12px">${note.he}</div>
+      <div style="font-size:13px;color:var(--accent);font-family:ui-monospace,monospace;margin-top:8px">${note.t}</div>
+      <div style="font-size:15px;color:var(--text-dim);margin-top:6px">${note.fr}</div>
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn btn-primary nr-btn">Reveal print + meaning</button>
+      <button class="btn nr-hear">▶ Hear it</button>
+    </div>
+  `;
+  el.appendChild(panel);
+  panel.querySelector('.nr-btn').addEventListener('click', () => { panel.querySelector('.note-reveal').style.display = 'block'; });
+  panel.querySelector('.nr-hear').addEventListener('click', () => speak(note.he, 0.85));
+}
+
+// content
+const SHOPPING = [
+  { he: 'חָלָב',     t: 'chalav',   fr: 'milk' },
+  { he: 'לֶחֶם',     t: 'lechem',   fr: 'bread' },
+  { he: 'בֵּיצִים',  t: 'beitzim',  fr: 'eggs' },
+  { he: 'גְּבִינָה', t: 'gvina',    fr: 'cheese' },
+  { he: 'עַגְבָנִיּוֹת', t: 'agvaniyot', fr: 'tomatoes' },
+  { he: 'קָפֶה',     t: 'kafe',     fr: 'coffee' },
+  { he: 'סֻכָּר',    t: 'sukar',    fr: 'sugar' }
+];
+buildDrill('shopping', SHOPPING);
+
+buildNote('note1', {
+  he: 'אִמָּא, הָלַכְתִּי לַחֲבֵרִים. אֶחְזֹר בְּשֶׁבַע. נְשִׁיקוֹת, דָּנִי',
+  t: 'ima, halachti la-chaverim. echzor be-sheva. neshikot, Dani',
+  fr: "Mom, I went to friends'. I'll be back at seven. Kisses, Dani"
+});
+
+const FORM = [
+  { label: 'שֵׁם',     he: 'יוֹנָס',           t: 'Yonas',          fr: 'Name: Jonas' },
+  { label: 'מִשְׁפָּחָה', he: 'נַפְתָּלִי',      t: 'Naftali',        fr: 'Surname: Nephtali' },
+  { label: 'כְּתֹבֶת', he: 'רְחוֹב הֶרְצְל 12', t: 'rechov Herzl 12', fr: 'Address: 12 Herzl Street' },
+  { label: 'עִיר',     he: 'תֵּל אָבִיב',       t: 'Tel Aviv',       fr: 'City: Tel Aviv' },
+  { label: 'טֶלֶפוֹן', he: '054-1234567',       t: '054-1234567',    fr: 'Phone (digits as written)' }
+];
+buildForm('form', FORM);
+
+const DAYS = [
+  { he: 'יוֹם רִאשׁוֹן', t: 'yom rishon', fr: 'Sunday (day one)' },
+  { he: 'יוֹם שֵׁנִי',   t: 'yom sheni',  fr: 'Monday (day two)' },
+  { he: 'יוֹם שְׁלִישִׁי', t: 'yom shlishi', fr: 'Tuesday (day three)' },
+  { he: 'יוֹם רְבִיעִי', t: 'yom revi\'i', fr: 'Wednesday (day four)' },
+  { he: 'יוֹם חֲמִישִׁי', t: 'yom chamishi', fr: 'Thursday (day five)' },
+  { he: 'יוֹם שִׁישִׁי', t: 'yom shishi', fr: 'Friday (day six)' },
+  { he: 'שַׁבָּת',       t: 'shabat',     fr: 'Saturday (Shabbat)' }
+];
+buildDrill('days', DAYS, 0.8);
+
+buildNote('note2', {
+  he: 'הַיי, קִבַּלְתִּי אֶת הַהוֹדָעָה שֶׁלְּךָ. אֲנִי בָּעֲבוֹדָה עַד חָמֵשׁ, אֲבָל אַחֲרֵי זֶה אֲנִי פָּנוּי. נִפָּגֵשׁ בַּקָּפֶה לְיַד הַתַּחֲנָה בְּשֵׁשׁ? תַּעֲנֶה לִי כְּשֶׁאַתָּה רוֹאֶה אֶת זֶה. נְשַׁמַע',
+  t: "hai, kibalti et ha-hodaa shelcha. ani ba-avoda ad chamesh, aval acharei ze ani panui. nipagesh ba-kafe leyad ha-tachana be-shesh? taane li ksheata roe et ze. nishama",
+  fr: "Hi, I got your message. I'm at work until five, but after that I'm free. Shall we meet at the cafe by the station at six? Reply when you see this. Talk soon."
+});
+
+// completion: revealing the graduation note + a few rows
+let revealed = 0;
+document.body.addEventListener('click', e => {
+  if (e.target.closest('.cur-read-row') || e.target.classList.contains('nr-btn')) {
+    revealed++;
+    if (revealed >= 8) markLessonDone('cursive-003');
+  }
+});
+
+addMiniQuiz('Real handwriting, check', [
+  { q: 'On a handwritten form, the labels (Name, Address) are usually…', options: ['cursive', 'printed; only the answers are cursive', 'in English', 'missing'], answer: 1 },
+  { q: 'A handwritten Israeli date "3.6.2026" means…', options: ['March 6, 2026', '3 June 2026', 'June 3 or March 6, ambiguous', '2026 days'], answer: 1, explain: 'Day before month, like France.' },
+  { q: 'Numbers in Israeli handwriting use…', options: ['Hebrew letters as numerals', 'the same Western digits 0-9 you know', 'Roman numerals', 'words only'], answer: 1 },
+  { q: '"יום שלישי" written by hand is…', options: ['Sunday', 'Tuesday (day three)', 'Wednesday', 'Saturday'], answer: 1 },
+  { q: 'After these three lessons, cursive should feel…', options: ['impossible', 'readable with effort, fluency comes with exposure', 'unnecessary', 'identical to print'], answer: 1, explain: 'You have the system. Now read handwriting whenever you can.' }
+]);
+</script>
+
+</body>
+</html>

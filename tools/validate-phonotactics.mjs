@@ -28,8 +28,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
+import { ROOT, pages, lessonPages, dataPath, reportPath } from './paths.mjs';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, '..');
 
 const SHEVA = 'ְ', HATAF_SEGOL = 'ֱ', HATAF_PATAH = 'ֲ', HATAF_QAMATS = 'ֳ';
 const HIRIQ = 'ִ', TSERE = 'ֵ', SEGOL = 'ֶ', PATAH = 'ַ', QAMATS = 'ָ';
@@ -121,7 +122,7 @@ function check(word) {
 
 // ---- corpora -------------------------------------------------------------
 async function lessonRows() {
-  const files = (await readdir(ROOT)).filter((f) => /^\d+-.*\.html$/.test(f)).sort();
+  const files = await lessonPages();
   const rows = [];
   for (const f of files) {
     const s = await readFile(join(ROOT, f), 'utf8');
@@ -142,8 +143,8 @@ const args = process.argv.slice(2);
 
 if (args.includes('--selftest')) {
   // Known-good by construction: both files are hand-authored and verified. Any hit is a rule bug.
-  const pb = JSON.parse(await readFile(join(ROOT, 'phrasebook.json'), 'utf8')).phrases.map((p) => p.he);
-  const ex = JSON.parse(await readFile(join(ROOT, 'expressions.json'), 'utf8')).expressions.map((e) => e.he);
+  const pb = JSON.parse(await readFile(dataPath('phrasebook.json'), 'utf8')).phrases.map((p) => p.he);
+  const ex = JSON.parse(await readFile(dataPath('expressions.json'), 'utf8')).expressions.map((e) => e.he);
   let bad = 0, n = 0;
   for (const [label, corpus] of [['phrasebook.json', pb], ['expressions.json', ex]]) {
     let hits = 0;
@@ -185,7 +186,7 @@ list.slice(0, 20).forEach((v) => console.log(`   ${v.he.padEnd(16)} -> ${v.fix.p
 if (args.includes('--fix')) {
   const HEB = /[֐-׿]/;
   let applied = 0;
-  const files = (await readdir(ROOT)).filter((f) => /\.html$/.test(f));
+  const files = await pages('allPages');
   for (const f of files) {
     let s = await readFile(join(ROOT, f), 'utf8');
     const orig = s;
@@ -204,6 +205,6 @@ if (args.includes('--fix')) {
   }
   console.log(`\napplied ${applied} replacements.`);
 } else {
-  await writeFile(join(ROOT, 'phonotactic-violations.json'), JSON.stringify({ count: list.length, violations: list }, null, 1) + '\n');
-  console.log('\n-> phonotactic-violations.json  (run with --fix to apply, after --selftest)');
+  await writeFile(reportPath('phonotactic-violations.json'), JSON.stringify({ count: list.length, violations: list }, null, 1) + '\n');
+  console.log('\n-> tools/reports/phonotactic-violations.json  (run with --fix to apply, after --selftest)');
 }
