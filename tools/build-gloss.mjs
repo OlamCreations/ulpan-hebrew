@@ -100,7 +100,8 @@ const out = {
   _note: 'Verified word glosses compiled from the phrasebook, the expressions and the lessons. '
        + 'Keys are FULLY VOCALIZED forms — there is deliberately no consonantal-skeleton fallback, '
        + 'see the header of tools/build-gloss.mjs. Generated; do not edit.',
-  built: new Date().toISOString(),
+  // Deliberately no build timestamp: it would make every regeneration produce a diff even when
+  // not a single gloss changed, so a real content change could not be told from a rebuild.
   v,
 };
 await writeFile(dataPath('gloss.json'), JSON.stringify(out) + '\n', 'utf8');
