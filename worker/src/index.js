@@ -123,6 +123,7 @@ function parseUD(conllu) {
 }
 
 const HEB = /[֐-׿]/;
+const stripNiqqud = (s) => (s || '').replace(/[֑-ׇ]/g, '');
 function morphOf(ud) {
   const out = {};
   // Never surface a "punct"/other bogus tag on a token that is actually Hebrew letters.
@@ -171,16 +172,59 @@ async function udpipe(text, signal) {
 }
 
 async function analyze(text) {
+  // Both upstreams expect UNVOCALIZED modern Hebrew. Nakdan's whole job is to ADD niqqud, and
+  // UDPipe's Hebrew model (HTB) is trained on unvocalized text, so feeding either one niqqud is
+  // out of distribution. The breakdown asks about a card whose Hebrew is already vocalized, so
+  // that is exactly what was being sent — and the morphology under every word paid for it.
+  //
+  // Measured against hand-written ground truth on 17 words of everyday sentences:
+  //     bare input      17/17 correct part of speech
+  //     vocalized input  9/16 — לֶחֶם (bread) tagged as an infinitive verb, טָרִי (fresh) as a
+  //                      noun, בַּשּׁוּק (in the market) as an adverb, and one word dropped from
+  //                      the tokenization entirely.
+  const bare = stripNiqqud(text);
+  /* UDPipe also tags noticeably worse when the sentence carries its final punctuation. Measured
+     over 5 everyday sentences with hand-written ground truth: 79% with the trailing mark, 95%
+     without, and the words that flip are ordinary content words in the MIDDLE of the sentence
+     (לֶחֶם bread -> verb, טָרִי fresh -> adverb, בַּגִּנָּה in the garden -> adverb), not the token next
+     to the punctuation. Token alignment is unaffected either way — parseUD already drops PUNCT
+     rows — so this only changes the tagger's own analysis. Trailing only: internal commas were
+     not measured and may well carry real syntactic signal. Dicta still gets the full text; it
+     needs the punctuation to emit the separator tokens the client reassembles from. */
+  const forTagging = bare.replace(/[.!?…]+\s*$/, '');
   const dCtrl = new AbortController(), uCtrl = new AbortController();
   const dT = setTimeout(() => dCtrl.abort(), UPSTREAM_TIMEOUT);
   const uT = setTimeout(() => uCtrl.abort(), UPSTREAM_TIMEOUT);
   const [dRes, uRes] = await Promise.allSettled([
-    dicta(text, dCtrl.signal).finally(() => clearTimeout(dT)),
-    udpipe(text, uCtrl.signal).finally(() => clearTimeout(uT))
+    dicta(bare, dCtrl.signal).finally(() => clearTimeout(dT)),
+    udpipe(forTagging, uCtrl.signal).finally(() => clearTimeout(uT))
   ]);
   if (dRes.status !== 'fulfilled') return null;
   const out = dRes.value;
   const ud = uRes.status === 'fulfilled' ? uRes.value : [];
+
+  /* Stripping niqqud for the upstreams also throws away what the caller's niqqud already
+     settled. Sending הַמּוֹרָה (the teacher, feminine) bare makes Dicta re-point it הַמּוֹרֶה —
+     masculine, and tagged "m. sing." So: take morphology from the bare analysis, but give back
+     the caller's own vocalization whenever it survives. That also protects hand-verified niqqud
+     coming from the curated phrasebook, which is better than anything Dicta will guess.
+     Only overridden when the consonants match exactly, so a token Dicta split or reordered is
+     left alone rather than mislabelled with a neighbour's vowels. */
+  if (HEB.test(text) && text !== bare) {
+    const supplied = text.split(/\s+/).filter(Boolean);
+    let si = 0;
+    for (const tok of out) {
+      if (tok.sep) continue;
+      while (si < supplied.length && stripNiqqud(supplied[si]).replace(/[^֐-׿]/g, '') !== tok.word) si++;
+      if (si >= supplied.length) break;
+      // Take the Hebrew core only. Splitting on whitespace leaves the sentence's final period
+      // glued to the last word, and copying that in wholesale put a "." inside the vocalized
+      // form of every sentence-final word — the punctuation belongs to the separator token.
+      const core = supplied[si].replace(/^[^֐-׿]+/, '').replace(/[^֐-׿]+$/, '');
+      if (/[֑-ׇ]/.test(core)) tok.voc = core;
+      si++;
+    }
+  }
   let ui = 0;
   for (const tok of out) {
     if (tok.sep) continue;
@@ -358,7 +402,7 @@ export default {
 
     // Cache the computed payload (not the CORS-stamped Response) so the header stays per-origin.
     const cache = caches.default;
-    const cacheKey = new Request('https://morph.cache/v3/' + encodeURIComponent(text));
+    const cacheKey = new Request('https://morph.cache/v7/' + encodeURIComponent(text));
     const hit = await cache.match(cacheKey);
     if (hit) return new Response(await hit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
 
