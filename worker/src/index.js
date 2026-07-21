@@ -22,6 +22,27 @@ Give up to 2 options, most natural first (a second only if it is a genuinely dif
 HEBREW | short note in French on register or usage
 Do not number the lines. Do not write anything before or after the list.`;
 
+// Word-by-word glossing IN CONTEXT (/gloss). The breakdown used to translate each word alone
+// through Google, which on Hebrew homographs is a coin flip it kept losing: שְׁמִי -> "Semitic"
+// (my name), הַאִם -> "the mother" (the yes/no particle), עוֹבֵר -> "fetus" (passes). Measured:
+// sending the vocalized form changes nothing, so the cause is isolation, not vocalization —
+// only the surrounding sentence can settle it. The client resolves everything it can from its
+// own verified corpus first and asks here only for what is left.
+//
+// Same discipline as /nat: the model supplies ONLY the English gloss. Niqqud, transliteration,
+// root and morphology keep coming from Dicta/UDPipe and translit.js, never from the LLM.
+const GLOSS_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const GLOSS_SYS = `You gloss Hebrew words for a French/English speaker learning Hebrew at ulpan.
+You are given one Hebrew sentence, then a list of words taken from it. For EACH listed word, give its meaning AS USED IN THAT SENTENCE — the sentence is the context that decides between readings of the same spelling.
+Rules:
+- 1 to 4 English words per gloss. No explanation, no grammar labels, no transliteration.
+- For a verb, give it as English "to ..." or a plain conjugated sense (e.g. "buys", "will buy").
+- For a function word with no English equivalent, describe its job in parentheses, e.g. "(direct object marker)" or "(yes/no question)".
+- If a word is a name, output the name.
+Output ONLY these lines, one per listed word, in the same order:
+HEBREW WORD = gloss
+Do not number the lines. Do not write anything before or after the list.`;
+
 // CORS restricted to the app origins (still open to direct curl — that's a rate-limit concern,
 // not a CORS one — but this stops other sites embedding the endpoint in visitors' browsers).
 function allowOrigin(origin) {
@@ -207,6 +228,41 @@ async function natTranslate(text, env) {
   return options;
 }
 
+// Gloss the given words in the context of the sentence. Returns { word: gloss } for the words
+// the model actually answered — a missing word is left to the client's own fallback rather than
+// filled with a guess. Keyed by the exact surface form the client sent, so a word appearing
+// twice is asked once.
+async function glossInContext(text, words, env) {
+  if (!env || !env.AI) throw new Error('no AI binding');
+  const uniq = [...new Set(words.filter(w => HEB.test(w)))].slice(0, 24);
+  if (!uniq.length) return {};
+  const prompt = 'Sentence: ' + text + '\nWords:\n' + uniq.join('\n');
+  const r = await env.AI.run(GLOSS_MODEL, {
+    messages: [{ role: 'system', content: GLOSS_SYS }, { role: 'user', content: prompt }],
+    temperature: 0, max_tokens: 500
+  });
+  const raw = (r && (r.response || r.result || '')) || '';
+  // Only accept lines naming a word we actually asked about: the model occasionally invents an
+  // extra row, and an unrequested gloss would attach to nothing or, worse, to the wrong token.
+  const asked = new Map(uniq.map(w => [w.replace(/[֑-ׇ]/g, ''), w]));
+  const out = {};
+  for (let line of raw.split('\n')) {
+    line = line.trim();
+    const eq = line.indexOf('=');
+    if (eq === -1) continue;
+    const lhs = line.slice(0, eq).trim().replace(/^\d+[.)]\s*/, '');
+    let gloss = line.slice(eq + 1).trim();
+    const key = asked.get(lhs.replace(/[֑-ׇ]/g, ''));
+    if (!key || out[key]) continue;
+    // A gloss is a few words. Anything longer is the model explaining itself, which belongs
+    // nowhere near a vocabulary cell.
+    if (!gloss || gloss.length > 60 || HEB.test(gloss)) continue;
+    gloss = gloss.replace(/\s+/g, ' ');
+    out[key] = gloss;
+  }
+  return out;
+}
+
 // Anonymous usage analytics. The client batches events and POSTs them here (safelisted
 // text/plain, no preflight, sendBeacon on page hide). We write one Analytics Engine data point
 // per event: no cookies, no IP stored — country/device are derived, the only id is the client's
@@ -274,6 +330,25 @@ export default {
       const nPayload = JSON.stringify({ options });
       if (options.length && ctx && ctx.waitUntil) ctx.waitUntil(nCache.put(nKey, new Response(nPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
       return new Response(nPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
+    }
+
+    // In-context word glossing for the breakdown. Cached 7 days on sentence + word list, like
+    // /nat: temperature 0 makes it deterministic and the neuron budget is finite.
+    if (new URL(request.url).pathname === '/gloss') {
+      let gb;
+      try { gb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
+      const gText = ((gb && gb.text) || '').toString().slice(0, 500);
+      const gWords = Array.isArray(gb && gb.words) ? gb.words.map(w => String(w).slice(0, 40)) : [];
+      if (!gText.trim() || !gWords.length) return json({ glosses: {} }, 200, origin);
+      const gCache = caches.default;
+      const gKey = new Request('https://gloss.cache/v1/' + encodeURIComponent(gText + '||' + gWords.join('|')));
+      const gHit = await gCache.match(gKey);
+      if (gHit) return new Response(await gHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
+      let glosses;
+      try { glosses = await glossInContext(gText, gWords, env); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
+      const gPayload = JSON.stringify({ glosses });
+      if (Object.keys(glosses).length && ctx && ctx.waitUntil) ctx.waitUntil(gCache.put(gKey, new Response(gPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
+      return new Response(gPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
     }
 
     let body;

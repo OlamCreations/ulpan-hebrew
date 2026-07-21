@@ -584,6 +584,19 @@
     return glossDict[clean.normalize('NFC')] || null;
   }
 
+  /* Ask the Worker to gloss several words at once, in the context of the sentence they came
+     from. One request per breakdown, not per word — and only for words our verified corpus
+     does not already cover. Returns {} on any failure so the caller degrades to Google. */
+  function fetchContextGloss(sentence, words, signal) {
+    return fetch(MORPH_URL + '/gloss', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: sentence, words: words }), signal: signal
+    })
+      .then(r => { if (!r.ok) throw new Error('gloss ' + r.status); return r.json(); })
+      .then(j => (j && j.glosses) || {})
+      .catch(() => ({}));
+  }
+
   function fetchMorph(text, signal) {
     const key = 'm:' + text;
     if (morphCache.has(key)) return Promise.resolve(morphCache.get(key));
@@ -637,12 +650,23 @@
         if (!tokens) { out.innerHTML = '<div class="qs-hint">Breakdown needs a connection.</div>'; return; }
         const words = tokens.filter(t => t && !t.sep && isHeb(t.word));
         if (!words.length) { out.innerHTML = '<div class="qs-hint">No breakdown for this.</div>'; return; }
-        // Our own verified meaning first; Google only for what we have never glossed ourselves.
-        // Besides being right, this removes an API call per known word.
-        return loadGloss().then(() => Promise.all(words.map(t => {
+        /* Three tiers, cheapest and most trustworthy first:
+             1. our own verified corpus  — exact vocalized match, offline, no call
+             2. the Worker, IN CONTEXT   — one batched call for everything still unknown; the
+                                           sentence is what settles a homograph
+             3. Google, word in isolation — last resort, and the source of the original bug
+           Tier 2 is one request for the whole sentence, not one per word. */
+        return loadGloss().then(() => {
+          const need = words.filter(t => !verifiedGloss(t.voc || t.word))
+                            .map(t => stripNiqqud(t.voc || t.word));
+          if (!need.length) return {};
+          return withTimeout(fetchContextGloss(hebrew, need, signal), CFG.tGloss).catch(() => ({}));
+        }).then(ctxGloss => Promise.all(words.map(t => {
           const voc = t.voc || t.word;
           const known = verifiedGloss(voc);
           if (known) return Promise.resolve({ en: known, verified: true });
+          const inCtx = ctxGloss && ctxGloss[stripNiqqud(voc)];
+          if (inCtx) return Promise.resolve({ en: inCtx, context: true });
           return withTimeout(fetchGloss(stripNiqqud(voc), signal), CFG.tGloss)
             .then(g => ({ en: (g && g.en) || '', verified: false }));
         }))).then(glosses => {
