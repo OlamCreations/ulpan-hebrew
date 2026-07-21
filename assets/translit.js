@@ -74,13 +74,151 @@
     return out;
   }
 
+  /* --- Syllable stress ---------------------------------------------------------------------
+   *
+   * Hebrew stress is mostly final (milra) — measured 110/139 multi-syllable words in the
+   * curated phrasebook (data/phrasebook.json, hand-verified `tr` with hyphens + CAPS). That is
+   * the default below. The 29 exceptions were analyzed by cross-tabulating each word's FINAL
+   * syllable shape (nucleus vowel x open/closed) against its measured stress, not guessed from
+   * grammar (see tools/translit-test.cjs for the reproducible accuracy check). Three shapes came
+   * out 100% clean with zero contradictions and are implemented as general rules; everything
+   * else that could not be reduced to a clean rule is a small, named, measured exception list.
+   */
+  function vmarkOf(u) {
+    for (const x of u.marks) if (VOWELS.has(x)) return x;
+    return null;
+  }
+
+  // Is the word's FINAL syllable an unstressable "helper" vowel, so stress retreats one
+  // syllable back? All three rules were tested against every multi-syllable word in the
+  // phrasebook and hold with ZERO contradictions at the scope written here — each comment
+  // states the measured count and the closest contradiction found, so the scope is not
+  // guessed narrower than necessary nor generalized past what was checked.
+  function finalSyllableUnstressable(letters) {
+    const n = letters.length;
+    if (n < 2) return false;
+    const last = letters[n - 1], prev = letters[n - 2];
+    const lastV = vmarkOf(last);
+    // Rule F — classic furtive patach: the guttural (ח/ע) IS the final letter and carries the
+    // patach itself. יוֹדֵעַ yode'a, שָׂמֵחַ sameach, פָּתוּחַ patuach — 3/3, 0 contradictions.
+    if ((last.base === 0x05D7 || last.base === 0x05E2) && lastV === PATAH) return true;
+    // Rule T — trailing SILENT ayin after a patah: the ayin carries no sound at all, so the
+    // syllable it silently trails never gets to be "truly final" for stress purposes — same
+    // mechanism as Rule F, different trigger shape. רֶגַע rega, אַרְבַּע arba, שֶׁבַע sheva,
+    // תֵּשַׁע tesha — 4/4, 0 contradictions. Scoped to ayin (not alef: the corpus's trailing-mute
+    // -alef words are all qamats/tsere and all final-stressed) and to patah specifically
+    // (נִשְׁמָע nishma trails a silent ayin too but after QAMATS, and is final — excluded by
+    // requiring lastV===null here and prev vowel===PATAH, not by word list).
+    if (last.base === 0x05E2 && lastV === null && prev && vmarkOf(prev) === PATAH) return true;
+    // Rule S — segolate nucleus: final syllable closes on a SEGOL with one real (non-mater,
+    // non-alef/ayin) consonant. בְּסֵדֶר seder, בּוֹקֶר boker, עֶרֶב erev, כֶּסֶף kesef, עֶשֶׂר eser —
+    // 6/6, 0 contradictions. Deliberately NOT extended to patah-closed (בֶּטַח betakh is
+    // penultimate but לְאַט le-AT has the identical final shape and is final-stressed — a real
+    // measured contradiction, n=2 — so patah-closed stays lexical, see STRESS_EXCEPTIONS_PENULT)
+    // nor to qamats/holam/tsere-closed (each measured 100% final in the corpus, see
+    // tools/translit-test.cjs's cross-tab dump).
+    if (lastV === null && last.base !== 0x05D4 && last.base !== 0x05D0 && last.base !== 0x05E2 &&
+        prev && vmarkOf(prev) === SEGOL) return true;
+    // Rule D — the -ayim / -ayit shape (dual and a family of common nouns): a yod carrying HIRIQ
+    // as the final nucleus, with a PATAH on the letter before it. בַּיִת BA-yit, מַיִם MA-yim,
+    // שְׁתַּיִם SHTA-yim, שָׁמַיִם sha-MA-yim, יָדַיִם ya-DA-yim, עַיִן A-yin — penultimate, every one.
+    // The phrasebook has two of these and they were being carried as lexical exceptions; they are
+    // not lexical, they are this shape, which is why held-out בַּיִת and שָׁמַיִם both came out wrong
+    // (74% on 19 held-out words vs 100% on the corpus the rules were tuned against). Narrow on
+    // purpose: the nucleus letter must be yod. עִבְרִית iv-RIT and תַּלְמִיד tal-MID carry hiriq on an
+    // ordinary consonant and stay final-stressed.
+    if (prev && prev.base === 0x05D9 && vmarkOf(prev) === HIRIQ && lastV === null) {
+      const before = n >= 3 ? letters[n - 3] : null;
+      if (before && vmarkOf(before) === PATAH) return true;
+    }
+    return false;
+  }
+
+  // A sheva that resolves silent (nach) via shevaSound's cluster-onset branch (word-initial, or
+  // the 2nd of two consecutive shevas, AND the cluster it forms with the NEXT consonant is
+  // pronounceable) is deliberately joining THAT consonant's onset, not closing what precedes:
+  // אַנְגְּלִית's גּ is the 2nd of two shevas and clusters fine with ל (g+l, rising sonority) — it
+  // must stay pending so the boundary lands "an-GLIT", not lock into "ang-LIT". An ordinary
+  // single medial sheva-nach (not word-initial, not the 2nd of a pair) is a real coda and DOES
+  // close the syllable before it: לַמִּשְׁטָרָה's שׁ locks "mish" before ת opens "ta". Needed
+  // because shevaSound() returns '' (silent) for BOTH cases; only this second call distinguishes
+  // WHY it is silent, purely to decide where the syllable boundary falls (the phoneme output —
+  // shevaSound's return value itself — is untouched).
+  function shevaDefersToNext(u, isFirst, next, wasSheva) {
+    return (isFirst || wasSheva) && clusterOk(consOf(u), consOf(next));
+  }
+
+  // Reconstruct the plain (unromanized) Hebrew for a word's letter-units, NFC-normalized, for
+  // the exception lookup below. Marks are stored per-unit in a Set (insertion order = source
+  // text order after normalizeDicta's NFC pass), so this round-trips reliably.
+  function hebrewKey(us) {
+    let s = '';
+    for (const u of us) {
+      if (!u.base) continue;
+      s += String.fromCodePoint(u.base);
+      for (const m of u.marks) s += String.fromCodePoint(m);
+    }
+    return s.normalize('NFC');
+  }
+
+  // Small, explicit, MEASURED stress exceptions — every entry checked against phrasebook.json's
+  // hand-verified `tr`. None of these are guessed; each is a case where the rules above are
+  // proven insufficient (checked, not assumed) and the word falls into a closed, bounded,
+  // high-frequency class rather than an open-ended pattern:
+  //
+  //  interrogatives (closed grammatical class): לָמָּה כַּמָּה אֵיפֹה — 3/3 measured penultimate.
+  //  directional-he ה"א המגמה, "toward X" (closed class; the suffix never bears stress, but is
+  //    NOT distinguishable from the ordinary feminine qamats+he ending by niqqud alone —
+  //    תּוֹדָה toda has the identical final shape and is final-stressed): שְׂמֹאלָה smola,
+  //    יְמִינָה yemina — 2/2 measured penultimate.
+  //  numerals not covered by a rule above (see NUM_UNITS/NUM_TENS — most numerals already fall
+  //    under Rule T or Rule S; only these two don't): שְׁתַּיִם shtayim (hiriq-closed, no rule
+  //    covers it), שְׁמוֹנֶה shmone (segol + silent-he, that shape is final in every OTHER
+  //    measured word — מְעוּלֶה עוֹלֶה רוֹצֶה קָפֶה יָפֶה — 8/9 in that bucket, shmone is the one).
+  //  lexical / no productive rule available, each independently measured, NOT generalized to a
+  //    suffix or word-family rule (the closest such generalization was tried and contradicted —
+  //    see finalSyllableUnstressable's comment on אַחַר/אַחַת):
+  //    לַיְלָה layla — identical final shape (qamats + silent he) as תּוֹדָה toda (final); no
+  //      niqqud-only signal separates them, this is a lexical/historical fact.
+  //    סַבַּבָּה sababa — slang loanword, arbitrary stress.
+  //    בֶּטַח betakh — see Rule S comment (patah-closed, contradicted by לְאַט le-AT).
+  //    מַיִם mayim — ancient irregular "dual-form" noun (with panim, shamayim — not in corpus).
+  //    הַצִּילוּ hatzilu — n=1 for the imperative -u suffix; NOT generalized (untested elsewhere).
+  //    יוֹדַעַת yodaat, מִרְקַחַת mirkakhat — guttural+patah+bare-suffix-consonant, but the SAME
+  //      shape on אַחַר/אַחַת is final-stressed (measured contradiction) — see finalSyllableUnstressable.
+  const STRESS_EXCEPTIONS_PENULT = new Set([
+    'לָמָּה', 'כַּמָּה', 'אֵיפֹה',
+    'שְׂמֹאלָה', 'יְמִינָה',
+    'שְׁתַּיִם', 'שְׁמוֹנֶה',
+    'לַיְלָה', 'סַבַּבָּה', 'בֶּטַח', 'מַיִם', 'הַצִּילוּ', 'יוֹדַעַת', 'מִרְקַחַת'
+  ].map((s) => s.normalize('NFC')));
+
   // Romanize a single Hebrew word (already split into letter-units).
+  //
+  // Syllable boundaries are recorded ALONGSIDE res as it is built, at zero risk to the phoneme
+  // string itself: openSyllable()/lockOnset() only ever record positions into `boundaries` /
+  // `pendingOnsetStart`, called from the exact same branches that already decide a vowel is
+  // being emitted. Nothing about what gets appended to res changes as a result.
   function word(us) {
     let res = '';
     let lastVowel = null;      // last vowel sound emitted (for matres yod)
     let prevHadVowel = false;  // did the previous consonant carry a vowel?
     let prevWasSheva = false;  // did the previous letter carry a sheva? (2nd of two = na)
     const letters = us.filter(u => u.base);
+
+    const boundaries = [];         // res.length offsets where a NEW syllable begins
+    let sawNucleus = false;        // has any syllable nucleus appeared yet in this word?
+    let pendingOnsetStart = 0;     // earliest res offset belonging to the NOT-YET-OPENED next syllable
+    // A run of consonants with NO vowel mark at all (not even sheva) sitting right before a
+    // fresh nucleus is that nucleus's ONSET, not the coda of what came before it: in שָׁלוֹם the
+    // bare ל belongs to "lom" (sha-LOM ground truth), not to "sha". Such a run is never locked
+    // in by lockOnset() below, so pendingOnsetStart still points to before it when the next
+    // nucleus opens. Call openSyllable() right BEFORE appending a fresh nucleus's text.
+    const openSyllable = () => { if (sawNucleus) boundaries.push(pendingOnsetStart); sawNucleus = true; };
+    // Call AFTER appending a nucleus, a glide that extends one, or an explicit sheva-NACH
+    // consonant (silent but MARKED — it closes the syllable it follows, e.g. מִרְקַחַת's ר,
+    // לַמִּשְׁטָרָה's שׁ). Locks everything appended so far onto the syllable just finished.
+    const lockOnset = () => { pendingOnsetStart = res.length; };
 
     for (let i = 0; i < us.length; i++) {
       const u = us[i];
@@ -102,8 +240,8 @@
       // --- VAV ---
       if (c === 0x05D5) {
         const hasHolam = m.has(HOLAM) || m.has(HOLAM_HASER);
-        if (hasHolam) { res += 'o'; lastVowel = 'o'; prevHadVowel = true; continue; }     // holam male: וֹ = o
-        if (dagesh && vmark === null) { res += 'u'; lastVowel = 'u'; prevHadVowel = true; continue; } // shuruk: וּ = u
+        if (hasHolam) { openSyllable(); res += 'o'; lockOnset(); lastVowel = 'o'; prevHadVowel = true; continue; }     // holam male: וֹ = o
+        if (dagesh && vmark === null) { openSyllable(); res += 'u'; lockOnset(); lastVowel = 'u'; prevHadVowel = true; continue; } // shuruk: וּ = u
         // A bare vav after a vowel is only a mater lectionis when it spells that vowel — i.e. a
         // defective holam/shuruk (בֹּוקֶר = boker). After any OTHER vowel it is a real consonant,
         // and dropping it deleted a whole letter: עַכְשָׁיו -> "achshai" (achshav), תָּו -> "ta"
@@ -111,7 +249,10 @@
         if (vmark === null && prevHadVowel && (lastVowel === 'o' || lastVowel === 'u')) continue;
         // consonantal vav
         let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
-        res += 'v' + v; lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
+        if (v) openSyllable();
+        res += 'v' + v;
+        if (v || (vmark === SHEVA && !shevaDefersToNext(u, isFirst, nextLetter, wasSheva))) lockOnset();
+        lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
       }
 
       // --- YOD ---
@@ -128,32 +269,42 @@
         if (bareOrShevaGlide) {
           // mater / glide based on the previous vowel
           if (lastVowel === 'e' || lastVowel === 'a' || lastVowel === 'o' || lastVowel === 'u') {
-            res += 'i'; lastVowel = 'i'; prevHadVowel = true; continue;
+            res += 'i'; lockOnset(); lastVowel = 'i'; prevHadVowel = true; continue;
           }
           if (lastVowel === 'i') { prevHadVowel = true; continue; } // hiriq male, already 'i'
-          if (vmark === null) { res += 'y'; prevHadVowel = false; continue; } // consonantal yod
+          // consonantal yod with no vowel of its own yet — an onset consonant, not a coda: leave
+          // pendingOnsetStart alone so it (like שָׁלוֹם's bare ל) joins whichever syllable opens next.
+          if (vmark === null) { res += 'y'; prevHadVowel = false; continue; }
         }
         let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
-        res += 'y' + v; lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
+        if (v) openSyllable();
+        res += 'y' + v;
+        if (v || (vmark === SHEVA && !shevaDefersToNext(u, isFirst, nextLetter, wasSheva))) lockOnset();
+        lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
       }
 
       // --- SHIN / SIN ---
       if (c === 0x05E9) {
         const cons = m.has(SIN_DOT) ? 's' : 'sh';
         let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
-        res += cons + v; lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
+        if (v) openSyllable();
+        res += cons + v;
+        if (v || (vmark === SHEVA && !shevaDefersToNext(u, isFirst, nextLetter, wasSheva))) lockOnset();
+        lastVowel = v || lastVowel; prevHadVowel = !!v; continue;
       }
 
       // --- furtive patach: final ח after a vowel sounds "a" BEFORE the guttural
       //     (פָּתוּחַ = pa-tu-ach, not pa-tu-cha) ---
       if (c === 0x05D7 && isLast && prevHadVowel && vmark === PATAH) {
-        res += 'ach'; lastVowel = 'a'; prevHadVowel = true; continue;
+        openSyllable(); // its own syllable for splitting (pa-TU-akh), even though Rule F never stresses it
+        res += 'ach'; lockOnset(); lastVowel = 'a'; prevHadVowel = true; continue;
       }
 
       // --- HE: silent at word end (no mappiq dagesh) ---
       if (c === 0x05D4 && isLast && !dagesh) {
         let v = vowelSound(vmark);
-        res += v; if (v) { lastVowel = v; prevHadVowel = true; }
+        if (v) openSyllable();
+        res += v; if (v) { lockOnset(); lastVowel = v; prevHadVowel = true; }
         continue;
       }
 
@@ -164,11 +315,24 @@
       let v;
       if (vmark === SHEVA) v = shevaSound(u, isFirst, nextLetter, wasSheva);
       else v = vowelSound(vmark);
+      if (v) openSyllable();
       res += cons + v;
+      // sheva-NACH (silent but explicitly marked) closes the syllable before it; a letter with
+      // NO mark at all (vmark===null, e.g. bare alef/ayin carriers) stays pending — it is onset
+      // material for whatever nucleus opens next, exactly like שָׁלוֹם's bare ל.
+      if (v || (vmark === SHEVA && !shevaDefersToNext(u, isFirst, nextLetter, wasSheva))) lockOnset();
       if (v) { lastVowel = v; prevHadVowel = true; }
       else { prevHadVowel = false; if (cons === '') { /* silent carrier, keep lastVowel */ } }
     }
-    return res;
+
+    if (!boundaries.length) return res;     // single syllable: nothing to mark (ken, lo, tov...)
+    const syl = [];
+    { let start = 0; for (const b of boundaries) { syl.push(res.slice(start, b)); start = b; } syl.push(res.slice(start)); }
+    const fromEnd = STRESS_EXCEPTIONS_PENULT.has(hebrewKey(us)) ? 1
+      : finalSyllableUnstressable(letters) ? 1
+      : 0;
+    const stressIdx = Math.max(0, syl.length - 1 - fromEnd);
+    return syl.map((s, i) => (i === stressIdx ? s.toUpperCase() : s)).join('-');
   }
 
   /* sheva na (pronounced "e") vs sheva nach (silent).

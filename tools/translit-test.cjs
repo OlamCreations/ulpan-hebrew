@@ -26,6 +26,48 @@ console.log('--- mismatches ---');
 for (const b of bad) console.log(`he=${b.he}\n  want=${b.want}  (${b.nw})\n  got =${b.got}  (${b.ng})`);
 
 /*
+ * Syllabification + stress accuracy — the defect this file was written to catch after the fact.
+ * `norm()` above strips hyphens and case, so a translit.js that never marks a syllable boundary
+ * or a stressed syllable still shows 100% on the check above (that IS the bug: the live
+ * translator showed the learner no stress at all, and this test could not see it). This block
+ * compares the ACTUAL hyphen positions and the ACTUAL capitalized syllable against phrasebook.json's
+ * hand-authored `tr` (e.g. "sha-LOM"), per Hebrew word (phrases are split word-for-word, `he` and
+ * `tr` always have the same word count — asserted below). `normSyl` only folds the kh/ch and tz/ts
+ * spelling-convention differences already accepted elsewhere in this file; it does NOT strip
+ * hyphens or case, so it cannot hide a missing or misplaced boundary/stress mark the way the
+ * phoneme-level `norm()` above can.
+ */
+const normSyl = (s) => (s || '').toLowerCase().replace(/kh/g, 'ch').replace(/tz/g, 'ts');
+let wordCountMismatch = 0, multiSyl = 0, syllOk = 0, stressOk = 0;
+const syllBad = [];
+for (const p of data) {
+  const heWords = p.he.trim().split(/\s+/).filter(Boolean);
+  const trWords = p.tr.trim().split(/\s+/).filter(Boolean);
+  if (heWords.length !== trWords.length) { wordCountMismatch++; continue; }
+  for (let i = 0; i < heWords.length; i++) {
+    const wantSyl = trWords[i].split('-');
+    if (wantSyl.length < 2) continue; // monosyllables carry no boundary/stress to check
+    multiSyl++;
+    const gotSyl = transliterate(heWords[i]).split('-');
+    const boundaryMatch = gotSyl.length === wantSyl.length &&
+      gotSyl.every((s, idx) => normSyl(s) === normSyl(wantSyl[idx]));
+    const wantStress = wantSyl.findIndex((s) => /[A-Z]/.test(s));
+    const gotStress = gotSyl.findIndex((s) => /[A-Z]/.test(s));
+    if (boundaryMatch) syllOk++;
+    if (boundaryMatch && wantStress === gotStress) stressOk++;
+    else syllBad.push({ he: heWords[i], want: trWords[i], got: gotSyl.join('-') });
+  }
+}
+console.log(`\nsyllabification + stress over ${multiSyl} multi-syllable words (word-count mismatches: ${wordCountMismatch})`);
+console.log(`  syllable-boundary accuracy : ${syllOk}/${multiSyl} = ${(100 * syllOk / multiSyl).toFixed(1)}%`);
+console.log(`  stress-position accuracy   : ${stressOk}/${multiSyl} = ${(100 * stressOk / multiSyl).toFixed(1)}%`);
+for (const b of syllBad) console.log(`  MISS he=${b.he}  want=${b.want}  got=${b.got}`);
+if (wordCountMismatch > 0 || syllOk !== multiSyl || stressOk !== multiSyl) {
+  console.error('\nFAIL: syllabification/stress regressed below the measured 100% baseline.');
+  process.exit(1);
+}
+
+/*
  * cleanDictaForDisplay — the fold we apply to Hebrew shown on screen.
  *
  * It exists because the full normalizeDicta cannot be shown to a user: its qamats/qubuts rules
