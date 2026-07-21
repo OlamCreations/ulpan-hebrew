@@ -48,6 +48,11 @@ const READ = () => {
   const out = { sections: [], hint: null };
   const res = document.getElementById('qs-results');
   if (!res) return out;
+  // Kept on every record so an empty result can be diagnosed instead of guessed at: rawLen 0
+  // means the container really was cleared, rawLen > 0 means this reader failed to parse what
+  // was on screen. Those are opposite bugs and they look identical without this number.
+  out.rawLen = res.innerHTML.length;
+  out.inputAtRead = (document.getElementById('qs-input') || {}).value;
   const hint = res.querySelector('.qs-hint');
   if (hint) out.hint = hint.textContent.trim();
   let current = null;
@@ -90,26 +95,43 @@ const READ = () => {
  */
 const snapshot = () => page.evaluate(() => {
   const r = document.getElementById('qs-results');
-  if (!r) return { busy: false, len: 0, cards: 0 };
-  return { busy: r.getAttribute('aria-busy') === 'true', len: r.innerHTML.length, cards: r.querySelectorAll('.qs-card').length };
+  if (!r) return { busy: false, len: 0, cards: 0, loading: false };
+  return {
+    busy: r.getAttribute('aria-busy') === 'true',
+    len: r.innerHTML.length,
+    cards: r.querySelectorAll('.qs-card').length,
+    // The positive "still working" marker. aria-busy alone is not enough: see settle().
+    loading: !!r.querySelector('.qs-loading'),
+  };
 });
 
-async function settle(maxMs = 20000) {
+/**
+ * @param {string} beforeKey snapshot signature taken BEFORE typing, so we can tell the new
+ *   render from the previous query's results still sitting on screen.
+ */
+async function settle(beforeKey, maxMs = 20000) {
   const t0 = Date.now();
+  const sig = (s) => `${s.busy}|${s.len}|${s.cards}|${s.loading}`;
 
-  // 1. Work started, or an offline-only answer already rendered. The floor must clear the
-  //    350ms debounce; without it we would sample the pre-render state.
+  // 1. The NEW render has started — detected as a change from the pre-typing state, never as
+  //    "there is something on screen". Clearing the field does not clear the results (that
+  //    render is cancelled by the 350ms debounce), so the container still holds the PREVIOUS
+  //    query's cards: treating non-empty as "started" passes instantly on stale content.
   let started = false;
-  while (Date.now() - t0 < 3000) {
+  while (Date.now() - t0 < 4000) {
     const s = await snapshot();
-    if (s.busy || s.len > 0) { started = true; break; }
+    if (sig(s) !== beforeKey || s.busy || s.loading) { started = true; break; }
     await page.waitForTimeout(100);
   }
   if (!started) return { settled: true, rendered: false };   // genuinely produced nothing
 
-  // 2. Online work finished.
+  // 2. Work finished. Wait on BOTH signals: the loading line is what the user sees, and it
+  //    outlives aria-busy on a slow request. Waiting only on aria-busy let the loading line
+  //    itself sit still for the stability window and be recorded as a finished empty result —
+  //    which is exactly how this probe invented 20 failures the engine never had.
   while (Date.now() - t0 < maxMs) {
-    if (!(await snapshot()).busy) break;
+    const s = await snapshot();
+    if (!s.busy && !s.loading) break;
     await page.waitForTimeout(150);
   }
 
@@ -117,7 +139,7 @@ async function settle(maxMs = 20000) {
   let last = '', stableSince = 0;
   while (Date.now() - t0 < maxMs) {
     const s = await snapshot();
-    const key = `${s.busy}|${s.len}|${s.cards}`;
+    const key = sig(s);
     if (key === last) { if (!stableSince) stableSince = Date.now(); else if (Date.now() - stableSince > 600) return { settled: true, rendered: true }; }
     else { last = key; stableSince = 0; }
     await page.waitForTimeout(150);
@@ -132,17 +154,20 @@ for (const item of items) {
   const errBefore = netErrors.length;
   await page.fill('#qs-input', '');
   await page.waitForTimeout(120);
+  // Signature of what is on screen BEFORE typing — the baseline settle() compares against.
+  const before = await snapshot();
+  const beforeKey = `${before.busy}|${before.len}|${before.cards}|${before.loading}`;
   await page.fill('#qs-input', item.input);
-  const { settled, rendered } = await settle();
+  const { settled, rendered } = await settle(beforeKey);
 
   let natClicked = false;
   if (WANT_NAT && rendered) {
     const btn = await page.$('.qs-nat-btn');
-    if (btn) { await btn.click().catch(() => {}); natClicked = true; await page.waitForTimeout(2500); await settle(20000); }
+    if (btn) { await btn.click().catch(() => {}); natClicked = true; await page.waitForTimeout(2500); await settle('', 20000); }
   }
   if (WANT_BREAK && rendered) {
     const btn = await page.$('.qs-card .qs-break');
-    if (btn) { await btn.click().catch(() => {}); await page.waitForTimeout(1800); await settle(15000); }
+    if (btn) { await btn.click().catch(() => {}); await page.waitForTimeout(1800); await settle('', 15000); }
   }
 
   const shown = await page.evaluate(READ);

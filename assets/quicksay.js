@@ -555,6 +555,35 @@
     });
   }
 
+  /* --- Verified glosses ------------------------------------------------------------------
+     The breakdown used to ask Google for each word ALONE, which on Hebrew homographs is a coin
+     flip it kept losing: שְׁמִי -> "Semitic" (my name), הַאִם -> "the mother" (the yes/no particle),
+     אֶת -> "you" (the accusative marker), עוֹבֵר -> "fetus" (passes).
+
+     Sending the vocalized form instead of the bare one was measured to change nothing — Google
+     returns the same gloss for שמי and שְׁמִי — so the cause is isolation, not vocalization. What
+     fixes it is not asking at all for the words we have already verified ourselves: 6871 vocalized
+     words across the phrasebook, the expressions and the 465 lessons, each with its meaning.
+     Keyed on the FULL vocalization (never the consonant skeleton — that is the ambiguity itself).
+     Loaded lazily, so a learner who never opens a breakdown never pays for it. */
+  let glossDict = null, glossPromise = null;
+  function loadGloss() {
+    if (glossPromise) return glossPromise;
+    glossPromise = fetch((window.ULPAN_BASE || '') + 'data/gloss.json')
+      .then(r => r.json())
+      .then(d => { glossDict = (d && d.v) || {}; return glossDict; })
+      .catch(() => { glossDict = {}; return glossDict; });   // offline: fall back to Google
+    return glossPromise;
+  }
+  function verifiedGloss(voc) {
+    if (!glossDict || !voc) return null;
+    // Match on the same cleaned form the cell displays, or Dicta's raw encoding would miss
+    // every key (our corpus stores בּוֹקֶר, Dicta sends בֹּוֽקֶר).
+    const clean = (window.Translit && window.Translit.cleanDictaForDisplay)
+      ? window.Translit.cleanDictaForDisplay(voc) : voc;
+    return glossDict[clean.normalize('NFC')] || null;
+  }
+
   function fetchMorph(text, signal) {
     const key = 'm:' + text;
     if (morphCache.has(key)) return Promise.resolve(morphCache.get(key));
@@ -593,7 +622,9 @@
       '<div class="mw-he" dir="rtl" lang="he">' + escapeHtml(heShown) + '</div>' +
       cursive +
       tr +
-      '<div class="mw-gloss">' + escapeHtml(gloss || '') + '</div>' +
+      // The title says where the meaning came from without putting a badge in the learner's face.
+      '<div class="mw-gloss"' + (gloss && gloss.verified ? ' title="meaning from the lessons (verified)"' : '') + '>'
+        + escapeHtml((gloss && gloss.en) || (typeof gloss === 'string' ? gloss : '')) + '</div>' +
       root +
       morph +
     '</div>';
@@ -606,9 +637,15 @@
         if (!tokens) { out.innerHTML = '<div class="qs-hint">Breakdown needs a connection.</div>'; return; }
         const words = tokens.filter(t => t && !t.sep && isHeb(t.word));
         if (!words.length) { out.innerHTML = '<div class="qs-hint">No breakdown for this.</div>'; return; }
-        return Promise.all(words.map(t =>
-          withTimeout(fetchGloss(stripNiqqud(t.voc || t.word), signal), CFG.tGloss).then(g => (g && g.en) || '')
-        )).then(glosses => {
+        // Our own verified meaning first; Google only for what we have never glossed ourselves.
+        // Besides being right, this removes an API call per known word.
+        return loadGloss().then(() => Promise.all(words.map(t => {
+          const voc = t.voc || t.word;
+          const known = verifiedGloss(voc);
+          if (known) return Promise.resolve({ en: known, verified: true });
+          return withTimeout(fetchGloss(stripNiqqud(voc), signal), CFG.tGloss)
+            .then(g => ({ en: (g && g.en) || '', verified: false }));
+        }))).then(glosses => {
           out.innerHTML = '<div class="qs-sub">Word by word</div>' +
             '<div class="mw-grid" dir="rtl">' + words.map((t, i) => morphWordHtml(t, glosses[i])).join('') + '</div>';
         });
@@ -736,6 +773,14 @@
       container.innerHTML = html;
       wirePlay(container);
       wireNat(container);
+    }).catch(() => {
+      // Without this the chain had no rejection handler at all: one failed upstream call left
+      // aria-busy set and the "Translating" line on screen forever, with no way for the learner
+      // to tell a slow network from a dead one. Only clear OUR render — a superseded one
+      // (token !== renderToken) must not wipe the newer query's results.
+      if (token !== renderToken) return;
+      container.removeAttribute('aria-busy');
+      container.innerHTML = '<div class="qs-hint">Translation failed — check the connection and try again.</div>';
     });
   }
 
