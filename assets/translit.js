@@ -193,6 +193,17 @@
     'לַיְלָה', 'סַבַּבָּה', 'בֶּטַח', 'מַיִם', 'הַצִּילוּ', 'יוֹדַעַת', 'מִרְקַחַת'
   ].map((s) => s.normalize('NFC')));
 
+  // Loanword stress overrides. Nothing in the niqqud marks a word as a loanword, so its stress is
+  // listed explicitly in an external config (LOI 0a: data lives in JSON, not in code). Key = the NFC
+  // vocalized Hebrew exactly as hebrewKey() reconstructs it; value = stressed syllable counted from
+  // the END, 1-based (1 = final/milra, 2 = penult, 3 = antepenult). Consulted in word() BEFORE the
+  // phonotactic rules. Populated via setLoanwords(); in Node it best-effort self-loads the JSON.
+  let LOANWORD_STRESS = (root && root.TranslitLoanwords) || {};
+  function setLoanwords(map) { LOANWORD_STRESS = (map && typeof map === 'object') ? map : {}; }
+  if (typeof module !== 'undefined' && module.exports) {
+    try { setLoanwords(require('../data/loanwords.json')); } catch (e) { /* optional */ }
+  }
+
   // Romanize a single Hebrew word (already split into letter-units).
   //
   // Syllable boundaries are recorded ALONGSIDE res as it is built, at zero risk to the phoneme
@@ -328,7 +339,10 @@
     if (!boundaries.length) return res;     // single syllable: nothing to mark (ken, lo, tov...)
     const syl = [];
     { let start = 0; for (const b of boundaries) { syl.push(res.slice(start, b)); start = b; } syl.push(res.slice(start)); }
-    const fromEnd = STRESS_EXCEPTIONS_PENULT.has(hebrewKey(us)) ? 1
+    const key = hebrewKey(us);
+    const loan = LOANWORD_STRESS[key];
+    const fromEnd = Number.isInteger(loan) ? loan - 1        // config: 1=final, 2=penult, 3=antepenult
+      : STRESS_EXCEPTIONS_PENULT.has(key) ? 1
       : finalSyllableUnstressable(letters) ? 1
       : 0;
     const stressIdx = Math.max(0, syl.length - 1 - fromEnd);
@@ -498,7 +512,11 @@
   // Replace standalone integer runs in a romanization with their spelled form (for the
   // translator: "ani ben 33" -> "ani ben shloshim ve shalosh"). Out-of-range digits stay.
   function spellNumbersInText(tr) {
-    return (tr || '').replace(/\d+/g, (d) => {
+    return (tr || '')
+      // A time colon glues the two spelled numbers ("14:30" -> "...esre:shloshim"); pad it so the
+      // hour and minute read as separate words. Only a colon flanked by digits is treated as a time.
+      .replace(/(\d)\s*:\s*(\d)/g, '$1 : $2')
+      .replace(/\d+/g, (d) => {
       if (d.length > 1 && d[0] === '0') return d;   // 054, 007 -> phone/id, read digit by digit
       const s = spellNumber(parseInt(d, 10));
       return s ? s.tr : d;
@@ -529,7 +547,7 @@
     return s.normalize('NFC');
   }
 
-  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay };
+  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay, setLoanwords };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.Translit = api;
 })(typeof window !== 'undefined' ? window : globalThis);

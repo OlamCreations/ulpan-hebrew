@@ -254,8 +254,9 @@ function playCloudChunks(chunks) {
 }
 
 function stripNiqqud(text) {
-  return text.replace(/[֑-ׇ]/g, '');
+  return (text || '').replace(/[֑-ׇ]/g, '');
 }
+window.stripNiqqud = stripNiqqud;
 
 function forvoLink(hebrewText) {
   const cleaned = stripNiqqud(hebrewText).split(/\s+/)[0];
@@ -684,6 +685,7 @@ function makeModalAccessible(modal, dialog) {
 function escHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+window.escHtml = escHtml;
 function openSRSReview() {
   const existing = document.getElementById('srs-modal');
   if (existing) existing.remove();
@@ -757,7 +759,7 @@ function openSRSReview() {
       </div>
       <div class="srs-he" data-he="${escHtml(current.he)}">${escHtml(heShown)}</div>
       <button class="srs-listen" type="button" aria-label="Play audio">▶</button>
-      <div class="srs-answer" hidden>
+      <div class="srs-answer">
         <div class="srs-translit">${escHtml(current.translit||'')}</div>
         <div class="srs-fr">${escHtml(current.fr||'')}</div>
       </div>
@@ -779,7 +781,7 @@ function openSRSReview() {
     });
     cardEl.querySelector('.srs-show').addEventListener('click', () => {
       revealed = true;
-      cardEl.querySelector('.srs-answer').hidden = false;
+      cardEl.querySelector('.srs-answer').classList.add('revealed');
       cardEl.querySelector('.srs-show').hidden = true;
       cardEl.querySelector('.srs-grade').hidden = false;
     });
@@ -1194,7 +1196,7 @@ function renderFlashcard(stage, items) {
         <div class="fc-side fc-front">
           <div class="fc-he">${w.he}</div>
           <div class="fc-translit">${w.translit}</div>
-          <div class="fc-hint">tap/space to flip · swipe →</div>
+          <div class="fc-hint">tap/space to flip · swipe ← for next</div>
         </div>
       </div>
       <div class="fc-controls">
@@ -1210,7 +1212,7 @@ function renderFlashcard(stage, items) {
       if (flipped) {
         card.innerHTML = `<div class="fc-side fc-back"><div class="fc-fr">${w.fr}</div><div class="fc-translit">${w.translit}</div><div class="fc-hint">tap to flip back</div></div>`;
       } else {
-        card.innerHTML = `<div class="fc-side fc-front"><div class="fc-he">${w.he}</div><div class="fc-translit">${w.translit}</div><div class="fc-hint">tap/space to flip · swipe →</div></div>`;
+        card.innerHTML = `<div class="fc-side fc-front"><div class="fc-he">${w.he}</div><div class="fc-translit">${w.translit}</div><div class="fc-hint">tap/space to flip · swipe ← for next</div></div>`;
       }
     });
     // Touch swipe
@@ -1759,7 +1761,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1785700000000';
+  var SHARED_V = '1785800000000';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }
@@ -1771,4 +1773,16 @@ function openSituations(situations, lessonId) {
     s.onerror = function () { try { console.warn('[ulpan] failed to load shared module', m); } catch (e) {} };
     document.head.appendChild(s);
   });
+  // Feed translit.js the loanword stress config so the live translator gets loanword stress too (the
+  // Node tooling self-loads it; the browser fetches it). Best-effort — a miss just falls back to the
+  // default stress. Polls briefly for window.Translit since the module scripts load async.
+  (function loadLoanwords() {
+    fetch(window.ULPAN_BASE + 'data/loanwords.json').then(function (r) { return r.json(); }).then(function (map) {
+      var tries = 0;
+      (function apply() {
+        if (window.Translit && window.Translit.setLoanwords) { window.Translit.setLoanwords(map); return; }
+        if (tries++ < 40) setTimeout(apply, 100);
+      })();
+    }).catch(function () {});
+  })();
 })();

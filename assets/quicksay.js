@@ -57,7 +57,7 @@
   // phoneme-level romanization key: kh==ch (כ/ח), tz==ts (צ), drop everything non-letter.
   // Same normalization as _translit_test.cjs so the reverse-match agrees with the forward test.
   const romNorm = s => (s || '').toLowerCase().replace(/kh/g, 'ch').replace(/tz/g, 'ts').replace(/[^a-z]/g, '');
-  const stripNiqqud = s => (s || '').replace(/[֑-ׇ]/g, '');
+  const stripNiqqud = window.stripNiqqud;
 
   // Normalized Levenshtein similarity in [0,1] (1 = identical). Short strings only.
   function levSim(a, b) {
@@ -154,7 +154,7 @@
     } catch (e) {}
   }
 
-  const escapeHtml = s => (s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const escapeHtml = window.escHtml;
 
   function card(p, kind) {
     let tag = '';
