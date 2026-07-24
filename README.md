@@ -68,6 +68,11 @@ from `olamcreations.github.io`, so a fork will not reach it. Deploy with:
 cd worker && npx wrangler deploy   # needs your own Cloudflare account (free tier is fine)
 ```
 
+Dicta's public API blocks Cloudflare's Worker egress IPs, so the niqqud is served by a small
+self-hosted Hugging Face Space running Dicta's open model (`worker/dicta-space/`). If you fork
+this repo, **deploy your own Space too** (it's free) and point the Worker's `SPACE_URL` at it —
+ours is key-gated and serves only our Worker. See `worker/dicta-space/README.md`.
+
 ## License
 
 - **Code** (HTML/CSS/JS, `tools/`, service worker): MIT — see [LICENSE](LICENSE).
