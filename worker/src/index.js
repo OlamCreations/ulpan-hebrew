@@ -3,7 +3,13 @@
 //   - Dicta Nakdan  -> vocalization (niqqud) + root/lemma
 //   - UDPipe (HTB)  -> part of speech, binyan, verb form, gender/number/person
 // UDPipe is CC BY-NC-SA (non-commercial) — fine for a personal learning app.
-const NAKDAN = 'https://nakdan-u1-0.loadbalancer.dicta.org.il/api';
+// Dicta's load-balancer intermittently returns 5xx to Cloudflare's shared egress IPs while serving
+// normal clients fine (observed: u1-0 -> 503 from the Worker, 200 from a browser). Try each node in
+// turn so one flaky node doesn't take the breakdown down.
+const NAKDAN_HOSTS = [
+  'https://nakdan-u1-0.loadbalancer.dicta.org.il/api',
+  'https://nakdan-2-0.loadbalancer.dicta.org.il/api',
+];
 const UDPIPE = 'https://lindat.mff.cuni.cz/services/udpipe/api/process';
 const UPSTREAM_TIMEOUT = 6000;   // ms; a hung upstream degrades instead of hanging the request
 const CACHE_TTL = 604800;        // 7 days — the vocabulary is effectively static
@@ -185,9 +191,25 @@ function morphOf(ud) {
 async function dicta(text, signal) {
   const payload = { task: 'nakdan', data: text, genre: 'modern', addmorph: true,
     keepqq: false, nodageshdefault: false, patachma: false, keepmetagim: true };
-  const r = await fetch(NAKDAN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal });
-  if (!r.ok) throw new Error('nakdan ' + r.status);
-  const toks = await r.json();
+  const body = JSON.stringify(payload);
+  // Browser-like headers: Dicta's LB 503's the Worker's default egress fingerprint but serves the
+  // same request from a browser, so present as one (real UA + Origin/Referer of the Dicta web app).
+  const dictaHeaders = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+    'Origin': 'https://nakdan.dicta.org.il',
+    'Referer': 'https://nakdan.dicta.org.il/',
+  };
+  let toks = null, lastStatus = 0;
+  for (const url of NAKDAN_HOSTS) {
+    let r;
+    try { r = await fetch(url, { method: 'POST', headers: dictaHeaders, body, signal }); }
+    catch (e) { lastStatus = 'net'; continue; }          // network error / abort → try next node
+    if (!r.ok) { lastStatus = r.status; continue; }        // 5xx on this node → try next
+    toks = await r.json();
+    break;
+  }
+  if (toks === null) throw new Error('nakdan ' + lastStatus);
   const out = [];
   for (const t of (Array.isArray(toks) ? toks : [])) {
     if (t && t.sep) { out.push({ sep: true, word: t.word || '' }); continue; }
