@@ -226,21 +226,31 @@ h2 {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 22px 28px;
+  padding: 18px 28px;
+  /* Right-to-left row: the Hebrew reads from the right edge (the reading habit we want to build),
+     the play + plus buttons fall to the left, and the transliteration + translation stack directly
+     under the Hebrew word — same right anchor — so each line sits exactly below the word it renders.
+     In an RTL grid the first column is the rightmost: 1fr content on the right, two auto button
+     columns on the left. */
+  direction: rtl;
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1.5fr auto auto;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    "he       plus play"
+    "translit plus play"
+    "fr       plus play";
   align-items: center;
-  gap: 32px;
+  column-gap: 24px;
+  row-gap: 4px;
   transition: background 0.15s;
 }
-/* Force consistent column positions regardless of HTML source order.
-   Some lessons (mastery section, batch-generated) put the play button
-   between .he and .translit — these rules push the buttons to the end. */
-.word-row .icon-btn { grid-column: 5; justify-self: end; }
-.word-row .srs-btn { grid-column: 4; justify-self: end; }
-.word-row .he { grid-column: 1; }
-.word-row .translit { grid-column: 2; }
-.word-row .fr { grid-column: 3; }
+/* Place by selector, not HTML source order: some lessons (mastery, batch-generated) interleave the
+   play button between .he and .translit — named areas keep the layout identical everywhere. */
+.word-row .icon-btn { grid-area: play; justify-self: center; }
+.word-row .srs-btn  { grid-area: plus; justify-self: center; }
+.word-row .he { grid-area: he; }
+.word-row .translit { grid-area: translit; }
+.word-row .fr { grid-area: fr; }
 
 .srs-btn {
   width: 30px;
@@ -299,7 +309,13 @@ html.light .srs-btn.active { color: #fff; }
   min-height: 36px;
   display: flex;
   align-items: center;
+  /* Latin / French read left-to-right, but the box hugs the right edge so the line sits directly
+     under the right-anchored Hebrew word above it. */
+  direction: ltr;
+  justify-content: flex-end;
 }
+.word-row .translit .reveal-front,
+.word-row .fr .reveal-front { text-align: right; }
 
 .word-row .translit { font-size: 17px; color: var(--text-dim); font-style: italic; letter-spacing: 0.3px; }
 .word-row .fr { font-size: 18px; }
@@ -832,14 +848,10 @@ body.no-niqqud [style*="direction: rtl"] {
 @media (max-width: 600px) {
   body { padding: 20px 14px; }
   .word-row {
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "he btn" "translit btn" "fr btn";
-    gap: 4px;
+    padding: 16px 18px;
+    column-gap: 14px;
+    row-gap: 2px;
   }
-  .word-row .he { grid-area: he; text-align: left; }
-  .word-row .translit { grid-area: translit; }
-  .word-row .fr { grid-area: fr; }
-  .word-row button { grid-area: btn; align-self: center; }
   .quiz .he-display { font-size: 64px; }
 }
 
