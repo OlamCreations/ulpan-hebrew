@@ -11,8 +11,11 @@ pinned: false
 # Ulpan niqqud Space
 
 Self-hosted Hebrew diacritizer for the ulpan-hebrew live-translator breakdown. Runs Dicta's own
-open model (`dicta-il/dictabert-large-char-menaked`, CC-BY-4.0) behind a tiny FastAPI, so the
-Cloudflare Worker gets Dicta-quality niqqud from an IP that Dicta doesn't block.
+open model (`dicta-il/dictabert-large-char-menaked`, CC-BY-4.0), so the Cloudflare Worker gets
+Dicta-quality niqqud from an IP that Dicta doesn't block. One app, two surfaces on the same port:
+
+- **`/`** — a Gradio **demo**: type unpointed Hebrew, see it vocalized (try it in the browser).
+- **`/vocalize`** — the **JSON API** the Worker calls (`{text}` → `{tokens}`), key-gated.
 
 ## Why this exists
 
