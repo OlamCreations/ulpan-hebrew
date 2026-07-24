@@ -22,11 +22,20 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
-  padding: 88px 20px 32px;
+  padding: 26px 20px 32px;
   font-size: 17px;
 }
-/* Home has no fixed floating-controls bar, so reclaim the reserved top space. */
-body.home { padding-top: 26px; }
+
+/* Respect the OS "reduce motion" setting: kill the infinite pulses, the reveal flip, and every
+   transition so nothing auto-animates for motion-sensitive users (WCAG 2.2.2 / 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 .container { max-width: 960px; margin: 0 auto; }
 
@@ -947,7 +956,6 @@ body.no-niqqud [style*="direction: rtl"] {
 @media (max-width: 600px) {
   #floating-controls { padding: 8px 10px; gap: 4px; flex-wrap: wrap; }
   .fc-btn { font-size: 11px; padding: 6px 10px; }
-  body { padding-top: 96px; }
 }
 
 /* ============ Word Tokens (clickable Hebrew words) ============ */
@@ -1312,7 +1320,7 @@ html.light ::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
 }
 html.light ::-webkit-scrollbar-thumb:hover {
-  background: #047857;
+  background: var(--accent);
   background-clip: padding-box;
   border: 2px solid transparent;
 }
@@ -1320,7 +1328,7 @@ html.light * {
   scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
 }
 html.light *:hover {
-  scrollbar-color: #047857 transparent;
+  scrollbar-color: var(--accent) transparent;
 }
 
 /* Mobile: hide scrollbars in horizontal-overflow containers (cat-nav)
@@ -1732,3 +1740,19 @@ html.light .sit-feedback.bad { color: #dc2626; }
   .sit-options { grid-template-columns: 1fr; }
   .fr-frame, .fr-full { font-size: 24px; }
 }
+
+/* Text-on-accent contrast (WCAG 1.4.3). White on the dark-theme accent (#4A9EDB) is ~2.9:1;
+   on accent-FILLED controls use black text in dark mode. The darker light accent (#0071B9)
+   keeps white. Placed last so it wins over the base rules at equal specificity. */
+.srs-btn.active,
+.fc-badge-due,
+.seg-btn.on,
+.qs-online-btn:hover:not(:disabled),
+.qs-nat-btn:hover:not(.loading) { color: #000; }
+html.light .srs-btn.active,
+html.light .fc-badge-due,
+html.light .seg-btn.on,
+html.light .qs-online-btn:hover:not(:disabled),
+html.light .qs-nat-btn:hover:not(.loading) { color: #fff; }
+/* accent text on accent-dim bg was borderline (~4.47:1) — brighten in dark only. */
+.quiz-option.correct { color: #7ec2f0; }

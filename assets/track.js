@@ -42,7 +42,8 @@
       var p = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
       if (p) return p;
     } catch (e) {}
-    return (document.body && document.body.classList.contains('home')) ? 'home' : 'home';
+    // Empty slug means the directory root, which the host serves as index.html — i.e. the home.
+    return 'home';
   }
 
   function flush(useBeacon) {

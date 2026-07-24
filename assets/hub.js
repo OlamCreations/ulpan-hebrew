@@ -91,10 +91,15 @@
     m.innerHTML = '<div class="hub-overlay"></div><div class="' + cardClass + '" role="dialog" tabindex="-1"></div>';
     const card = m.querySelector('[role="dialog"]');
     card.innerHTML = innerHtml;
+    // Name the dialog from its title so assistive tech announces e.g. "Preferences", not an unnamed dialog.
+    const titleEl = card.querySelector('.hub-title, h2');
+    if (titleEl) { if (!titleEl.id) titleEl.id = id + '-title'; card.setAttribute('aria-labelledby', titleEl.id); }
     document.body.appendChild(m);
-    m.querySelector('.hub-overlay').addEventListener('click', () => m.remove());
+    function close() { m.remove(); document.removeEventListener('keydown', onEsc); }
+    function onEsc(e) { if (e.key === 'Escape') close(); }
+    m.querySelector('.hub-overlay').addEventListener('click', close);
     if (typeof window.makeModalAccessible === 'function') window.makeModalAccessible(m, card);
-    else document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { m.remove(); document.removeEventListener('keydown', esc); } });
+    else document.addEventListener('keydown', onEsc);   // fallback; close() removes it so it can't leak
     if (onMount) onMount(card, m);
     return m;
   }
@@ -125,7 +130,7 @@
   function toggleRow(id, label, hint, on) {
     return '<div class="pref-row"><div><div class="pref-label">' + esc(label) + '</div>' +
       (hint ? '<div class="pref-hint">' + esc(hint) + '</div>' : '') + '</div>' +
-      '<button type="button" class="pref-switch' + (on ? ' on' : '') + '" id="' + id + '" role="switch" aria-checked="' + (on ? 'true' : 'false') + '"><span class="knob"></span></button></div>';
+      '<button type="button" class="pref-switch' + (on ? ' on' : '') + '" id="' + id + '" role="switch" aria-checked="' + (on ? 'true' : 'false') + '" aria-label="' + esc(label) + '"><span class="knob"></span></button></div>';
   }
   function segRow(label, hint, options, current, groupId) {
     const btns = options.map(o => '<button type="button" class="seg-btn' + (o.value === current ? ' on' : '') +
@@ -307,10 +312,12 @@
   function installApp() {
     const dp = window.__deferredInstallPrompt;
     if (dp) {
+      // Clear synchronously: a beforeinstallprompt event can only be prompt()-ed once, so if the
+      // menu is reopened before userChoice resolves, canInstall() must already read false.
+      window.__deferredInstallPrompt = null;
       closeMenu();
       if (window.track) track('install_prompt');
       dp.prompt();
-      Promise.resolve(dp.userChoice).catch(() => {}).then(() => { window.__deferredInstallPrompt = null; });
       return;
     }
     // iOS Safari: the Share → Add to Home Screen flow can't be triggered from JS — show the steps.
@@ -341,7 +348,7 @@
     const host = document.querySelector('#hub-menu .hub-menu-items');
     if (!host) return;
     const items = MENU_ITEMS.filter(it => !it.showIf || it.showIf());
-    host.innerHTML = items.map((it, i) => '<button type="button" class="menu-item" role="menuitem" data-i="' + i + '">' +
+    host.innerHTML = items.map((it, i) => '<button type="button" class="menu-item" data-i="' + i + '">' +
       '<span class="menu-label">' + esc(it.label) + '</span>' +
       '<span class="menu-hint">' + esc(it.hint) + '</span></button>').join('');
     host.querySelectorAll('.menu-item').forEach(el => {
@@ -460,6 +467,7 @@
     const burger = document.createElement('button');
     burger.id = 'hub-burger'; burger.className = 'hub-burger';
     burger.setAttribute('aria-label', 'Menu'); burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-haspopup', 'true'); burger.setAttribute('aria-controls', 'hub-menu');
     burger.innerHTML = '<span></span><span></span><span></span>';
     actions.appendChild(burger);
 
@@ -472,7 +480,7 @@
     menu.id = 'hub-menu';
     menu.innerHTML =
       '<div class="hub-menu-backdrop"></div>' +
-      '<nav class="hub-menu-panel" role="menu" aria-label="Menu">' +
+      '<nav class="hub-menu-panel" aria-label="Menu">' +
         '<div class="hub-menu-head">Menu</div>' +
         '<div class="hub-menu-items"></div>' +
       '</nav>';

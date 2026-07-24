@@ -123,7 +123,6 @@ function speak(text, rate = 0.85) {
 }
 
 let cloudAudio = null;
-let audioDB = null;
 let audioPrimed = false;
 
 // Prime the HTML5 Audio context on the very first user gesture anywhere on the
@@ -175,31 +174,6 @@ document.addEventListener('click', (e) => {
     }
   }
 }, { capture: true });  // capture phase so we win over inline handlers that stopPropagation
-function getAudioDB() {
-  if (audioDB) return Promise.resolve(audioDB);
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open('hebrew-audio', 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore('blobs');
-    req.onsuccess = e => { audioDB = e.target.result; resolve(audioDB); };
-    req.onerror = () => resolve(null);
-  });
-}
-async function getCachedAudio(key) {
-  const db = await getAudioDB();
-  if (!db) return null;
-  return new Promise(resolve => {
-    const tx = db.transaction('blobs', 'readonly');
-    const req = tx.objectStore('blobs').get(key);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => resolve(null);
-  });
-}
-async function setCachedAudio(key, blob) {
-  const db = await getAudioDB();
-  if (!db) return;
-  const tx = db.transaction('blobs', 'readwrite');
-  tx.objectStore('blobs').put(blob, key);
-}
 function speakViaCloudTTS(text) {
   const cleaned = stripNiqqud(text).trim();
   if (!cleaned) return Promise.resolve();
@@ -435,6 +409,10 @@ if ('speechSynthesis' in window) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Run synchronously so there is no window where the baked-in ▶ buttons expose the raw glyph as
+  // their name, and Hebrew nodes are tagged lang/dir before the first screen-reader pass.
+  a11yIconButtons();
+  a11yLangDir();
   setupNiqqudToggle();
   setupCursiveToggle();
   setTimeout(() => { if (!voiceCheckDone) setupAudioButtons(); }, 1000);
@@ -449,6 +427,17 @@ function a11yIconButtons() {
   document.querySelectorAll('.icon-btn').forEach(b => {
     if (!b.getAttribute('aria-label')) b.setAttribute('aria-label', b.title || 'Listen');
     if (b.textContent.trim() === '▶' && !b.querySelector('span')) b.innerHTML = '<span aria-hidden="true">▶</span>';
+  });
+}
+
+// Hebrew text carries its direction only via CSS `direction:rtl` (which assistive tech ignores)
+// and inherits lang="en" from <html>. Tag every Hebrew node at runtime — same approach as the
+// icon-button fix — so screen readers switch to a Hebrew voice and expose RTL, without editing
+// the ~500 baked HTML files.
+function a11yLangDir() {
+  document.querySelectorAll('.he, .tb-he, .title-he, .hd-he, .stich-words .he').forEach(el => {
+    if (!el.getAttribute('lang')) el.setAttribute('lang', 'he');
+    if (!el.getAttribute('dir')) el.setAttribute('dir', 'rtl');
   });
 }
 
@@ -478,7 +467,7 @@ function enhanceIndexNavTooltips() {
 /* ---------- Click-to-reveal translit and translation ---------- */
 function revealAll(state) {
   document.querySelectorAll('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr').forEach(el => {
-    el.classList.toggle('revealed', !!state);
+    setReveal(el, !!state);
   });
 }
 
@@ -488,35 +477,51 @@ function wrapRevealCards() {
     if (el.querySelector(':scope > .reveal-inner')) return;
     const original = el.innerHTML;
     if (!original.trim()) return;
-    el.innerHTML = `<span class="reveal-inner"><span class="reveal-front">${original}</span><span class="reveal-back" aria-hidden="true">•••</span></span>`;
+    // The answer (.reveal-front) starts hidden from assistive tech too — otherwise a screen-reader
+    // user hears it while it is visually concealed, defeating the study mechanic. Toggled in lockstep
+    // with the `.revealed` class (see setReveal).
+    el.innerHTML = `<span class="reveal-inner"><span class="reveal-front" aria-hidden="true">${original}</span><span class="reveal-back" aria-hidden="true">•••</span></span>`;
     el.setAttribute('tabindex', '0');
     el.setAttribute('role', 'button');
-    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Tap to reveal');
+    el.setAttribute('aria-label', 'Reveal answer');
   });
+}
+
+// Keep the visual, ARIA-pressed, hidden-from-AT, and label states of a reveal cell consistent.
+function setReveal(card, shown) {
+  card.classList.toggle('revealed', shown);
+  card.setAttribute('aria-pressed', shown ? 'true' : 'false');
+  card.setAttribute('aria-label', shown ? 'Hide answer' : 'Reveal answer');
+  const front = card.querySelector('.reveal-front');
+  if (front) front.setAttribute('aria-hidden', shown ? 'false' : 'true');
 }
 
 function setupRevealToggle() {
   wrapRevealCards();
   injectPerCardSRS();
-  // re-wrap when DOM changes (lessons inject content after R() runs)
-  const obs = new MutationObserver(() => { wrapRevealCards(); injectPerCardSRS(); a11yIconButtons(); });
+  // Re-wrap when DOM changes (lessons inject content after R() runs). Coalesce bursts into one
+  // rAF pass — otherwise every flashcard flip and every translator keystroke triggers three
+  // full-document scans, which janks long lesson pages on a phone.
+  let rescanPending = false;
+  const rescan = () => { rescanPending = false; wrapRevealCards(); injectPerCardSRS(); a11yIconButtons(); a11yLangDir(); };
+  const obs = new MutationObserver(() => { if (rescanPending) return; rescanPending = true; requestAnimationFrame(rescan); });
   obs.observe(document.body, { childList: true, subtree: true });
   document.addEventListener('click', (e) => {
     if (e.target.closest('.srs-btn')) return;
     const card = e.target.closest('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr');
     if (!card) return;
-    card.classList.toggle('revealed');
-    card.setAttribute('aria-pressed', card.classList.contains('revealed') ? 'true' : 'false');
+    setReveal(card, !card.classList.contains('revealed'));
     e.stopPropagation();
   });
-  // Keyboard parity: Enter/Space reveals the focused cell.
+  // Keyboard parity: Enter/Space reveals the focused cell. stopPropagation so Space does not also
+  // reach the floating-controls handler and flip the flashcard on the same press.
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
     const card = e.target.closest && e.target.closest('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr');
     if (!card) return;
     e.preventDefault();
-    card.classList.toggle('revealed');
-    card.setAttribute('aria-pressed', card.classList.contains('revealed') ? 'true' : 'false');
+    e.stopPropagation();
+    setReveal(card, !card.classList.contains('revealed'));
   });
 }
 
@@ -885,12 +890,16 @@ function injectFloatingControls() {
       if (niqq) niqq.click();
     }
     else if (e.key === 't' || e.key === 'T') { e.preventDefault(); toggleTheme(); }
-    else if (e.key === '?' || e.key === '/') { e.preventDefault(); showShortcutsHelp(); }
+    // Only '?' opens help. '/' is owned by the hub's live-translator shortcut — sharing it opened
+    // both modals at once on lesson pages.
+    else if (e.key === '?') { e.preventDefault(); showShortcutsHelp(); }
     else if (e.key === '1' || e.key === '2') {
       const tab = document.querySelectorAll('.ex-tab')[parseInt(e.key) - 1];
       if (tab) { e.preventDefault(); tab.click(); }
     }
     else if (e.key === ' ') {
+      // A focused reveal cell owns Space (it reveals); don't also flip the flashcard.
+      if (document.activeElement && document.activeElement.closest('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr')) return;
       const fcCard = document.getElementById('fc-card');
       if (fcCard) { e.preventDefault(); fcCard.click(); }
     }
@@ -910,21 +919,25 @@ function showShortcutsHelp() {
   const m = document.createElement('div');
   m.id = 'shortcuts-modal';
   m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;';
-  m.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--accent);border-radius:8px;padding:24px;max-width:480px;width:100%;">
-    <h2 style="margin-bottom:16px;">Keyboard Shortcuts</h2>
+  m.innerHTML = `<div aria-labelledby="shortcuts-title" style="background:var(--bg-card);border:1px solid var(--accent);border-radius:8px;padding:24px;max-width:480px;width:100%;">
+    <h2 id="shortcuts-title" style="margin-bottom:16px;">Keyboard Shortcuts</h2>
     <table style="width:100%;font-size:14px;">
       <tr><td style="padding:6px 0;color:var(--text-dim);">L</td><td>Listen to all words</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">P</td><td>Printable view</td></tr>
-      <tr><td style="padding:6px 0;color:var(--text-dim);">S</td><td>Add lesson words to SRS</td></tr>
+      <tr><td style="padding:6px 0;color:var(--text-dim);">S</td><td>Open SRS review</td></tr>
+      <tr><td style="padding:6px 0;color:var(--text-dim);">A</td><td>Add lesson words to SRS</td></tr>
+      <tr><td style="padding:6px 0;color:var(--text-dim);">R / H</td><td>Reveal / hide all</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">N</td><td>Toggle niqqud (vowel marks)</td></tr>
+      <tr><td style="padding:6px 0;color:var(--text-dim);">T</td><td>Toggle theme (dark / light)</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">1-2</td><td>Switch exercise mode (Flashcards / Listen)</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">Space</td><td>Flip flashcard</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">→ ←</td><td>Next/previous flashcard</td></tr>
       <tr><td style="padding:6px 0;color:var(--text-dim);">?</td><td>This help</td></tr>
     </table>
-    <button class="btn btn-primary" style="margin-top:16px;width:100%;" onclick="this.closest('#shortcuts-modal').remove()">Got it</button>
+    <button class="btn btn-primary" id="shortcuts-close" style="margin-top:16px;width:100%;">Got it</button>
   </div>`;
   m.addEventListener('click', e => { if (e.target === m) m.remove(); });
+  m.querySelector('#shortcuts-close').addEventListener('click', () => m.remove());
   document.body.appendChild(m);
   makeModalAccessible(m);
 }
@@ -973,6 +986,7 @@ function printableView() {
   const items = collectLessonItems();
   const title = document.querySelector('h1')?.textContent || 'Hebrew Lesson';
   const w = window.open('', '_blank');
+  if (!w) { flashHint('Allow pop-ups to open the printable view.'); return; }
   w.document.write(`<!doctype html><html><head><title>${title}, Print</title>
     <style>body{font-family:Georgia,serif;padding:24px;line-height:1.6;color:#000;background:#fff;}
       h1{border-bottom:2px solid #000;padding-bottom:8px;}
@@ -1745,7 +1759,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1785600000000';
+  var SHARED_V = '1785700000000';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

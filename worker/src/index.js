@@ -48,12 +48,14 @@ Do not number the lines. Do not write anything before or after the list.`;
 function allowOrigin(origin) {
   try {
     if (!origin) return 'https://olamcreations.github.io';
-    const h = new URL(origin).hostname;
-    // ONLY our Pages origin + local dev. This used to allow any *.github.io, but MORPH_URL is
+    const u = new URL(origin);
+    const h = u.hostname;
+    // ONLY our Pages origin (https) + local dev. This used to allow any *.github.io, but MORPH_URL is
     // hardcoded to this deployment in the (open-source) front-end, so a fork deployed to another
     // github.io could freeload on our Workers AI neuron budget from its visitors' browsers.
     // Self-hosters deploy their own Worker and point MORPH_URL at it (see README).
-    if (h === 'olamcreations.github.io' || h === 'localhost' || h === '127.0.0.1') return origin;
+    if (h === 'olamcreations.github.io' && u.protocol === 'https:') return origin;
+    if (h === 'localhost' || h === '127.0.0.1') return origin;
   } catch (e) {}
   return 'https://olamcreations.github.io';
 }
@@ -299,7 +301,9 @@ async function natTranslate(text, env) {
     if (line.indexOf('|') === -1) continue;
     const parts = line.split('|').map(s => s.trim());
     const he = (parts[0] || '').replace(/^\d+[.)]\s*/, '').trim();
-    const note = (parts[1] || '').trim();
+    // Cap the note like /gloss caps its output: a prompt-injected input could otherwise stuff the
+    // "register note" with ~1500 chars of attacker-directed text that the app shows as trusted.
+    const note = (parts[1] || '').trim().slice(0, 120);
     if (!HEB.test(he)) continue;
     const skel = he.replace(/[֑-ׇ\s.,?!;:'"״׳()־-]/g, '');
     if (!skel || seen.has(skel)) continue;
@@ -381,10 +385,25 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
     if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
-    // Per-IP rate limit (native binding) — stops scripted abuse of the public endpoint.
+    const path = new URL(request.url).pathname;
+    const isAI = path === '/nat' || path === '/gloss';
+
+    // Reject oversized bodies before reading/parsing/joining them — an unbounded words[] on /gloss
+    // could otherwise materialize past the isolate memory limit and kill the worker.
+    const clen = +request.headers.get('Content-Length');
+    if (clen > 10000) return json({ error: 'too large' }, 413, origin);
+
+    const ip = request.headers.get('CF-Connecting-IP') || 'anon';
+    // Per-IP rate limit. AI paths (Llama 70B) fail CLOSED if the limiter errors — an unmetered path
+    // to a 70B model lets one IP drain the daily neuron allowance in under an hour. Cheap paths fail
+    // open (availability over strictness). AI paths also get a second, much tighter budget.
     if (env && env.RL) {
-      const ip = request.headers.get('CF-Connecting-IP') || 'anon';
-      try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); } catch (e) {}
+      try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
+      catch (e) { if (isAI) return json({ error: 'rate limited' }, 429, origin); }
+    }
+    if (isAI && env && env.RL_AI) {
+      try { const { success } = await env.RL_AI.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
+      catch (e) { return json({ error: 'rate limited' }, 429, origin); }
     }
 
     // Analytics ingest — always 204 (never let tracking break or slow the app). Awaited (not
@@ -420,10 +439,13 @@ export default {
       let gb;
       try { gb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
       const gText = ((gb && gb.text) || '').toString().slice(0, 500);
-      const gWords = Array.isArray(gb && gb.words) ? gb.words.map(w => String(w).slice(0, 40)) : [];
+      // Cap the array BEFORE mapping/joining/keying — glossInContext caps internally, but the pre-cap
+      // map + join + encodeURIComponent on an unbounded array is itself the allocation risk.
+      const gWords = Array.isArray(gb && gb.words) ? gb.words.slice(0, 24).map(w => String(w).slice(0, 40)) : [];
       if (!gText.trim() || !gWords.length) return json({ glosses: {} }, 200, origin);
       const gCache = caches.default;
-      const gKey = new Request('https://gloss.cache/v1/' + encodeURIComponent(gText + '||' + gWords.join('|')));
+      // JSON-encode the key so a literal '|' inside a word can't collide two distinct requests.
+      const gKey = new Request('https://gloss.cache/v2/' + encodeURIComponent(JSON.stringify([gText, gWords])));
       const gHit = await gCache.match(gKey);
       if (gHit) return new Response(await gHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
       let glosses;

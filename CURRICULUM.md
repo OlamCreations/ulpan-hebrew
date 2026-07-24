@@ -708,7 +708,7 @@ M8. Decoding Workshop — the 4-step protocol: unknown word → strip → root �
 
 ## Estimated Coverage
 
-After completing all 100 lessons, a learner should have:
+After completing the full curriculum (465 lessons), a learner should have:
 - ~3000 active vocabulary words
 - All 5 verb tenses (present, past, future, imperative, infinitive)
 - All 7 verb patterns (binyanim) introduced
