@@ -1714,6 +1714,15 @@ function openSituations(situations, lessonId) {
     addOnce('meta[name="apple-mobile-web-app-capable"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-capable'; m.content = 'yes'; return m; });
     addOnce('meta[name="apple-mobile-web-app-status-bar-style"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-status-bar-style'; m.content = 'black-translucent'; return m; });
     addOnce('meta[name="apple-mobile-web-app-title"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-title'; m.content = 'Ulpan'; return m; });
+    // Capture the install prompt as early as possible — it can fire before hub.js loads. The hub's
+    // "Install app" menu item reads window.__deferredInstallPrompt and re-checks on every open, so a
+    // late-firing event still surfaces the button. Cleared once installed so it stops advertising.
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      window.__deferredInstallPrompt = e;
+      try { window.dispatchEvent(new Event('ulpan:installable')); } catch (err) {}
+    });
+    window.addEventListener('appinstalled', function () { window.__deferredInstallPrompt = null; });
     if ('serviceWorker' in navigator) {
       // Auto-update: bypass the HTTP cache when checking sw.js, and reload once when a fresh
       // worker takes control — so a deploy lands on the next visit with no manual cache clearing.
@@ -1736,7 +1745,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1784649117585';
+  var SHARED_V = '1785600000000';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

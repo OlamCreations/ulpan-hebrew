@@ -278,8 +278,55 @@
     { label: 'Print', hint: '', showIf: hasBtn('fc-print'), act: () => clickHidden('fc-print') },
     { label: 'Shortcuts', hint: '', showIf: hasBtn('fc-help'), act: () => clickHidden('fc-help') },
     { label: 'Preferences', hint: '', act: openPrefs },   // theme lives inside Preferences — no separate toggle (was a duplicate)
-    { label: 'No sound? Install a voice', hint: '', act: () => { closeMenu(); if (window.showVoiceBanner) window.showVoiceBanner(true); } }
+    { label: 'No sound? Install a voice', hint: '', act: () => { closeMenu(); if (window.showVoiceBanner) window.showVoiceBanner(true); } },
+    { label: 'Install app', hint: 'home screen', showIf: canInstall, act: installApp }
   ];
+
+  // --- Install to home screen -----------------------------------------------------
+  // Already-installed windows run in their own display mode (or iOS's navigator.standalone).
+  function isStandalone() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true;
+  }
+  // iPadOS 13+ reports as a Mac, so also treat a touch-capable "Macintosh" as iOS.
+  function isIOS() {
+    return /iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent) ||
+      (/Macintosh/.test(navigator.userAgent) && 'ontouchend' in document);
+  }
+  function isIOSSafari() {
+    return isIOS() && /Safari/.test(navigator.userAgent) && !/(CriOS|FxiOS|EdgiOS|OPiOS)/.test(navigator.userAgent);
+  }
+  // Show the button when the browser offered a prompt (Android / desktop Chromium) OR on iOS Safari,
+  // where there is no programmatic install and the only path is the manual Share sheet. Never when
+  // already installed.
+  function canInstall() {
+    if (isStandalone()) return false;
+    if (window.__deferredInstallPrompt) return true;
+    return isIOSSafari();
+  }
+  function installApp() {
+    const dp = window.__deferredInstallPrompt;
+    if (dp) {
+      closeMenu();
+      if (window.track) track('install_prompt');
+      dp.prompt();
+      Promise.resolve(dp.userChoice).catch(() => {}).then(() => { window.__deferredInstallPrompt = null; });
+      return;
+    }
+    // iOS Safari: the Share → Add to Home Screen flow can't be triggered from JS — show the steps.
+    if (window.track) track('install_ios_help');
+    openOverlay('hub-install', 'hub-card hub-install-card',
+      '<button class="hub-close" aria-label="Close">×</button>' +
+      '<div class="hub-title">Install this app</div>' +
+      '<div class="hub-sub">Add the Ulpan icon to your home screen</div>' +
+      '<ol class="install-steps">' +
+        '<li>Tap the <strong>Share</strong> button in Safari\'s toolbar (the square with an arrow pointing up).</li>' +
+        '<li>Scroll down and choose <strong>Add to Home Screen</strong>.</li>' +
+        '<li>Tap <strong>Add</strong>. The app opens full-screen from its icon, like a native app.</li>' +
+      '</ol>',
+      (card, m) => { card.querySelector('.hub-close').addEventListener('click', () => m.remove()); });
+    closeMenu();
+  }
 
   function closeMenu() {
     const menu = document.getElementById('hub-menu');
