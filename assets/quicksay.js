@@ -156,6 +156,52 @@
 
   const escapeHtml = window.escHtml;
 
+  // --- Copy to clipboard --------------------------------------------------------
+  // What gets copied is the BARE Hebrew, not what's on screen: niqqud is a reading aid for the
+  // learner and looks wrong (and breaks some fonts) in a WhatsApp message or an email, which is
+  // the whole point of the button. The async Clipboard API needs a secure context — the site is
+  // HTTPS, but the textarea fallback keeps it working on a plain-http local server and on old
+  // Safari, where the modal would otherwise fail silently.
+  const COPY_TITLE = 'Copy the plain Hebrew — ready to paste in a message';
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+    return new Promise((resolve, reject) => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:-1000px;left:0;opacity:0';
+        document.body.appendChild(ta);
+        ta.select(); ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error('copy refused'));
+      } catch (e) { reject(e); }
+    });
+  }
+
+  function wireCopy(container) {
+    container.querySelectorAll('.qs-copy').forEach(b => {
+      if (b._wired) return; b._wired = true;
+      b.addEventListener('click', () => {
+        const text = b.dataset.copy || '';
+        if (!text) return;
+        copyToClipboard(text).then(() => {
+          if (window.track) track('phrase_copied');
+          b.classList.remove('failed');
+          b.classList.add('done');
+          b.setAttribute('aria-label', 'Copied');   // the icon swap alone says nothing to a screen reader
+          clearTimeout(b._t);
+          b._t = setTimeout(() => { b.classList.remove('done'); b.setAttribute('aria-label', 'Copy Hebrew'); }, 1500);
+        }).catch(() => {
+          b.classList.add('failed');
+          clearTimeout(b._t);
+          b._t = setTimeout(() => b.classList.remove('failed'), 1500);
+        });
+      });
+    });
+  }
+
   function card(p, kind) {
     let tag = '';
     if (kind === 'online') tag = '<span class="qs-tag qs-tag-online" title="Translated online">online</span>';
@@ -181,18 +227,24 @@
     const breakable = /[֐-׿]/.test(p.he || '') && stripNiqqud(p.he).trim().split(/\s+/).filter(Boolean).length >= 2;
     const breakBtn = breakable
       ? '<button type="button" class="qs-break" data-he="' + escapeHtml(p.he) + '">Break it down</button>' : '';
-    const saveBtn = '<button type="button" class="qs-save" data-he="' + escapeHtml(p.he) +
-      '" data-tr="' + escapeHtml(p.tr || '') + '" data-en="' + escapeHtml(meaning) + '">Save</button>';
+    // Tools column: listen, copy, save. Round icon buttons, same visual language as the lesson
+    // word-row, so the same three gestures mean the same thing everywhere in the app.
+    const tools =
+      '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.he) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
+      '<button type="button" class="qs-tool qs-copy" title="' + COPY_TITLE + '" aria-label="Copy Hebrew" ' +
+        'data-copy="' + escapeHtml(stripNiqqud(p.he || '').trim()) + '"></button>' +
+      '<button type="button" class="qs-tool qs-save" title="Save to my phrases" aria-label="Save to my phrases" ' +
+        'data-he="' + escapeHtml(p.he) + '" data-tr="' + escapeHtml(p.tr || '') + '" data-en="' + escapeHtml(meaning) + '"></button>';
     return '' +
       '<div class="qs-card' + (breakable ? ' has-break' : '') + '">' +
-        '<button class="qs-play icon-btn" title="Listen" aria-label="Listen: ' + escapeHtml(p.he) + '" data-he="' + escapeHtml(p.he) + '">▶</button>' +
         '<div class="qs-text">' +
           '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(heDisp) + '</div>' +
           cursive +
           tr +
           en +
-          '<div class="qs-actions">' + saveBtn + breakBtn + '</div>' +
         '</div>' +
+        '<div class="qs-tools">' + tools + '</div>' +
+        (breakBtn ? '<div class="qs-actions">' + breakBtn + '</div>' : '') +
         (breakable ? '<div class="qs-break-out"></div>' : '') +
       '</div>';
   }
@@ -475,6 +527,7 @@
     });
     wireBreak(container);
     wireSave(container);
+    wireCopy(container);
   }
 
   // Save a result to the personal phrasebook (window.QSNotebook, owned by hub.js).
@@ -482,12 +535,13 @@
     container.querySelectorAll('.qs-save').forEach(b => {
       if (b._wired) return; b._wired = true;
       const nb = window.QSNotebook;
-      if (nb && nb.has(b.dataset.he, b.dataset.en)) { b.classList.add('on'); b.textContent = 'Saved'; }
+      const mark = () => { b.classList.add('on'); b.setAttribute('aria-label', 'Saved to my phrases'); b.title = 'Saved'; };
+      if (nb && nb.has(b.dataset.he, b.dataset.en)) mark();
       b.addEventListener('click', () => {
         if (!window.QSNotebook || b.classList.contains('on')) return;
         window.QSNotebook.add({ he: b.dataset.he, tr: b.dataset.tr, en: b.dataset.en });
         if (window.track) track('phrase_saved');
-        b.classList.add('on'); b.textContent = 'Saved';
+        mark();
       });
     });
   }
@@ -643,8 +697,17 @@
     '</div>';
   }
 
+  // Loading placeholder. Keeps the `.qs-loading` class — the translator probe synchronises on it
+  // (a positive "loading gone" signal), and swapping it for a differently-named skeleton would
+  // silently break every measurement run. Only the visual changed: a card-shaped shimmer instead
+  // of a line of text, so the layout does not jump when the real card lands.
+  const skeleton = (label, lines) =>
+    '<div class="qs-loading" role="presentation" aria-label="' + label + '">' +
+      new Array(lines || 3).fill(0).map((_, i) => '<span class="qs-sk sk-' + i + '"></span>').join('') +
+    '</div>';
+
   function renderBreakdown(out, hebrew, signal) {
-    out.innerHTML = '<div class="qs-loading">Breaking down</div>';
+    out.innerHTML = skeleton('Breaking down', 2);
     withTimeout(fetchMorph(hebrew, signal), CFG.tMorph)
       .then(tokens => {
         if (!tokens) { out.innerHTML = '<div class="qs-hint">Breakdown needs a connection.</div>'; return; }
@@ -748,7 +811,7 @@
     // Online-first: loading line + whatever the offline phrasebook already knows, then fill in.
     container.setAttribute('aria-busy', 'true');
     container.innerHTML =
-      '<div class="qs-loading">Translating</div>' +
+      skeleton('Translating', 3) +
       phonSectionHtml(revOffline, []) +
       (fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated')).join('') : '');
     wirePlay(container);
@@ -814,14 +877,25 @@
     host._qsMounted = true;
     host.innerHTML =
       '<div class="qs-box">' +
-        '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="Type something…" ' +
-               'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French, Spanish or Russian to Hebrew, or look up transliterated Hebrew">' +
+        '<div class="qs-field">' +
+          '<span class="qs-field-icon" aria-hidden="true">א</span>' +
+          '<input type="text" id="qs-input" class="qs-input" maxlength="200" placeholder="Type something…" ' +
+                 'autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Translate English, French, Spanish or Russian to Hebrew, or look up transliterated Hebrew">' +
+          '<button type="button" class="qs-clear" aria-label="Clear" title="Clear (Esc)">×</button>' +
+        '</div>' +
         '<div id="qs-results" class="qs-results" role="status" aria-live="polite" aria-atomic="false"></div>' +
       '</div>';
     const input = host.querySelector('#qs-input');
     const results = host.querySelector('#qs-results');
+    const field = host.querySelector('.qs-field');
+    // The clear button only exists while there is something to clear — a dead × in an empty
+    // field is the kind of always-there control that makes an interface feel unresponsive.
+    const syncClear = () => field.classList.toggle('has-value', !!input.value);
     let t = null;
-    input.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => render(results, input.value), 350); });
+    input.addEventListener('input', () => { syncClear(); clearTimeout(t); t = setTimeout(() => render(results, input.value), 350); });
+    host.querySelector('.qs-clear').addEventListener('click', () => {
+      input.value = ''; syncClear(); clearTimeout(t); render(results, ''); input.focus();
+    });
     // Tappable example chips (and any future chips) seed the input.
     results.addEventListener('click', e => {
       const chip = e.target.closest('.qs-chip');
@@ -831,6 +905,7 @@
       render(results, input.value);
     });
     loadPhrases().then(() => { if (input.value) render(results, input.value); });
+    syncClear();
     render(results, '');
   }
 
@@ -843,11 +918,16 @@
       e.preventDefault(); input.focus(); input.select();
     } else if (e.key === 'Escape' && document.activeElement === input) {
       const results = document.getElementById('qs-results');
-      input.value = ''; if (results) render(results, ''); input.blur();
+      input.value = '';
+      const field = input.closest('.qs-field');
+      if (field) field.classList.remove('has-value');   // else the clear × outlives the text it clears
+      if (results) render(results, ''); input.blur();
     }
   });
 
   // renderBreakdown is reused by the lesson Sentence-Builder (app.js) to turn a finished
   // sentence into a per-word morphology micro-lesson, so it's exposed alongside mount.
-  window.QuickSay = { mount: mount, renderBreakdown: renderBreakdown };
+  // copy/copyTitle are exported so "My phrases" (hub.js) offers the same gesture on a saved
+  // phrase as the translator does on a fresh one — one implementation, one fallback path.
+  window.QuickSay = { mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE };
 })();

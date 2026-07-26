@@ -211,7 +211,12 @@
     const prefs = window.QSPrefs;
     const he = (prefs && !prefs.niqqud()) ? stripN(e.he) : e.he;
     return '<div class="ph-row" data-id="' + e.id + '">' +
-      '<button class="ph-play icon-btn" title="Listen" data-he="' + esc(e.he) + '">▶</button>' +
+      '<div class="ph-tools">' +
+        '<button class="ph-play icon-btn" title="Listen" data-he="' + esc(e.he) + '">▶</button>' +
+        '<button type="button" class="qs-tool qs-copy ph-copy" aria-label="Copy Hebrew" ' +
+          'title="' + ((window.QuickSay && window.QuickSay.copyTitle) || 'Copy the plain Hebrew') + '" ' +
+          'data-copy="' + esc(stripN(e.he).trim()) + '"></button>' +
+      '</div>' +
       '<div class="ph-text">' +
         '<div class="ph-he" dir="rtl" lang="he">' + esc(he) + '</div>' +
         (e.tr ? '<div class="ph-tr">' + esc(e.tr) + '</div>' : '') +
@@ -232,6 +237,19 @@
       : list.slice().sort((a, b) => (a.tr || a.en || '').localeCompare(b.tr || b.en || ''));
     host.innerHTML = list.map(e => phraseRowHtml(e, tab)).join('') || '<div class="ph-empty">No match.</div>';
     host.querySelectorAll('.ph-play').forEach(b => b.addEventListener('click', () => { if (typeof window.speak === 'function') window.speak(b.dataset.he, 0.8); }));
+    host.querySelectorAll('.ph-copy').forEach(b => b.addEventListener('click', () => {
+      const copy = window.QuickSay && window.QuickSay.copy;
+      if (!copy || !b.dataset.copy) return;
+      copy(b.dataset.copy).then(() => {
+        b.classList.add('done'); b.setAttribute('aria-label', 'Copied');
+        clearTimeout(b._t);
+        b._t = setTimeout(() => { b.classList.remove('done'); b.setAttribute('aria-label', 'Copy Hebrew'); }, 1500);
+      }).catch(() => {
+        b.classList.add('failed');
+        clearTimeout(b._t);
+        b._t = setTimeout(() => b.classList.remove('failed'), 1500);
+      });
+    }));
     host.querySelectorAll('.ph-del').forEach(b => b.addEventListener('click', () => { Notebook.remove(b.dataset.id); renderPhrases(host, tab, query); }));
     host.querySelectorAll('.ph-note').forEach(inp => inp.addEventListener('change', () => { Notebook.update(inp.closest('.ph-row').dataset.id, { note: inp.value }); }));
   }
