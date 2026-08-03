@@ -30,8 +30,18 @@
     // Google's rm instead of making the learner watch "Translating" for 14 seconds.
     tAlts: 5000,        // ms budget: the "as French" second reading
     tVocalize: 4000,    // ms budget: pointing bare Hebrew via the Worker
-    tNat: 16000         // ms budget: the on-demand "natural version" (70B model, can be slow cold)
+    tNat: 16000,        // ms budget: the on-demand "natural version" (70B model, can be slow cold)
+    tForm: 16000        // ms budget: the on-demand gendered/plural version (same 70B model)
   };
+
+  // The forms a learner can ask for. Labelled exactly as the breakdown labels what it finds
+  // ("f. sing."), so the chip you press and the grammar line you read afterwards use one vocabulary.
+  const FORMS = [
+    { g: 'm', n: 'sg', label: 'm. sing.', say: 'the masculine singular' },
+    { g: 'f', n: 'sg', label: 'f. sing.', say: 'the feminine singular' },
+    { g: 'm', n: 'pl', label: 'm. pl.', say: 'the masculine plural' },
+    { g: 'f', n: 'pl', label: 'f. pl.', say: 'the feminine plural' }
+  ];
 
   // Source languages we treat as "a translation query" (vs romanized Hebrew). sl=auto handles
   // any language, but these are the ones whose confident detection suppresses phonetic guesses.
@@ -443,7 +453,7 @@
   // bare Hebrew through it and then translit.js scored 7/7 where Google's rm scored 0/7, and it
   // structurally fixes shva na / qamats qatan, which translit.js guesses at from letters alone
   // (Dicta actually knows the morphology). Cached 7 days by the Worker.
-  function vocalizeBare(res, signal) {
+  function vocalizeBare(res, signal, prefer) {
     if (!res || !res.he || !isHeb(res.he) || hasNiqqud(res.he)) return Promise.resolve(res);
     // Consonant skeleton for the "Dicta didn't rewrite the word" guard: strip niqqud, whitespace
     // AND punctuation. Dicta returns commas/periods/? as separator tokens that we filter out, so a
@@ -454,7 +464,7 @@
     // Dicta 502s on some cold calls and succeeds on retry — but the 502 itself can take ~6s, so
     // the retry lives INSIDE one shared budget rather than doubling the wall clock. Fail fast to
     // Google's rm; the Worker's 7-day cache means the next attempt at this phrase is ~90ms.
-    const once = () => fetchMorph(res.he, signal);
+    const once = () => fetchMorph(res.he, signal, prefer);
     return withTimeout(once().catch(() => once()), CFG.tVocalize)
       .then(toks => {
         if (!toks || !toks.length) return res;
@@ -561,9 +571,11 @@
   // returns per-word vocalization + root (lemma). Point this at another deployment to move it.
   const MORPH_URL = 'https://ulpan-morph.olamcreations.workers.dev';
   const NAT_URL = MORPH_URL + '/nat';
+  const FORM_URL = MORPH_URL + '/form';
   const isHeb = s => /[֐-׿]/.test(s || '');
   const morphCache = new Map();
   const natCache = new Map();
+  const formCache = new Map();
 
   // --- Natural version (on-demand LLM layer) --------------------------------------
   // Google Translate under the live translator gives literal calques on idiomatic phrases and
@@ -619,6 +631,95 @@
     });
   }
 
+  /* --- Gendered / plural version (on-demand) ------------------------------------------------
+     Hebrew has no way to say a sentence without saying who is speaking and who is spoken to. "I
+     want a coffee" is רוֹצֶה from a man and רוֹצָה from a woman; "do you want" changes again with who
+     is being asked. Google returns exactly one of these and never says which, so a learner reading
+     the card has no way to know whether it is the sentence HE can say. Hence a request: pick a
+     form, get that form.
+
+     The translation comes from the Worker's /form (the same 70B model as the natural version, told
+     which agreement to apply). The POINTING does not: /form hands back consonants only, and they
+     are re-pointed through Dicta with the requested gender attached — because for the commonest
+     case the consonants are identical and the niqqud IS the whole difference. Ask for the feminine
+     of "I want a coffee" without that and Dicta's default answers רוֹצֶה, so the card would say
+     "f. sing." above a masculine word and the learner would say it out loud, wrong. */
+  function fetchForm(q, g, n, signal) {
+    const key = g + n + ':' + q.toLowerCase();
+    if (formCache.has(key)) return Promise.resolve(formCache.get(key));
+    const run = fetch(FORM_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: q, gender: g, number: n }), signal: signal
+    })
+      .then(r => { if (!r.ok) throw new Error('form ' + r.status); return r.json(); })
+      .then(j => (j && j.options) || []);
+    return withTimeout(run, CFG.tForm).then(opts => {
+      const o = opts || [];
+      if (o.length) formCache.set(key, o);
+      return o;
+    });
+  }
+
+  // Comparison key for "is this actually a different sentence?". Keeps the niqqud — that is the
+  // entire difference between רוֹצֶה and רוֹצָה and must never be normalized away — but drops spacing
+  // and punctuation: Google keeps the question mark of "where is the station?" and the model does
+  // not, and that alone was enough to present an identical sentence as a new form.
+  const sameKey = s => (s || '').normalize('NFC').replace(/[\s.,!?;:"'״׳־]/g, '');
+
+  function wireForm(container) {
+    container.querySelectorAll('.qs-form').forEach(wrap => {
+      if (wrap._wired) return; wrap._wired = true;
+      const out = wrap.querySelector('.qs-form-out');
+      const q = wrap.dataset.q || '';
+      const base = sameKey(wrap.dataset.base || '');
+      wrap.querySelectorAll('.qs-form-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          if (wrap.classList.contains('loading')) return;
+          const form = FORMS[+b.dataset.i] || FORMS[0];
+          // Pressing the chip that is already showing puts the card away again, so the control is
+          // a toggle rather than a one-way door.
+          if (b.classList.contains('on')) {
+            b.classList.remove('on'); out.innerHTML = ''; return;
+          }
+          wrap.querySelectorAll('.qs-form-btn').forEach(x => x.classList.remove('on'));
+          b.classList.add('on');
+          wrap.classList.add('loading');
+          out.innerHTML = skeleton('Loading the ' + form.say, 2);
+          if (window.track) track('form_used', form.g + form.n);
+          const sig = new AbortController().signal;
+          const done = () => wrap.classList.remove('loading');
+          const fail = () => { out.innerHTML = '<div class="qs-hint">That form isn’t available right now.</div>'; done(); };
+          const prefer = { g: form.g, n: form.n };
+          fetchForm(q, form.g, form.n, sig).then(opts => {
+            if (!opts || !opts.length) return fail();
+            return Promise.all(opts.map(o => {
+              // The heading above the card already names the form, so the tag carries only what it
+              // adds: WHICH participant is carrying it. Repeating "f. sing." in both is noise.
+              const res = { he: stripNiqqud(o.he), rm: null, en: q, cat: o.note || '' };
+              return withTimeout(vocalizeBare(res, sig, prefer), CFG.tVocalize).then(v => v || res);
+            })).then(cards => {
+              // Not every sentence HAS a masculine and a feminine — "where is the station?" is the
+              // same either way, and the model is told to say so. Showing an identical card under a
+              // "f. sing." heading would invent a distinction the language does not make, so say
+              // plainly that there is nothing to change. Compared on the POINTED form, never the
+              // consonants: רוצה/רוצה are the same letters and genuinely different words.
+              const changed = cards.filter(c => sameKey(c.he) !== base);
+              if (!changed.length) {
+                out.innerHTML = '<div class="qs-hint">This sentence doesn’t change in ' +
+                  escapeHtml(form.say) + ' — it is the same as above.</div>';
+                return done();
+              }
+              out.innerHTML = '<div class="qs-sub">' + escapeHtml(form.label) + '</div>' +
+                changed.map(c => card(c)).join('');
+              wirePlay(out);
+              done();
+            });
+          }).catch(fail);
+        });
+      });
+    });
+  }
+
   /* --- Verified glosses ------------------------------------------------------------------
      The breakdown used to ask Google for each word ALONE, which on Hebrew homographs is a coin
      flip it kept losing: שְׁמִי -> "Semitic" (my name), הַאִם -> "the mother" (the yes/no particle),
@@ -661,12 +762,16 @@
       .catch(() => ({}));
   }
 
-  function fetchMorph(text, signal) {
-    const key = 'm:' + text;
+  // `prefer` ({g,n}) asks the Worker for a specific reading instead of Dicta's first guess — the
+  // only thing that separates rotze from rotza, which share every letter. It is part of the cache
+  // key for the same reason it is part of the Worker's: without it the masculine pointing already
+  // held here is handed back to the request that just asked for the feminine one.
+  function fetchMorph(text, signal, prefer) {
+    const key = 'm:' + (prefer ? prefer.g + (prefer.n || '') : '') + '|' + text;
     if (morphCache.has(key)) return Promise.resolve(morphCache.get(key));
     return fetch(MORPH_URL, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text }), signal: signal
+      body: JSON.stringify(prefer ? { text: text, prefer: prefer } : { text: text }), signal: signal
     })
       .then(r => { if (!r.ok) throw new Error('morph ' + r.status); return r.json(); })
       .then(j => { const toks = (j && j.tokens) || []; morphCache.set(key, toks); return toks; });
@@ -894,6 +999,19 @@
       // On-demand "natural version": only for a translation query (not Hebrew-you-heard, where the
       // learner already has the word). Idiomatic phrases are exactly where Google calques and this
       // 70B layer earns its keep — but it's slow and metered, so it stays a button, not automatic.
+      // Ask for a different agreement. Offered only when there is a translation to vary and the
+      // learner typed a language rather than Hebrew — on Hebrew-you-heard the word is already in
+      // hand, and the question "how would a woman say this" is not what was asked.
+      // data-base carries the POINTED Hebrew on screen, which is what the answer is compared
+      // against to tell a real variant from a sentence that simply does not inflect.
+      if (!isHeb(nq) && fwdCard && fwdCard.he) {
+        html += '<div class="qs-form" data-q="' + escapeHtml(nq) + '" data-base="' + escapeHtml(fwdCard.he) + '">' +
+          '<span class="qs-form-lbl">Say it as</span>' +
+          '<span class="seg" role="group" aria-label="Grammatical form">' +
+          FORMS.map((f, i) => '<button type="button" class="seg-btn qs-form-btn" data-i="' + i + '">' +
+            escapeHtml(f.label) + '</button>').join('') +
+          '</span><div class="qs-form-out"></div></div>';
+      }
       if (!isHeb(nq)) {
         html += '<div class="qs-nat">' +
           '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">✦ version naturelle</button>' +
@@ -902,6 +1020,7 @@
       container.innerHTML = html;
       wirePlay(container);
       wireNat(container);
+      wireForm(container);
     }).catch(() => {
       // Without this the chain had no rejection handler at all: one failed upstream call left
       // aria-busy set and the "Translating" line on screen forever, with no way for the learner
