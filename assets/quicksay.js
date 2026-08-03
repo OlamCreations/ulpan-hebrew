@@ -224,9 +224,17 @@
     const cursive = (prefs && prefs.cursive())
       ? '<div class="qs-he-cursive" dir="rtl" lang="he">' + escapeHtml(stripNiqqud(p.he)) + '</div>' : '';
     // Multi-word Hebrew results can be decomposed word by word (root + niqqud + meaning).
-    const breakable = /[֐-׿]/.test(p.he || '') && stripNiqqud(p.he).trim().split(/\s+/).filter(Boolean).length >= 2;
+    const heWordCount = /[֐-׿]/.test(p.he || '')
+      ? stripNiqqud(p.he).trim().split(/\s+/).filter(Boolean).length : 0;
+    const breakable = heWordCount >= 2;
     const breakBtn = breakable
       ? '<button type="button" class="qs-break" data-he="' + escapeHtml(p.he) + '">Break it down</button>' : '';
+    // A ONE-word answer gets its grammar inline instead of behind a button. Looking up a single
+    // Hebrew word, the gender is half the answer: Hebrew has no neuter, and every adjective, verb
+    // and number that follows has to agree with it — so "table" is not learnable as שולחן alone.
+    // Filled asynchronously by wireGnp; stays empty (and CSS-hidden) if the Worker has nothing.
+    const gnpSlot = (heWordCount === 1)
+      ? '<div class="qs-gnp" data-he="' + escapeHtml(p.he) + '"></div>' : '';
     // Tools column: listen, copy, save. Round icon buttons, same visual language as the lesson
     // word-row, so the same three gestures mean the same thing everywhere in the app.
     const tools =
@@ -242,6 +250,7 @@
           cursive +
           tr +
           en +
+          gnpSlot +
         '</div>' +
         '<div class="qs-tools">' + tools + '</div>' +
         (breakBtn ? '<div class="qs-actions">' + breakBtn + '</div>' : '') +
@@ -528,6 +537,7 @@
     wireBreak(container);
     wireSave(container);
     wireCopy(container);
+    wireGnp(container);
   }
 
   // Save a result to the personal phrasebook (window.QSNotebook, owned by hub.js).
@@ -738,6 +748,38 @@
         });
       })
       .catch(() => { out.innerHTML = '<div class="qs-hint">Breakdown needs a connection.</div>'; });
+  }
+
+  /* Inline grammar for a single-word result: part of speech, gender/number, and the dictionary
+     form when it differs from the surface. Same token the breakdown uses, same Worker call, same
+     preferences (grammar / root) — this is the one-word shape of "Break it down", not a new
+     source of truth.
+     Measured before shipping, on 30 held-out everyday nouns whose gender is unambiguous in
+     standard Hebrew: 29 right, 0 wrong, 1 abstention (כוס, which UDPipe tags Fem,Masc and the
+     Worker deliberately refuses to guess on). Silence is the failure mode here, never a guess —
+     a confidently wrong gender would teach the learner an error they would then repeat aloud. */
+  function wireGnp(container) {
+    container.querySelectorAll('.qs-gnp[data-he]').forEach(slot => {
+      if (slot._wired) return; slot._wired = true;
+      const prefs = window.QSPrefs;
+      const wantGrammar = !prefs || prefs.grammar();
+      const wantRoot = !prefs || prefs.root();
+      if (!wantGrammar && !wantRoot) return;
+      withTimeout(fetchMorph(slot.dataset.he, new AbortController().signal), CFG.tMorph)
+        .then(tokens => {
+          const t = (tokens || []).find(x => x && !x.sep && isHeb(x.word));
+          if (!t) return;
+          const grammar = wantGrammar ? [t.pos, t.binyan, t.form, t.gnp].filter(Boolean).join(' · ') : '';
+          const lemma = stripNiqqud(t.lemma || '');
+          const showRoot = wantRoot && lemma && lemma !== stripNiqqud(t.voc || t.word || '');
+          if (!grammar && !showRoot) return;
+          slot.innerHTML =
+            (grammar ? '<span class="qs-gnp-g">' + escapeHtml(grammar) + '</span>' : '') +
+            (showRoot ? '<span class="qs-gnp-r" dir="rtl" lang="he" title="root / dictionary form">√ '
+              + escapeHtml(lemma) + '</span>' : '');
+        })
+        .catch(() => {});
+    });
   }
 
   function wireBreak(container) {

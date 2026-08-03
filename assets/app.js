@@ -1401,7 +1401,7 @@ function renderTextBlock(id, items) {
   items.forEach((line, i) => {
     const div = document.createElement('div');
     div.style.cssText = 'padding: 18px 0; border-bottom: 1px solid var(--border);';
-    div.innerHTML = `<div style="display: flex; gap: 18px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 13px; min-width: 24px;">${i+1}</span><div style="flex: 1;"><div class="he tb-he" data-he="${line.he.replace(/"/g,'&quot;')}" style="font-family: 'Frank Ruhl Libre', serif; font-size: 30px; direction: rtl; text-align: right; line-height: 1.5; cursor: pointer;">${line.he}</div><div class="tb-translit" style="font-size: 16px; color: var(--text-dim); font-style: italic; margin-top: 14px;">${line.translit}</div><div class="tb-fr" style="font-size: 17px; margin-top: 10px;">${line.fr}</div></div></div>`;
+    div.innerHTML = `<div style="display: flex; gap: 18px; align-items: baseline;"><span style="color: var(--accent); font-weight: 600; font-size: 13px; min-width: 24px;">${i+1}</span><div style="flex: 1;"><div class="he tb-he" data-he="${line.he.replace(/"/g,'&quot;')}">${line.he}</div><div class="tb-translit" style="font-size: 16px; color: var(--text-dim); font-style: italic; margin-top: 14px;">${line.translit}</div><div class="tb-fr" style="font-size: 17px; margin-top: 10px;">${line.fr}</div></div></div>`;
     const heEl = div.querySelector('.tb-he');
     if (heEl) heEl.addEventListener('click', () => speak(line.he, 0.75));
     el.appendChild(div);
@@ -1761,7 +1761,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
 (function loadSharedModules() {
-  var SHARED_V = '1785900000000';
+  var SHARED_V = '1786000000000';
   ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

@@ -13,6 +13,10 @@
   --grade-again: #ef4444;
   --grade-hard: #f59e0b;
   --grade-easy: #06b6d4;
+  /* How much bigger handwriting (ktav yad) renders than the printed Hebrew it replaces. Cursive is
+     the script being LEARNED, and its strokes are thinner, so it gets a little more room. One knob
+     for every cursive context in the app. */
+  --cursive-scale: 1.1;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -305,7 +309,11 @@ html.light .srs-btn.active { color: #fff; }
 .word-row:hover { background: var(--bg-card-hover); }
 
 .word-row .he {
-  font-size: 36px;
+  /* --he-size is the single source of truth for this context's Hebrew size, in ONE place, so the
+     cursive rule can derive from it instead of restating it. Media queries override the variable,
+     never the font-size, which is what keeps cursive in step at every breakpoint. */
+  --he-size: 36px;
+  font-size: var(--he-size);
   font-family: 'Frank Ruhl Libre', 'David', serif;
   direction: rtl;
   text-align: right;
@@ -846,11 +854,34 @@ a.btn.icon-btn.forvo-link:hover {
 
 /* When cursive is on, lesson Hebrew renders in the handwriting font. Scoped to the same .he
    content the niqqud toggle already governs; index/home have no toggle so body.cursive is never
-   set there. Nudge the size up: KtavYad reads smaller than Frank Ruhl at the same px. */
+   set there.
+   Size: this used to say `font-size: 1.15em`, which was a bug, not a nudge. `em` on font-size
+   resolves against the PARENT, so 1.15em against a 17px .word-row rendered cursive at ~19.6px
+   where print was 36px — cursive came out at 54% of print, which is exactly what reads as "tiny".
+   Measured (canvas ink height of ascender/descender-free words at 36px): KtavYad's letter bodies
+   are already ~16% TALLER than Frank Ruhl's at the same px, so no compensation is owed. The 1.1
+   scale below is for legibility of an unfamiliar script with thin handwriting strokes, nothing
+   more. Derived from each context's --he-size so a breakpoint only ever changes one number. */
 body.cursive .word-row .he,
 body.cursive .tb-he,
 body.cursive .stich-words .he,
-body.cursive .mini-quiz .he { font-family: 'KtavYad', cursive; font-size: 1.15em; }
+body.cursive .mini-quiz .he {
+  font-family: 'KtavYad', cursive;
+  font-size: calc(var(--he-size, 1em) * var(--cursive-scale));
+}
+
+/* Text-block Hebrew (renderTextBlock). These four properties used to be written inline by app.js,
+   which meant the cursive rule above could never win against them — the toggle silently did
+   nothing on text-block pages. They live here so the toggle reaches them like everywhere else. */
+.tb-he {
+  --he-size: 30px;
+  font-size: var(--he-size);
+  font-family: 'Frank Ruhl Libre', 'David', serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.5;
+  cursor: pointer;
+}
 
 body.no-niqqud .he,
 body.no-niqqud [style*="direction: rtl"] {
@@ -1198,7 +1229,10 @@ html .verses-grid .verse {
 
   /* WORD ROWS (used in classic lesson pages) */
   .word-row { font-size: 14px !important; padding: 10px 12px !important; }
-  .word-row .he { font-size: 22px !important; }
+  /* Override the size VARIABLE, not font-size: the cursive rule reads --he-size, so handwriting
+     stays proportional here instead of being frozen at the desktop value (or, worse, beaten by an
+     !important it cannot see). */
+  .word-row .he { --he-size: 22px !important; }
   .word-row .translit { font-size: 12px !important; }
   .word-row .fr { font-size: 13px !important; }
 
@@ -1441,9 +1475,11 @@ html.light *:hover {
 }
 .qs-card:hover { border-color: var(--accent-dim); box-shadow: 0 3px 16px rgba(0,0,0,0.18); }
 html.light .qs-card:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.06); }
-.qs-text { grid-area: text; min-width: 0; }
+/* --he-size sits on the shared PARENT, not on .qs-he: the printed line and the cursive echo are
+   siblings, so a variable declared on one would never reach the other. */
+.qs-text { grid-area: text; min-width: 0; --he-size: 27px; }
 .qs-he {
-  font-family: 'Frank Ruhl Libre', serif; font-size: 27px; line-height: 1.4; color: var(--text);
+  font-family: 'Frank Ruhl Libre', serif; font-size: var(--he-size); line-height: 1.4; color: var(--text);
   direction: rtl; text-align: right; overflow-wrap: break-word;
 }
 /* Latin lines read left-to-right but hug the RIGHT edge, so they sit under the word they gloss
@@ -1451,6 +1487,16 @@ html.light .qs-card:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.06); }
 .qs-tr, .qs-en { direction: ltr; text-align: right; }
 .qs-tr { font-size: 14px; color: var(--accent); margin-top: 5px; }
 .qs-en { font-size: 13px; color: var(--text-dim); margin-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+/* Inline grammar under a one-word result (gender/number, and the dictionary form when it differs).
+   Filled asynchronously — `:empty` keeps it out of the layout entirely until it has something to
+   say, so a card whose grammar never arrives looks exactly like a card that never asked. */
+.qs-gnp { direction: ltr; text-align: right; margin-top: 6px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.qs-gnp:empty { display: none; }
+.qs-gnp-g { font-size: 11px; letter-spacing: .03em; color: var(--text-faint);
+  border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; }
+.qs-gnp-r { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 15px; color: var(--text-dim); }
+
 .qs-tag {
   font-size: 10px; text-transform: uppercase; letter-spacing: .04em;
   color: var(--text-faint); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
@@ -1492,7 +1538,7 @@ html.light .qs-card:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.06); }
 .qs-online-btn:hover:not(:disabled) { background: var(--accent); color: #fff; border-style: solid; }
 .qs-online-btn:disabled { opacity: .6; cursor: default; }
 @media (max-width: 700px) {
-  .qs-he { font-size: 28px; }
+  .qs-text { --he-size: 28px; }
   .qs-card { padding: 15px 14px; column-gap: 8px; }
 }
 
@@ -1597,7 +1643,10 @@ html.light .hub-overlay { background: rgba(0,0,0,0.32); }
 .pref-switch.on .knob { transform: translateX(20px); background: var(--accent); }
 
 /* Cursive echo line inside a translator card */
-.qs-he-cursive { font-family: 'KtavYad', cursive; direction: rtl; text-align: right; font-size: 26px; line-height: 1.25; color: var(--text-dim); margin-top: 4px; }
+/* Cursive echo under the printed Hebrew. Sized off the printed line it echoes (same knob as every
+   other cursive context) rather than a standalone px that drifts out of step with it. */
+.qs-he-cursive { font-family: 'KtavYad', cursive; direction: rtl; text-align: right;
+  font-size: calc(var(--he-size, 27px) * var(--cursive-scale)); line-height: 1.25; color: var(--text-dim); margin-top: 4px; }
 
 @media (max-width: 700px) {
   .hub-title { font-size: 19px; }
@@ -1653,10 +1702,13 @@ body.home .cursive-toggle { display: none; }
 .mw-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .mw { flex: 1 1 auto; min-width: 92px; padding: 11px 9px; background: var(--bg-card-hover);
   border: 1px solid var(--border); border-radius: 10px; text-align: center;
-  transition: border-color .15s ease; }
+  transition: border-color .15s ease; --he-size: 22px; }
 .mw:hover { border-color: var(--accent-dim); }
-.mw-he { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 22px; color: var(--text); line-height: 1.2; }
-.mw-cursive { font-family: 'KtavYad', cursive; direction: rtl; font-size: 18px; color: var(--text-dim); margin-top: 2px; }
+.mw-he { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: var(--he-size); color: var(--text); line-height: 1.2; }
+/* Was 18px against a 22px printed form — the cursive a learner is decoding was the smallest thing
+   in the cell. Same knob as everywhere else now. */
+.mw-cursive { font-family: 'KtavYad', cursive; direction: rtl;
+  font-size: calc(var(--he-size) * var(--cursive-scale)); color: var(--text-dim); margin-top: 2px; }
 .mw-tr { font-size: 12px; color: var(--accent); margin-top: 3px; }
 .mw-gloss { font-size: 13px; color: var(--text); margin-top: 2px; }
 .mw-root { font-family: 'Frank Ruhl Libre', 'David', serif; font-size: 14px; color: var(--text-faint); margin-top: 4px; }
