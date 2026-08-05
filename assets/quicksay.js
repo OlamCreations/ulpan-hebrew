@@ -609,20 +609,20 @@
         const out = wrap && wrap.querySelector('.qs-nat-out');
         if (!out || b.classList.contains('loading')) return;
         const q = b.dataset.q || '';
-        b.classList.add('loading'); b.textContent = 'Version naturelle…';
+        b.classList.add('loading'); b.textContent = 'Natural version…';
         if (window.track) track('nat_used');
         const sig = new AbortController().signal;
-        const fail = () => { out.innerHTML = '<div class="qs-hint">Version naturelle indisponible pour l’instant.</div>'; b.classList.remove('loading'); b.textContent = '✦ version naturelle'; };
+        const fail = () => { out.innerHTML = '<div class="qs-hint">Natural version isn’t available right now.</div>'; b.classList.remove('loading'); b.textContent = '✦ natural version'; };
         fetchNatural(q, sig).then(opts => {
           if (!opts || !opts.length) return fail();
           // Strip the model's niqqud and re-point each option through Dicta + translit.js.
           return Promise.all(opts.map(o => {
             // en = the phrase the learner typed (the meaning — so Save stores it right); the
-            // French register note becomes the tag. Strip the model's niqqud; Dicta re-points it.
-            const res = { he: stripNiqqud(o.he), rm: null, en: q, cat: o.note ? ('✦ ' + o.note) : '✦ naturel' };
+            // register note becomes the tag. Strip the model's niqqud; Dicta re-points it.
+            const res = { he: stripNiqqud(o.he), rm: null, en: q, cat: o.note ? ('✦ ' + o.note) : '✦ natural' };
             return withTimeout(vocalizeBare(res, sig), CFG.tVocalize).then(v => v || res);
           })).then(cards => {
-            out.innerHTML = '<div class="qs-sub">Version naturelle</div>' + cards.map(c => card(c)).join('');
+            out.innerHTML = '<div class="qs-sub">Natural version</div>' + cards.map(c => card(c)).join('');
             wirePlay(out);
             b.style.display = 'none';
           });
@@ -1014,7 +1014,7 @@
       }
       if (!isHeb(nq)) {
         html += '<div class="qs-nat">' +
-          '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">✦ version naturelle</button>' +
+          '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">✦ natural version</button>' +
           '<div class="qs-nat-out"></div></div>';
       }
       container.innerHTML = html;

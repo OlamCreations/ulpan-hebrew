@@ -25,7 +25,7 @@ const CACHE_TTL = 604800;        // 7 days — the vocabulary is effectively sta
 const NAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const NAT_SYS = `You are a careful Hebrew translator for a French/English speaker learning Hebrew at ulpan. Translate the user's sentence FAITHFULLY into natural, modern spoken Israeli Hebrew. Preserve the exact meaning, register, gender and number — do not invent, add, or drop ideas. Prefer how a native Israeli actually says it over a word-for-word calque; if the phrase is idiomatic, give the idiomatic Hebrew, not the literal one.
 Give up to 2 options, most natural first (a second only if it is a genuinely different, correct way to say it — e.g. a feminine-speaker form). Output ONLY these lines and nothing else, one option per line:
-HEBREW | short note in French on register or usage
+HEBREW | short note in English on register or usage
 Do not number the lines. Do not write anything before or after the list.`;
 
 // Gendered / numbered variants (/form). Hebrew agrees with the person speaking AND the person
@@ -606,7 +606,11 @@ export default {
       const nt = ((nb && nb.text) || '').toString().slice(0, 300);
       if (!nt.trim()) return json({ options: [] }, 200, origin);
       const nCache = caches.default;
-      const nKey = new Request('https://nat.cache/v2/' + encodeURIComponent(nt));
+      /* v3, not v2: the prompt above used to ask for the register note in French, inside an
+       * app whose every other string is English. Bumping the key is not tidiness — the responses
+       * are cached for seven days, so leaving it at v2 would have kept serving the French notes
+       * to everyone who had already asked, and the fix would have looked like it did nothing. */
+      const nKey = new Request('https://nat.cache/v3/' + encodeURIComponent(nt));
       const nHit = await nCache.match(nKey);
       if (nHit) return new Response(await nHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
       let options;
