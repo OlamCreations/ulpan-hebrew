@@ -156,6 +156,34 @@ for (const path of ['/liturgy/songs-001-hatikvah-en.html', '/liturgy/tehilim-001
   await ctx.close();
 }
 
+// --- a liturgy page can receive updates at all ----------------------------------------
+//
+// This is the check that would have caught the feature being invisible in the installed app
+// while the network served it correctly. The service worker's scope covers these pages, but
+// the code that ASKS whether a newer worker exists lives in app.js, which no liturgy page
+// loads — so a deploy reached the network and never reached the app.
+//
+// The assertion is decisive precisely because app.js is absent here: if a registration
+// exists on this page, only swupdate.js can have made it.
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 800 } });
+  const page = await ctx.newPage();
+  await page.goto(BASE + '/liturgy/tehilim-001.html', { waitUntil: 'load' });
+  await page.waitForTimeout(2500);
+  const sw = await page.evaluate(async () => {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    return {
+      count: regs.length,
+      appJs: !!document.querySelector('script[src*="app.js"]'),
+      updater: !!document.querySelector('script[src*="swupdate.js"]'),
+    };
+  });
+  say(!sw.appJs, 'the page still loads no app.js (the condition that made this necessary)');
+  say(sw.updater, 'it carries the updater instead');
+  say(sw.count >= 1, 'and a service worker is registered from a liturgy page', `${sw.count} registration(s)`);
+  await ctx.close();
+}
+
 // --- frame-rate independence, tested by CHANGING THE FRAME RATE -----------------------
 //
 // This is the assertion the module's own comment is written against, and the obvious version
