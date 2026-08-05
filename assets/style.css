@@ -1893,3 +1893,93 @@ html.light .qs-tool:hover,
 html.light .qs-nat-btn:hover:not(.loading) { color: #fff; }
 /* accent text on accent-dim bg was borderline (~4.47:1) — brighten in dark only. */
 .quiz-option.correct { color: #7ec2f0; }
+
+/* ---------------------------------------------------------------- autoscroll
+   The liturgy pages (songs, tehilim, prayers, shabbat) get a play button that
+   creeps the page down while both hands stay on the instrument. Docked bottom
+   centre: these pages carry no other floating control, and centre is where a
+   thumb lands when the phone is on a stand. Built by assets/autoscroll.js. */
+.as-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.light .as-bar { box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12); }
+.as-bar.is-playing { border-color: var(--accent); }
+
+.as-play {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+/* The glyph is a mask, like the lesson play buttons: a text ▶ renders soft and
+   sits off-centre, and swapping it for ❚❚ would change the button's width. */
+.as-play::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin-left: 2px;                 /* optical centring of the triangle */
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M8 5v14l11-7z'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M8 5v14l11-7z'/></svg>") no-repeat center / contain;
+}
+.as-play.as-playing::before {
+  margin-left: 0;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 5h4v14H6zM14 5h4v14h-4z'/></svg>") no-repeat center / contain;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 5h4v14H6zM14 5h4v14h-4z'/></svg>") no-repeat center / contain;
+}
+.as-play:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.as-play.as-playing { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.as-step {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.as-step:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.as-step:disabled { opacity: 0.35; cursor: default; }
+
+.as-readout {
+  min-width: 20px;
+  text-align: center;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  cursor: default;
+}
+.as-bar.is-playing .as-readout { color: var(--accent); }
+.as-play:focus-visible,
+.as-step:focus-visible,
+.as-readout:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 700px) { .as-bar { bottom: 12px; } }
+@media print { .as-bar { display: none !important; } }
