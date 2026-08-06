@@ -23,10 +23,10 @@ const CACHE_TTL = 604800;        // 7 days — the vocabulary is effectively sta
 // it — its self-generated transliteration is wrong (yoter -> "odar") and its niqqud is patchy,
 // so the client strips both and re-vocalizes through Dicta + translit.js like any other result.
 const NAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
-const NAT_SYS = `You are a careful Hebrew translator for a French/English speaker learning Hebrew at ulpan. Translate the user's sentence FAITHFULLY into natural, modern spoken Israeli Hebrew. Preserve the exact meaning, register, gender and number — do not invent, add, or drop ideas. Prefer how a native Israeli actually says it over a word-for-word calque; if the phrase is idiomatic, give the idiomatic Hebrew, not the literal one.
+const NAT_SYS = `You are a careful Hebrew translator for an English-speaking learner at ulpan. Translate the user's sentence FAITHFULLY into natural, modern spoken Israeli Hebrew. Preserve the exact meaning, register, gender and number — do not invent, add, or drop ideas. Prefer how a native Israeli actually says it over a word-for-word calque; if the phrase is idiomatic, give the idiomatic Hebrew, not the literal one.
 Give up to 2 options, most natural first (a second only if it is a genuinely different, correct way to say it — e.g. a feminine-speaker form). Output ONLY these lines and nothing else, one option per line:
-HEBREW | short note in English on register or usage
-Do not number the lines. Do not write anything before or after the list.`;
+HEBREW | short note on register or usage, written in ENGLISH
+Do not number the lines. Do not write anything before or after the list. The note after the | must be in English, never in French, whatever language the user wrote in.`;
 
 // Gendered / numbered variants (/form). Hebrew agrees with the person speaking AND the person
 // spoken to, so "I want a coffee" has no single translation: a man says אני רוצה, a woman אני רוצה
@@ -610,7 +610,7 @@ export default {
        * app whose every other string is English. Bumping the key is not tidiness — the responses
        * are cached for seven days, so leaving it at v2 would have kept serving the French notes
        * to everyone who had already asked, and the fix would have looked like it did nothing. */
-      const nKey = new Request('https://nat.cache/v3/' + encodeURIComponent(nt));
+      const nKey = new Request('https://nat.cache/v4/' + encodeURIComponent(nt));
       const nHit = await nCache.match(nKey);
       if (nHit) return new Response(await nHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
       let options;
