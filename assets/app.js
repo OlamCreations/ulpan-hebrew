@@ -1759,10 +1759,10 @@ function openSituations(situations, lessonId) {
 /* Shared front-end modules — injected once from app.js (which every page already loads) so the
    home and all ~500 lesson pages get translit + quick-say + the hamburger hub without editing
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
-   translit -> quicksay (uses window.Translit) -> hub (uses window.QuickSay). */
+   translit -> conjugate -> quicksay (uses window.Translit and window.Conjugate) -> hub. */
 (function loadSharedModules() {
-  var SHARED_V = '1786586400000';
-  ['track.js', 'translit.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
+  var SHARED_V = '1786672800000';
+  ['track.js', 'translit.js', 'conjugate.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }
     });

@@ -863,6 +863,50 @@
      standard Hebrew: 29 right, 0 wrong, 1 abstention (כוס, which UDPipe tags Fem,Masc and the
      Worker deliberately refuses to guess on). Silence is the failure mode here, never a guess —
      a confidently wrong gender would teach the learner an error they would then repeat aloud. */
+  /* The whole present tense under a verb, straight away — the thing Jonas asked for after looking
+     up לנוח and getting an infinitive with nothing to inflect. No round trip: conjugate.js builds
+     the forms from the root, the binyan and the pointed word, so the table is there in the same
+     frame as the card.
+
+     It appears only when the engine RECOGNISES the class. That is not caution for its own sake:
+     the verbs anyone bothers to look up are the irregular ones, and the alternative — a model
+     generating forms — cannot be checked, because the only analyser this app can reach tags
+     invented words like נוחיתי as a clean Pa'al past. Silence where the pattern is unknown is
+     the same rule the gender labels already follow: blank beats wrong. */
+  var CONJ_LABELS = [['m.s', 'm. sing.'], ['f.s', 'f. sing.'], ['m.pl', 'm. pl.'], ['f.pl', 'f. pl.']];
+
+  function renderConjugation(slot, tok, lemma) {
+    if (!window.Conjugate || !slot || !slot.parentNode) return;
+    if (String(tok.pos || '').toLowerCase() !== 'verb') return;
+    var built = window.Conjugate.present(lemma, tok.binyan, tok.voc || tok.word || '');
+    if (!built) return;
+
+    var prefs = window.QSPrefs;
+    var wantTr = !prefs || prefs.translit();
+    var wantNiqqud = !prefs || prefs.niqqud();
+    var cells = CONJ_LABELS.map(function (pair) {
+      var he = built.forms[pair[0]];
+      if (!he) return '';
+      var shown = wantNiqqud ? he : stripNiqqud(he);
+      var tr = wantTr && window.Translit ? window.Translit.transliterate(he) : '';
+      return '<div class="qs-cj-cell">' +
+        '<div class="qs-cj-tag">' + escapeHtml(pair[1]) + '</div>' +
+        '<div class="qs-cj-he" dir="rtl" lang="he">' + escapeHtml(shown) + '</div>' +
+        (tr ? '<div class="qs-cj-tr">' + escapeHtml(tr) + '</div>' : '') +
+      '</div>';
+    }).join('');
+    if (!cells) return;
+
+    var host = slot.parentNode.querySelector('.qs-cj');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'qs-cj';
+      slot.parentNode.insertBefore(host, slot.nextSibling);
+    }
+    host.innerHTML = '<div class="qs-cj-title">Present tense</div>' +
+      '<div class="qs-cj-grid">' + cells + '</div>';
+  }
+
   function wireGnp(container) {
     container.querySelectorAll('.qs-gnp[data-he]').forEach(slot => {
       if (slot._wired) return; slot._wired = true;
@@ -882,6 +926,7 @@
             (grammar ? '<span class="qs-gnp-g">' + escapeHtml(grammar) + '</span>' : '') +
             (showRoot ? '<span class="qs-gnp-r" dir="rtl" lang="he" title="root / dictionary form">√ '
               + escapeHtml(lemma) + '</span>' : '');
+          renderConjugation(slot, t, lemma);
         })
         .catch(() => {});
     });
