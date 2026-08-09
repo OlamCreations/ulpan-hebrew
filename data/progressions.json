@@ -1,0 +1,272 @@
+{
+  "_comment": "Harmonic vocabulary for the chord engine's shuffle generator (assets/chords.js). Scales are semitone offsets from the tonic; the engine derives the diatonic triads and sevenths from the scale itself rather than storing them, so an exotic mode gets correct chords without a hand-written table. Pattern tokens: \"1\"-\"7\" = triad on that scale degree, \"V\"/\"V7\" = major/dominant chord on the 5th degree (harmonic-minor dominant, used even in modes whose natural 5th is minor), \"v\" = natural minor 5th, \"S/n\" = secondary dominant resolving to degree n, \"TT\" = tritone substitute of V, \"o/n\" = passing diminished a semitone below degree n.",
+  "version": 1,
+  "modes": {
+    "ionian": {
+      "label": "Ionian (major)",
+      "family": "western",
+      "scale": [0, 2, 4, 5, 7, 9, 11],
+      "tonicQuality": "major",
+      "note": "The plain major scale.",
+      "label_fr": "Ionien (majeur)",
+      "note_fr": "La gamme majeure toute simple."
+    },
+    "aeolian": {
+      "label": "Aeolian (natural minor)",
+      "family": "western",
+      "scale": [0, 2, 3, 5, 7, 8, 10],
+      "tonicQuality": "minor",
+      "note": "Natural minor. In synagogue practice this is Magen Avot, the mode of the Friday-night service.",
+      "label_fr": "Éolien (mineur naturel)",
+      "note_fr": "Mineur naturel. Dans la pratique synagogale c'est Magen Avot, le mode de l'office du vendredi soir."
+    },
+    "dorian": {
+      "label": "Dorian",
+      "family": "western",
+      "scale": [0, 2, 3, 5, 7, 9, 10],
+      "tonicQuality": "minor",
+      "note": "Minor with a raised 6th, so the IV chord turns major. Folk and modal rock live here.",
+      "label_fr": "Dorien",
+      "note_fr": "Mineur à sixte haussée, ce qui rend l'accord de IV majeur. Le folk et le rock modal vivent là."
+    },
+    "phrygian": {
+      "label": "Phrygian",
+      "family": "western",
+      "scale": [0, 1, 3, 5, 7, 8, 10],
+      "tonicQuality": "minor",
+      "note": "Minor with a flat 2nd. The bII to i step is the Phrygian cadence heard across the Mediterranean.",
+      "label_fr": "Phrygien",
+      "note_fr": "Mineur à seconde abaissée. Le pas bII vers i est la cadence phrygienne qu'on entend tout autour de la Méditerranée."
+    },
+    "mixolydian": {
+      "label": "Mixolydian",
+      "family": "western",
+      "scale": [0, 2, 4, 5, 7, 9, 10],
+      "tonicQuality": "major",
+      "note": "Major with a flat 7th, so bVII replaces the leading tone.",
+      "label_fr": "Mixolydien",
+      "note_fr": "Majeur à septième abaissée : bVII remplace la sensible."
+    },
+    "harmonic-minor": {
+      "label": "Harmonic minor",
+      "family": "western",
+      "scale": [0, 2, 3, 5, 7, 8, 11],
+      "tonicQuality": "minor",
+      "note": "Minor with a raised 7th, which restores a major V and a real leading tone.",
+      "label_fr": "Mineur harmonique",
+      "note_fr": "Mineur à septième haussée, ce qui restitue un V majeur et une vraie sensible."
+    },
+    "ahava-rabbah": {
+      "label": "Ahava Rabbah (freygish)",
+      "family": "jewish",
+      "scale": [0, 1, 4, 5, 7, 8, 10],
+      "tonicQuality": "major",
+      "note": "Phrygian dominant: 1 b2 3 4 5 b6 b7. The prayer mode of Ahava Rabbah, and the sound most people mean by \"Jewish scale\". Its bII chord is a major triad a semitone above the tonic.",
+      "label_fr": "Ahava Rabbah (freygish)",
+      "note_fr": "Phrygien dominant : 1 b2 3 4 5 b6 b7. Le mode de prière d'Ahava Rabbah, et le son que la plupart des gens appellent « la gamme juive ». Son accord de bII est un accord majeur un demi-ton au-dessus de la tonique."
+    },
+    "mi-sheberach": {
+      "label": "Mi Sheberach (Ukrainian Dorian)",
+      "family": "jewish",
+      "scale": [0, 2, 3, 6, 7, 9, 10],
+      "tonicQuality": "minor",
+      "note": "Altered Dorian: 1 2 b3 #4 5 6 b7. The raised 4th turns II into a major chord, which is the klezmer lift you hear in Hava Nagila.",
+      "label_fr": "Mi Sheberach (dorien ukrainien)",
+      "note_fr": "Dorien altéré : 1 2 b3 #4 5 6 b7. La quarte haussée rend le II majeur, et c'est l'élan klezmer qu'on entend dans Hava Nagila."
+    },
+    "adonai-malach": {
+      "label": "Adonai Malach",
+      "family": "jewish",
+      "scale": [0, 2, 4, 5, 7, 9, 10],
+      "tonicQuality": "major",
+      "note": "Major with a flat 7th, the mode of the Shabbat morning service. Shares its notes with Mixolydian; the difference is liturgical use, not pitch.",
+      "label_fr": "Adonaï Malach",
+      "note_fr": "Majeur à septième abaissée, le mode de l'office du samedi matin. Mêmes notes que le mixolydien ; ce qui les distingue est l'usage liturgique, pas la hauteur."
+    }
+  },
+  "strategies": [
+    {
+      "id": "andalusian",
+      "label": "Andalusian cadence",
+      "modes": ["aeolian", "phrygian", "harmonic-minor", "ahava-rabbah"],
+      "weight": 3,
+      "seeds": [
+        ["1", "7", "6", "V"],
+        ["1", "1", "7", "6", "V", "V"],
+        ["1", "7", "6", "V", "1"]
+      ],
+      "explain": "A stepwise descent from the tonic to the dominant. The bVI to V step is the Phrygian half-cadence that gives Sephardic, Greek and Spanish music its pull, and it lands unresolved on purpose.",
+      "label_fr": "Cadence andalouse",
+      "explain_fr": "Une descente conjointe de la tonique vers la dominante. Le pas bVI vers V est la demi-cadence phrygienne qui donne aux musiques séfarade, grecque et espagnole leur tension, et elle reste volontairement non résolue."
+    },
+    {
+      "id": "yiddish-cadence",
+      "label": "Yiddish cadence",
+      "modes": ["ahava-rabbah"],
+      "weight": 4,
+      "seeds": [
+        ["1", "2", "1"],
+        ["1", "4", "2", "1"],
+        ["1", "2", "1", "7", "1"],
+        ["4", "2", "1", "1"]
+      ],
+      "explain": "The bII to I step of Ahava Rabbah: a major chord a semitone above the tonic falling home. In klezmer and hazzanut this is the phrase ending, not the surprise.",
+      "label_fr": "Cadence yiddish",
+      "explain_fr": "Le pas bII vers I d'Ahava Rabbah : un accord majeur un demi-ton au-dessus de la tonique qui retombe chez lui. En klezmer et en hazzanout c'est la fin de phrase, pas la surprise."
+    },
+    {
+      "id": "freygish-vamp",
+      "label": "Freygish vamp",
+      "modes": ["ahava-rabbah"],
+      "weight": 3,
+      "seeds": [
+        ["1", "4", "1", "7"],
+        ["1", "1", "4", "V"],
+        ["1", "7", "4", "1"]
+      ],
+      "explain": "Sitting on the tonic major with the minor iv and bVII circling it. The mode carries the colour, so the harmony can stay still.",
+      "label_fr": "Vamp freygish",
+      "explain_fr": "On reste sur la tonique majeure, avec le iv mineur et le bVII qui tournent autour. Le mode porte la couleur, donc l'harmonie peut rester immobile."
+    },
+    {
+      "id": "mi-sheberach-lift",
+      "label": "Mi Sheberach lift",
+      "modes": ["mi-sheberach"],
+      "weight": 4,
+      "seeds": [
+        ["1", "2", "1"],
+        ["1", "4", "2", "1"],
+        ["1", "2", "5", "1"],
+        ["1", "1", "2", "2", "1"]
+      ],
+      "explain": "The raised 4th makes II a major chord inside a minor mode. Going i to II and back is the lift heard at every simcha, and it is what separates this mode from plain Dorian.",
+      "label_fr": "Élan Mi Sheberach",
+      "explain_fr": "La quarte haussée rend II majeur à l'intérieur d'un mode mineur. Aller de i à II et revenir, c'est l'élan qu'on entend à chaque simha, et c'est ce qui sépare ce mode du dorien ordinaire."
+    },
+    {
+      "id": "functional",
+      "label": "Functional cadence",
+      "modes": ["ionian", "aeolian", "dorian", "mixolydian", "harmonic-minor", "adonai-malach"],
+      "weight": 3,
+      "generator": "functional",
+      "explain": "Tonic, then a subdominant departure, then a dominant, then home. The oldest working grammar in Western harmony, and still the one an ear expects.",
+      "label_fr": "Cadence fonctionnelle",
+      "explain_fr": "Tonique, puis départ vers la sous-dominante, puis dominante, puis retour. La plus ancienne grammaire opérante de l'harmonie occidentale, et toujours celle qu'une oreille attend."
+    },
+    {
+      "id": "circle-of-fifths",
+      "label": "Circle of fifths",
+      "modes": ["ionian", "aeolian", "dorian", "harmonic-minor", "adonai-malach", "mixolydian"],
+      "weight": 2,
+      "generator": "circle",
+      "explain": "Each chord falls a fifth to the next, so every step is the strongest root motion available. Chains of three to five links pull hard toward the tonic.",
+      "label_fr": "Cycle des quintes",
+      "explain_fr": "Chaque accord descend d'une quinte vers le suivant, donc chaque pas est le mouvement de basse le plus fort disponible. Des chaînes de trois à cinq maillons tirent fort vers la tonique."
+    },
+    {
+      "id": "aeolian-loop",
+      "label": "Aeolian loop",
+      "modes": ["aeolian", "dorian"],
+      "weight": 2,
+      "seeds": [
+        ["1", "6", "3", "7"],
+        ["1", "7", "3", "6"],
+        ["6", "7", "1", "1"],
+        ["1", "3", "7", "6"]
+      ],
+      "explain": "A four-chord loop with no leading tone, so it turns rather than resolves. Modern Israeli and Mizrahi pop leans on this because it can repeat forever under a vocal.",
+      "label_fr": "Boucle éolienne",
+      "explain_fr": "Une boucle de quatre accords sans sensible : elle tourne au lieu de résoudre. La pop israélienne et mizrahi actuelle s'appuie dessus parce qu'elle peut se répéter indéfiniment sous une voix."
+    },
+    {
+      "id": "modal-interchange",
+      "label": "Modal interchange",
+      "modes": ["ionian", "mixolydian", "adonai-malach"],
+      "weight": 2,
+      "generator": "interchange",
+      "explain": "Borrowing bVI, bVII and the minor iv from the parallel minor. The key stays major but the colour darkens for a bar, which is why the return to I sounds earned.",
+      "label_fr": "Emprunt modal",
+      "explain_fr": "On emprunte bVI, bVII et le iv mineur au mineur parallèle. La tonalité reste majeure mais la couleur s'assombrit le temps d'une mesure, et c'est pour ça que le retour au I sonne mérité."
+    },
+    {
+      "id": "chromatic-mediant",
+      "label": "Chromatic mediant",
+      "modes": ["ionian", "aeolian", "harmonic-minor", "mixolydian"],
+      "weight": 1,
+      "generator": "mediant",
+      "explain": "A shift to a major chord a third away that shares one note and belongs to no single key. It sounds like a cut to another scene rather than a step.",
+      "label_fr": "Médiante chromatique",
+      "explain_fr": "Un basculement vers un accord majeur à distance de tierce, qui partage une seule note et n'appartient à aucune tonalité unique. Ça sonne comme un changement de plan, pas comme un pas."
+    },
+    {
+      "id": "tonic-pedal",
+      "label": "Tonic pedal",
+      "modes": ["aeolian", "dorian", "ahava-rabbah", "mi-sheberach", "mixolydian", "adonai-malach"],
+      "weight": 1,
+      "seeds": [
+        ["1", "4", "1", "7"],
+        ["1", "7", "1", "4"],
+        ["1", "1", "4", "1"]
+      ],
+      "explain": "The bass never leaves the tonic while the chords above it move. Common under a cantorial line, where the harmony must not compete with the voice.",
+      "label_fr": "Pédale de tonique",
+      "explain_fr": "La basse ne quitte jamais la tonique pendant que les accords bougent au-dessus. Fréquent sous une ligne cantoriale, où l'harmonie ne doit pas concurrencer la voix."
+    }
+  ],
+  "decorators": [
+    {
+      "id": "seventh",
+      "label": "sevenths",
+      "probability": 0.35,
+      "explain": "Sevenths added for weight.",
+      "label_fr": "septièmes",
+      "explain_fr": "Septièmes ajoutées pour le poids."
+    },
+    {
+      "id": "secondary-dominant",
+      "label": "secondary dominant",
+      "probability": 0.25,
+      "explain": "A dominant 7th borrowed from the key of the chord it precedes, which tightens the approach to it.",
+      "label_fr": "dominante secondaire",
+      "explain_fr": "Une septième de dominante empruntée à la tonalité de l'accord qu'elle précède, ce qui resserre son approche."
+    },
+    {
+      "id": "tritone-sub",
+      "label": "tritone substitute",
+      "probability": 0.12,
+      "explain": "The dominant replaced by a 7th chord a tritone away. Same tension, chromatic bass.",
+      "label_fr": "substitution tritonique",
+      "explain_fr": "La dominante remplacée par une septième à distance de triton. Même tension, basse chromatique."
+    },
+    {
+      "id": "passing-dim",
+      "label": "passing diminished",
+      "probability": 0.12,
+      "explain": "A diminished chord a semitone below the target, used as a chromatic hinge.",
+      "label_fr": "diminué de passage",
+      "explain_fr": "Un accord diminué un demi-ton sous la cible, utilisé comme charnière chromatique."
+    },
+    {
+      "id": "sus-resolution",
+      "label": "sus resolution",
+      "probability": 0.18,
+      "explain": "A repeated chord split into sus4 then plain, so a static bar still moves.",
+      "label_fr": "résolution sus",
+      "explain_fr": "Un accord répété scindé en sus4 puis nature, pour qu'une mesure statique bouge quand même."
+    },
+    {
+      "id": "add9",
+      "label": "add9 colour",
+      "probability": 0.15,
+      "explain": "An added 9th, which opens the voicing without changing the function.",
+      "label_fr": "couleur add9",
+      "explain_fr": "Une neuvième ajoutée, qui ouvre le voicing sans changer la fonction."
+    }
+  ],
+  "form": {
+    "barCounts": [4, 4, 4, 8],
+    "chordsPerBar": [1, 1, 2],
+    "_comment": "barCounts is sampled, so four-bar phrases are the common case and eight-bar ones appear about a quarter of the time. chordsPerBar is sampled per bar."
+  },
+  "_comment_i18n": "Fields ending in _fr are the French rendering, picked when the surrounding page declares lang=\"fr\". Adding a language means adding _xx fields, not a second file."
+}
