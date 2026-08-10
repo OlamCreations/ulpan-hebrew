@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 13: לַמְנַצֵּחַ מִזְמוֹר</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 13: How long, O LORD?</h1>
+    <div class="subtitle">תְּהִלִּים י״ג · לַמְנַצֵּחַ מִזְמוֹר</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 13</a></div>
+</header>
+
+<div class="t-intro">
+  Six verses, and the shortest distance in the whole book from despair to song. The question at <strong>עַד</strong> (ad, v.2) and <strong>אָנָה</strong> (a-na, v.2) is asked four times across two verses and then never again: verse 4 turns it into a request, and verse 6 answers in a tense for something that has not happened yet. It falls on the second day of the monthly cycle, where the reading runs from Psalm 10 to Psalm 17. The verb the enemies get at <strong>יָגִילוּ</strong> (ya-gi-lu, v.5) is the verb the heart gets at <strong>יָגֵל</strong> (ya-gel, v.6), and that single root is the psalm in miniature.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לַמְנַצֵּחַ מִזְמוֹר לְדָוִד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַמְנַצֵּחַ</div><div class="tr">lam-na-<b>TZE</b>-ach</div><div class="fr">for the choirmaster</div></div>
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">For the choirmaster. A psalm of David.</div>
+  </div>
+
+  <div class="verse-summary">A bare heading: choirmaster, psalm, David. Nothing in it prepares a reader for the question the next verse opens with, and the drop from one to the other is part of how the psalm works.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">עַד אָנָה יְהֹוָה תִּשְׁכָּחֵנִי נֶצַח<br>
+  עַד אָנָה תַּסְתִּיר אֶת פָּנֶיךָ מִמֶּנִּי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">אָנָה</div><div class="tr">a-<b>NA</b></div><div class="fr">when</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">תִּשְׁכָּחֵנִי</div><div class="tr">tish-ka-che-<b>NI</b></div><div class="fr">will You forget me</div></div>
+      <div class="word"><div class="he">נֶצַח</div><div class="tr">ne-<b>TZACH</b></div><div class="fr">forever</div></div>
+    </div>
+    <div class="stich-translation">How long, LORD, will You forget me forever?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">אָנָה</div><div class="tr">a-<b>NA</b></div><div class="fr">when</div></div>
+      <div class="word"><div class="he">תַּסְתִּיר</div><div class="tr">tas-<b>TIR</b></div><div class="fr">will You hide</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">פָּנֶיךָ</div><div class="tr">pa-nei-<b>CHA</b></div><div class="fr">Your face</div></div>
+      <div class="word"><div class="he">מִמֶּנִּי</div><div class="tr">mi-me-<b>NI</b></div><div class="fr">from me</div></div>
+    </div>
+    <div class="stich-translation">How long will You hide Your face from me?</div>
+  </div>
+
+  <div class="verse-summary">Four words in and the complaint has already reached forever. The two halves ask about memory and about face, which in biblical idiom amount to the same complaint twice: to be forgotten is to be out of sight.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">עַד אָנָה אָשִׁית עֵצוֹת בְּנַפְשִׁי יָגוֹן בִּלְבָבִי יוֹמָם<br>
+  עַד אָנָה יָרוּם אֹיְבִי עָלָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">אָנָה</div><div class="tr">a-<b>NA</b></div><div class="fr">when</div></div>
+      <div class="word"><div class="he">אָשִׁית</div><div class="tr">a-<b>SHIT</b></div><div class="fr">must I set</div></div>
+      <div class="word"><div class="he">עֵצוֹת</div><div class="tr">e-<b>TZOT</b></div><div class="fr">plans</div></div>
+      <div class="word"><div class="he">בְּנַפְשִׁי</div><div class="tr">bnaf-<b>SHI</b></div><div class="fr">in my soul</div></div>
+      <div class="word"><div class="he">יָגוֹן</div><div class="tr">ya-<b>GON</b></div><div class="fr">sorrow</div></div>
+      <div class="word"><div class="he">בִּלְבָבִי</div><div class="tr">bil-va-<b>VI</b></div><div class="fr">in my heart</div></div>
+      <div class="word"><div class="he">יוֹמָם</div><div class="tr">yo-<b>MAM</b></div><div class="fr">by day</div></div>
+    </div>
+    <div class="stich-translation">How long must I hold counsel in my soul, sorrow in my heart by day?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">אָנָה</div><div class="tr">a-<b>NA</b></div><div class="fr">when</div></div>
+      <div class="word"><div class="he">יָרוּם</div><div class="tr">ya-<b>RUM</b></div><div class="fr">will he be raised</div></div>
+      <div class="word"><div class="he">אֹיְבִי</div><div class="tr">oi-<b>VI</b></div><div class="fr">my enemy</div></div>
+      <div class="word"><div class="he">עָלָי</div><div class="tr">a-<b>LAI</b></div><div class="fr">over me</div></div>
+    </div>
+    <div class="stich-translation">How long will my enemy be raised over me?</div>
+  </div>
+
+  <div class="verse-summary">The question turns inward before it turns outward: two clauses about what the speaker is doing to himself, and only then the enemy. Sorrow is dated to the daytime at {{3.7}} and no night is named, which leaves the line short of the balance the rest of the verse keeps.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">הַבִּיטָה עֲנֵנִי יְהֹוָה אֱלֹהָי<br>
+  הָאִירָה עֵינַי<br>
+  פֶּן אִישַׁן הַמָּוֶת</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַבִּיטָה</div><div class="tr">ha-bi-<b>TA</b></div><div class="fr">look!</div></div>
+      <div class="word"><div class="he">עֲנֵנִי</div><div class="tr">a-ne-<b>NI</b></div><div class="fr">answer me</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֱלֹהָי</div><div class="tr">e-lo-<b>HAI</b></div><div class="fr">my God</div></div>
+    </div>
+    <div class="stich-translation">Look, answer me, LORD my God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָאִירָה</div><div class="tr">ha-i-<b>RA</b></div><div class="fr">give light to</div></div>
+      <div class="word"><div class="he">עֵינַי</div><div class="tr">ei-<b>NAI</b></div><div class="fr">my eyes</div></div>
+    </div>
+    <div class="stich-translation">give light to my eyes,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פֶּן</div><div class="tr">pen</div><div class="fr">lest</div></div>
+      <div class="word"><div class="he">אִישַׁן</div><div class="tr">i-<b>SHAN</b></div><div class="fr">I sleep</div></div>
+      <div class="word"><div class="he">הַמָּוֶת</div><div class="tr">ha-<b>MA</b>-vet</div><div class="fr">the death</div></div>
+    </div>
+    <div class="stich-translation">lest I sleep the sleep of death;</div>
+  </div>
+
+  <div class="verse-summary">The pivot. Three imperatives in a row and the complaining stops. Note that death here is the thing slept, not the thing slept through: the Hebrew makes it the object of the verb.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">פֶּן יֹאמַר אֹיְבִי יְכׇלְתִּיו<br>
+  צָרַי יָגִילוּ כִּי אֶמּוֹט</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פֶּן</div><div class="tr">pen</div><div class="fr">lest</div></div>
+      <div class="word"><div class="he">יֹאמַר</div><div class="tr">yo-<b>MAR</b></div><div class="fr">he say</div></div>
+      <div class="word"><div class="he">אֹיְבִי</div><div class="tr">oi-<b>VI</b></div><div class="fr">my enemy</div></div>
+      <div class="word"><div class="he">יְכׇלְתִּיו</div><div class="tr">ye-chol-<b>TIV</b></div><div class="fr">I have overcome him</div></div>
+    </div>
+    <div class="stich-translation">lest my enemy say: I have overcome him,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">צָרַי</div><div class="tr">tza-<b>RAI</b></div><div class="fr">my foes</div></div>
+      <div class="word"><div class="he">יָגִילוּ</div><div class="tr">ya-gi-<b>LU</b></div><div class="fr">will rejoice</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">when</div></div>
+      <div class="word"><div class="he">אֶמּוֹט</div><div class="tr">e-<b>MOT</b></div><div class="fr">I am shaken</div></div>
+    </div>
+    <div class="stich-translation">lest my foes rejoice when I am shaken.</div>
+  </div>
+
+  <div class="verse-summary">The argument handed to God is about reputation rather than about the speaker's comfort. Quoting the enemy makes the danger concrete: what is feared is not death but a sentence somebody gets to say afterwards.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">וַאֲנִי בְּחַסְדְּךָ בָטַחְתִּי<br>
+  יָגֵל לִבִּי בִּישׁוּעָתֶךָ<br>
+  אָשִׁירָה לַיהֹוָה<br>
+  כִּי גָמַל עָלָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַאֲנִי</div><div class="tr">va-a-<b>NI</b></div><div class="fr">but I</div></div>
+      <div class="word"><div class="he">בְּחַסְדְּךָ</div><div class="tr">be-chas-de-<b>CHA</b></div><div class="fr">in Your kindness</div></div>
+      <div class="word"><div class="he">בָטַחְתִּי</div><div class="tr">va-tach-<b>TI</b></div><div class="fr">I have trusted</div></div>
+    </div>
+    <div class="stich-translation">But as for me, I have trusted in Your kindness;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָגֵל</div><div class="tr">ya-<b>GEL</b></div><div class="fr">will rejoice</div></div>
+      <div class="word"><div class="he">לִבִּי</div><div class="tr">li-<b>BI</b></div><div class="fr">my heart</div></div>
+      <div class="word"><div class="he">בִּישׁוּעָתֶךָ</div><div class="tr">bi-shu-a-te-<b>CHA</b></div><div class="fr">in Your salvation</div></div>
+    </div>
+    <div class="stich-translation">my heart will rejoice in Your salvation.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָשִׁירָה</div><div class="tr">a-shi-<b>RA</b></div><div class="fr">let me sing</div></div>
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">lai-ho-<b>VA</b></div><div class="fr">to the LORD</div></div>
+    </div>
+    <div class="stich-translation">Let me sing to the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">גָמַל</div><div class="tr">ga-<b>MAL</b></div><div class="fr">He has dealt bountifully</div></div>
+      <div class="word"><div class="he">עָלָי</div><div class="tr">a-<b>LAI</b></div><div class="fr">with me</div></div>
+    </div>
+    <div class="stich-translation">for He has dealt bountifully with me.</div>
+  </div>
+
+  <div class="verse-summary">Three clauses, each further ahead than the last: a trust already given, a joy not yet arrived, a song offered for a deliverance the psalm never reports. The final verb is a perfect, so the thanks is given for something treated as done.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>A lament with every part visible and none of them padded. Verses 2 and 3 are the complaint, four times how long. Verse 4 is the petition, three imperatives with nothing between them. Verse 5 is the motive clause, the reason God is given for acting, stated as what the enemy would otherwise get to say. Verse 6 is the trust, and it arrives without anything having changed in the meantime. Nothing in the text reports a rescue. The turn happens inside the speaker, which is why the psalm can be this short.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The idiom at <strong>הָאִירָה</strong> (ha-i-ra, v.4), give light to my eyes, is ordinary Hebrew for strength coming back into a body; the same expression is used in 1 Samuel 14 when Jonathan eats honey and his eyes brighten. Against it stands the sleep of the same verse, where death is named as the thing slept rather than a state slept through. The root that closes the psalm is worth tracking on its own: at <strong>יָגִילוּ</strong> (ya-gi-lu, v.5) the foes would rejoice, and at <strong>יָגֵל</strong> (ya-gel, v.6) the heart will rejoice, one root doing both jobs, so the last verse takes the enemy's own verb away from him.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The fourfold how long reads as a descent rather than a repetition: forgotten, then hidden from, then left to one's own counsel, and last overtaken by someone else, so the questions travel from God's memory down to the enemy's advantage. The verb at <strong>גָמַל</strong> (ga-mal, v.6) belongs to the vocabulary of a benefit given freely rather than a debt settled, and it stands in the perfect, so the psalm signs off thanking God for something it never says has happened. Read that way it is a training exercise: it does not record a rescue, it rehearses the sentence a person will need on the other side of one.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading takes the hiding of the face as a technical term rather than a mood. Concealment is a stage in a process, not a punishment, and the four questions of verses 2 and 3 measure how far down the concealment reaches. What ends it here is not the face returning but light entering the eyes, which is the smaller and nearer of the two gifts: the seeker is given enough to see by, not the thing seen. The song of verse 6 therefore belongs to the dark rather than to the dawn, and that is exactly why it can be sung before anything has changed.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-013-en',
+  key: 'Am',
+  tempo: 54,
+  progression: '| Am Am | Dm Am | F E | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

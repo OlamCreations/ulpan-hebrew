@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 34: לְדָוִד בְּשַׁנּוֹתוֹ</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 34: Taste and see</h1>
+    <div class="subtitle">תְּהִלִּים ל״ד · לְדָוִד בְּשַׁנּוֹתוֹ</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 34</a></div>
+</header>
+
+<div class="t-intro">
+  An alphabetical psalm with a hole in it. After the superscription, each verse opens with the next letter of the alphabet, alef through tav, except that no verse begins with vav: the he verse is followed directly by the zayin verse. Then, after the tav verse has closed the sequence, one more verse is added, and it begins with pe, a letter already used earlier. The same two features appear in Psalm 25. The content is a testimony that turns into a lesson: the first half reports a rescue, the second half teaches a class of children how to live. Verse 4 is sung when the Torah scroll is lifted and carried, verse 11 is among the verses appended to the grace after meals, and in many rites the whole psalm is read in the morning service on Shabbat.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לְדָוִד<br>
+  בְּשַׁנּוֹתוֹ אֶת טַעְמוֹ לִפְנֵי אֲבִימֶלֶךְ<br>
+  וַיְגָרְשֵׁהוּ וַיֵּלַךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">Of David.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּשַׁנּוֹתוֹ</div><div class="tr">be-sha-no-<b>TO</b></div><div class="fr">when he changed</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">טַעְמוֹ</div><div class="tr">ta-<b>MO</b></div><div class="fr">his good sense</div></div>
+      <div class="word"><div class="he">לִפְנֵי</div><div class="tr">lif-<b>NEI</b></div><div class="fr">before</div></div>
+      <div class="word"><div class="he">אֲבִימֶלֶךְ</div><div class="tr">a-vi-me-<b>LECH</b></div><div class="fr">Abimelech</div></div>
+    </div>
+    <div class="stich-translation">When he changed his behaviour in front of Abimelech,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַיְגָרְשֵׁהוּ</div><div class="tr">vai-gar-she-<b>HU</b></div><div class="fr">and he drove him out</div></div>
+      <div class="word"><div class="he">וַיֵּלַךְ</div><div class="tr">va-ye-<b>LACH</b></div><div class="fr">and he went</div></div>
+    </div>
+    <div class="stich-translation">who drove him out, and he left.</div>
+  </div>
+
+  <div class="verse-summary">The heading places the psalm at the lowest point of David's flight, when he saved himself by acting like a madman. The rescue the psalm celebrates was not a battle won.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אֲבָרְכָה אֶת יְהֹוָה בְּכׇל עֵת<br>
+  תָּמִיד תְּהִלָּתוֹ בְּפִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲבָרְכָה</div><div class="tr">a-var-<b>CHA</b></div><div class="fr">let me bless</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בְּכׇל</div><div class="tr">be-<b>CHOL</b></div><div class="fr">at every</div></div>
+      <div class="word"><div class="he">עֵת</div><div class="tr">et</div><div class="fr">time</div></div>
+    </div>
+    <div class="stich-translation">I will bless the LORD at every moment;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תָּמִיד</div><div class="tr">ta-<b>MID</b></div><div class="fr">continually</div></div>
+      <div class="word"><div class="he">תְּהִלָּתוֹ</div><div class="tr">te-hi-la-<b>TO</b></div><div class="fr">His praise</div></div>
+      <div class="word"><div class="he">בְּפִי</div><div class="tr">be-<b>FI</b></div><div class="fr">in my mouth</div></div>
+    </div>
+    <div class="stich-translation">His praise is always in my mouth.</div>
+  </div>
+
+  <div class="verse-summary">The alef verse, and the first of the acrostic proper. The claim is about frequency, not intensity: at every time, continually, which is the promise the rest of the psalm has to make good on.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">בַּיהֹוָה תִּתְהַלֵּל נַפְשִׁי<br>
+  יִשְׁמְעוּ עֲנָוִים וְיִשְׂמָחוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּיהֹוָה</div><div class="tr">bai-ho-<b>VA</b></div><div class="fr">in the LORD</div></div>
+      <div class="word"><div class="he">תִּתְהַלֵּל</div><div class="tr">tit-ha-<b>LEL</b></div><div class="fr">boasts</div></div>
+      <div class="word"><div class="he">נַפְשִׁי</div><div class="tr">naf-<b>SHI</b></div><div class="fr">my soul</div></div>
+    </div>
+    <div class="stich-translation">My soul boasts in the LORD;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׁמְעוּ</div><div class="tr">yish-me-<b>U</b></div><div class="fr">they will hear</div></div>
+      <div class="word"><div class="he">עֲנָוִים</div><div class="tr">a-na-<b>VIM</b></div><div class="fr">humble ones</div></div>
+      <div class="word"><div class="he">וְיִשְׂמָחוּ</div><div class="tr">ve-yis-ma-<b>CHU</b></div><div class="fr">and they will rejoice</div></div>
+    </div>
+    <div class="stich-translation">the lowly hear it and are glad.</div>
+  </div>
+
+  <div class="verse-summary">Boasting is normally the opposite of humility, so the second line answers the objection before it is raised: this boast is the one that the humble are pleased to overhear.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">גַּדְּלוּ לַיהֹוָה אִתִּי<br>
+  וּנְרוֹמְמָה שְׁמוֹ יַחְדָּו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גַּדְּלוּ</div><div class="tr">gad-<b>LU</b></div><div class="fr">magnify</div></div>
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">lai-ho-<b>VA</b></div><div class="fr">to the LORD</div></div>
+      <div class="word"><div class="he">אִתִּי</div><div class="tr">i-<b>TI</b></div><div class="fr">with me</div></div>
+    </div>
+    <div class="stich-translation">Make the LORD great with me,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּנְרוֹמְמָה</div><div class="tr">un-rom-<b>MA</b></div><div class="fr">and let us exalt</div></div>
+      <div class="word"><div class="he">שְׁמוֹ</div><div class="tr">shmo</div><div class="fr">His name</div></div>
+      <div class="word"><div class="he">יַחְדָּו</div><div class="tr">yach-<b>DAV</b></div><div class="fr">together</div></div>
+    </div>
+    <div class="stich-translation">and let us lift His name high together.</div>
+  </div>
+
+  <div class="verse-summary">Two plural verbs, an imperative and a cohortative, turn a private testimony into a congregation. This is the verse the leader calls out when the scroll is carried to the reading desk.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">דָּרַשְׁתִּי אֶת יְהֹוָה וְעָנָנִי<br>
+  וּמִכׇּל מְגוּרוֹתַי הִצִּילָנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דָּרַשְׁתִּי</div><div class="tr">da-rash-<b>TI</b></div><div class="fr">I sought</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">וְעָנָנִי</div><div class="tr">ve-a-na-<b>NI</b></div><div class="fr">and He answered me</div></div>
+    </div>
+    <div class="stich-translation">I sought out the LORD and He answered me,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמִכׇּל</div><div class="tr">u-mi-<b>KOL</b></div><div class="fr">and from all</div></div>
+      <div class="word"><div class="he">מְגוּרוֹתַי</div><div class="tr">me-gu-ro-<b>TAI</b></div><div class="fr">my terrors</div></div>
+      <div class="word"><div class="he">הִצִּילָנִי</div><div class="tr">hi-tzi-la-<b>NI</b></div><div class="fr">He delivered me</div></div>
+    </div>
+    <div class="stich-translation">and He pulled me clear of everything I dreaded.</div>
+  </div>
+
+  <div class="verse-summary">The first report in the past tense, and the pattern the psalm will repeat twice more: someone calls, He hears, He extracts. The noun is fears, not enemies, so what is removed is the dread rather than the danger.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">הִבִּיטוּ אֵלָיו וְנָהָרוּ<br>
+  וּפְנֵיהֶם אַל יֶחְפָּרוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִבִּיטוּ</div><div class="tr">hi-bi-<b>TU</b></div><div class="fr">they looked</div></div>
+      <div class="word"><div class="he">אֵלָיו</div><div class="tr">e-<b>LAV</b></div><div class="fr">to Him</div></div>
+      <div class="word"><div class="he">וְנָהָרוּ</div><div class="tr">ve-na-ha-<b>RU</b></div><div class="fr">and they were radiant</div></div>
+    </div>
+    <div class="stich-translation">They looked to Him and were lit up,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּפְנֵיהֶם</div><div class="tr">uf-<b>NEI</b>-hem</div><div class="fr">and their faces</div></div>
+      <div class="word"><div class="he">אַל</div><div class="tr">al</div><div class="fr">let not</div></div>
+      <div class="word"><div class="he">יֶחְפָּרוּ</div><div class="tr">yech-pa-<b>RU</b></div><div class="fr">be ashamed</div></div>
+    </div>
+    <div class="stich-translation">and their faces will never be shamed.</div>
+  </div>
+
+  <div class="verse-summary">The he verse, and the last before the gap in the alphabet. Note the change of mood inside it: the first half reports what happened, the second half is a wish, marked by the negative particle that goes with a jussive.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">זֶה עָנִי קָרָא וַיהֹוָה שָׁמֵעַ<br>
+  וּמִכׇּל צָרוֹתָיו הוֹשִׁיעוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זֶה</div><div class="tr">ze</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">עָנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">poor man</div></div>
+      <div class="word"><div class="he">קָרָא</div><div class="tr">ka-<b>RA</b></div><div class="fr">called out</div></div>
+      <div class="word"><div class="he">וַיהֹוָה</div><div class="tr">vai-ho-<b>VA</b></div><div class="fr">and the LORD</div></div>
+      <div class="word"><div class="he">שָׁמֵעַ</div><div class="tr">sha-<b>ME</b>-a</div><div class="fr">heard</div></div>
+    </div>
+    <div class="stich-translation">This poor man called and the LORD heard,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמִכׇּל</div><div class="tr">u-mi-<b>KOL</b></div><div class="fr">and from all</div></div>
+      <div class="word"><div class="he">צָרוֹתָיו</div><div class="tr">tza-ro-<b>TAV</b></div><div class="fr">his troubles</div></div>
+      <div class="word"><div class="he">הוֹשִׁיעוֹ</div><div class="tr">ho-shi-<b>O</b></div><div class="fr">He saved him</div></div>
+    </div>
+    <div class="stich-translation">and saved him out of all his troubles.</div>
+  </div>
+
+  <div class="verse-summary">The zayin verse, arriving where a vav verse would be expected. The demonstrative points at someone: either the speaker calling himself poor, or a case held up in front of the listeners.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">חֹנֶה מַלְאַךְ יְהֹוָה סָבִיב לִירֵאָיו<br>
+  וַיְחַלְּצֵם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֹנֶה</div><div class="tr">cho-<b>NE</b></div><div class="fr">encamping</div></div>
+      <div class="word"><div class="he">מַלְאַךְ</div><div class="tr">mal-<b>ACH</b></div><div class="fr">the messenger of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">סָבִיב</div><div class="tr">sa-<b>VIV</b></div><div class="fr">around</div></div>
+      <div class="word"><div class="he">לִירֵאָיו</div><div class="tr">li-re-<b>AV</b></div><div class="fr">for those who fear Him</div></div>
+    </div>
+    <div class="stich-translation">The messenger of the LORD camps around those who fear Him,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַיְחַלְּצֵם</div><div class="tr">vai-chal-<b>TZEM</b></div><div class="fr">and He rescues them</div></div>
+    </div>
+    <div class="stich-translation">and He pulls them free.</div>
+  </div>
+
+  <div class="verse-summary">One participle and one finite verb: a camp that stays put and a rescue that happens. The military image is defensive, a ring of guard around the people who are afraid.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">טַעֲמוּ וּרְאוּ כִּי טוֹב יְהֹוָה<br>
+  אַשְׁרֵי הַגֶּבֶר יֶחֱסֶה בּוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">טַעֲמוּ</div><div class="tr">ta-a-<b>MU</b></div><div class="fr">taste</div></div>
+      <div class="word"><div class="he">וּרְאוּ</div><div class="tr">ur-<b>U</b></div><div class="fr">and see</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">that</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">is good</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Taste and see that the LORD is good;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַשְׁרֵי</div><div class="tr">ash-<b>REI</b></div><div class="fr">happy is</div></div>
+      <div class="word"><div class="he">הַגֶּבֶר</div><div class="tr">ha-<b>GE</b>-ver</div><div class="fr">the man</div></div>
+      <div class="word"><div class="he">יֶחֱסֶה</div><div class="tr">ye-che-<b>SE</b></div><div class="fr">who takes refuge</div></div>
+      <div class="word"><div class="he">בּוֹ</div><div class="tr">bo</div><div class="fr">in Him</div></div>
+    </div>
+    <div class="stich-translation">happy is the man who shelters in Him.</div>
+  </div>
+
+  <div class="verse-summary">The argument stops being reported and becomes an invitation. Tasting comes before seeing, which is the wrong order for a proof and the right one for an experience.</div>
+</div>
+
+<!-- VERSE 10 -->
+<div class="verse">
+  <span class="verse-num">10</span>
+  <div class="verse-full">יְראוּ אֶת יְהֹוָה קְדֹשָׁיו<br>
+  כִּי אֵין מַחְסוֹר לִירֵאָיו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְראוּ</div><div class="tr">ye-<b>RU</b></div><div class="fr">fear</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">קְדֹשָׁיו</div><div class="tr">ke-do-<b>SHAV</b></div><div class="fr">His holy ones</div></div>
+    </div>
+    <div class="stich-translation">Fear the LORD, you His holy ones,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אֵין</div><div class="tr">ein</div><div class="fr">there is no</div></div>
+      <div class="word"><div class="he">מַחְסוֹר</div><div class="tr">mach-<b>SOR</b></div><div class="fr">lack</div></div>
+      <div class="word"><div class="he">לִירֵאָיו</div><div class="tr">li-re-<b>AV</b></div><div class="fr">for those who fear Him</div></div>
+    </div>
+    <div class="stich-translation">for those who fear Him lack nothing.</div>
+  </div>
+
+  <div class="verse-summary">Fear here is not the opposite of the radiance in verse 6; the same participle for those who fear Him appears in verse 8 as the ones the camp protects. What it buys is stated flatly: no shortage.</div>
+</div>
+
+<!-- VERSE 11 -->
+<div class="verse">
+  <span class="verse-num">11</span>
+  <div class="verse-full">כְּפִירִים רָשׁוּ וְרָעֵבוּ<br>
+  וְדֹרְשֵׁי יְהֹוָה לֹא יַחְסְרוּ כׇל טוֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּפִירִים</div><div class="tr">kfi-<b>RIM</b></div><div class="fr">young lions</div></div>
+      <div class="word"><div class="he">רָשׁוּ</div><div class="tr">ra-<b>SHU</b></div><div class="fr">go poor</div></div>
+      <div class="word"><div class="he">וְרָעֵבוּ</div><div class="tr">ve-ra-e-<b>VU</b></div><div class="fr">and go hungry</div></div>
+    </div>
+    <div class="stich-translation">Young lions go poor and go hungry,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְדֹרְשֵׁי</div><div class="tr">ve-dor-<b>SHEI</b></div><div class="fr">but those who seek</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יַחְסְרוּ</div><div class="tr">yach-<b>SRU</b></div><div class="fr">shall lack</div></div>
+      <div class="word"><div class="he">כׇל</div><div class="tr">chol</div><div class="fr">any</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">good</div></div>
+    </div>
+    <div class="stich-translation">but those who seek the LORD lack no good thing.</div>
+  </div>
+
+  <div class="verse-summary">The strongest hunter in the field is set against the one who has nothing but a search. The verb for lacking is the same root as the noun in verse 10. This verse is said at the end of the grace after meals.</div>
+</div>
+
+<!-- VERSE 12 -->
+<div class="verse">
+  <span class="verse-num">12</span>
+  <div class="verse-full">לְכוּ בָנִים שִׁמְעוּ לִי<br>
+  יִרְאַת יְהֹוָה אֲלַמֶּדְכֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְכוּ</div><div class="tr">le-<b>CHU</b></div><div class="fr">come</div></div>
+      <div class="word"><div class="he">בָנִים</div><div class="tr">va-<b>NIM</b></div><div class="fr">sons</div></div>
+      <div class="word"><div class="he">שִׁמְעוּ</div><div class="tr">shim-<b>U</b></div><div class="fr">listen</div></div>
+      <div class="word"><div class="he">לִי</div><div class="tr">li</div><div class="fr">to me</div></div>
+    </div>
+    <div class="stich-translation">Come, sons, listen to me;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִרְאַת</div><div class="tr">yir-<b>AT</b></div><div class="fr">the fear of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֲלַמֶּדְכֶם</div><div class="tr">a-la-<b>MED</b>-chem</div><div class="fr">I will teach you</div></div>
+    </div>
+    <div class="stich-translation">the fear of the LORD I will teach you.</div>
+  </div>
+
+  <div class="verse-summary">The hinge of the psalm. Testimony becomes instruction, and the vocabulary switches to the wisdom-book register of a teacher addressing students as sons.</div>
+</div>
+
+<!-- VERSE 13 -->
+<div class="verse">
+  <span class="verse-num">13</span>
+  <div class="verse-full">מִי הָאִישׁ הֶחָפֵץ חַיִּים<br>
+  אֹהֵב יָמִים לִרְאוֹת טוֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">הָאִישׁ</div><div class="tr">ha-<b>ISH</b></div><div class="fr">is the man</div></div>
+      <div class="word"><div class="he">הֶחָפֵץ</div><div class="tr">he-cha-<b>FETZ</b></div><div class="fr">who delights in</div></div>
+      <div class="word"><div class="he">חַיִּים</div><div class="tr">cha-<b>YIM</b></div><div class="fr">life</div></div>
+    </div>
+    <div class="stich-translation">Who is the man who wants life,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֹהֵב</div><div class="tr">o-<b>HEV</b></div><div class="fr">loving</div></div>
+      <div class="word"><div class="he">יָמִים</div><div class="tr">ya-<b>MIM</b></div><div class="fr">days</div></div>
+      <div class="word"><div class="he">לִרְאוֹת</div><div class="tr">lir-<b>OT</b></div><div class="fr">to see</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">good</div></div>
+    </div>
+    <div class="stich-translation">who loves days enough to see good in them?</div>
+  </div>
+
+  <div class="verse-summary">A question addressed to the market rather than the study house, phrased the way a seller would phrase it. The answer given next has nothing to do with health or wealth.</div>
+</div>
+
+<!-- VERSE 14 -->
+<div class="verse">
+  <span class="verse-num">14</span>
+  <div class="verse-full">נְצֹר לְשׁוֹנְךָ מֵרָע<br>
+  וּשְׂפָתֶיךָ מִדַּבֵּר מִרְמָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נְצֹר</div><div class="tr">ne-<b>TZOR</b></div><div class="fr">guard</div></div>
+      <div class="word"><div class="he">לְשׁוֹנְךָ</div><div class="tr">le-shon-<b>CHA</b></div><div class="fr">your tongue</div></div>
+      <div class="word"><div class="he">מֵרָע</div><div class="tr">me-<b>RA</b></div><div class="fr">from evil</div></div>
+    </div>
+    <div class="stich-translation">Guard your tongue from evil,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּשְׂפָתֶיךָ</div><div class="tr">us-fa-tei-<b>CHA</b></div><div class="fr">and your lips</div></div>
+      <div class="word"><div class="he">מִדַּבֵּר</div><div class="tr">mi-da-<b>BER</b></div><div class="fr">from speaking</div></div>
+      <div class="word"><div class="he">מִרְמָה</div><div class="tr">mir-<b>MA</b></div><div class="fr">deceit</div></div>
+    </div>
+    <div class="stich-translation">and your lips from speaking deceit.</div>
+  </div>
+
+  <div class="verse-summary">The whole answer to the question is a rule about speech. These words open the silent meditation that closes every standing prayer, which is why most learners meet this verse before they meet the psalm.</div>
+</div>
+
+<!-- VERSE 15 -->
+<div class="verse">
+  <span class="verse-num">15</span>
+  <div class="verse-full">סוּר מֵרָע וַעֲשֵׂה טוֹב<br>
+  בַּקֵּשׁ שָׁלוֹם וְרׇדְפֵהוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">סוּר</div><div class="tr">sur</div><div class="fr">turn away</div></div>
+      <div class="word"><div class="he">מֵרָע</div><div class="tr">me-<b>RA</b></div><div class="fr">from evil</div></div>
+      <div class="word"><div class="he">וַעֲשֵׂה</div><div class="tr">va-a-<b>SE</b></div><div class="fr">and do</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">good</div></div>
+    </div>
+    <div class="stich-translation">Turn from evil and do good;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּקֵּשׁ</div><div class="tr">ba-<b>KESH</b></div><div class="fr">seek</div></div>
+      <div class="word"><div class="he">שָׁלוֹם</div><div class="tr">sha-<b>LOM</b></div><div class="fr">peace</div></div>
+      <div class="word"><div class="he">וְרׇדְפֵהוּ</div><div class="tr">ve-rod-fe-<b>HU</b></div><div class="fr">and pursue it</div></div>
+    </div>
+    <div class="stich-translation">seek peace and chase it down.</div>
+  </div>
+
+  <div class="verse-summary">Four imperatives, two negative and two positive. The last one raises the temperature: peace is not waited for but pursued, with the verb used for hunting a fugitive.</div>
+</div>
+
+<!-- VERSE 16 -->
+<div class="verse">
+  <span class="verse-num">16</span>
+  <div class="verse-full">עֵינֵי יְהֹוָה אֶל צַדִּיקִים<br>
+  וְאׇזְנָיו אֶל שַׁוְעָתָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֵינֵי</div><div class="tr">ei-<b>NEI</b></div><div class="fr">the eyes of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">toward</div></div>
+      <div class="word"><div class="he">צַדִּיקִים</div><div class="tr">tza-di-<b>KIM</b></div><div class="fr">the righteous</div></div>
+    </div>
+    <div class="stich-translation">The eyes of the LORD are toward the righteous,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאׇזְנָיו</div><div class="tr">ve-oz-<b>NAV</b></div><div class="fr">and His ears</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">toward</div></div>
+      <div class="word"><div class="he">שַׁוְעָתָם</div><div class="tr">shav-a-<b>TAM</b></div><div class="fr">their cry</div></div>
+    </div>
+    <div class="stich-translation">and His ears toward their cry for help.</div>
+  </div>
+
+  <div class="verse-summary">The ayin verse, and the start of a run of three that describe God by body parts: eyes, ears, then face. Attention is the reward, stated before any rescue is mentioned.</div>
+</div>
+
+<!-- VERSE 17 -->
+<div class="verse">
+  <span class="verse-num">17</span>
+  <div class="verse-full">פְּנֵי יְהֹוָה בְּעֹשֵׂי רָע<br>
+  לְהַכְרִית מֵאֶרֶץ זִכְרָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פְּנֵי</div><div class="tr">pnei</div><div class="fr">the face of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בְּעֹשֵׂי</div><div class="tr">be-o-<b>SEI</b></div><div class="fr">against those who do</div></div>
+      <div class="word"><div class="he">רָע</div><div class="tr">ra</div><div class="fr">evil</div></div>
+    </div>
+    <div class="stich-translation">The face of the LORD is set against those who do evil,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְהַכְרִית</div><div class="tr">le-hach-<b>RIT</b></div><div class="fr">to cut off</div></div>
+      <div class="word"><div class="he">מֵאֶרֶץ</div><div class="tr">me-<b>E</b>-retz</div><div class="fr">their memory</div></div>
+      <div class="word"><div class="he">זִכְרָם</div><div class="tr">zich-<b>RAM</b></div><div class="fr">from the earth</div></div>
+    </div>
+    <div class="stich-translation">to cut their memory off from the earth.</div>
+  </div>
+
+  <div class="verse-summary">The pe verse, in its regular alphabetical place. The same face that shines in verse 6 is turned the other way here, and the punishment named is erasure from memory rather than death.</div>
+</div>
+
+<!-- VERSE 18 -->
+<div class="verse">
+  <span class="verse-num">18</span>
+  <div class="verse-full">צָעֲקוּ וַיהֹוָה שָׁמֵעַ<br>
+  וּמִכׇּל צָרוֹתָם הִצִּילָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">צָעֲקוּ</div><div class="tr">tza-a-<b>KU</b></div><div class="fr">they cried out</div></div>
+      <div class="word"><div class="he">וַיהֹוָה</div><div class="tr">vai-ho-<b>VA</b></div><div class="fr">and the LORD</div></div>
+      <div class="word"><div class="he">שָׁמֵעַ</div><div class="tr">sha-<b>ME</b>-a</div><div class="fr">heard</div></div>
+    </div>
+    <div class="stich-translation">They cried out and the LORD heard,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמִכׇּל</div><div class="tr">u-mi-<b>KOL</b></div><div class="fr">and from all</div></div>
+      <div class="word"><div class="he">צָרוֹתָם</div><div class="tr">tza-ro-<b>TAM</b></div><div class="fr">their troubles</div></div>
+      <div class="word"><div class="he">הִצִּילָם</div><div class="tr">hi-tzi-<b>LAM</b></div><div class="fr">He delivered them</div></div>
+    </div>
+    <div class="stich-translation">and rescued them from all their troubles.</div>
+  </div>
+
+  <div class="verse-summary">Verse 7 repeated in the plural: the one poor man has become a group, and the singular suffixes on troubles and saved him turn into plural ones.</div>
+</div>
+
+<!-- VERSE 19 -->
+<div class="verse">
+  <span class="verse-num">19</span>
+  <div class="verse-full">קָרוֹב יְהֹוָה לְנִשְׁבְּרֵי לֵב<br>
+  וְאֶת דַּכְּאֵי רוּחַ יוֹשִׁיעַ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קָרוֹב</div><div class="tr">ka-<b>ROV</b></div><div class="fr">near</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לְנִשְׁבְּרֵי</div><div class="tr">le-nish-<b>BREI</b></div><div class="fr">to the broken of</div></div>
+      <div class="word"><div class="he">לֵב</div><div class="tr">lev</div><div class="fr">heart</div></div>
+    </div>
+    <div class="stich-translation">The LORD is close to the broken of heart,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאֶת</div><div class="tr"><b>VE</b>-et</div><div class="fr">and (object marker)</div></div>
+      <div class="word"><div class="he">דַּכְּאֵי</div><div class="tr">dak-<b>EI</b></div><div class="fr">the crushed of</div></div>
+      <div class="word"><div class="he">רוּחַ</div><div class="tr"><b>RU</b>-ach</div><div class="fr">spirit</div></div>
+      <div class="word"><div class="he">יוֹשִׁיעַ</div><div class="tr">yo-<b>SHI</b>-a</div><div class="fr">He saves</div></div>
+    </div>
+    <div class="stich-translation">and He saves those crushed in spirit.</div>
+  </div>
+
+  <div class="verse-summary">Two construct chains describing damaged people, and a single adjective, near, doing the work. Nothing is said about repairing them first.</div>
+</div>
+
+<!-- VERSE 20 -->
+<div class="verse">
+  <span class="verse-num">20</span>
+  <div class="verse-full">רַבּוֹת רָעוֹת צַדִּיק<br>
+  וּמִכֻּלָּם יַצִּילֶנּוּ יְהֹוָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבּוֹת</div><div class="tr">ra-<b>BOT</b></div><div class="fr">many are</div></div>
+      <div class="word"><div class="he">רָעוֹת</div><div class="tr">ra-<b>OT</b></div><div class="fr">the troubles of</div></div>
+      <div class="word"><div class="he">צַדִּיק</div><div class="tr">tza-<b>DIK</b></div><div class="fr">a righteous man</div></div>
+    </div>
+    <div class="stich-translation">Many are the troubles of a righteous man,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמִכֻּלָּם</div><div class="tr">u-mi-ku-<b>LAM</b></div><div class="fr">and from all of them</div></div>
+      <div class="word"><div class="he">יַצִּילֶנּוּ</div><div class="tr">ya-tzi-le-<b>NU</b></div><div class="fr">He will deliver him</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">and out of them all the LORD delivers him.</div>
+  </div>
+
+  <div class="verse-summary">The concession the psalm has been circling: being righteous does not reduce the number of troubles. It changes only what happens at the end of each one.</div>
+</div>
+
+<!-- VERSE 21 -->
+<div class="verse">
+  <span class="verse-num">21</span>
+  <div class="verse-full">שֹׁמֵר כׇּל עַצְמוֹתָיו<br>
+  אַחַת מֵהֵנָּה לֹא נִשְׁבָּרָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֹׁמֵר</div><div class="tr">sho-<b>MER</b></div><div class="fr">He guards</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">עַצְמוֹתָיו</div><div class="tr">atz-mo-<b>TAV</b></div><div class="fr">his bones</div></div>
+    </div>
+    <div class="stich-translation">He guards every one of his bones;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַחַת</div><div class="tr">a-<b>CHAT</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">מֵהֵנָּה</div><div class="tr">me-he-<b>NA</b></div><div class="fr">of them</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">נִשְׁבָּרָה</div><div class="tr">nish-ba-<b>RA</b></div><div class="fr">is broken</div></div>
+    </div>
+    <div class="stich-translation">not one of them has been broken.</div>
+  </div>
+
+  <div class="verse-summary">The claim narrows from troubles to bones, the hardest and most countable part of a body. The verb for breaking is the same root as the broken heart of verse 19, used there of what God draws near to and here of what He prevents.</div>
+</div>
+
+<!-- VERSE 22 -->
+<div class="verse">
+  <span class="verse-num">22</span>
+  <div class="verse-full">תְּמוֹתֵת רָשָׁע רָעָה<br>
+  וְשֹׂנְאֵי צַדִּיק יֶאְשָׁמוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּמוֹתֵת</div><div class="tr">tmo-<b>TET</b></div><div class="fr">shall put to death</div></div>
+      <div class="word"><div class="he">רָשָׁע</div><div class="tr">ra-<b>SHA</b></div><div class="fr">the wicked</div></div>
+      <div class="word"><div class="he">רָעָה</div><div class="tr">ra-<b>A</b></div><div class="fr">evil</div></div>
+    </div>
+    <div class="stich-translation">Evil kills the wicked,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשֹׂנְאֵי</div><div class="tr">ve-son-<b>EI</b></div><div class="fr">and those who hate</div></div>
+      <div class="word"><div class="he">צַדִּיק</div><div class="tr">tza-<b>DIK</b></div><div class="fr">the righteous</div></div>
+      <div class="word"><div class="he">יֶאְשָׁמוּ</div><div class="tr">ye-sha-<b>MU</b></div><div class="fr">will be found guilty</div></div>
+    </div>
+    <div class="stich-translation">and those who hate the righteous will bear their guilt.</div>
+  </div>
+
+  <div class="verse-summary">The tav verse, which should be the last one. Evil is the subject and the wicked the object, so the punishment is not sent from outside: it is the thing itself doing the killing.</div>
+</div>
+
+<!-- VERSE 23 -->
+<div class="verse">
+  <span class="verse-num">23</span>
+  <div class="verse-full">פֹּדֶה יְהֹוָה נֶפֶשׁ עֲבָדָיו<br>
+  וְלֹא יֶאְשְׁמוּ כׇּל הַחֹסִים בּוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פֹּדֶה</div><div class="tr">po-<b>DE</b></div><div class="fr">redeems</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">נֶפֶשׁ</div><div class="tr"><b>NE</b>-fesh</div><div class="fr">the life of</div></div>
+      <div class="word"><div class="he">עֲבָדָיו</div><div class="tr">a-va-<b>DAV</b></div><div class="fr">His servants</div></div>
+    </div>
+    <div class="stich-translation">The LORD ransoms the life of His servants,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">יֶאְשְׁמוּ</div><div class="tr">ye-<b>SHMU</b></div><div class="fr">will bear guilt</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הַחֹסִים</div><div class="tr">ha-cho-<b>SIM</b></div><div class="fr">those who take refuge</div></div>
+      <div class="word"><div class="he">בּוֹ</div><div class="tr">bo</div><div class="fr">in Him</div></div>
+    </div>
+    <div class="stich-translation">and none who shelter in Him will bear guilt.</div>
+  </div>
+
+  <div class="verse-summary">An extra verse after the alphabet has finished, opening with pe. It takes the verb that ended verse 22 and negates it, so the psalm closes on the acquittal of the other side rather than on the guilt of the wicked.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two halves joined at verse 12. Verses 2 to 11 are a report: I sought, He answered, this poor man called, He heard, so taste for yourselves. Verses 12 to 23 are a lesson: come and listen, here is what to do with your tongue, and here is what happens to the two kinds of people. The alphabet runs underneath both halves and does not quite hold. Twenty-two verses follow the superscription, but they carry only twenty-one letters, alef through tav with no vav verse, and then a twenty-second verse that starts again with pe. The one place a vav does stand at the head of a line is inside the he verse, at <strong>וּפְנֵיהֶם</strong> (uf-nei-hem, v.6), where the second half of the couplet begins with it. Whether that is why the letter has no verse of its own, the text does not say.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The superscription and the turn of the psalm share a root. In <strong>טַעְמוֹ</strong> (ta-mo, v.1) David changes his good sense, the noun for taste and judgement, in order to look insane in front of a foreign king; in <strong>טַעֲמוּ</strong> (ta-a-mu, v.9) the same root comes back as an imperative addressed to everyone, taste. The word that named a pretended madness names the recommended way to know that God is good. A second pairing closes the poem: the verb at <strong>יֶאְשָׁמוּ</strong> (ye-sha-mu, v.22), they will bear guilt, is the last word of the tav verse, and the added pe verse repeats it at <strong>יֶאְשְׁמוּ</strong> (ye-shmu, v.23) with a negative in front. Note also that the psalm has both an ayin verse at <strong>עֵינֵי</strong> (ei-nei, v.16) and a pe verse at <strong>פְּנֵי</strong> (pnei, v.17) in their normal order, so the extra pe at <strong>פֹּדֶה</strong> (po-de, v.23) is a genuine addition rather than a displaced letter.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Verses 13 and 14 became the classic text on guarding speech. The Talmud tells of a peddler who went through the towns crying that he had the elixir of life for sale; when a crowd gathered he opened a book of Psalms and read out the question, who is the man who wants life, together with its answer, guard your tongue from evil. Those same words of <strong>עָנִי</strong> (a-ni, v.7) onward, the poor man who called and was heard, were read as the reason David could be quoted at all: the teacher of the second half is the rescued man of the first, and he is selling what he was given. The verse about bones at <strong>עַצְמוֹתָיו</strong> (atz-mo-tav, v.21), that not one is broken, was heard against the rule that no bone of the passover offering may be broken, so that the protected righteous stands where the offering stands.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical readings work on the order of the two verbs in verse 9. Sight keeps its object at a distance and leaves the one seeing unchanged; taste takes the thing in and changes the one tasting, and it cannot be done on someone else's report. Putting taste first makes knowledge of God a matter of ingestion rather than observation, and the invitation is then unanswerable by argument. The missing letter is read in the same key. An alphabet is the full set of what can be said, and this one is short by a letter and long by a verse, so the psalm neither closes on completeness nor claims it: what falls outside the sequence is the verse that says nobody who shelters there is condemned.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-034-en',
+  key: 'Am',
+  tempo: 84,
+  progression: '| Dm Dm | Gm Gm | Dm A7 | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

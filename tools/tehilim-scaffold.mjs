@@ -29,7 +29,18 @@ const REPO = join(HERE, '..');
 const require = createRequire(import.meta.url);
 const T = require(join(REPO, 'assets', 'translit.js'));
 
-const SEFARIA = 'https://www.sefaria.org/api/texts/Psalms.';
+/* Both versions are named explicitly. Asking Sefaria for "Psalms.23" returns whatever it
+   considers default, which today is the JPS Gender-Sensitive Edition of 2023 under CC-BY-NC:
+   not a free licence, and not something to bake into 150 pages of a site that already ships a
+   LICENSE-CONTENT file. Named here instead:
+     Hebrew   Miqra according to the Masorah (MAM), CC-BY-SA, from the Aleppo Codex
+     English  The Holy Scriptures: A New Translation (JPS 1917), public domain
+   JPS 1917 also carries no footnote apparatus, which the 2023 edition does; its markers used to
+   be flattened into the verse text, producing lines like "repose-awater in places of repose In
+   contrast to others still waters". */
+const HE_VERSION = 'Miqra according to the Masorah';
+const EN_VERSION = 'The Holy Scriptures: A New Translation (JPS 1917)';
+const SEFARIA = 'https://www.sefaria.org/api/v3/texts/Psalms.';
 
 /* The pages carry niqqud and nothing else. MAM ships the full cantillation (te'amim) because it is
    a reading edition; those marks are meaningless to a learner sounding the word out, and they break
@@ -50,7 +61,12 @@ const stripHeMarkup = s => (s || '')
   .replace(/&thinsp;|&nbsp;/g, ' ')
   .replace(/[\[\]()]/g, '');
 
-const stripAccents = s => stripHeMarkup(s || '')
+/* MAM marks the scribal paragraph breaks of the Masoretic text inline as {פ} petucha
+   and {ס} setuma. They are layout, not language: left in they become a word cell on the
+   page and the transliterator dutifully romanises one as "{f}". */
+const stripParagraphMarks = s => (s || '').replace(/\{[פסש]\}/g, ' ');
+
+const stripAccents = s => stripParagraphMarks(stripHeMarkup(s || ''))
   .replace(/[֑-ֽ֯׀׃׆]/g, '')
   .replace(/־/g, ' ')
   .replace(/[ -‏]/g, '')
@@ -60,6 +76,8 @@ const stripAccents = s => stripHeMarkup(s || '')
 // Sefaria's English is JPS with poetry markup; keep the line structure as a hint for where the
 // Hebrew colon breaks fall, but strip the tags before anything reaches a page.
 const stripTags = s => (s || '')
+  .replace(/<sup class="footnote-marker">[\s\S]*?<\/sup>/g, '')
+  .replace(/<i class="footnote">[\s\S]*?<\/i>/g, '')
   .replace(/<br\s*\/?>/gi, '\n')
   .replace(/<[^>]+>/g, '')
   .replace(/&thinsp;/g, ' ')
@@ -68,17 +86,30 @@ const stripTags = s => (s || '')
   .split('\n').map(x => x.trim()).filter(Boolean);
 
 async function fetchPsalm(n) {
-  const r = await fetch(SEFARIA + n + '?context=0');
+  const url = SEFARIA + n
+    + '?version=hebrew|' + encodeURIComponent(HE_VERSION)
+    + '&version=english|' + encodeURIComponent(EN_VERSION);
+  const r = await fetch(url);
   if (!r.ok) throw new Error('sefaria ' + r.status + ' for psalm ' + n);
   const j = await r.json();
-  const he = Array.isArray(j.he) ? j.he : [];
-  const en = Array.isArray(j.text) ? j.text : [];
+  const heV = (j.versions || []).find(v => v.language === 'he');
+  const enV = (j.versions || []).find(v => v.language === 'en');
+  // Refuse rather than fall back: a silent substitution would put a differently
+  // licensed text into the page with no sign that anything changed.
+  if (!heV || heV.versionTitle !== HE_VERSION) throw new Error(`psalm ${n}: expected "${HE_VERSION}", got "${heV && heV.versionTitle}"`);
+  if (!enV || enV.versionTitle !== EN_VERSION) throw new Error(`psalm ${n}: expected "${EN_VERSION}", got "${enV && enV.versionTitle}"`);
+  if (enV.license !== 'Public Domain') throw new Error(`psalm ${n}: English licence is "${enV.license}", refusing`);
+  const he = Array.isArray(heV.text) ? heV.text : [];
+  const en = Array.isArray(enV.text) ? enV.text : [];
   if (!he.length) throw new Error('no Hebrew returned for psalm ' + n);
+  if (en.length !== he.length) throw new Error(`psalm ${n}: ${he.length} Hebrew verses but ${en.length} English`);
   return {
     psalm: n,
-    heVersion: j.versionTitle || '',
-    heLicense: j.license || '',
-    enVersion: j.versionTitleInHebrew || j.versionTitle || '',
+    heRef: j.heRef || '',
+    heVersion: heV.versionTitle,
+    heLicense: heV.license,
+    enVersion: enV.versionTitle,
+    enLicense: enV.license,
     verses: he.map((v, i) => {
       const clean = stripAccents(v);
       const words = clean.split(' ').filter(Boolean);
@@ -107,7 +138,11 @@ if (!psalms.length) {
   process.exit(2);
 }
 
-const outDir = join(REPO, 'tools', 'reports');
+/* The Masoretic text we publish is pinned in the repo, not left in tools/reports,
+   which is gitignored. Two reasons: a fresh clone must be able to rebuild every page
+   without the network, and a CC-BY-SA text we redistribute should be the exact bytes
+   we shipped rather than whatever the API returns next year. */
+const outDir = join(REPO, 'content', 'tehilim', 'source');
 mkdirSync(outDir, { recursive: true });
 
 for (const n of psalms) {
@@ -117,7 +152,7 @@ for (const n of psalms) {
   if (toStdout) {
     console.log(JSON.stringify(data, null, 2));
   } else {
-    const p = join(outDir, `tehilim-${nn}.data.json`);
+    const p = join(outDir, `${nn}.json`);
     writeFileSync(p, JSON.stringify(data, null, 2) + '\n', 'utf8');
     console.log(`psalm ${n}: ${data.verses.length} verses, ${words} words  ->  ${p}`);
     console.log(`   v1: ${data.verses[0].he}`);

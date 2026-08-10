@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 23: מִזְמוֹר לְדָוִד</title>
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 23: The LORD is my shepherd</h1>
+    <div class="subtitle">תְּהִלִּים כ״ג · מִזְמוֹר לְדָוִד</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 23</a></div>
+</header>
+
+<div class="t-intro">
+  Six verses, the best known in the whole book, and the shortest route into biblical Hebrew: almost every word is a noun with a possessive suffix or a verb with an object suffix, which is the single grammatical pattern the psalms live on. Said at the third Shabbat meal, at funerals, and at the table before kiddush in many homes. The imagery turns halfway through, from a shepherd in the field to a host at a table, and the pronoun turns with it.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">מִזְמוֹר לְדָוִד<br>
+  יְהֹוָה רֹעִי לֹא אֶחְסָר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">A psalm of David.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">רֹעִי</div><div class="tr">ro-<b>I</b></div><div class="fr">my shepherd</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">אֶחְסָר</div><div class="tr">ech-<b>SAR</b></div><div class="fr">I shall lack</div></div>
+    </div>
+    <div class="stich-translation">The LORD is my shepherd; I shall not want.</div>
+  </div>
+
+  <div class="verse-summary">The claim is made before anything is asked for: because there is a shepherd, there is no lack. The rest of the psalm is that sentence unfolded.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">בִּנְאוֹת דֶּשֶׁא יַרְבִּיצֵנִי<br>
+  עַל מֵי מְנֻחוֹת יְנַהֲלֵנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בִּנְאוֹת</div><div class="tr">bin-<b>OT</b></div><div class="fr">in pastures of</div></div>
+      <div class="word"><div class="he">דֶּשֶׁא</div><div class="tr">de-<b>SHE</b></div><div class="fr">fresh grass</div></div>
+      <div class="word"><div class="he">יַרְבִּיצֵנִי</div><div class="tr">yar-bi-tze-<b>NI</b></div><div class="fr">He makes me lie down</div></div>
+    </div>
+    <div class="stich-translation">He makes me lie down in green pastures,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">beside</div></div>
+      <div class="word"><div class="he">מֵי</div><div class="tr">mei</div><div class="fr">waters of</div></div>
+      <div class="word"><div class="he">מְנֻחוֹת</div><div class="tr">me-nu-<b>CHOT</b></div><div class="fr">rest</div></div>
+      <div class="word"><div class="he">יְנַהֲלֵנִי</div><div class="tr">ye-na-ha-le-<b>NI</b></div><div class="fr">He leads me</div></div>
+    </div>
+    <div class="stich-translation">He leads me beside still waters.</div>
+  </div>
+
+  <div class="verse-summary">Two verbs of care, both with the object suffix -ni, me. The sheep is not driven; it is made to rest, and water it could not reach on its own is brought within reach.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">נַפְשִׁי יְשׁוֹבֵב<br>
+  יַנְחֵנִי בְמַעְגְּלֵי צֶדֶק לְמַעַן שְׁמוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נַפְשִׁי</div><div class="tr">naf-<b>SHI</b></div><div class="fr">my soul</div></div>
+      <div class="word"><div class="he">יְשׁוֹבֵב</div><div class="tr">ye-sho-<b>VEV</b></div><div class="fr">He restores</div></div>
+    </div>
+    <div class="stich-translation">He restores my soul;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יַנְחֵנִי</div><div class="tr">yan-che-<b>NI</b></div><div class="fr">He guides me</div></div>
+      <div class="word"><div class="he">בְמַעְגְּלֵי</div><div class="tr">ve-ma-<b>GLEI</b></div><div class="fr">in the tracks of</div></div>
+      <div class="word"><div class="he">צֶדֶק</div><div class="tr"><b>TZE</b>-dek</div><div class="fr">righteousness</div></div>
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">for the sake of</div></div>
+      <div class="word"><div class="he">שְׁמוֹ</div><div class="tr">shmo</div><div class="fr">His name</div></div>
+    </div>
+    <div class="stich-translation">He guides me in straight paths for His name's sake.</div>
+  </div>
+
+  <div class="verse-summary">The turn inward. What was pasture and water becomes soul and path, and the reason given is not the sheep's merit but the shepherd's own name.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">גַּם כִּי אֵלֵךְ בְּגֵיא צַלְמָוֶת<br>
+  לֹא אִירָא רָע<br>
+  כִּי אַתָּה עִמָּדִי<br>
+  שִׁבְטְךָ וּמִשְׁעַנְתֶּךָ הֵמָּה יְנַחֲמֻנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גַּם</div><div class="tr">gam</div><div class="fr">even</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">when</div></div>
+      <div class="word"><div class="he">אֵלֵךְ</div><div class="tr">e-<b>LECH</b></div><div class="fr">I walk</div></div>
+      <div class="word"><div class="he">בְּגֵיא</div><div class="tr">bgei</div><div class="fr">in a valley of</div></div>
+      <div class="word"><div class="he">צַלְמָוֶת</div><div class="tr">tzal-<b>MA</b>-vet</div><div class="fr">deepest shadow</div></div>
+    </div>
+    <div class="stich-translation">Even when I walk through a valley of deepest shadow,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">no</div></div>
+      <div class="word"><div class="he">אִירָא</div><div class="tr">i-<b>RA</b></div><div class="fr">I will fear</div></div>
+      <div class="word"><div class="he">רָע</div><div class="tr">ra</div><div class="fr">evil</div></div>
+    </div>
+    <div class="stich-translation">I will fear no evil,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">עִמָּדִי</div><div class="tr">i-ma-<b>DI</b></div><div class="fr">are with me</div></div>
+    </div>
+    <div class="stich-translation">for You are with me;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁבְטְךָ</div><div class="tr">shiv-te-<b>CHA</b></div><div class="fr">Your rod</div></div>
+      <div class="word"><div class="he">וּמִשְׁעַנְתֶּךָ</div><div class="tr">u-mish-an-te-<b>CHA</b></div><div class="fr">and Your staff</div></div>
+      <div class="word"><div class="he">הֵמָּה</div><div class="tr">he-<b>MA</b></div><div class="fr">they</div></div>
+      <div class="word"><div class="he">יְנַחֲמֻנִי</div><div class="tr">ye-na-cha-mu-<b>NI</b></div><div class="fr">comfort me</div></div>
+    </div>
+    <div class="stich-translation">Your rod and Your staff, they comfort me.</div>
+  </div>
+
+  <div class="verse-summary">The centre of the psalm, and the exact point where the speaker stops saying He and starts saying You. Fear is answered by presence, not by the removal of the valley.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">תַּעֲרֹךְ לְפָנַי שֻׁלְחָן נֶגֶד צֹרְרָי<br>
+  דִּשַּׁנְתָּ בַשֶּׁמֶן רֹאשִׁי<br>
+  כּוֹסִי רְוָיָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תַּעֲרֹךְ</div><div class="tr">ta-a-<b>ROCH</b></div><div class="fr">You set</div></div>
+      <div class="word"><div class="he">לְפָנַי</div><div class="tr">le-fa-<b>NAI</b></div><div class="fr">before me</div></div>
+      <div class="word"><div class="he">שֻׁלְחָן</div><div class="tr">shul-<b>CHAN</b></div><div class="fr">a table</div></div>
+      <div class="word"><div class="he">נֶגֶד</div><div class="tr"><b>NE</b>-ged</div><div class="fr">in front of</div></div>
+      <div class="word"><div class="he">צֹרְרָי</div><div class="tr">tzor-<b>RAI</b></div><div class="fr">my foes</div></div>
+    </div>
+    <div class="stich-translation">You set a table before me in the presence of my enemies;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דִּשַּׁנְתָּ</div><div class="tr">di-shan-<b>TA</b></div><div class="fr">You have anointed</div></div>
+      <div class="word"><div class="he">בַשֶּׁמֶן</div><div class="tr">va-<b>SHE</b>-men</div><div class="fr">with the oil</div></div>
+      <div class="word"><div class="he">רֹאשִׁי</div><div class="tr">ro-<b>SHI</b></div><div class="fr">my head</div></div>
+    </div>
+    <div class="stich-translation">You have anointed my head with oil;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כּוֹסִי</div><div class="tr">ko-<b>SI</b></div><div class="fr">my cup</div></div>
+      <div class="word"><div class="he">רְוָיָה</div><div class="tr">re-va-<b>YA</b></div><div class="fr">is full to overflowing</div></div>
+    </div>
+    <div class="stich-translation">my cup overflows.</div>
+  </div>
+
+  <div class="verse-summary">The shepherd becomes a host. The enemies are not defeated, only made to watch: safety here is hospitality held in plain view of the threat.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">אַךְ טוֹב וָחֶסֶד יִרְדְּפוּנִי כׇּל יְמֵי חַיָּי<br>
+  וְשַׁבְתִּי בְּבֵית יְהֹוָה לְאֹרֶךְ יָמִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַךְ</div><div class="tr">ach</div><div class="fr">surely</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">goodness</div></div>
+      <div class="word"><div class="he">וָחֶסֶד</div><div class="tr">va-<b>CHE</b>-sed</div><div class="fr">and kindness</div></div>
+      <div class="word"><div class="he">יִרְדְּפוּנִי</div><div class="tr">yir-de-fu-<b>NI</b></div><div class="fr">shall pursue me</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">the days of</div></div>
+      <div class="word"><div class="he">חַיָּי</div><div class="tr">cha-<b>YAI</b></div><div class="fr">my life</div></div>
+    </div>
+    <div class="stich-translation">Surely goodness and kindness shall pursue me all the days of my life,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשַׁבְתִּי</div><div class="tr">ve-shav-<b>TI</b></div><div class="fr">and I shall dwell</div></div>
+      <div class="word"><div class="he">בְּבֵית</div><div class="tr">be-<b>VEIT</b></div><div class="fr">in the house of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לְאֹרֶךְ</div><div class="tr">le-o-<b>RECH</b></div><div class="fr">for length of</div></div>
+      <div class="word"><div class="he">יָמִים</div><div class="tr">ya-<b>MIM</b></div><div class="fr">days</div></div>
+    </div>
+    <div class="stich-translation">and I shall dwell in the house of the LORD for length of days.</div>
+  </div>
+
+  <div class="verse-summary">The verb usually belongs to enemies: it is the word for chasing someone down. Here what pursues is goodness, and the chase ends at a house rather than a grave.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>A shepherd's day, then a host's evening. Verses 1-4 are pasture, water, path and valley; verses 5-6 are a table, oil and a house. The hinge is <strong>אַתָּה</strong> (a-ta, v.4): up to that point God is spoken about, from there God is spoken to, and the change of person is the psalm's real argument. Note that the valley is walked through, not avoided, and that the enemies of verse 5 are still present at the meal. Nothing is removed; something is added.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The word rendered "deepest shadow", <strong>צַלְמָוֶת</strong> (tzal-ma-vet, v.4), is read by the Masoretes as a compound of shadow and death, and older translations give "the valley of the shadow of death". Modern philology usually reads it as a single noun meaning deep darkness. Both readings survive in synagogue use, which is why the verse is said at a funeral and also by a traveller at night. The rod and the staff of <strong>שִׁבְטְךָ</strong> (shiv-te-cha, v.4) are a shepherd's two tools: one to strike off predators, one to lean on and to steer with.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The rabbis noticed that <strong>יִרְדְּפוּנִי</strong> (yir-de-fu-ni, v.6) uses the verb of pursuit, the same verb an enemy would take, and read it as a deliberate inversion: what chased David through the book of Samuel is replaced here by goodness and covenant kindness doing the chasing. Midrash Tehillim ties the table of verse 5 to the wilderness generation, fed in the open while surrounded, and reads the psalm as Israel's biography compressed into six verses rather than one man's.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>In the kabbalistic reading the two halves map onto two modes of divine relation: the shepherd who leads from outside and above, and the host who is present at the same table. The move from third person to second is then not a literary effect but a description of drawing near, and the overflowing cup of verse 5 is the standard image for a measure that receives more than it can hold and passes the surplus on.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-023-en',
+  key: 'Am',
+  tempo: 66,
+  progression: '| Am Am | Dm Dm | Am Em | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>
