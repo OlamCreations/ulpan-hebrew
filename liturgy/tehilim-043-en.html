@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 43: שׇׁפְטֵנִי אֱלֹהִים</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 43: Send out Your light and Your truth</h1>
+    <div class="subtitle">תְּהִלִּים מ״ג · שׇׁפְטֵנִי אֱלֹהִים</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 43</a></div>
+</header>
+
+<div class="t-intro">
+  Five verses with no heading of their own, which is unusual here: every neighbouring psalm in Book Two carries one. The last verse is letter for letter the last verse of Psalm 42, and a shorter form of the same refrain stands in the middle of 42 as well, so the two psalms share a spine. A number of Hebrew manuscripts count them as a single composition and most readers treat 43 as the third panel of a poem that begins at 42. Read that way, this is what the earlier psalm could not reach: 42 remembers walking to the house of God in the past tense, 43 asks to be taken there. For a learner the drill is the volitive, the first person request that ends in a long vowel: let them lead me, let them bring me, and let me come, three in a row across verses 3 and 4.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שׇׁפְטֵנִי אֱלֹהִים וְרִיבָה רִיבִי<br>
+  מִגּוֹי לֹא חָסִיד<br>
+  מֵאִישׁ מִרְמָה וְעַוְלָה תְפַלְּטֵנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שׇׁפְטֵנִי</div><div class="tr">shof-te-<b>NI</b></div><div class="fr">judge me</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">וְרִיבָה</div><div class="tr">ve-ri-<b>VA</b></div><div class="fr">and contend</div></div>
+      <div class="word"><div class="he">רִיבִי</div><div class="tr">ri-<b>VI</b></div><div class="fr">my case</div></div>
+    </div>
+    <div class="stich-translation">Judge me, O God, and take up my case</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִגּוֹי</div><div class="tr">mi-<b>GOI</b></div><div class="fr">against a nation</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">חָסִיד</div><div class="tr">cha-<b>SID</b></div><div class="fr">faithful</div></div>
+    </div>
+    <div class="stich-translation">against a nation without faithfulness;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מֵאִישׁ</div><div class="tr">me-<b>ISH</b></div><div class="fr">from a man of</div></div>
+      <div class="word"><div class="he">מִרְמָה</div><div class="tr">mir-<b>MA</b></div><div class="fr">deceit</div></div>
+      <div class="word"><div class="he">וְעַוְלָה</div><div class="tr">ve-av-<b>LA</b></div><div class="fr">and injustice</div></div>
+      <div class="word"><div class="he">תְפַלְּטֵנִי</div><div class="tr">tfal-te-<b>NI</b></div><div class="fr">may You rescue me</div></div>
+    </div>
+    <div class="stich-translation">from a man of deceit and injustice rescue me.</div>
+  </div>
+
+  <div class="verse-summary">No heading, no preamble, straight into a courtroom verb. What is asked for first is not rescue but a verdict, and the second verb asks God to argue the speaker's side rather than to preside over it.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">כִּי אַתָּה אֱלֹהֵי מָעוּזִּי<br>
+  לָמָה זְנַחְתָּנִי<br>
+  לָמָּה קֹדֵר אֶתְהַלֵּךְ בְּלַחַץ אוֹיֵב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">אֱלֹהֵי</div><div class="tr">e-lo-<b>HEI</b></div><div class="fr">the God of</div></div>
+      <div class="word"><div class="he">מָעוּזִּי</div><div class="tr">ma-u-<b>ZI</b></div><div class="fr">my stronghold</div></div>
+    </div>
+    <div class="stich-translation">For You are the God of my stronghold.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לָמָה</div><div class="tr">la-<b>MA</b></div><div class="fr">why</div></div>
+      <div class="word"><div class="he">זְנַחְתָּנִי</div><div class="tr">ze-nach-ta-<b>NI</b></div><div class="fr">have You cast me off</div></div>
+    </div>
+    <div class="stich-translation">Why have You cast me off?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לָמָּה</div><div class="tr"><b>LA</b>-ma</div><div class="fr">why</div></div>
+      <div class="word"><div class="he">קֹדֵר</div><div class="tr">ko-<b>DER</b></div><div class="fr">in mourning</div></div>
+      <div class="word"><div class="he">אֶתְהַלֵּךְ</div><div class="tr">et-ha-<b>LECH</b></div><div class="fr">must I walk about</div></div>
+      <div class="word"><div class="he">בְּלַחַץ</div><div class="tr">bla-<b>CHATZ</b></div><div class="fr">under the pressure of</div></div>
+      <div class="word"><div class="he">אוֹיֵב</div><div class="tr">o-<b>YEV</b></div><div class="fr">an enemy</div></div>
+    </div>
+    <div class="stich-translation">Why must I walk about in mourning under the pressure of an enemy?</div>
+  </div>
+
+  <div class="verse-summary">The complaint follows the plea without softening it. The God called a stronghold in the first half of the verse is asked in the second half why He has abandoned the speaker, and the two halves are simply left standing next to each other.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">שְׁלַח אוֹרְךָ וַאֲמִתְּךָ<br>
+  הֵמָּה יַנְחוּנִי<br>
+  יְבִיאוּנִי אֶל הַר קׇדְשְׁךָ וְאֶל מִשְׁכְּנוֹתֶיךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁלַח</div><div class="tr">shlach</div><div class="fr">send out</div></div>
+      <div class="word"><div class="he">אוֹרְךָ</div><div class="tr">or-<b>CHA</b></div><div class="fr">Your light</div></div>
+      <div class="word"><div class="he">וַאֲמִתְּךָ</div><div class="tr">va-a-mit-<b>CHA</b></div><div class="fr">and Your truth</div></div>
+    </div>
+    <div class="stich-translation">Send out Your light and Your truth;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֵמָּה</div><div class="tr">he-<b>MA</b></div><div class="fr">they</div></div>
+      <div class="word"><div class="he">יַנְחוּנִי</div><div class="tr">yan-chu-<b>NI</b></div><div class="fr">let them lead me</div></div>
+    </div>
+    <div class="stich-translation">let them lead me,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְבִיאוּנִי</div><div class="tr">ye-vi-u-<b>NI</b></div><div class="fr">let them bring me</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">to</div></div>
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">the mountain of</div></div>
+      <div class="word"><div class="he">קׇדְשְׁךָ</div><div class="tr">kod-<b>SHCHA</b></div><div class="fr">Your holiness</div></div>
+      <div class="word"><div class="he">וְאֶל</div><div class="tr"><b>VE</b>-el</div><div class="fr">and to</div></div>
+      <div class="word"><div class="he">מִשְׁכְּנוֹתֶיךָ</div><div class="tr">mish-kno-tei-<b>CHA</b></div><div class="fr">Your dwelling places</div></div>
+    </div>
+    <div class="stich-translation">let them bring me to Your holy mountain and to Your dwelling places.</div>
+  </div>
+
+  <div class="verse-summary">Complaint turns into request. Light and truth are sent out as two agents with verbs of their own, and both verbs carry the object suffix that means me, so the speaker is the one being moved.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">וְאָבוֹאָה אֶל מִזְבַּח אֱלֹהִים<br>
+  אֶל אֵל שִׂמְחַת גִּילִי<br>
+  וְאוֹדְךָ בְכִנּוֹר אֱלֹהִים אֱלֹהָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאָבוֹאָה</div><div class="tr">ve-a-vo-<b>A</b></div><div class="fr">and let me come</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">to</div></div>
+      <div class="word"><div class="he">מִזְבַּח</div><div class="tr">miz-<b>BACH</b></div><div class="fr">the altar of</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">And let me come to the altar of God,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">to</div></div>
+      <div class="word"><div class="he">אֵל</div><div class="tr">el</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">שִׂמְחַת</div><div class="tr">sim-<b>CHAT</b></div><div class="fr">the gladness of</div></div>
+      <div class="word"><div class="he">גִּילִי</div><div class="tr">gi-<b>LI</b></div><div class="fr">my rejoicing</div></div>
+    </div>
+    <div class="stich-translation">to God, the gladness of my rejoicing,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאוֹדְךָ</div><div class="tr">ve-od-<b>CHA</b></div><div class="fr">and let me praise You</div></div>
+      <div class="word"><div class="he">בְכִנּוֹר</div><div class="tr">ve-chi-<b>NOR</b></div><div class="fr">with a harp</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">אֱלֹהָי</div><div class="tr">e-lo-<b>HAI</b></div><div class="fr">my God</div></div>
+    </div>
+    <div class="stich-translation">and let me praise You with the harp, O God, my God.</div>
+  </div>
+
+  <div class="verse-summary">The destination is named at last, and the reason for wanting it is not safety but the ability to play music. Four of the verse's twelve words are a name for God, and the final one adds the possessive suffix.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">מַה תִּשְׁתּוֹחֲחִי נַפְשִׁי וּמַה תֶּהֱמִי עָלָי<br>
+  הוֹחִילִי לֵאלֹהִים<br>
+  כִּי עוֹד אוֹדֶנּוּ יְשׁוּעֹת פָּנַי וֵאלֹהָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַה</div><div class="tr">ma</div><div class="fr">why</div></div>
+      <div class="word"><div class="he">תִּשְׁתּוֹחֲחִי</div><div class="tr">tish-to-cha-<b>CHI</b></div><div class="fr">are you bowed down</div></div>
+      <div class="word"><div class="he">נַפְשִׁי</div><div class="tr">naf-<b>SHI</b></div><div class="fr">my soul</div></div>
+      <div class="word"><div class="he">וּמַה</div><div class="tr">u-<b>MA</b></div><div class="fr">and why</div></div>
+      <div class="word"><div class="he">תֶּהֱמִי</div><div class="tr">te-he-<b>MI</b></div><div class="fr">do you moan</div></div>
+      <div class="word"><div class="he">עָלָי</div><div class="tr">a-<b>LAI</b></div><div class="fr">upon me</div></div>
+    </div>
+    <div class="stich-translation">Why are you bowed down, my soul, and why do you moan upon me?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הוֹחִילִי</div><div class="tr">ho-chi-<b>LI</b></div><div class="fr">wait</div></div>
+      <div class="word"><div class="he">לֵאלֹהִים</div><div class="tr">le-lo-<b>HIM</b></div><div class="fr">for God</div></div>
+    </div>
+    <div class="stich-translation">Wait for God,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">עוֹד</div><div class="tr">od</div><div class="fr">still</div></div>
+      <div class="word"><div class="he">אוֹדֶנּוּ</div><div class="tr">o-de-<b>NU</b></div><div class="fr">I will praise Him</div></div>
+      <div class="word"><div class="he">יְשׁוּעֹת</div><div class="tr">ye-shu-<b>OT</b></div><div class="fr">the deliverances of</div></div>
+      <div class="word"><div class="he">פָּנַי</div><div class="tr">pa-<b>NAI</b></div><div class="fr">my face</div></div>
+      <div class="word"><div class="he">וֵאלֹהָי</div><div class="tr">ve-lo-<b>HAI</b></div><div class="fr">and my God</div></div>
+    </div>
+    <div class="stich-translation">for I shall yet praise Him, the deliverance of my face and my God.</div>
+  </div>
+
+  <div class="verse-summary">The refrain, identical to the closing verse of Psalm 42 down to the vowel points. Nothing in the argument has been decided; the speaker turns from God back to his own soul and tells it to keep waiting.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Five verses in a tight sequence: a legal plea, a complaint, a request for an escort, a vow of what will happen on arrival, and the refrain. Notice who acts. In verse 1 God is asked to judge and to argue; in verse 3 it is light and truth that lead and bring, so what the speaker asks for is a pair of guides rather than the guide himself. The psalm ends before anything has been granted, which is why the refrain fits: the situation at verse 5 is the situation at verse 1, and the only thing that has changed is that a destination has been named.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The relationship with Psalm 42 is visible in the words, not only in the mood. Verse 5 here is character for character the twelfth and last verse of Psalm 42, while the earlier appearance of the refrain in that psalm differs in three small ways: the second question is not asked twice there, so it reads and you moan rather than and why do you moan; the imperative to wait is written short, without the yod; and it ends with His face rather than with my face and my God. A refrain that shifts slightly at each return is the standard argument for reading the two as one composition. Verse 2 works the same way: <strong>לָמָּה</strong> (la-ma, v.2) <strong>קֹדֵר</strong> (ko-der, v.2) <strong>אֶתְהַלֵּךְ</strong> (et-ha-lech, v.2) <strong>בְּלַחַץ</strong> (bla-chatz, v.2) <strong>אוֹיֵב</strong> (o-yev, v.2) repeats a run of Psalm 42:10 with one verb changed, from the simple stem to the reflexive stem of the same root, so the walking becomes something the speaker does to himself. In verse 1 the nation is described as <strong>לֹא</strong> (lo, v.1) <strong>חָסִיד</strong> (cha-sid, v.1), not chasid, which turns the covenant word chesed into the thing this nation lacks. The pair <strong>אוֹרְךָ</strong> (or-cha, v.3) and <strong>וַאֲמִתְּךָ</strong> (va-a-mit-cha, v.3), light and truth, is often compared to the Urim and Tummim of the priestly breastpiece, and the comparison is a reading rather than something the psalm states.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Because the psalm has no superscription, the tradition had to decide where it begins, and the decision is still visible: some Hebrew manuscripts run 42 and 43 together as one psalm, printed bibles keep them apart, and the refrain keeps pulling them back together. Read as one, the speakers are the sons of Korah named in the heading of 42, and the whole becomes an exile poem whose only petition is to be brought back to a building. What is not asked for is worth noticing. The nation of verse 1 and the man of deceit are to be judged and escaped from, not destroyed, and the psalm spends its final two verses on an altar and a harp instead of on the enemy.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>In the mystical reading verse 3 is the centre of the psalm, because two qualities are sent out from above and it is they, not the man, who travel. Light and truth take the verbs; the speaker takes the suffixes. The ascent to the holy mountain is therefore described as something done to him rather than by him, which is the opposite of what a pilgrimage looks like from outside. The plural in <strong>מִשְׁכְּנוֹתֶיךָ</strong> (mish-kno-tei-cha, v.3), dwelling places rather than one dwelling, is read as levels rather than as rooms, and verse 4 names what stands at the last of them: an altar, a name, and an instrument. Whether the harp is an instrument or the soul itself is the kind of question this level of reading exists for.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-043-en',
+  key: 'Am',
+  tempo: 62,
+  progression: '| Dm Dm | Gm C | F A7 | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

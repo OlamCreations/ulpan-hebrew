@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 123: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 123: To You I lift my eyes</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ג · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 123</a></div>
+</header>
+
+<div class="t-intro">
+  Four verses, one of the fifteen Songs of Ascents, and the clearest short demonstration of how Hebrew poetry builds by repeating a root rather than by rhyming. The word for eye appears four times in the first two verses; the root for showing favour three times across verses 2 and 3; the root for having had enough twice; the word for contempt twice. Nothing in the psalm is narrated and nothing is described. The whole thing is a posture, eyes raised and held there, and the only event in it is a request. In many Ashkenazi communities the Songs of Ascents are said after Minchah on the Shabbatot between Sukkot and Passover.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  אֵלֶיךָ נָשָׂאתִי אֶת עֵינַי<br>
+  הַיֹּשְׁבִי בַּשָּׁמָיִם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵלֶיךָ</div><div class="tr">e-lei-<b>CHA</b></div><div class="fr">to You</div></div>
+      <div class="word"><div class="he">נָשָׂאתִי</div><div class="tr">na-sa-<b>TI</b></div><div class="fr">I have lifted</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">עֵינַי</div><div class="tr">ei-<b>NAI</b></div><div class="fr">my eyes</div></div>
+    </div>
+    <div class="stich-translation">To You I have lifted my eyes,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַיֹּשְׁבִי</div><div class="tr">ha-yosh-<b>VI</b></div><div class="fr">You who are enthroned</div></div>
+      <div class="word"><div class="he">בַּשָּׁמָיִם</div><div class="tr">ba-sha-ma-<b>YIM</b></div><div class="fr">in the heavens</div></div>
+    </div>
+    <div class="stich-translation">You who are enthroned in the heavens.</div>
+  </div>
+
+  <div class="verse-summary">One person, one gesture, and an address that is a participle rather than a name. The speaker is singular here and will be plural from verse 2 to the end of the psalm.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">הִנֵּה כְעֵינֵי עֲבָדִים אֶל יַד אֲדוֹנֵיהֶם<br>
+  כְּעֵינֵי שִׁפְחָה אֶל יַד גְּבִרְתָּהּ<br>
+  כֵּן עֵינֵינוּ אֶל יְהֹוָה אֱלֹהֵינוּ עַד שֶׁיְּחׇנֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">behold</div></div>
+      <div class="word"><div class="he">כְעֵינֵי</div><div class="tr">che-ei-<b>NEI</b></div><div class="fr">like the eyes of</div></div>
+      <div class="word"><div class="he">עֲבָדִים</div><div class="tr">a-va-<b>DIM</b></div><div class="fr">servants</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">toward</div></div>
+      <div class="word"><div class="he">יַד</div><div class="tr">yad</div><div class="fr">the hand of</div></div>
+      <div class="word"><div class="he">אֲדוֹנֵיהֶם</div><div class="tr">a-do-<b>NEI</b>-hem</div><div class="fr">their masters</div></div>
+    </div>
+    <div class="stich-translation">Behold, like the eyes of servants toward the hand of their masters,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּעֵינֵי</div><div class="tr">ke-ei-<b>NEI</b></div><div class="fr">like the eyes of</div></div>
+      <div class="word"><div class="he">שִׁפְחָה</div><div class="tr">shif-<b>CHA</b></div><div class="fr">a maidservant</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">toward</div></div>
+      <div class="word"><div class="he">יַד</div><div class="tr">yad</div><div class="fr">the hand of</div></div>
+      <div class="word"><div class="he">גְּבִרְתָּהּ</div><div class="tr">gvir-<b>TAH</b></div><div class="fr">her mistress</div></div>
+    </div>
+    <div class="stich-translation">like the eyes of a maidservant toward the hand of her mistress,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so</div></div>
+      <div class="word"><div class="he">עֵינֵינוּ</div><div class="tr">ei-nei-<b>NU</b></div><div class="fr">our eyes</div></div>
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">toward</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">שֶׁיְּחׇנֵּנוּ</div><div class="tr">shey-cho-ne-<b>NU</b></div><div class="fr">He is gracious to us</div></div>
+    </div>
+    <div class="stich-translation">so are our eyes toward the LORD our God, until He is gracious to us.</div>
+  </div>
+
+  <div class="verse-summary">The longest verse in the psalm and the only comparison in it. Two households are set out, one male and one female, before the third clause finally says what they were being used for.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">חׇנֵּנוּ יְהֹוָה חׇנֵּנוּ<br>
+  כִּי רַב שָׂבַעְנוּ בוּז</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חׇנֵּנוּ</div><div class="tr">cho-ne-<b>NU</b></div><div class="fr">be gracious to us</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">חׇנֵּנוּ</div><div class="tr">cho-ne-<b>NU</b></div><div class="fr">be gracious to us</div></div>
+    </div>
+    <div class="stich-translation">Be gracious to us, LORD, be gracious to us,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">רַב</div><div class="tr">rav</div><div class="fr">much</div></div>
+      <div class="word"><div class="he">שָׂבַעְנוּ</div><div class="tr">sa-va-<b>NU</b></div><div class="fr">we have had our fill</div></div>
+      <div class="word"><div class="he">בוּז</div><div class="tr">vuz</div><div class="fr">contempt</div></div>
+    </div>
+    <div class="stich-translation">for we have had more than enough contempt.</div>
+  </div>
+
+  <div class="verse-summary">The request, doubled, and the first time the psalm says what is wrong. Everything before this was posture; this is the petition the posture was holding.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">רַבַּת שָׂבְעָה לָּהּ נַפְשֵׁנוּ<br>
+  הַלַּעַג הַשַּׁאֲנַנִּים<br>
+  הַבּוּז לִגְאֵי יוֹנִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבַּת</div><div class="tr">ra-<b>BAT</b></div><div class="fr">much</div></div>
+      <div class="word"><div class="he">שָׂבְעָה</div><div class="tr">sav-<b>A</b></div><div class="fr">has had its fill</div></div>
+      <div class="word"><div class="he">לָּהּ</div><div class="tr">lah</div><div class="fr">for itself</div></div>
+      <div class="word"><div class="he">נַפְשֵׁנוּ</div><div class="tr">naf-she-<b>NU</b></div><div class="fr">our soul</div></div>
+    </div>
+    <div class="stich-translation">Our soul has had far more than enough</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלַּעַג</div><div class="tr">ha-la-<b>AG</b></div><div class="fr">the mockery</div></div>
+      <div class="word"><div class="he">הַשַּׁאֲנַנִּים</div><div class="tr">ha-sha-a-na-<b>NIM</b></div><div class="fr">of those at ease</div></div>
+    </div>
+    <div class="stich-translation">of the mockery of those at ease,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַבּוּז</div><div class="tr">ha-<b>BUZ</b></div><div class="fr">the contempt</div></div>
+      <div class="word"><div class="he">לִגְאֵי</div><div class="tr">lig-<b>EI</b></div><div class="fr">of the proud of</div></div>
+      <div class="word"><div class="he">יוֹנִים</div><div class="tr">yo-<b>NIM</b></div><div class="fr">oppressors</div></div>
+    </div>
+    <div class="stich-translation">of the contempt of the arrogant oppressors.</div>
+  </div>
+
+  <div class="verse-summary">The complaint expanded and given owners. Contempt is not anonymous here: it belongs to people who are comfortable, and the psalm names their comfort before it names their scorn.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Four verses in two halves that meet on one root. Verses 1 and 2 are posture: eyes lifted to a throne, then two households in which a servant watches a hand. Verses 3 and 4 are the request and the reason for it. The hinge is <strong>שֶׁיְּחׇנֵּנוּ</strong> (shey-cho-ne-nu, v.2), until He is gracious to us, which closes the first half, and <strong>חׇנֵּנוּ</strong> (cho-ne-nu, v.3), be gracious to us, which opens the second: the same root, first as a hope and then as a demand. The image in verse 2 is precise and easy to read past. Servants do not watch the master's face, they watch the hand, because the hand is where the next instruction and the next portion both come from, and the watching is continuous rather than occasional.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p><strong>הַיֹּשְׁבִי</strong> (ha-yosh-vi, v.1) is grammatically odd. It is the definite article plus a participle, which would ordinarily give the one who sits, but it carries an extra yod on the end that the sense does not need. The same ending turns up in a small number of poetic lines elsewhere in the Bible, and the usual account is that it preserves an old case ending kept for effect, though what it originally marked is not settled. The last two words are the hardest in the psalm. The received text divides the consonants into <strong>לִגְאֵי</strong> (lig-ei, v.4) and <strong>יוֹנִים</strong> (yo-nim, v.4), and that division has itself been questioned; the second element is not clearly attested anywhere else, and translations split between the proud oppressors, the arrogant, and readings that emend the consonants. The sense here is printed as the received division gives it and should be treated as disputed.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The two households of verse 2 are read as one argument made twice, and the doubling is taken as deliberate: a male servant with male masters, then a female servant with a female mistress, so that nobody hearing it can place themselves outside the comparison. The eye is the psalm's only instrument, and it is the organ that cannot act, only wait and receive, which is why there is no verb of doing anywhere in the psalm except the lifting in verse 1. Readers have also noticed that what the servant in the comparison waits for is not rescue but attention, and that the psalm never asks for the contempt to stop. It asks for favour, and favour is what a hand gives when it owes nothing.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The psalm is built on the smallest possible movement, eyes going up, and it gives that movement a destination in the first verse and then stays there for the remaining three. In the kabbalistic reading the raised eye is a standard image for a vessel turned toward its source, and the hand-watching of verse 2 is the same idea in daylight: the flow is constant and what varies is whether anyone is looking. The doubled request of <strong>חׇנֵּנוּ</strong> (cho-ne-nu, v.3) and <strong>חׇנֵּנוּ</strong> (cho-ne-nu, v.3) is read as two different askings, one for the favour and one for the capacity to hold it, which is why the verse repeats a word instead of adding one. The psalm ends on the word for the arrogant, so nothing is resolved inside the text. The resolution is the looking.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-123-en',
+  key: 'Am',
+  tempo: 58,
+  progression: '| Dm Gm | Dm A7 | Dm Gm | A7 Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

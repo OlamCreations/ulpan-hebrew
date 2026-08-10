@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 70: לַמְנַצֵּחַ לְדָוִד</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 70: Hurry to deliver me</h1>
+    <div class="subtitle">תְּהִלִּים ע׳ · לַמְנַצֵּחַ לְדָוִד</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 70</a></div>
+</header>
+
+<div class="t-intro">
+  A heading and five verses, and all five of them are already in the book: Psalm 70 verses 2 to 6 are Psalm 40 verses 14 to 18 again, under a different heading and with a short list of changes. This page gives the changes rather than reprinting the other page, so read it next to Psalm 40 and the edits are the lesson. On its own the psalm is the shortest complete cry for help in the collection. It states no case, gives no reason, and asks for nothing but speed: hurry in verse 2, do not be late in verse 6.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לַמְנַצֵּחַ לְדָוִד<br>
+  לְהַזְכִּיר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַמְנַצֵּחַ</div><div class="tr">lam-na-<b>TZE</b>-ach</div><div class="fr">for the choirmaster</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">For the leader. Of David.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְהַזְכִּיר</div><div class="tr">le-haz-<b>KIR</b></div><div class="fr">to bring to remembrance</div></div>
+    </div>
+    <div class="stich-translation">To bring to remembrance.</div>
+  </div>
+
+  <div class="verse-summary">Psalm 40 heads its page with the ordinary word for a psalm. Here the third word is a verb instead, an infinitive with no stated object, and the only other heading in the book that carries it is Psalm 38.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אֱלֹהִים לְהַצִּילֵנִי<br>
+  יְהֹוָה לְעֶזְרָתִי חוּשָׁה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">לְהַצִּילֵנִי</div><div class="tr">le-ha-tzi-le-<b>NI</b></div><div class="fr">to deliver me</div></div>
+    </div>
+    <div class="stich-translation">O God, to deliver me;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לְעֶזְרָתִי</div><div class="tr">le-ez-ra-<b>TI</b></div><div class="fr">to my help</div></div>
+      <div class="word"><div class="he">חוּשָׁה</div><div class="tr">chu-<b>SHA</b></div><div class="fr">hurry</div></div>
+    </div>
+    <div class="stich-translation">O LORD, to my help, hurry.</div>
+  </div>
+
+  <div class="verse-summary">The first half has no verb at all. Psalm 40 supplies one, be pleased, before the divine name; here it is gone, and the only finite verb in the verse is the imperative at the very end, which the reader has to carry back over the whole line.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">יֵבֹשׁוּ וְיַחְפְּרוּ מְבַקְשֵׁי נַפְשִׁי<br>
+  יִסֹּגוּ אָחוֹר וְיִכָּלְמוּ חֲפֵצֵי רָעָתִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יֵבֹשׁוּ</div><div class="tr">ye-vo-<b>SHU</b></div><div class="fr">let them be shamed</div></div>
+      <div class="word"><div class="he">וְיַחְפְּרוּ</div><div class="tr">ve-yach-<b>PRU</b></div><div class="fr">and let them be disgraced</div></div>
+      <div class="word"><div class="he">מְבַקְשֵׁי</div><div class="tr">me-vak-<b>SHEI</b></div><div class="fr">those who seek</div></div>
+      <div class="word"><div class="he">נַפְשִׁי</div><div class="tr">naf-<b>SHI</b></div><div class="fr">my life</div></div>
+    </div>
+    <div class="stich-translation">Let them be shamed and disgraced, those who seek my life;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִסֹּגוּ</div><div class="tr">yi-so-<b>GU</b></div><div class="fr">let them fall back</div></div>
+      <div class="word"><div class="he">אָחוֹר</div><div class="tr">a-<b>CHOR</b></div><div class="fr">backward</div></div>
+      <div class="word"><div class="he">וְיִכָּלְמוּ</div><div class="tr">ve-yi-kal-<b>MU</b></div><div class="fr">and let them be humiliated</div></div>
+      <div class="word"><div class="he">חֲפֵצֵי</div><div class="tr">cha-fe-<b>TZEI</b></div><div class="fr">those who delight in</div></div>
+      <div class="word"><div class="he">רָעָתִי</div><div class="tr">ra-a-<b>TI</b></div><div class="fr">my ruin</div></div>
+    </div>
+    <div class="stich-translation">let them fall back and be humiliated, those who want my ruin.</div>
+  </div>
+
+  <div class="verse-summary">Four jussive verbs and two participial phrases naming who they fall on. The enemies are described only by what they want, never by what they are, and both descriptions are built the same way: a construct participle plus a noun with the suffix my.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">יָשׁוּבוּ עַל עֵקֶב בׇּשְׁתָּם<br>
+  הָאֹמְרִים הֶאָח הֶאָח</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָשׁוּבוּ</div><div class="tr">ya-shu-<b>VU</b></div><div class="fr">let them turn back</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">on</div></div>
+      <div class="word"><div class="he">עֵקֶב</div><div class="tr"><b>E</b>-kev</div><div class="fr">the heel of</div></div>
+      <div class="word"><div class="he">בׇּשְׁתָּם</div><div class="tr">bosh-<b>TAM</b></div><div class="fr">their shame</div></div>
+    </div>
+    <div class="stich-translation">Let them turn back on the heels of their own shame,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָאֹמְרִים</div><div class="tr">ha-om-<b>RIM</b></div><div class="fr">those who say</div></div>
+      <div class="word"><div class="he">הֶאָח</div><div class="tr">he-<b>ACH</b></div><div class="fr">aha</div></div>
+      <div class="word"><div class="he">הֶאָח</div><div class="tr">he-<b>ACH</b></div><div class="fr">aha</div></div>
+    </div>
+    <div class="stich-translation">those who say: aha, aha.</div>
+  </div>
+
+  <div class="verse-summary">The two middle words are an idiom, literally on the heel of, used for what follows something as its consequence. Their shame is not the punishment here, it is the thing that walks them backwards.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">יָשִׂישׂוּ וְיִשְׂמְחוּ בְּךָ כׇּל מְבַקְשֶׁיךָ<br>
+  וְיֹאמְרוּ תָמִיד יִגְדַּל אֱלֹהִים אֹהֲבֵי יְשׁוּעָתֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָשִׂישׂוּ</div><div class="tr">ya-si-<b>SU</b></div><div class="fr">let them be glad</div></div>
+      <div class="word"><div class="he">וְיִשְׂמְחוּ</div><div class="tr">ve-yis-me-<b>CHU</b></div><div class="fr">and let them rejoice</div></div>
+      <div class="word"><div class="he">בְּךָ</div><div class="tr">be-<b>CHA</b></div><div class="fr">in You</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">מְבַקְשֶׁיךָ</div><div class="tr">me-vak-shei-<b>CHA</b></div><div class="fr">those who seek You</div></div>
+    </div>
+    <div class="stich-translation">Let all who seek You be glad and rejoice in You;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְיֹאמְרוּ</div><div class="tr">ve-yom-<b>RU</b></div><div class="fr">and let them say</div></div>
+      <div class="word"><div class="he">תָמִיד</div><div class="tr">ta-<b>MID</b></div><div class="fr">always</div></div>
+      <div class="word"><div class="he">יִגְדַּל</div><div class="tr">yig-<b>DAL</b></div><div class="fr">let Him be great</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">אֹהֲבֵי</div><div class="tr">o-ha-<b>VEI</b></div><div class="fr">those who love</div></div>
+      <div class="word"><div class="he">יְשׁוּעָתֶךָ</div><div class="tr">ye-shu-a-te-<b>CHA</b></div><div class="fr">Your rescue</div></div>
+    </div>
+    <div class="stich-translation">and let those who love Your rescue always say: God be magnified.</div>
+  </div>
+
+  <div class="verse-summary">The mirror of verses 3 and 4, with the same grammar turned the other way: four more jussives, and the seekers of verse 3 answered by seekers of a different object. The one thing the psalm asks anyone to say is not about the speaker.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">וַאֲנִי עָנִי וְאֶבְיוֹן<br>
+  אֱלֹהִים חוּשָׁה לִּי<br>
+  עֶזְרִי וּמְפַלְטִי אַתָּה<br>
+  יְהֹוָה אַל תְּאַחַר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַאֲנִי</div><div class="tr">va-a-<b>NI</b></div><div class="fr">but I</div></div>
+      <div class="word"><div class="he">עָנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">am poor</div></div>
+      <div class="word"><div class="he">וְאֶבְיוֹן</div><div class="tr">ve-evi-<b>ON</b></div><div class="fr">and needy</div></div>
+    </div>
+    <div class="stich-translation">But I am poor and needy;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">חוּשָׁה</div><div class="tr">chu-<b>SHA</b></div><div class="fr">hurry</div></div>
+      <div class="word"><div class="he">לִּי</div><div class="tr">li</div><div class="fr">to me</div></div>
+    </div>
+    <div class="stich-translation">God, hurry to me.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֶזְרִי</div><div class="tr">ez-<b>RI</b></div><div class="fr">my help</div></div>
+      <div class="word"><div class="he">וּמְפַלְטִי</div><div class="tr">um-fal-<b>TI</b></div><div class="fr">and my rescuer</div></div>
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You are</div></div>
+    </div>
+    <div class="stich-translation">You are my help and the one who gets me out;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אַל</div><div class="tr">al</div><div class="fr">do not</div></div>
+      <div class="word"><div class="he">תְּאַחַר</div><div class="tr">te-a-<b>CHAR</b></div><div class="fr">be late</div></div>
+    </div>
+    <div class="stich-translation">LORD, do not be late.</div>
+  </div>
+
+  <div class="verse-summary">The verse repeats the imperative of verse 2 and then says the same thing again as a negative, do not be late, which closes the psalm on timing rather than on rescue. No outcome is reported and nothing is promised in return.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Five verses in a ring. Verse 2 asks for speed, verse 6 asks for speed twice more, and between them stand two wishes pointing in opposite directions: verses 3 and 4 send the pursuers backwards, verse 5 sends the seekers into song. Nothing is narrated. There is no pit, no illness, no accusation, no vow, none of the machinery a lament usually carries, which is why the psalm can be said by anyone. The self description in <strong>עָנִי</strong> (a-ni, v.6) and <strong>וְאֶבְיוֹן</strong> (ve-evi-on, v.6) is the closest thing to a reason given, and it is a status rather than an event.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The edits against Psalm 40 verses 14 to 18, in order. Verse 2 drops the opening verb be pleased and begins with <strong>אֱלֹהִים</strong> (e-lo-him, v.2) where Psalm 40 has the four letter name. Verse 3 is two words shorter: it loses together after the first pair of verbs, and it loses the infinitive to sweep it away after <strong>נַפְשִׁי</strong> (naf-shi, v.3). Verse 4 opens with <strong>יָשׁוּבוּ</strong> (ya-shu-vu, v.4), let them turn back, where Psalm 40 has a similar looking verb from another root meaning let them be appalled, and it drops the word to me after <strong>הָאֹמְרִים</strong> (ha-om-rim, v.4). Verse 5 adds a conjunction to <strong>וְיֹאמְרוּ</strong> (ve-yom-ru, v.5), reads <strong>אֱלֹהִים</strong> (e-lo-him, v.5) where Psalm 40 reads the four letter name, and spells the noun in <strong>יְשׁוּעָתֶךָ</strong> (ye-shu-a-te-cha, v.5) with an opening yod where Psalm 40 opens it with a taw, two forms of the same word for rescue. Verse 6 is the largest change: Psalm 40 says the Lord will take account of me, this psalm says <strong>אֱלֹהִים</strong> (e-lo-him, v.6) <strong>חוּשָׁה</strong> (chu-sha, v.6) <strong>לִּי</strong> (li, v.6), God hurry to me; the noun in <strong>עֶזְרִי</strong> (ez-ri, v.6) is the shorter form of the one Psalm 40 uses; and the psalm closes on <strong>יְהֹוָה</strong> (a-do-nay, v.6), the four letter name, where Psalm 40 closes on my God.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Psalms 42 to 83 are the stretch of the book in which the word God stands where the four letter name stands elsewhere, and this psalm sits inside that stretch while Psalm 40 sits outside it. The same pairing occurs at Psalms 14 and 53. So the substitutions listed above are a property of the collection each copy landed in, not a copyist nodding, and the remaining changes are the kind of variation that singing a text produces. Which copy is earlier is disputed and the text does not decide it: the piece can be read as an excerpt lifted out of Psalm 40 and given a heading of its own, or as an independent poem that Psalm 40 absorbed as its second half. Its placement argues for a use of its own, since the psalm that follows it carries no heading at all and begins mid appeal.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The subject of this psalm is time. Every other lament asks God to change a situation; this one asks only that the answer not arrive late, and the two ends of it, <strong>חוּשָׁה</strong> (chu-sha, v.2) and <strong>תְּאַחַר</strong> (te-a-char, v.6), are the same request stated once positively and once as a prohibition. Read that way the heading matters, because a verb of remembering with no object is not asking God to recall a fact but asking to be held in mind at all, which is the same request as speed in another register. Poor and needy in <strong>עָנִי</strong> (a-ni, v.6) and <strong>וְאֶבְיוֹן</strong> (ve-evi-on, v.6) then reads as a description of a vessel with nothing of its own to draw on, and the only outcome the psalm names for itself is that others say God be magnified.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-070-en',
+  key: 'Am',
+  tempo: 96,
+  progression: '| Dm Gm | A7 Dm | Bb Gm | A7 Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

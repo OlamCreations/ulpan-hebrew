@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 114: בְּצֵאת יִשְׂרָאֵל</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 114: When Israel went out of Egypt</h1>
+    <div class="subtitle">תְּהִלִּים קי״ד · בְּצֵאת יִשְׂרָאֵל</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 114</a></div>
+</header>
+
+<div class="t-intro">
+  Eight verses, four couplets, and no name for God in the first six of them. The four letter name does not appear anywhere in this psalm at all; verse 7 uses two other words instead, and by then the sea has already fled and the mountains have already skipped. Verses 3 and 4 report what happened, verses 5 and 6 repeat them almost word for word as questions put to the sea and the hills, and verse 7 answers with an order rather than an explanation. It is the second psalm of the Hallel, said on festivals and at the Seder, where its last words close the half of the Hallel that comes before the meal. Short enough to learn by heart in an evening, and built out of pairs the whole way down.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">בְּצֵאת יִשְׂרָאֵל מִמִּצְרָיִם<br>
+  בֵּית יַעֲקֹב מֵעַם לֹעֵז</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּצֵאת</div><div class="tr">be-<b>TZET</b></div><div class="fr">at the going out of</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">מִמִּצְרָיִם</div><div class="tr">mi-mitz-ra-<b>YIM</b></div><div class="fr">from Egypt</div></div>
+    </div>
+    <div class="stich-translation">When Israel went out of Egypt,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֵּית</div><div class="tr">beit</div><div class="fr">the house of</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+      <div class="word"><div class="he">מֵעַם</div><div class="tr">me-<b>AM</b></div><div class="fr">from a people</div></div>
+      <div class="word"><div class="he">לֹעֵז</div><div class="tr">lo-<b>EZ</b></div><div class="fr">speaking strangely</div></div>
+    </div>
+    <div class="stich-translation">the house of Jacob from a people of foreign speech,</div>
+  </div>
+
+  <div class="verse-summary">One long time clause with no main verb in it. The sentence does not finish until verse 2, which is why the psalm sounds like it starts already in motion.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">הָיְתָה יְהוּדָה לְקׇדְשׁוֹ<br>
+  יִשְׂרָאֵל מַמְשְׁלוֹתָיו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָיְתָה</div><div class="tr">hai-<b>TA</b></div><div class="fr">she became</div></div>
+      <div class="word"><div class="he">יְהוּדָה</div><div class="tr">ye-hu-<b>DA</b></div><div class="fr">Judah</div></div>
+      <div class="word"><div class="he">לְקׇדְשׁוֹ</div><div class="tr">le-kod-<b>SHO</b></div><div class="fr">for His holiness</div></div>
+    </div>
+    <div class="stich-translation">Judah became His holy place,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">מַמְשְׁלוֹתָיו</div><div class="tr">mam-shlo-<b>TAV</b></div><div class="fr">His dominions</div></div>
+    </div>
+    <div class="stich-translation">Israel His dominions.</div>
+  </div>
+
+  <div class="verse-summary">The main clause at last, and it is not the one the exodus story leads you to expect. Not that Israel became free, but that it became a place: a sanctuary, and a territory under rule.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">הַיָּם רָאָה וַיָּנֹס<br>
+  הַיַּרְדֵּן יִסֹּב לְאָחוֹר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַיָּם</div><div class="tr">ha-<b>YAM</b></div><div class="fr">the sea</div></div>
+      <div class="word"><div class="he">רָאָה</div><div class="tr">ra-<b>A</b></div><div class="fr">saw</div></div>
+      <div class="word"><div class="he">וַיָּנֹס</div><div class="tr">va-ya-<b>NOS</b></div><div class="fr">and it fled</div></div>
+    </div>
+    <div class="stich-translation">The sea saw and fled,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַיַּרְדֵּן</div><div class="tr">ha-yar-<b>DEN</b></div><div class="fr">the Jordan</div></div>
+      <div class="word"><div class="he">יִסֹּב</div><div class="tr">yi-<b>SOV</b></div><div class="fr">turned</div></div>
+      <div class="word"><div class="he">לְאָחוֹר</div><div class="tr">le-a-<b>CHOR</b></div><div class="fr">backward</div></div>
+    </div>
+    <div class="stich-translation">the Jordan turned back.</div>
+  </div>
+
+  <div class="verse-summary">Two events forty years apart, from two different books, set in one line as if they were one gesture. The verse does not say what the sea saw, and the missing object is the gap the whole later reading grows out of.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">הֶהָרִים רָקְדוּ כְאֵילִים<br>
+  גְּבָעוֹת כִּבְנֵי צֹאן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֶהָרִים</div><div class="tr">he-ha-<b>RIM</b></div><div class="fr">the mountains</div></div>
+      <div class="word"><div class="he">רָקְדוּ</div><div class="tr">rak-<b>DU</b></div><div class="fr">skipped</div></div>
+      <div class="word"><div class="he">כְאֵילִים</div><div class="tr">che-ei-<b>LIM</b></div><div class="fr">like rams</div></div>
+    </div>
+    <div class="stich-translation">The mountains skipped like rams,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גְּבָעוֹת</div><div class="tr">gva-<b>OT</b></div><div class="fr">hills</div></div>
+      <div class="word"><div class="he">כִּבְנֵי</div><div class="tr">kiv-<b>NEI</b></div><div class="fr">like the young of</div></div>
+      <div class="word"><div class="he">צֹאן</div><div class="tr">tzon</div><div class="fr">the flock</div></div>
+    </div>
+    <div class="stich-translation">the hills like lambs of the flock.</div>
+  </div>
+
+  <div class="verse-summary">The dry land joins the water. The animals are chosen by size, so the big mountains get the ram and the small hills get the lamb, and the parallel holds down to the pairing.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">מַה לְּךָ הַיָּם כִּי תָנוּס<br>
+  הַיַּרְדֵּן תִּסֹּב לְאָחוֹר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַה</div><div class="tr">ma</div><div class="fr">what</div></div>
+      <div class="word"><div class="he">לְּךָ</div><div class="tr">le-<b>CHA</b></div><div class="fr">is it to you</div></div>
+      <div class="word"><div class="he">הַיָּם</div><div class="tr">ha-<b>YAM</b></div><div class="fr">sea</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">that</div></div>
+      <div class="word"><div class="he">תָנוּס</div><div class="tr">ta-<b>NUS</b></div><div class="fr">you flee</div></div>
+    </div>
+    <div class="stich-translation">What is it with you, sea, that you flee?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַיַּרְדֵּן</div><div class="tr">ha-yar-<b>DEN</b></div><div class="fr">Jordan</div></div>
+      <div class="word"><div class="he">תִּסֹּב</div><div class="tr">ti-<b>SOV</b></div><div class="fr">you turn</div></div>
+      <div class="word"><div class="he">לְאָחוֹר</div><div class="tr">le-a-<b>CHOR</b></div><div class="fr">backward</div></div>
+    </div>
+    <div class="stich-translation">Jordan, that you turn back?</div>
+  </div>
+
+  <div class="verse-summary">The same nouns and the same verbs as verse 3, now with the question word in front and the verbs in the future. The psalm turns around and interrogates its own report.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">הֶהָרִים תִּרְקְדוּ כְאֵילִים<br>
+  גְּבָעוֹת כִּבְנֵי צֹאן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֶהָרִים</div><div class="tr">he-ha-<b>RIM</b></div><div class="fr">the mountains</div></div>
+      <div class="word"><div class="he">תִּרְקְדוּ</div><div class="tr">tir-ke-<b>DU</b></div><div class="fr">you skip</div></div>
+      <div class="word"><div class="he">כְאֵילִים</div><div class="tr">che-ei-<b>LIM</b></div><div class="fr">like rams</div></div>
+    </div>
+    <div class="stich-translation">Mountains, that you skip like rams,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גְּבָעוֹת</div><div class="tr">gva-<b>OT</b></div><div class="fr">hills</div></div>
+      <div class="word"><div class="he">כִּבְנֵי</div><div class="tr">kiv-<b>NEI</b></div><div class="fr">like the young of</div></div>
+      <div class="word"><div class="he">צֹאן</div><div class="tr">tzon</div><div class="fr">the flock</div></div>
+    </div>
+    <div class="stich-translation">hills, like lambs of the flock?</div>
+  </div>
+
+  <div class="verse-summary">The question extends to the hills and nothing new is said. All the force is in the change from telling to asking, which is the only thing these two verses do.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">מִלִּפְנֵי אָדוֹן חוּלִי אָרֶץ<br>
+  מִלִּפְנֵי אֱלוֹהַּ יַעֲקֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִלִּפְנֵי</div><div class="tr">mi-lif-<b>NEI</b></div><div class="fr">from before</div></div>
+      <div class="word"><div class="he">אָדוֹן</div><div class="tr">a-<b>DON</b></div><div class="fr">the Master</div></div>
+      <div class="word"><div class="he">חוּלִי</div><div class="tr">chu-<b>LI</b></div><div class="fr">writhe</div></div>
+      <div class="word"><div class="he">אָרֶץ</div><div class="tr"><b>A</b>-retz</div><div class="fr">earth</div></div>
+    </div>
+    <div class="stich-translation">Before the Master, writhe, earth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִלִּפְנֵי</div><div class="tr">mi-lif-<b>NEI</b></div><div class="fr">from before</div></div>
+      <div class="word"><div class="he">אֱלוֹהַּ</div><div class="tr">e-lo-<b>HA</b></div><div class="fr">the God of</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+    </div>
+    <div class="stich-translation">before the God of Jacob,</div>
+  </div>
+
+  <div class="verse-summary">The answer arrives and it is not an answer but a command, and the first divine title in the psalm comes with it. The earth is told to do what the mountains were already doing in verse 4.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">הַהֹפְכִי הַצּוּר אֲגַם מָיִם<br>
+  חַלָּמִישׁ לְמַעְיְנוֹ מָיִם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַהֹפְכִי</div><div class="tr">ha-hof-<b>CHI</b></div><div class="fr">the One who turns</div></div>
+      <div class="word"><div class="he">הַצּוּר</div><div class="tr">ha-<b>TZUR</b></div><div class="fr">the rock</div></div>
+      <div class="word"><div class="he">אֲגַם</div><div class="tr">a-<b>GAM</b></div><div class="fr">into a pool of</div></div>
+      <div class="word"><div class="he">מָיִם</div><div class="tr">ma-<b>YIM</b></div><div class="fr">water</div></div>
+    </div>
+    <div class="stich-translation">who turns the rock into a pool of water,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חַלָּמִישׁ</div><div class="tr">cha-la-<b>MISH</b></div><div class="fr">flint</div></div>
+      <div class="word"><div class="he">לְמַעְיְנוֹ</div><div class="tr">le-mai-<b>NO</b></div><div class="fr">into a spring of</div></div>
+      <div class="word"><div class="he">מָיִם</div><div class="tr">ma-<b>YIM</b></div><div class="fr">water</div></div>
+    </div>
+    <div class="stich-translation">flint into a spring of water.</div>
+  </div>
+
+  <div class="verse-summary">One act said twice, water out of stone and then water out of harder stone. The psalm ends on the water rather than on the one who made it, so the last word is the evidence.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Four couplets in a strict shape. First the going out and what it produced, a people that becomes a sanctuary and a domain. Then what the world did about it, water and land in one line each. Then the same two lines again as questions. Then the command to the earth and the reason, which is a God who converts rock into water. Notice that the grammatical subject of the whole thing is missing until verse 7 and even then arrives as a title rather than a name. Notice also that <strong>לְקׇדְשׁוֹ</strong> (le-kod-sho, v.2) makes Judah a holy thing rather than a holy people; the noun is holiness with a preposition and a possessive, not the word for temple.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Three details a learner can carry away. <strong>לֹעֵז</strong> (lo-ez, v.1) is a rare participle for speaking unintelligibly, and the root supplies the later Hebrew word for a foreign tongue. <strong>חוּלִי</strong> (chu-li, v.7) is a feminine singular imperative from the root chet vav lamed, to writhe or to whirl, the same root behind the word for a circle dance, so the command can be read as tremble or as dance and both are current; the earth is being told to do the thing the mountains did. <strong>הַהֹפְכִי</strong> (ha-hof-chi, v.8) and <strong>לְמַעְיְנוֹ</strong> (le-mai-no, v.8) both end in a vowel that adds nothing to the sense, the one who turns and into a spring of, and the usual grammatical explanation is an archaic linking ending kept in poetry. That ending is one of the marks of very old Hebrew verse.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Because verse 3 refuses to say what the sea saw, readers have filled it in, and the gap has been filled in more than one way: that the sea saw the God of Israel, that it saw the merit of the ancestors, that it saw the bones of Joseph being carried up out of Egypt, since Joseph is the one who fled in Genesis and the sea in this verse flees with the same verb. None of those is stated here, and the psalm gains from leaving it open. The other reading that attaches itself to this psalm is about order: nature is not described as obeying but as reacting, in the way an inferior gives way to a superior, which is why verses 5 and 6 can afford to be sarcastic. At the Seder the first half of the Hallel ends with verse 8, so flint into a spring of water is the last thing said before the meal.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The psalm has no name for God until verse 7 and never uses the four letter name, and the mystical reading takes the delay as the point: what acts in verses 3 and 4 is a presence not yet named, and creation recognises it before language does. Verse 2 is read as the moment a people becomes a vessel, a sanctuary and a rule, which is what the exodus was for. The rock of verse 8 is the standard image of a closed thing made to give, and its two halves are graded, ordinary stone and then flint, so the harder case is the second one. The last word of the psalm is water, which is where a psalm about a sea that fled would be expected to end, and does.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-114-en',
+  key: 'Am',
+  tempo: 96,
+  progression: '| Em Em | D D | C C | B7 Em |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 149: הַלְלוּ יָהּ</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 149: Sing to the LORD a new song</h1>
+    <div class="subtitle">תְּהִלִּים קמ״ט · הַלְלוּ יָהּ</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 149</a></div>
+</header>
+
+<div class="t-intro">
+  Nine verses, and one of the five psalms that both open and close with Halleluyah at the end of the book. Those five are said every morning in Pesukei deZimra, so this is a psalm a beginner hears constantly without noticing it. The thing to watch is the collision in verse 6: the high praises of God in the throat and a double-edged sword in the hand, one clause each, with nothing between them to mark a contrast. Everything after that verse is an infinitive, which matters more than it sounds, because an infinitive states a purpose without saying who carries it out or when.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">הַלְלוּ יָהּ<br>
+  שִׁירוּ לַיהֹוָה שִׁיר חָדָשׁ<br>
+  תְּהִלָּתוֹ בִּקְהַל חֲסִידִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Praise Yah.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁירוּ</div><div class="tr">shi-<b>RU</b></div><div class="fr">sing</div></div>
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">lai-ho-<b>VA</b></div><div class="fr">to the LORD</div></div>
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song</div></div>
+      <div class="word"><div class="he">חָדָשׁ</div><div class="tr">cha-<b>DASH</b></div><div class="fr">new</div></div>
+    </div>
+    <div class="stich-translation">Sing to the LORD a new song,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּהִלָּתוֹ</div><div class="tr">te-hi-la-<b>TO</b></div><div class="fr">His praise</div></div>
+      <div class="word"><div class="he">בִּקְהַל</div><div class="tr">bik-<b>HAL</b></div><div class="fr">in the assembly of</div></div>
+      <div class="word"><div class="he">חֲסִידִים</div><div class="tr">cha-si-<b>DIM</b></div><div class="fr">the faithful</div></div>
+    </div>
+    <div class="stich-translation">His praise in the assembly of the faithful.</div>
+  </div>
+
+  <div class="verse-summary">The opening word is a plural imperative, so the psalm is an instruction to a group from its first syllable. A new song implies that the old ones are still standing and something has happened that they do not cover.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">יִשְׂמַח יִשְׂרָאֵל בְּעֹשָׂיו<br>
+  בְּנֵי צִיּוֹן יָגִילוּ בְמַלְכָּם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׂמַח</div><div class="tr">yis-<b>MACH</b></div><div class="fr">let him rejoice</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">בְּעֹשָׂיו</div><div class="tr">be-o-<b>SAV</b></div><div class="fr">in his Maker</div></div>
+    </div>
+    <div class="stich-translation">Let Israel rejoice in his Maker;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּנֵי</div><div class="tr">bnei</div><div class="fr">the children of</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+      <div class="word"><div class="he">יָגִילוּ</div><div class="tr">ya-gi-<b>LU</b></div><div class="fr">let them be glad</div></div>
+      <div class="word"><div class="he">בְמַלְכָּם</div><div class="tr">ve-mal-<b>KAM</b></div><div class="fr">in their King</div></div>
+    </div>
+    <div class="stich-translation">let the children of Zion be glad in their King.</div>
+  </div>
+
+  <div class="verse-summary">Two names for the same community, singular then plural, and two titles for God, one from creation and one from politics. The pairing sets up the second half of the psalm, where kingship becomes the operative idea.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">יְהַלְלוּ שְׁמוֹ בְמָחוֹל<br>
+  בְּתֹף וְכִנּוֹר יְזַמְּרוּ לוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהַלְלוּ</div><div class="tr">ye-hal-<b>LU</b></div><div class="fr">let them praise</div></div>
+      <div class="word"><div class="he">שְׁמוֹ</div><div class="tr">shmo</div><div class="fr">His name</div></div>
+      <div class="word"><div class="he">בְמָחוֹל</div><div class="tr">ve-ma-<b>CHOL</b></div><div class="fr">with dance</div></div>
+    </div>
+    <div class="stich-translation">Let them praise His name with dancing,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּתֹף</div><div class="tr">be-<b>TOF</b></div><div class="fr">with drum</div></div>
+      <div class="word"><div class="he">וְכִנּוֹר</div><div class="tr">ve-chi-<b>NOR</b></div><div class="fr">and lyre</div></div>
+      <div class="word"><div class="he">יְזַמְּרוּ</div><div class="tr">ye-zam-<b>RU</b></div><div class="fr">let them make music</div></div>
+      <div class="word"><div class="he">לוֹ</div><div class="tr">lo</div><div class="fr">to Him</div></div>
+    </div>
+    <div class="stich-translation">with drum and lyre let them make music for Him.</div>
+  </div>
+
+  <div class="verse-summary">Praise gets a body and instruments. The drum and the lyre are the two ends of the range, one percussive and portable, one played with the fingers.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">כִּי רוֹצֶה יְהֹוָה בְּעַמּוֹ<br>
+  יְפָאֵר עֲנָוִים בִּישׁוּעָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">רוֹצֶה</div><div class="tr">ro-<b>TZE</b></div><div class="fr">takes pleasure</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בְּעַמּוֹ</div><div class="tr">be-a-<b>MO</b></div><div class="fr">in His people</div></div>
+    </div>
+    <div class="stich-translation">For the LORD takes pleasure in His people;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְפָאֵר</div><div class="tr">ye-fa-<b>ER</b></div><div class="fr">He adorns</div></div>
+      <div class="word"><div class="he">עֲנָוִים</div><div class="tr">a-na-<b>VIM</b></div><div class="fr">the humble</div></div>
+      <div class="word"><div class="he">בִּישׁוּעָה</div><div class="tr">bi-shu-<b>A</b></div><div class="fr">with salvation</div></div>
+    </div>
+    <div class="stich-translation">He crowns the humble with rescue.</div>
+  </div>
+
+  <div class="verse-summary">The reason clause, and the only verse in the psalm where God is the one acting. The verb in the second half means to make beautiful, so rescue is described as an ornament worn rather than a rope thrown.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">יַעְלְזוּ חֲסִידִים בְּכָבוֹד<br>
+  יְרַנְּנוּ עַל מִשְׁכְּבוֹתָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יַעְלְזוּ</div><div class="tr">ya-le-<b>ZU</b></div><div class="fr">let them exult</div></div>
+      <div class="word"><div class="he">חֲסִידִים</div><div class="tr">cha-si-<b>DIM</b></div><div class="fr">the faithful</div></div>
+      <div class="word"><div class="he">בְּכָבוֹד</div><div class="tr">be-cha-<b>VOD</b></div><div class="fr">in glory</div></div>
+    </div>
+    <div class="stich-translation">Let the faithful exult in glory;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְרַנְּנוּ</div><div class="tr">ye-ran-<b>NU</b></div><div class="fr">let them sing out</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">מִשְׁכְּבוֹתָם</div><div class="tr">mish-ke-vo-<b>TAM</b></div><div class="fr">their beds</div></div>
+    </div>
+    <div class="stich-translation">let them sing out on their beds.</div>
+  </div>
+
+  <div class="verse-summary">The most private verse in a public psalm. Everything so far has been assembly, dance and instruments, and now the singing happens lying down, alone, with no audience.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">רוֹמְמוֹת אֵל בִּגְרוֹנָם<br>
+  וְחֶרֶב פִּיפִיּוֹת בְּיָדָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רוֹמְמוֹת</div><div class="tr">rom-<b>MOT</b></div><div class="fr">high praises of</div></div>
+      <div class="word"><div class="he">אֵל</div><div class="tr">el</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">בִּגְרוֹנָם</div><div class="tr">big-ro-<b>NAM</b></div><div class="fr">in their throat</div></div>
+    </div>
+    <div class="stich-translation">The high praises of God in their throat,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְחֶרֶב</div><div class="tr">ve-<b>CHE</b>-rev</div><div class="fr">and a sword of</div></div>
+      <div class="word"><div class="he">פִּיפִיּוֹת</div><div class="tr">pi-fi-<b>YOT</b></div><div class="fr">two mouths</div></div>
+      <div class="word"><div class="he">בְּיָדָם</div><div class="tr">bya-<b>DAM</b></div><div class="fr">in their hand</div></div>
+    </div>
+    <div class="stich-translation">and a double-edged sword in their hand.</div>
+  </div>
+
+  <div class="verse-summary">The hinge, and there is no verb in it at all. Two nouns held in two body parts, side by side, and the psalm never explains how they are meant to relate.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">לַעֲשׂוֹת נְקָמָה בַּגּוֹיִם<br>
+  תּוֹכֵחוֹת בַּלְאֻמִּים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַעֲשׂוֹת</div><div class="tr">la-a-<b>SOT</b></div><div class="fr">to carry out</div></div>
+      <div class="word"><div class="he">נְקָמָה</div><div class="tr">ne-ka-<b>MA</b></div><div class="fr">vengeance</div></div>
+      <div class="word"><div class="he">בַּגּוֹיִם</div><div class="tr">ba-go-<b>YIM</b></div><div class="fr">among the nations</div></div>
+    </div>
+    <div class="stich-translation">To carry out vengeance among the nations,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תּוֹכֵחוֹת</div><div class="tr">to-che-<b>CHOT</b></div><div class="fr">rebukes</div></div>
+      <div class="word"><div class="he">בַּלְאֻמִּים</div><div class="tr">bal-u-<b>MIM</b></div><div class="fr">among the peoples</div></div>
+    </div>
+    <div class="stich-translation">rebukes among the peoples,</div>
+  </div>
+
+  <div class="verse-summary">The first of three infinitives that hang off verse 6. Grammatically nobody is doing this yet: the line states what the sword is for, not that it has been drawn.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">לֶאְסֹר מַלְכֵיהֶם בְּזִקִּים<br>
+  וְנִכְבְּדֵיהֶם בְּכַבְלֵי בַרְזֶל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֶאְסֹר</div><div class="tr">le-<b>SOR</b></div><div class="fr">to bind</div></div>
+      <div class="word"><div class="he">מַלְכֵיהֶם</div><div class="tr">mal-<b>CHEI</b>-hem</div><div class="fr">their kings</div></div>
+      <div class="word"><div class="he">בְּזִקִּים</div><div class="tr">bzi-<b>KIM</b></div><div class="fr">with chains</div></div>
+    </div>
+    <div class="stich-translation">to bind their kings with chains,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְנִכְבְּדֵיהֶם</div><div class="tr">ve-nich-<b>BDEI</b>-hem</div><div class="fr">and their nobles</div></div>
+      <div class="word"><div class="he">בְּכַבְלֵי</div><div class="tr">be-chav-<b>LEI</b></div><div class="fr">with fetters of</div></div>
+      <div class="word"><div class="he">בַרְזֶל</div><div class="tr"><b>VAR</b>-zel</div><div class="fr">iron</div></div>
+    </div>
+    <div class="stich-translation">and their nobles with iron fetters,</div>
+  </div>
+
+  <div class="verse-summary">The targets are the top of the hierarchy, not populations. Kings and nobles are bound rather than killed, which keeps the scene judicial rather than military.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">לַעֲשׂוֹת בָּהֶם מִשְׁפָּט כָּתוּב<br>
+  הָדָר הוּא לְכׇל חֲסִידָיו<br>
+  הַלְלוּ יָהּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַעֲשׂוֹת</div><div class="tr">la-a-<b>SOT</b></div><div class="fr">to carry out</div></div>
+      <div class="word"><div class="he">בָּהֶם</div><div class="tr"><b>BA</b>-hem</div><div class="fr">on them</div></div>
+      <div class="word"><div class="he">מִשְׁפָּט</div><div class="tr">mish-<b>PAT</b></div><div class="fr">the judgment</div></div>
+      <div class="word"><div class="he">כָּתוּב</div><div class="tr">ka-<b>TUV</b></div><div class="fr">written</div></div>
+    </div>
+    <div class="stich-translation">to carry out on them the judgment that is written.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָדָר</div><div class="tr">ha-<b>DAR</b></div><div class="fr">splendour</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">it is</div></div>
+      <div class="word"><div class="he">לְכׇל</div><div class="tr">le-<b>CHOL</b></div><div class="fr">for all</div></div>
+      <div class="word"><div class="he">חֲסִידָיו</div><div class="tr">cha-si-<b>DAV</b></div><div class="fr">His faithful</div></div>
+    </div>
+    <div class="stich-translation">That is the splendour of all His faithful.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Praise Yah.</div>
+  </div>
+
+  <div class="verse-summary">The last infinitive ties the whole sword sequence to a text already on the record, so nothing new is being decided here. Then the psalm drops the subject completely and ends on the word it started with.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two movements of unequal weight. Verses 1 to 5 are praise: a new song, an assembly, a Maker and a King, dancing, a drum, a lyre, and finally singing in bed. Verses 6 to 9 are a sword, vengeance, rebukes, chains, iron and a written judgment. Verse 6 belongs to both and joins them with nothing stronger than the letter that means and. What holds the second half back from being a call to arms is grammar: <strong>לַעֲשׂוֹת</strong> (la-a-sot, v.7), <strong>לֶאְסֹר</strong> (le-sor, v.8) and <strong>לַעֲשׂוֹת</strong> (la-a-sot, v.9) are all infinitives, purpose clauses attached to a sword that is described as held, not used. The psalm ends by calling the whole thing splendour and returning to the word it opened with, so the frame around the violence is praise on both sides.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The sword of verse 6 is literally a sword of two mouths, <strong>פִּיפִיּוֹת</strong> (pi-fi-yot, v.6), since a blade edge in Hebrew is a mouth. That puts two mouths in the hand of someone whose throat, <strong>בִּגְרוֹנָם</strong> (big-ro-nam, v.6), is already full of praise, and the pun is almost certainly deliberate: the verse is built out of speech organs. The second crux is <strong>כָּתוּב</strong> (ka-tuv, v.9), the judgment written. Written where is not stated. Read as the Torah's own sentences it makes the second half a matter of enforcement rather than initiative; read as a decree recorded elsewhere it makes it prophecy. Third, <strong>הָדָר</strong> (ha-dar, v.9) can be construed as an abstract noun, splendour, so the line means this is splendour for all His faithful, or as a predicate for God, so it means He is the splendour of all His faithful. Translations split on it and the Hebrew does not decide.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>A long tradition of reading takes the sword of verse 6 as words rather than metal, on the grounds that the verse gives the faithful a throat before it gives them a hand and that the weapon is named after mouths. On that reading the vengeance of verse 7 is carried out in study and testimony, and the psalm is describing what praise does when it is precise. A second reading works on <strong>כָּתוּב</strong> (ka-tuv, v.9) and treats the word written as a limit rather than a licence: the faithful execute only a judgment already recorded, which forbids them from inventing one. Both readings are attempts to solve the same discomfort, that a liturgical psalm said every morning puts a blade in the hand of the congregation and does not apologise for it.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The psalm keeps moving between the public and the hidden. It begins in an assembly, <strong>חֲסִידִים</strong> (cha-si-dim, v.1), and reaches its quietest point in <strong>מִשְׁכְּבוֹתָם</strong> (mish-ke-vo-tam, v.5), praise sung on the bed, in the dark, where nobody hears it. That verse is often read as the real location of the work: what a person sings alone at night is what the daylight praise is made of. The two words for radiance, <strong>בְּכָבוֹד</strong> (be-cha-vod, v.5) and <strong>הָדָר</strong> (ha-dar, v.9), bracket the sword section, so the entire middle passage sits inside a description of light. In that frame the double-edged sword is not an instrument added to praise but what praise becomes when it is directed, and the reason the psalm can end on Halleluyah without any transition is that it never left.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-149-en',
+  key: 'Am',
+  tempo: 112,
+  progression: '| Am Am | F F | C G | Am E7 |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

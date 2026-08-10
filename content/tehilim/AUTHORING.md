@@ -58,6 +58,9 @@ then write a line a learner in 2026 can map word by word onto the Hebrew above i
 4. **Every verse of the psalm is present**, numbered as in the data.
 5. **`summary` is at least 25 characters, `intro` at least 60, each pardes body at
    least 80.** No "TODO", no "...".
+6. **Every `{{verse.word}}` reference points at a word that exists.** This was
+   added after several authors wrote their own throwaway script to check it: a bad
+   index is a build error that surfaces long after you have gone.
 
 ### Quoting Hebrew in prose
 

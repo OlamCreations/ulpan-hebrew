@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 128: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 128: Happy is everyone who fears the LORD</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ח · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 128</a></div>
+</header>
+
+<div class="t-intro">
+  A Song of Ascents about an ordinary house, read at weddings in many communities. It is the best short drill in the book for the second person masculine singular suffix, because after the opening verse almost every noun in it carries one: your palms, your wife, your house, your sons, your table, your life, your sons again. Count them and you have the whole paradigm. The psalm also moves outward in a straight line, from a pair of working hands to a table, then to Zion, Jerusalem, grandchildren and the nation, and the last three words are the same three that end Psalm 125.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  אַשְׁרֵי כׇּל יְרֵא יְהֹוָה<br>
+  הַהֹלֵךְ בִּדְרָכָיו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of the ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַשְׁרֵי</div><div class="tr">ash-<b>REI</b></div><div class="fr">happy is</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">every</div></div>
+      <div class="word"><div class="he">יְרֵא</div><div class="tr">ye-<b>RE</b></div><div class="fr">one who fears</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Happy is everyone who fears the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַהֹלֵךְ</div><div class="tr">ha-ho-<b>LECH</b></div><div class="fr">the one who walks</div></div>
+      <div class="word"><div class="he">בִּדְרָכָיו</div><div class="tr">bid-ra-<b>CHAV</b></div><div class="fr">in His ways</div></div>
+    </div>
+    <div class="stich-translation">who walks in His ways.</div>
+  </div>
+
+  <div class="verse-summary">The opening word is the one the book of Psalms begins with, and it is a noun rather than an adjective, closer to the happinesses of than to happy. The subject is still general here, everyone, and it will narrow to a single you in the next verse.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">יְגִיעַ כַּפֶּיךָ כִּי תֹאכֵל<br>
+  אַשְׁרֶיךָ וְטוֹב לָךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְגִיעַ</div><div class="tr">ye-<b>GI</b>-a</div><div class="fr">the labour of</div></div>
+      <div class="word"><div class="he">כַּפֶּיךָ</div><div class="tr">ka-pei-<b>CHA</b></div><div class="fr">your palms</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">when</div></div>
+      <div class="word"><div class="he">תֹאכֵל</div><div class="tr">to-<b>CHEL</b></div><div class="fr">you eat</div></div>
+    </div>
+    <div class="stich-translation">When you eat the labour of your hands,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַשְׁרֶיךָ</div><div class="tr">ash-rei-<b>CHA</b></div><div class="fr">happy are you</div></div>
+      <div class="word"><div class="he">וְטוֹב</div><div class="tr">ve-<b>TOV</b></div><div class="fr">and good</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">is for you</div></div>
+    </div>
+    <div class="stich-translation">happy are you, and it is good for you.</div>
+  </div>
+
+  <div class="verse-summary">The first thing said to the man directly, and it is about eating what he made. The word for happy now carries a suffix, the only time in the book it does, so the general blessing of verse 1 is handed to one person.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">אֶשְׁתְּךָ כְּגֶפֶן פֹּרִיָּה בְּיַרְכְּתֵי בֵיתֶךָ<br>
+  בָּנֶיךָ כִּשְׁתִלֵי זֵיתִים סָבִיב לְשֻׁלְחָנֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶשְׁתְּךָ</div><div class="tr">esh-te-<b>CHA</b></div><div class="fr">your wife</div></div>
+      <div class="word"><div class="he">כְּגֶפֶן</div><div class="tr">ke-<b>GE</b>-fen</div><div class="fr">is like a vine</div></div>
+      <div class="word"><div class="he">פֹּרִיָּה</div><div class="tr">po-ri-<b>YA</b></div><div class="fr">fruitful</div></div>
+      <div class="word"><div class="he">בְּיַרְכְּתֵי</div><div class="tr">byar-<b>KTEI</b></div><div class="fr">in the innermost parts of</div></div>
+      <div class="word"><div class="he">בֵיתֶךָ</div><div class="tr">vei-te-<b>CHA</b></div><div class="fr">your house</div></div>
+    </div>
+    <div class="stich-translation">Your wife is like a fruiting vine in the recesses of your house;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בָּנֶיךָ</div><div class="tr">ba-nei-<b>CHA</b></div><div class="fr">your sons</div></div>
+      <div class="word"><div class="he">כִּשְׁתִלֵי</div><div class="tr">kish-ti-<b>LEI</b></div><div class="fr">are like the saplings of</div></div>
+      <div class="word"><div class="he">זֵיתִים</div><div class="tr">zei-<b>TIM</b></div><div class="fr">olive trees</div></div>
+      <div class="word"><div class="he">סָבִיב</div><div class="tr">sa-<b>VIV</b></div><div class="fr">around</div></div>
+      <div class="word"><div class="he">לְשֻׁלְחָנֶךָ</div><div class="tr">le-shul-cha-ne-<b>CHA</b></div><div class="fr">your table</div></div>
+    </div>
+    <div class="stich-translation">your sons like olive saplings around your table.</div>
+  </div>
+
+  <div class="verse-summary">Two plants, and both of them are slow. A vine takes years to bear and an olive longer, so the picture of a full house is also a picture of time already spent. The table in the last word is where the two halves meet.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">הִנֵּה כִי כֵן<br>
+  יְבֹרַךְ גָּבֶר יְרֵא יְהֹוָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">behold</div></div>
+      <div class="word"><div class="he">כִי</div><div class="tr">chi</div><div class="fr">indeed</div></div>
+      <div class="word"><div class="he">כֵן</div><div class="tr">chen</div><div class="fr">thus</div></div>
+    </div>
+    <div class="stich-translation">See, it is just so:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְבֹרַךְ</div><div class="tr">ye-vo-<b>RACH</b></div><div class="fr">shall be blessed</div></div>
+      <div class="word"><div class="he">גָּבֶר</div><div class="tr"><b>GA</b>-ver</div><div class="fr">a man</div></div>
+      <div class="word"><div class="he">יְרֵא</div><div class="tr">ye-<b>RE</b></div><div class="fr">one who fears</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">a man who fears the LORD is blessed.</div>
+  </div>
+
+  <div class="verse-summary">The psalm stops describing and points at what it has described. The phrase who fears the LORD comes back from verse 1 word for word, which closes the first half as a frame.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">יְבָרֶכְךָ יְהֹוָה מִצִּיּוֹן<br>
+  וּרְאֵה בְּטוּב יְרוּשָׁלָ͏ִם<br>
+  כֹּל יְמֵי חַיֶּיךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְבָרֶכְךָ</div><div class="tr">ye-va-rech-<b>CHA</b></div><div class="fr">may He bless you</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">מִצִּיּוֹן</div><div class="tr">mi-tzi-<b>YON</b></div><div class="fr">from Zion</div></div>
+    </div>
+    <div class="stich-translation">May the LORD bless you from Zion;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּרְאֵה</div><div class="tr">ur-<b>E</b></div><div class="fr">and see</div></div>
+      <div class="word"><div class="he">בְּטוּב</div><div class="tr">be-<b>TUV</b></div><div class="fr">in the good of</div></div>
+      <div class="word"><div class="he">יְרוּשָׁלָ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+    </div>
+    <div class="stich-translation">and may you look on the good of Jerusalem</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֹּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">the days of</div></div>
+      <div class="word"><div class="he">חַיֶּיךָ</div><div class="tr">cha-yei-<b>CHA</b></div><div class="fr">your life</div></div>
+    </div>
+    <div class="stich-translation">all the days of your life;</div>
+  </div>
+
+  <div class="verse-summary">The house opens onto the city. The blessing is given a direction, out of Zion, and what the man is told to look at is not his own table any more but the welfare of a place he does not own.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">וּרְאֵה בָנִים לְבָנֶיךָ<br>
+  שָׁלוֹם עַל יִשְׂרָאֵל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּרְאֵה</div><div class="tr">ur-<b>E</b></div><div class="fr">and see</div></div>
+      <div class="word"><div class="he">בָנִים</div><div class="tr">va-<b>NIM</b></div><div class="fr">sons</div></div>
+      <div class="word"><div class="he">לְבָנֶיךָ</div><div class="tr">le-va-nei-<b>CHA</b></div><div class="fr">belonging to your sons</div></div>
+    </div>
+    <div class="stich-translation">And may you see sons belonging to your sons.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁלוֹם</div><div class="tr">sha-<b>LOM</b></div><div class="fr">peace</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+    </div>
+    <div class="stich-translation">Peace upon Israel.</div>
+  </div>
+
+  <div class="verse-summary">The same verb as the middle of verse 5, used a second time so that seeing the city and seeing grandchildren are one request. The last three words leave the household entirely and are not attached to it by any grammar.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two halves with a hinge. Verses 1 to 3 describe: someone who fears the LORD, eats what his own hands made, and has a wife and children around a table. Verse 4 stops and points at it. Verses 5 and 6 turn from description into blessing, and the verbs change with them, from statements to wishes. The direction of the whole is outward: hands, food, house, table, Zion, Jerusalem, a second generation, Israel. Nothing in the psalm is extraordinary, and that is its argument, since what it calls blessed is a working man eating his own bread.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p><strong>אַשְׁרֵי</strong> (ash-rei, v.1) is the word that opens the book of Psalms, and it is a plural noun in the construct rather than an adjective, so the line reads closer to the happinesses of everyone who fears than to happy is he. Its form with a suffix in <strong>אַשְׁרֶיךָ</strong> (ash-rei-cha, v.2) occurs nowhere else in the book. <strong>יְגִיעַ</strong> (ye-gi-a, v.2) is not work but the product of work, the toil itself put on the table, and <strong>כַּפֶּיךָ</strong> (ka-pei-cha, v.2) is the palms rather than the hands. <strong>גָּבֶר</strong> (ga-ver, v.4) is not the general word for a person but the one for a man in his strength, which is why some read verse 4 as narrowing the everyone of verse 1. <strong>בְּיַרְכְּתֵי</strong> (byar-ktei, v.3) means the innermost or furthest parts, and how to take it here is disputed: one reading hears a statement about a wife kept in the interior of the house, another simply locates the vine where vines were grown, against the inner wall of the courtyard, and the Hebrew supports either.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The psalm has long been used at weddings, and the reason is in verse 3 rather than in any legal content: it describes a household as something that grows and is measured in years rather than as a contract. The pairing of plants was noticed early, since a vine is trained and an olive is planted and left, and the two together cover both kinds of patience. Verse 2 draws its own comment because eating what your hands made is presented as a blessing rather than as a bare fact, which implies the ordinary case in which a man works and someone else eats it. On the closing phrase, the shift from a private table to the whole nation is abrupt, and the same three words close Psalm 125, the only other place in the book where they appear.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading follows the widening as a deliberate order. What is blessed first is the smallest and most private thing, a pair of palms, and the blessing is then said to come from Zion, a place outside the house entirely, so the flow is inward from a source and outward again in results. The wife inside the house and the children around the table are read as an interior that receives and an exterior that shows, which is the shape this literature gives to any vessel that works. Seeing in <strong>וּרְאֵה</strong> (ur-e, v.5) and <strong>וּרְאֵה</strong> (ur-e, v.6) is the same verb twice, and it is the only thing the man is asked to do in the second half: not build, not keep, only look at what is good in a place larger than his own house, and then at a generation he will not live inside.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-128-en',
+  key: 'Am',
+  tempo: 80,
+  progression: '| D A | G D | Em A | D D |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

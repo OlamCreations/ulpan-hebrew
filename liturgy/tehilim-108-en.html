@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 108: שִׁיר מִזְמוֹר</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 108: Through God we will do valiantly</h1>
+    <div class="subtitle">תְּהִלִּים ק״ח · שִׁיר מִזְמוֹר</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 108</a></div>
+</header>
+
+<div class="t-intro">
+  Fourteen verses, and only the first of them is new. Verses 2 to 6 are the closing half of Psalm 57, verses 7 to 14 are the closing half of Psalm 60, and the three word heading at verse 1 replaces the two long headings those psalms carry. Nothing here needs to be learned twice: if you have worked through 57 and 60 you already have the vocabulary, and the exercise is different. Read this page for the seam. The two halves came from a song of confidence sung in hiding and a lament after a defeat, and putting them end to end produces a psalm that praises first and asks second, which is the reverse of both parents. The wording is not quite identical either, and the small differences are listed verse by verse below.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר מִזְמוֹר לְדָוִד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song</div></div>
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">A song. A psalm of David.</div>
+  </div>
+
+  <div class="verse-summary">The only line in the psalm without a parallel elsewhere. Three words, where Psalm 57 heads its text with a tune name and a cave and Psalm 60 with a tune name and a campaign.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">נָכוֹן לִבִּי אֱלֹהִים<br>
+  אָשִׁירָה וַאֲזַמְּרָה<br>
+  אַף כְּבוֹדִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נָכוֹן</div><div class="tr">na-<b>CHON</b></div><div class="fr">steady is</div></div>
+      <div class="word"><div class="he">לִבִּי</div><div class="tr">li-<b>BI</b></div><div class="fr">my heart</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">My heart is steady, God,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָשִׁירָה</div><div class="tr">a-shi-<b>RA</b></div><div class="fr">let me sing</div></div>
+      <div class="word"><div class="he">וַאֲזַמְּרָה</div><div class="tr">va-a-zam-<b>RA</b></div><div class="fr">and let me make music</div></div>
+    </div>
+    <div class="stich-translation">let me sing and make music,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַף</div><div class="tr">af</div><div class="fr">even</div></div>
+      <div class="word"><div class="he">כְּבוֹדִי</div><div class="tr">ke-vo-<b>DI</b></div><div class="fr">my glory</div></div>
+    </div>
+    <div class="stich-translation">with my glory too.</div>
+  </div>
+
+  <div class="verse-summary">Psalm 57:8 says my heart is steady twice; here it is said once. In exchange this verse ends with two words, <strong>אַף</strong> (af, v.2) and <strong>כְּבוֹדִי</strong> (ke-vo-di, v.2), that in Psalm 57 open the following verse as awake, my glory.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">עוּרָה הַנֵּבֶל וְכִנּוֹר<br>
+  אָעִירָה שָּׁחַר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עוּרָה</div><div class="tr">u-<b>RA</b></div><div class="fr">awake</div></div>
+      <div class="word"><div class="he">הַנֵּבֶל</div><div class="tr">ha-<b>NE</b>-vel</div><div class="fr">the harp</div></div>
+      <div class="word"><div class="he">וְכִנּוֹר</div><div class="tr">ve-chi-<b>NOR</b></div><div class="fr">and lyre</div></div>
+    </div>
+    <div class="stich-translation">Awake, harp and lyre;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָעִירָה</div><div class="tr">a-i-<b>RA</b></div><div class="fr">let me wake</div></div>
+      <div class="word"><div class="he">שָּׁחַר</div><div class="tr">sha-<b>CHAR</b></div><div class="fr">the dawn</div></div>
+    </div>
+    <div class="stich-translation">let me wake the dawn.</div>
+  </div>
+
+  <div class="verse-summary">Five words against seven in Psalm 57:9, which wakes the glory first and then repeats the imperative for the instruments. Here there is one waking of instruments and then the dawn.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">אוֹדְךָ בָעַמִּים יְהֹוָה<br>
+  וַאֲזַמֶּרְךָ בַּלְאֻמִּים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אוֹדְךָ</div><div class="tr">od-<b>CHA</b></div><div class="fr">I will thank You</div></div>
+      <div class="word"><div class="he">בָעַמִּים</div><div class="tr">va-a-<b>MIM</b></div><div class="fr">among the peoples</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">I will thank You among the peoples, LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַאֲזַמֶּרְךָ</div><div class="tr">va-a-za-mer-<b>CHA</b></div><div class="fr">and I will sing to You</div></div>
+      <div class="word"><div class="he">בַּלְאֻמִּים</div><div class="tr">bal-u-<b>MIM</b></div><div class="fr">among the nations</div></div>
+    </div>
+    <div class="stich-translation">and sing to You among the nations.</div>
+  </div>
+
+  <div class="verse-summary">Two changes from Psalm 57:10. The divine name at <strong>יְהֹוָה</strong> (a-do-nay, v.4) is the four letter name where Psalm 57 has my Lord, and the second verb here carries a joining vav that Psalm 57 does not have.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">כִּי גָדוֹל מֵעַל שָׁמַיִם חַסְדֶּךָ<br>
+  וְעַד שְׁחָקִים אֲמִתֶּךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">גָדוֹל</div><div class="tr">ga-<b>DOL</b></div><div class="fr">great</div></div>
+      <div class="word"><div class="he">מֵעַל</div><div class="tr">me-<b>AL</b></div><div class="fr">beyond</div></div>
+      <div class="word"><div class="he">שָׁמַיִם</div><div class="tr">sha-<b>MA</b>-yim</div><div class="fr">the heavens</div></div>
+      <div class="word"><div class="he">חַסְדֶּךָ</div><div class="tr">chas-de-<b>CHA</b></div><div class="fr">is Your kindness</div></div>
+    </div>
+    <div class="stich-translation">For Your kindness is great, higher than the heavens,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְעַד</div><div class="tr">ve-<b>AD</b></div><div class="fr">and up to</div></div>
+      <div class="word"><div class="he">שְׁחָקִים</div><div class="tr">shcha-<b>KIM</b></div><div class="fr">the clouds</div></div>
+      <div class="word"><div class="he">אֲמִתֶּךָ</div><div class="tr">a-mi-te-<b>CHA</b></div><div class="fr">is Your truth</div></div>
+    </div>
+    <div class="stich-translation">and Your truth reaches the clouds.</div>
+  </div>
+
+  <div class="verse-summary">The one difference here changes the sense. <strong>מֵעַל</strong> (me-al, v.5) means above or beyond; Psalm 57:11 has the shorter preposition meaning as far as. Kindness that reaches the sky becomes kindness that clears it.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">רוּמָה עַל שָׁמַיִם אֱלֹהִים<br>
+  וְעַל כׇּל הָאָרֶץ כְּבוֹדֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רוּמָה</div><div class="tr">ru-<b>MA</b></div><div class="fr">be exalted</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">above</div></div>
+      <div class="word"><div class="he">שָׁמַיִם</div><div class="tr">sha-<b>MA</b>-yim</div><div class="fr">heavens</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">Be exalted above heavens, God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְעַל</div><div class="tr">ve-<b>AL</b></div><div class="fr">and over</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הָאָרֶץ</div><div class="tr">ha-<b>A</b>-retz</div><div class="fr">the earth</div></div>
+      <div class="word"><div class="he">כְּבוֹדֶךָ</div><div class="tr">ke-vo-de-<b>CHA</b></div><div class="fr">Your glory</div></div>
+    </div>
+    <div class="stich-translation">and over all the earth, Your glory.</div>
+  </div>
+
+  <div class="verse-summary">The refrain that closes Psalm 57, reused here as a joint rather than an ending. The only difference is the vav at <strong>וְעַל</strong> (ve-al, v.6), which turns two separate clauses into one sentence.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">לְמַעַן יֵחָלְצוּן יְדִידֶיךָ<br>
+  הוֹשִׁיעָה יְמִינְךָ וַעֲנֵנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">so that</div></div>
+      <div class="word"><div class="he">יֵחָלְצוּן</div><div class="tr">ye-chal-<b>TZUN</b></div><div class="fr">they may be rescued</div></div>
+      <div class="word"><div class="he">יְדִידֶיךָ</div><div class="tr">ye-di-dei-<b>CHA</b></div><div class="fr">Your beloved ones</div></div>
+    </div>
+    <div class="stich-translation">So that Your beloved may be rescued,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הוֹשִׁיעָה</div><div class="tr">ho-shi-<b>A</b></div><div class="fr">save</div></div>
+      <div class="word"><div class="he">יְמִינְךָ</div><div class="tr">ye-min-<b>CHA</b></div><div class="fr">with Your right hand</div></div>
+      <div class="word"><div class="he">וַעֲנֵנִי</div><div class="tr">va-a-ne-<b>NI</b></div><div class="fr">and answer me</div></div>
+    </div>
+    <div class="stich-translation">save with Your right hand and answer me.</div>
+  </div>
+
+  <div class="verse-summary">The second source begins, word for word as Psalm 60:7. In Psalm 60 this plea follows five verses of accusation; here it follows praise, and the same sentence reads as trust rather than desperation.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">אֱלֹהִים דִּבֶּר בְּקׇדְשׁוֹ אֶעְלֹזָה<br>
+  אֲחַלְּקָה שְׁכֶם וְעֵמֶק סֻכּוֹת אֲמַדֵּד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">דִּבֶּר</div><div class="tr"><b>DI</b>-ber</div><div class="fr">has spoken</div></div>
+      <div class="word"><div class="he">בְּקׇדְשׁוֹ</div><div class="tr">be-kod-<b>SHO</b></div><div class="fr">in His holiness</div></div>
+      <div class="word"><div class="he">אֶעְלֹזָה</div><div class="tr">e-lo-<b>ZA</b></div><div class="fr">let me exult</div></div>
+    </div>
+    <div class="stich-translation">God has spoken in His holiness: let me exult.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲחַלְּקָה</div><div class="tr">a-chal-<b>KA</b></div><div class="fr">let me divide</div></div>
+      <div class="word"><div class="he">שְׁכֶם</div><div class="tr">shchem</div><div class="fr">Shechem</div></div>
+      <div class="word"><div class="he">וְעֵמֶק</div><div class="tr">ve-<b>E</b>-mek</div><div class="fr">and the valley of</div></div>
+      <div class="word"><div class="he">סֻכּוֹת</div><div class="tr">su-<b>KOT</b></div><div class="fr">Succoth</div></div>
+      <div class="word"><div class="he">אֲמַדֵּד</div><div class="tr">a-ma-<b>DED</b></div><div class="fr">let me measure out</div></div>
+    </div>
+    <div class="stich-translation">Let me parcel out Shechem and measure off the valley of Succoth.</div>
+  </div>
+
+  <div class="verse-summary">Identical to Psalm 60:8. An old oracle quoted inside the psalm, in which the land is treated as an estate to be surveyed rather than a front line.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">לִי גִלְעָד לִי מְנַשֶּׁה<br>
+  וְאֶפְרַיִם מָעוֹז רֹאשִׁי<br>
+  יְהוּדָה מְחֹקְקִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לִי</div><div class="tr">li</div><div class="fr">mine is</div></div>
+      <div class="word"><div class="he">גִלְעָד</div><div class="tr">gil-<b>AD</b></div><div class="fr">Gilead</div></div>
+      <div class="word"><div class="he">לִי</div><div class="tr">li</div><div class="fr">mine is</div></div>
+      <div class="word"><div class="he">מְנַשֶּׁה</div><div class="tr">me-na-<b>SHE</b></div><div class="fr">Manasseh</div></div>
+    </div>
+    <div class="stich-translation">Gilead is mine, Manasseh is mine,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאֶפְרַיִם</div><div class="tr">ve-ef-<b>RA</b>-yim</div><div class="fr">and Ephraim</div></div>
+      <div class="word"><div class="he">מָעוֹז</div><div class="tr">ma-<b>OZ</b></div><div class="fr">is the stronghold of</div></div>
+      <div class="word"><div class="he">רֹאשִׁי</div><div class="tr">ro-<b>SHI</b></div><div class="fr">my head</div></div>
+    </div>
+    <div class="stich-translation">Ephraim is the stronghold on my head,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהוּדָה</div><div class="tr">ye-hu-<b>DA</b></div><div class="fr">Judah</div></div>
+      <div class="word"><div class="he">מְחֹקְקִי</div><div class="tr">me-chok-<b>KI</b></div><div class="fr">is my commander's staff</div></div>
+    </div>
+    <div class="stich-translation">Judah is my commander's staff.</div>
+  </div>
+
+  <div class="verse-summary">One letter apart from Psalm 60:9: the second mine at <strong>לִי</strong> (li, v.9) has no joining vav here, where Psalm 60 has one. The list of holdings is otherwise the same, north then south.</div>
+</div>
+
+<!-- VERSE 10 -->
+<div class="verse">
+  <span class="verse-num">10</span>
+  <div class="verse-full">מוֹאָב סִיר רַחְצִי<br>
+  עַל אֱדוֹם אַשְׁלִיךְ נַעֲלִי<br>
+  עֲלֵי פְלֶשֶׁת אֶתְרוֹעָע</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מוֹאָב</div><div class="tr">mo-<b>AV</b></div><div class="fr">Moab</div></div>
+      <div class="word"><div class="he">סִיר</div><div class="tr">sir</div><div class="fr">is the pot of</div></div>
+      <div class="word"><div class="he">רַחְצִי</div><div class="tr">rach-<b>TZI</b></div><div class="fr">my washing</div></div>
+    </div>
+    <div class="stich-translation">Moab is my washbasin,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">אֱדוֹם</div><div class="tr">e-<b>DOM</b></div><div class="fr">Edom</div></div>
+      <div class="word"><div class="he">אַשְׁלִיךְ</div><div class="tr">ash-<b>LICH</b></div><div class="fr">I fling</div></div>
+      <div class="word"><div class="he">נַעֲלִי</div><div class="tr">na-a-<b>LI</b></div><div class="fr">my sandal</div></div>
+    </div>
+    <div class="stich-translation">on Edom I fling my sandal,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֲלֵי</div><div class="tr">a-<b>LEI</b></div><div class="fr">over</div></div>
+      <div class="word"><div class="he">פְלֶשֶׁת</div><div class="tr"><b>FLE</b>-shet</div><div class="fr">Philistia</div></div>
+      <div class="word"><div class="he">אֶתְרוֹעָע</div><div class="tr">et-ro-<b>A</b></div><div class="fr">I raise a shout</div></div>
+    </div>
+    <div class="stich-translation">over Philistia I shout in triumph.</div>
+  </div>
+
+  <div class="verse-summary">The largest difference in the psalm. <strong>אֶתְרוֹעָע</strong> (et-ro-a, v.10) is a first person verb, I raise a shout, where Psalm 60:10 has a feminine imperative telling Philistia to shout, and the preposition before it here means over rather than over me.</div>
+</div>
+
+<!-- VERSE 11 -->
+<div class="verse">
+  <span class="verse-num">11</span>
+  <div class="verse-full">מִי יֹבִלֵנִי עִיר מִבְצָר<br>
+  מִי נָחַנִי עַד אֱדוֹם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יֹבִלֵנִי</div><div class="tr">yo-vi-le-<b>NI</b></div><div class="fr">will bring me</div></div>
+      <div class="word"><div class="he">עִיר</div><div class="tr">ir</div><div class="fr">to the city of</div></div>
+      <div class="word"><div class="he">מִבְצָר</div><div class="tr">miv-<b>TZAR</b></div><div class="fr">fortification</div></div>
+    </div>
+    <div class="stich-translation">Who will bring me to the fortified city?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">נָחַנִי</div><div class="tr">na-cha-<b>NI</b></div><div class="fr">has led me</div></div>
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">as far as</div></div>
+      <div class="word"><div class="he">אֱדוֹם</div><div class="tr">e-<b>DOM</b></div><div class="fr">Edom</div></div>
+    </div>
+    <div class="stich-translation">Who has led me as far as Edom?</div>
+  </div>
+
+  <div class="verse-summary">The confidence stops and the questions start, exactly as in Psalm 60:11. The noun at <strong>מִבְצָר</strong> (miv-tzar, v.11) is a different word for a fortified place than the one Psalm 60 uses, with the same sense.</div>
+</div>
+
+<!-- VERSE 12 -->
+<div class="verse">
+  <span class="verse-num">12</span>
+  <div class="verse-full">הֲלֹא אֱלֹהִים זְנַחְתָּנוּ<br>
+  וְלֹא תֵצֵא אֱלֹהִים בְּצִבְאֹתֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֲלֹא</div><div class="tr">ha-<b>LO</b></div><div class="fr">is it not</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">זְנַחְתָּנוּ</div><div class="tr">ze-nach-ta-<b>NU</b></div><div class="fr">who have rejected us</div></div>
+    </div>
+    <div class="stich-translation">Is it not You, God, who rejected us?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">תֵצֵא</div><div class="tr">te-<b>TZE</b></div><div class="fr">do You go out</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">בְּצִבְאֹתֵינוּ</div><div class="tr">be-tziv-o-tei-<b>NU</b></div><div class="fr">with our armies</div></div>
+    </div>
+    <div class="stich-translation">And You do not go out, God, with our armies.</div>
+  </div>
+
+  <div class="verse-summary">Seven words where Psalm 60:12 has eight: the pronoun You that stands after <strong>הֲלֹא</strong> (ha-lo, v.12) there is absent here, so the accusation is a touch less pointed.</div>
+</div>
+
+<!-- VERSE 13 -->
+<div class="verse">
+  <span class="verse-num">13</span>
+  <div class="verse-full">הָבָה לָּנוּ עֶזְרָת מִצָּר<br>
+  וְשָׁוְא תְּשׁוּעַת אָדָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָבָה</div><div class="tr">ha-<b>VA</b></div><div class="fr">give</div></div>
+      <div class="word"><div class="he">לָּנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">us</div></div>
+      <div class="word"><div class="he">עֶזְרָת</div><div class="tr">ez-<b>RAT</b></div><div class="fr">help against</div></div>
+      <div class="word"><div class="he">מִצָּר</div><div class="tr">mi-<b>TZAR</b></div><div class="fr">the foe</div></div>
+    </div>
+    <div class="stich-translation">Give us help against the foe,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשָׁוְא</div><div class="tr">ve-<b>SHAV</b></div><div class="fr">and worthless is</div></div>
+      <div class="word"><div class="he">תְּשׁוּעַת</div><div class="tr">tshu-<b>AT</b></div><div class="fr">the rescue of</div></div>
+      <div class="word"><div class="he">אָדָם</div><div class="tr">a-<b>DAM</b></div><div class="fr">man</div></div>
+    </div>
+    <div class="stich-translation">for the rescue that people give is worthless.</div>
+  </div>
+
+  <div class="verse-summary">Identical to Psalm 60:13. The whole request is one imperative, and the second line rules out every alternative source of help.</div>
+</div>
+
+<!-- VERSE 14 -->
+<div class="verse">
+  <span class="verse-num">14</span>
+  <div class="verse-full">בֵּאלֹהִים נַעֲשֶׂה חָיִל<br>
+  וְהוּא יָבוּס צָרֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֵּאלֹהִים</div><div class="tr">be-lo-<b>HIM</b></div><div class="fr">through God</div></div>
+      <div class="word"><div class="he">נַעֲשֶׂה</div><div class="tr">na-a-<b>SE</b></div><div class="fr">we will do</div></div>
+      <div class="word"><div class="he">חָיִל</div><div class="tr">cha-<b>YIL</b></div><div class="fr">valiantly</div></div>
+    </div>
+    <div class="stich-translation">Through God we will do valiantly,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְהוּא</div><div class="tr">ve-<b>HU</b></div><div class="fr">and He</div></div>
+      <div class="word"><div class="he">יָבוּס</div><div class="tr">ya-<b>VUS</b></div><div class="fr">will trample</div></div>
+      <div class="word"><div class="he">צָרֵינוּ</div><div class="tr">tza-rei-<b>NU</b></div><div class="fr">our foes</div></div>
+    </div>
+    <div class="stich-translation">and He is the one who will trample our foes.</div>
+  </div>
+
+  <div class="verse-summary">Identical to Psalm 60:14. The psalm ends on a first person plural after opening on a first person singular, so the private harp of verse 3 finishes as an army.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>The plain fact about this psalm is its construction. Verse 1 is its own heading; verses 2 to 6 reproduce Psalm 57:8 to 12; verses 7 to 14 reproduce Psalm 60:7 to 14. Read as a single piece it has a shape neither parent has. Psalm 57 goes from danger to song, so its praise is an arrival. Psalm 60 goes from defeat to a request for help, so its plea is an ending. Psalm 108 puts the arrival first and then asks, which makes the questions of verses 11 and 12 land after the singer has already announced that God is exalted above the heavens. The seam is between verses 6 and 7, and it is audible: verse 6 is the last line of a refrain, verse 7 opens with a purpose word, so that the exaltation of verse 6 is retrospectively given a reason, that Your beloved may be rescued. Nothing was invented to join them. The join is the word at the start of verse 7 doing work it did not do in Psalm 60.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The differences from the parent psalms are small and worth counting, because they are the only places where this text is not simply quotation. Against Psalm 57: my heart is steady is said once instead of twice in verse 2, and the word my glory moves back from the next verse into this one, so that verse 3 loses one of its two imperatives to awake; the four letter name stands in verse 4 where Psalm 57 has my Lord, and the second verb of that verse gains a joining vav; verse 5 says the kindness is great above the heavens where Psalm 57 says as far as the heavens; verse 6 gains a vav on and over all the earth. Against Psalm 60: verse 9 loses the vav on the second mine; verse 11 uses one noun for a fortified city where Psalm 60 uses another; verse 12 lacks the pronoun You. There are also spelling differences that do not change a word, such as a vowel letter present in one text and absent in the other. The one difference that changes meaning is in verse 10: this psalm has a first person verb, over Philistia I raise a shout, while Psalm 60 has a feminine imperative addressed to Philistia herself. The direction of borrowing is disputed. The common view is that this psalm is the later compilation; it has also been argued that all three draw on older liturgical material, and the manuscripts settle neither.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>A psalm made of two other psalms is a statement about how scripture was used, not only about how it was written. Two songs from named crises, a cave and a lost battle, are stripped of their headings and rejoined under three neutral words, and what was autobiography becomes something a congregation can say on any morning. The reuse also performs an argument. Placing the confidence of Psalm 57 before the complaint of Psalm 60 means the complaint is spoken by someone who has already sung, so the questions in verse 11 are not the questions of a man who has lost faith but of a man who has kept it and still has no army. Read that way, <strong>הֲלֹא</strong> (ha-lo, v.12), is it not, is the pivot of the whole compilation: praise does not exempt anyone from asking why the help has not come. The absence of the pronoun You in that verse, compared with the parent text, has been read as softening the charge, though a single missing word is thin ground for a doctrine.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The two halves can be read as two moments of the same movement rather than as two documents. The first half is upward: heart steady, instruments woken, the dawn woken after them, kindness measured above the heavens, glory over all the earth. The second half is downward and outward: the land parcelled out by name, the neighbouring kingdoms reduced to household objects, the armies, the foe. Between them stands the right hand of verse 7, which in kabbalistic idiom is the side of kindness and expansion, and it is asked to do the saving. On this reading the psalm is a description of how a thing sung in the small hours reaches the ground: it is woken privately at <strong>אָעִירָה</strong> (a-i-ra, v.3), published among the nations in verse 4, raised above the heavens in verse 6, and only then applied to a specific map with specific enemies. Praise is not a mood here. It is the first stage of a descent into the world where the help is actually needed.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-108-en',
+  key: 'Am',
+  tempo: 84,
+  progression: '| D D | G G | D A | D D |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

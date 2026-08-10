@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 122: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 122: I rejoiced when they said to me</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ב · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 122</a></div>
+</header>
+
+<div class="t-intro">
+  One of the fifteen Songs of Ascents, and the one that describes arriving. The speaker is quoted secondhand in verse 1, standing inside the gates by verse 2, and from verse 6 he stops describing the city and starts talking to it. That turn is the grammar lesson: from verse 6 to the end almost every line carries a second person feminine singular suffix, your gates, those who love you, your walls, your palaces, within you, for you, because the addressee is a city and cities are feminine in Hebrew. In many Ashkenazi communities the Songs of Ascents are said after Minchah on the Shabbatot between Sukkot and Passover.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת לְדָוִד<br>
+  שָׂמַחְתִּי בְּאֹמְרִים לִי בֵּית יְהֹוָה נֵלֵךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">A song of ascents. Of David.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׂמַחְתִּי</div><div class="tr">sa-mach-<b>TI</b></div><div class="fr">I rejoiced</div></div>
+      <div class="word"><div class="he">בְּאֹמְרִים</div><div class="tr">be-om-<b>RIM</b></div><div class="fr">when they said</div></div>
+      <div class="word"><div class="he">לִי</div><div class="tr">li</div><div class="fr">to me</div></div>
+      <div class="word"><div class="he">בֵּית</div><div class="tr">beit</div><div class="fr">to the house of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">נֵלֵךְ</div><div class="tr">ne-<b>LECH</b></div><div class="fr">let us go</div></div>
+    </div>
+    <div class="stich-translation">I rejoiced when they said to me: let us go to the house of the LORD.</div>
+  </div>
+
+  <div class="verse-summary">The joy is dated to the invitation, not to the arrival. What the speaker reports is the moment other people included him in their plural verb, let us go.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">עֹמְדוֹת הָיוּ רַגְלֵינוּ<br>
+  בִּשְׁעָרַיִךְ יְרוּשָׁלָ͏ִם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֹמְדוֹת</div><div class="tr">om-<b>DOT</b></div><div class="fr">standing</div></div>
+      <div class="word"><div class="he">הָיוּ</div><div class="tr">hai-<b>U</b></div><div class="fr">have been</div></div>
+      <div class="word"><div class="he">רַגְלֵינוּ</div><div class="tr">rag-lei-<b>NU</b></div><div class="fr">our feet</div></div>
+    </div>
+    <div class="stich-translation">Our feet have been standing</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בִּשְׁעָרַיִךְ</div><div class="tr">bish-a-ra-<b>YICH</b></div><div class="fr">in your gates</div></div>
+      <div class="word"><div class="he">יְרוּשָׁלָ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+    </div>
+    <div class="stich-translation">inside your gates, Jerusalem.</div>
+  </div>
+
+  <div class="verse-summary">A participle plus the verb to be, which in Hebrew stretches an action out in time: not we arrived but we have been standing there. The pronoun has already turned from I to our.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">יְרוּשָׁלַ͏ִם הַבְּנוּיָה<br>
+  כְּעִיר שֶׁחֻבְּרָה לָּהּ יַחְדָּו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְרוּשָׁלַ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+      <div class="word"><div class="he">הַבְּנוּיָה</div><div class="tr">hab-nu-<b>YA</b></div><div class="fr">the one built</div></div>
+    </div>
+    <div class="stich-translation">Jerusalem, built up,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּעִיר</div><div class="tr">ke-<b>IR</b></div><div class="fr">like a city</div></div>
+      <div class="word"><div class="he">שֶׁחֻבְּרָה</div><div class="tr">she-chub-<b>RA</b></div><div class="fr">that is joined</div></div>
+      <div class="word"><div class="he">לָּהּ</div><div class="tr">lah</div><div class="fr">to itself</div></div>
+      <div class="word"><div class="he">יַחְדָּו</div><div class="tr">yach-<b>DAV</b></div><div class="fr">together</div></div>
+    </div>
+    <div class="stich-translation">like a city knit together with itself.</div>
+  </div>
+
+  <div class="verse-summary">The first thing said about the city is architectural: it is dense, its buildings touch, there are no gaps. The verse offers that as a description of a people as much as of masonry.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">שֶׁשָּׁם עָלוּ שְׁבָטִים שִׁבְטֵי יָהּ<br>
+  עֵדוּת לְיִשְׂרָאֵל לְהֹדוֹת לְשֵׁם יְהֹוָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁשָּׁם</div><div class="tr">she-<b>SHAM</b></div><div class="fr">for there</div></div>
+      <div class="word"><div class="he">עָלוּ</div><div class="tr">a-<b>LU</b></div><div class="fr">went up</div></div>
+      <div class="word"><div class="he">שְׁבָטִים</div><div class="tr">shva-<b>TIM</b></div><div class="fr">tribes</div></div>
+      <div class="word"><div class="he">שִׁבְטֵי</div><div class="tr">shiv-<b>TEI</b></div><div class="fr">the tribes of</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">There the tribes went up, the tribes of the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֵדוּת</div><div class="tr">e-<b>DUT</b></div><div class="fr">a testimony</div></div>
+      <div class="word"><div class="he">לְיִשְׂרָאֵל</div><div class="tr">lyis-ra-<b>EL</b></div><div class="fr">for Israel</div></div>
+      <div class="word"><div class="he">לְהֹדוֹת</div><div class="tr">le-ho-<b>DOT</b></div><div class="fr">to give thanks</div></div>
+      <div class="word"><div class="he">לְשֵׁם</div><div class="tr">le-<b>SHEM</b></div><div class="fr">to the name of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">a testimony for Israel, to give thanks to the name of the LORD.</div>
+  </div>
+
+  <div class="verse-summary">The compactness of verse 3 gets its explanation: this is where separate tribes converged. The word for going up is the same root as the ascents in the heading.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">כִּי שָׁמָּה יָשְׁבוּ כִסְאוֹת לְמִשְׁפָּט<br>
+  כִּסְאוֹת לְבֵית דָּוִד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">שָׁמָּה</div><div class="tr">sha-<b>MA</b></div><div class="fr">there</div></div>
+      <div class="word"><div class="he">יָשְׁבוּ</div><div class="tr">yash-<b>VU</b></div><div class="fr">sat</div></div>
+      <div class="word"><div class="he">כִסְאוֹת</div><div class="tr">chis-<b>OT</b></div><div class="fr">thrones</div></div>
+      <div class="word"><div class="he">לְמִשְׁפָּט</div><div class="tr">le-mish-<b>PAT</b></div><div class="fr">for judgment</div></div>
+    </div>
+    <div class="stich-translation">For there thrones were set for judgment,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּסְאוֹת</div><div class="tr">kis-<b>OT</b></div><div class="fr">thrones</div></div>
+      <div class="word"><div class="he">לְבֵית</div><div class="tr">le-<b>VEIT</b></div><div class="fr">for the house of</div></div>
+      <div class="word"><div class="he">דָּוִד</div><div class="tr">da-<b>VID</b></div><div class="fr">David</div></div>
+    </div>
+    <div class="stich-translation">thrones of the house of David.</div>
+  </div>
+
+  <div class="verse-summary">The second reason to come up, next to worship: this is where cases were heard. The verb is the ordinary one for sitting, with thrones as its subject, so the furniture is what sits.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">שַׁאֲלוּ שְׁלוֹם יְרוּשָׁלָ͏ִם<br>
+  יִשְׁלָיוּ אֹהֲבָיִךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שַׁאֲלוּ</div><div class="tr">sha-a-<b>LU</b></div><div class="fr">ask for</div></div>
+      <div class="word"><div class="he">שְׁלוֹם</div><div class="tr">shlom</div><div class="fr">the peace of</div></div>
+      <div class="word"><div class="he">יְרוּשָׁלָ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+    </div>
+    <div class="stich-translation">Ask after the peace of Jerusalem;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׁלָיוּ</div><div class="tr">yish-lai-<b>U</b></div><div class="fr">may they be at ease</div></div>
+      <div class="word"><div class="he">אֹהֲבָיִךְ</div><div class="tr">o-ha-va-<b>YICH</b></div><div class="fr">those who love you</div></div>
+    </div>
+    <div class="stich-translation">may those who love you be at ease.</div>
+  </div>
+
+  <div class="verse-summary">The pivot of the psalm. Description stops, instruction starts, and in the second half the city is addressed directly for the first time as you.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">יְהִי שָׁלוֹם בְּחֵילֵךְ<br>
+  שַׁלְוָה בְּאַרְמְנוֹתָיִךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהִי</div><div class="tr">ye-<b>HI</b></div><div class="fr">let there be</div></div>
+      <div class="word"><div class="he">שָׁלוֹם</div><div class="tr">sha-<b>LOM</b></div><div class="fr">peace</div></div>
+      <div class="word"><div class="he">בְּחֵילֵךְ</div><div class="tr">be-chei-<b>LECH</b></div><div class="fr">within your rampart</div></div>
+    </div>
+    <div class="stich-translation">Let there be peace within your walls,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שַׁלְוָה</div><div class="tr">shal-<b>VA</b></div><div class="fr">quiet</div></div>
+      <div class="word"><div class="he">בְּאַרְמְנוֹתָיִךְ</div><div class="tr">be-ar-me-no-ta-<b>YICH</b></div><div class="fr">in your palaces</div></div>
+    </div>
+    <div class="stich-translation">quiet in your palaces.</div>
+  </div>
+
+  <div class="verse-summary">Two zones named in order, the defensive wall and the buildings behind it, and a different word for calm in each. The outer one asks for peace, the inner one for quiet.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">לְמַעַן אַחַי וְרֵעָי<br>
+  אֲדַבְּרָה נָּא שָׁלוֹם בָּךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">for the sake of</div></div>
+      <div class="word"><div class="he">אַחַי</div><div class="tr">a-<b>CHAI</b></div><div class="fr">my brothers</div></div>
+      <div class="word"><div class="he">וְרֵעָי</div><div class="tr">ve-re-<b>AI</b></div><div class="fr">and my companions</div></div>
+    </div>
+    <div class="stich-translation">For the sake of my brothers and my friends,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲדַבְּרָה</div><div class="tr">a-dab-<b>RA</b></div><div class="fr">let me speak</div></div>
+      <div class="word"><div class="he">נָּא</div><div class="tr">na</div><div class="fr">now</div></div>
+      <div class="word"><div class="he">שָׁלוֹם</div><div class="tr">sha-<b>LOM</b></div><div class="fr">peace</div></div>
+      <div class="word"><div class="he">בָּךְ</div><div class="tr">bach</div><div class="fr">in you</div></div>
+    </div>
+    <div class="stich-translation">let me say: peace be within you.</div>
+  </div>
+
+  <div class="verse-summary">The reason given for blessing the city is other people. The speaker wants nothing from Jerusalem for himself and says so before he says the blessing.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">לְמַעַן בֵּית יְהֹוָה אֱלֹהֵינוּ<br>
+  אֲבַקְשָׁה טוֹב לָךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">for the sake of</div></div>
+      <div class="word"><div class="he">בֵּית</div><div class="tr">beit</div><div class="fr">the house of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+    </div>
+    <div class="stich-translation">For the sake of the house of the LORD our God,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲבַקְשָׁה</div><div class="tr">a-vak-<b>SHA</b></div><div class="fr">let me seek</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">good</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">for you</div></div>
+    </div>
+    <div class="stich-translation">let me seek good for you.</div>
+  </div>
+
+  <div class="verse-summary">The second reason, matching the first phrase of verse 8 word for word, and the psalm closes where verse 1 pointed: at the house. Seeking good is an action, not a wish.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Nine verses in two halves. Verses 1 to 5 look at Jerusalem and report: an invitation, feet in the gates, a compact city, tribes coming up, thrones for judgment. Verses 6 to 9 turn and speak to it. The two halves are joined by what the city is for, which the psalm gives twice, once as worship in verse 4 and once as justice in verse 5, and then repeats in reverse at the end, friends in verse 8 and the house in verse 9. Notice that <strong>עֹמְדוֹת</strong> (om-dot, v.2) and <strong>הָיוּ</strong> (hai-u, v.2) are a participle plus a past tense verb, a construction that holds an action open in time, so the standing is not a snapshot.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Verse 6 is built on one consonant cluster repeated four times: <strong>שַׁאֲלוּ</strong> (sha-a-lu, v.6) ask, <strong>שְׁלוֹם</strong> (shlom, v.6) the peace of, <strong>יְרוּשָׁלָ͏ִם</strong> (ye-ru-sha-la͏m, v.6) Jerusalem, <strong>יִשְׁלָיוּ</strong> (yish-lai-u, v.6) may they be at ease. The name of the city carries the sound of peace inside it, and the verse makes that audible rather than arguing it. Two words are commonly mistranslated. <strong>בְּחֵילֵךְ</strong> (be-chei-lech, v.7) is a rampart, the outer defensive work, not wealth, though the two are spelled alike. <strong>שֶׁחֻבְּרָה</strong> (she-chub-ra, v.3) is a passive of the verb to join, so the city is joined to itself, which older translations render compact. The name in <strong>יְרוּשָׁלָ͏ִם</strong> (ye-ru-sha-la͏m, v.2) is written short in the consonants and pointed as a dual by the Masoretes, and what the ending means, two cities or an old locative form, is disputed.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The two institutions of verses 4 and 5, the pilgrimage and the court, are what made the city a destination, and later readers took the pairing as a claim that worship without justice has no address. The joining of verse 3 attracted a long line of reading in which the city below is matched by a city above and the two are fastened to each other, so that praying for Jerusalem's peace is not local politics. That reading is repeated widely in later literature and is not stated in the verse itself. The instruction in verse 6 is one of the few in the book that tells you what to say rather than what to feel, and it has been treated as an obligation on anyone who benefits from the place, which is the logic verse 8 spells out.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>In the mystical reading the city is a receiver, which is why the whole second half addresses it in the feminine and asks that it be filled rather than that it act. Verse 7 names two vessels in order, the rampart and the palaces, and asks for a different quality in each, peace at the boundary and stillness inside, which is the standard shape of a container being prepared. The joining of <strong>שֶׁחֻבְּרָה</strong> (she-chub-ra, v.3) is read as the seam between what is above and what is below, and the ascents of the heading as the fifteen steps of that climb. The last word of the psalm is for you, so the whole movement ends by handing everything it gathered back to the place it came for.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-122-en',
+  key: 'Am',
+  tempo: 84,
+  progression: '| G D | Em C | G D | G G |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

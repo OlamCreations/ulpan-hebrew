@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 137: עַל נַהֲרוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 137: By the rivers of Babylon</h1>
+    <div class="subtitle">תְּהִלִּים קל״ז · עַל נַהֲרוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 137</a></div>
+</header>
+
+<div class="t-intro">
+  Nine verses, the only psalm that names the exile as something the speakers are living in rather than praying about, and the only one that ends where this one ends. In many communities it is said before the grace after meals on ordinary weekdays, with Psalm 126 taking its place on Shabbat and festivals, so the two psalms divide the week between memory of loss and memory of return. For a learner the page is a drill in the first person plural: we sat, we wept, we hung, our lyres, our captors, our tormentors, seven forms of the -nu suffix in the first three verses. Then verse 5 switches to the singular and stays there, and that switch is the psalm.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">עַל נַהֲרוֹת בָּבֶל<br>
+  שָׁם יָשַׁבְנוּ גַּם בָּכִינוּ<br>
+  בְּזׇכְרֵנוּ אֶת צִיּוֹן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">by</div></div>
+      <div class="word"><div class="he">נַהֲרוֹת</div><div class="tr">na-ha-<b>ROT</b></div><div class="fr">the rivers of</div></div>
+      <div class="word"><div class="he">בָּבֶל</div><div class="tr"><b>BA</b>-vel</div><div class="fr">Babylon</div></div>
+    </div>
+    <div class="stich-translation">By the rivers of Babylon,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+      <div class="word"><div class="he">יָשַׁבְנוּ</div><div class="tr">ya-shav-<b>NU</b></div><div class="fr">we sat</div></div>
+      <div class="word"><div class="he">גַּם</div><div class="tr">gam</div><div class="fr">and also</div></div>
+      <div class="word"><div class="he">בָּכִינוּ</div><div class="tr">ba-chi-<b>NU</b></div><div class="fr">we wept</div></div>
+    </div>
+    <div class="stich-translation">there we sat, and we wept,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּזׇכְרֵנוּ</div><div class="tr">bzoch-re-<b>NU</b></div><div class="fr">when we remembered</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">when we remembered Zion.</div>
+  </div>
+
+  <div class="verse-summary">A place, a posture and a cause, in that order. Sitting down is the mourner's position in biblical Hebrew, so the weeping is described as ritual before it is described as feeling.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">עַל עֲרָבִים בְּתוֹכָהּ<br>
+  תָּלִינוּ כִּנֹּרוֹתֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">on</div></div>
+      <div class="word"><div class="he">עֲרָבִים</div><div class="tr">a-ra-<b>VIM</b></div><div class="fr">willows</div></div>
+      <div class="word"><div class="he">בְּתוֹכָהּ</div><div class="tr">be-to-<b>CHAH</b></div><div class="fr">in her midst</div></div>
+    </div>
+    <div class="stich-translation">On the willows in her midst,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תָּלִינוּ</div><div class="tr">ta-li-<b>NU</b></div><div class="fr">we hung up</div></div>
+      <div class="word"><div class="he">כִּנֹּרוֹתֵינוּ</div><div class="tr">ki-no-ro-tei-<b>NU</b></div><div class="fr">our lyres</div></div>
+    </div>
+    <div class="stich-translation">we hung up our lyres.</div>
+  </div>
+
+  <div class="verse-summary">The instruments are not broken or abandoned, only put out of reach and left there. Everything the psalm goes on to say about singing depends on this being a decision.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">כִּי שָׁם שְׁאֵלוּנוּ שׁוֹבֵינוּ דִּבְרֵי שִׁיר<br>
+  וְתוֹלָלֵינוּ שִׂמְחָה<br>
+  שִׁירוּ לָנוּ מִשִּׁיר צִיּוֹן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+      <div class="word"><div class="he">שְׁאֵלוּנוּ</div><div class="tr">she-e-lu-<b>NU</b></div><div class="fr">they asked us</div></div>
+      <div class="word"><div class="he">שׁוֹבֵינוּ</div><div class="tr">sho-vei-<b>NU</b></div><div class="fr">our captors</div></div>
+      <div class="word"><div class="he">דִּבְרֵי</div><div class="tr">div-<b>REI</b></div><div class="fr">words of</div></div>
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">song</div></div>
+    </div>
+    <div class="stich-translation">For there our captors asked us for words of song,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְתוֹלָלֵינוּ</div><div class="tr">ve-to-la-lei-<b>NU</b></div><div class="fr">and our tormentors</div></div>
+      <div class="word"><div class="he">שִׂמְחָה</div><div class="tr">sim-<b>CHA</b></div><div class="fr">joy</div></div>
+    </div>
+    <div class="stich-translation">and our tormentors, for joy:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁירוּ</div><div class="tr">shi-<b>RU</b></div><div class="fr">sing</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+      <div class="word"><div class="he">מִשִּׁיר</div><div class="tr">mi-<b>SHIR</b></div><div class="fr">from the song of</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">sing us one from the songs of Zion.</div>
+  </div>
+
+  <div class="verse-summary">The demand is for the temple repertoire specifically, which makes it a demand to perform the thing that was destroyed. The second line has no verb of its own and borrows the first one, which is why it lands harder.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">אֵיךְ נָשִׁיר אֶת שִׁיר יְהֹוָה<br>
+  עַל אַדְמַת נֵכָר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵיךְ</div><div class="tr">eich</div><div class="fr">how</div></div>
+      <div class="word"><div class="he">נָשִׁיר</div><div class="tr">na-<b>SHIR</b></div><div class="fr">shall we sing</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">the song of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">How shall we sing the song of the LORD</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">on</div></div>
+      <div class="word"><div class="he">אַדְמַת</div><div class="tr">ad-<b>MAT</b></div><div class="fr">the soil of</div></div>
+      <div class="word"><div class="he">נֵכָר</div><div class="tr">ne-<b>CHAR</b></div><div class="fr">a foreign land</div></div>
+    </div>
+    <div class="stich-translation">on foreign soil?</div>
+  </div>
+
+  <div class="verse-summary">A question, not a refusal, and it is left unanswered. The objection is geographical rather than emotional: the problem named is the ground, not the mood.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">אִם אֶשְׁכָּחֵךְ יְרוּשָׁלָ͏ִם<br>
+  תִּשְׁכַּח יְמִינִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">אֶשְׁכָּחֵךְ</div><div class="tr">esh-ka-<b>CHECH</b></div><div class="fr">I forget you</div></div>
+      <div class="word"><div class="he">יְרוּשָׁלָ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+    </div>
+    <div class="stich-translation">If I forget you, Jerusalem,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּשְׁכַּח</div><div class="tr">tish-<b>KACH</b></div><div class="fr">let it forget</div></div>
+      <div class="word"><div class="he">יְמִינִי</div><div class="tr">ye-mi-<b>NI</b></div><div class="fr">my right hand</div></div>
+    </div>
+    <div class="stich-translation">let my right hand forget.</div>
+  </div>
+
+  <div class="verse-summary">The plural stops here and does not come back until the last two verses. One person steps out of the group and puts himself under oath, and the thing he wagers is the hand that plays the instrument.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">תִּדְבַּק לְשׁוֹנִי לְחִכִּי<br>
+  אִם לֹא אֶזְכְּרֵכִי<br>
+  אִם לֹא אַעֲלֶה אֶת יְרוּשָׁלַ͏ִם עַל רֹאשׁ שִׂמְחָתִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּדְבַּק</div><div class="tr">tid-<b>BAK</b></div><div class="fr">let it cling</div></div>
+      <div class="word"><div class="he">לְשׁוֹנִי</div><div class="tr">le-sho-<b>NI</b></div><div class="fr">my tongue</div></div>
+      <div class="word"><div class="he">לְחִכִּי</div><div class="tr">le-chi-<b>KI</b></div><div class="fr">to my palate</div></div>
+    </div>
+    <div class="stich-translation">Let my tongue cling to my palate</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">אֶזְכְּרֵכִי</div><div class="tr">ez-kre-<b>CHI</b></div><div class="fr">I remember you</div></div>
+    </div>
+    <div class="stich-translation">if I do not remember you,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">אַעֲלֶה</div><div class="tr">a-a-<b>LE</b></div><div class="fr">I raise up</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">יְרוּשָׁלַ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">above</div></div>
+      <div class="word"><div class="he">רֹאשׁ</div><div class="tr">rosh</div><div class="fr">the head of</div></div>
+      <div class="word"><div class="he">שִׂמְחָתִי</div><div class="tr">sim-cha-<b>TI</b></div><div class="fr">my joy</div></div>
+    </div>
+    <div class="stich-translation">if I do not raise Jerusalem above the head of my joy.</div>
+  </div>
+
+  <div class="verse-summary">The second half of the oath takes the other organ needed for song. Having refused to sing in Babylon, the speaker binds himself so that he cannot sing anywhere else either, unless the city comes first.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">זְכֹר יְהֹוָה לִבְנֵי אֱדוֹם אֵת יוֹם יְרוּשָׁלָ͏ִם<br>
+  הָאֹמְרִים עָרוּ עָרוּ<br>
+  עַד הַיְסוֹד בָּהּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זְכֹר</div><div class="tr">ze-<b>CHOR</b></div><div class="fr">remember</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לִבְנֵי</div><div class="tr">liv-<b>NEI</b></div><div class="fr">against the sons of</div></div>
+      <div class="word"><div class="he">אֱדוֹם</div><div class="tr">e-<b>DOM</b></div><div class="fr">Edom</div></div>
+      <div class="word"><div class="he">אֵת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">יוֹם</div><div class="tr">yom</div><div class="fr">the day of</div></div>
+      <div class="word"><div class="he">יְרוּשָׁלָ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+    </div>
+    <div class="stich-translation">Remember, LORD, against the sons of Edom the day of Jerusalem,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָאֹמְרִים</div><div class="tr">ha-om-<b>RIM</b></div><div class="fr">who were saying</div></div>
+      <div class="word"><div class="he">עָרוּ</div><div class="tr">a-<b>RU</b></div><div class="fr">strip bare</div></div>
+      <div class="word"><div class="he">עָרוּ</div><div class="tr">a-<b>RU</b></div><div class="fr">strip bare</div></div>
+    </div>
+    <div class="stich-translation">who said, strip her bare, strip her bare,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">down to</div></div>
+      <div class="word"><div class="he">הַיְסוֹד</div><div class="tr">hai-<b>SOD</b></div><div class="fr">the foundation</div></div>
+      <div class="word"><div class="he">בָּהּ</div><div class="tr">bah</div><div class="fr">in her</div></div>
+    </div>
+    <div class="stich-translation">down to the foundation in her.</div>
+  </div>
+
+  <div class="verse-summary">The verb that has meant our remembering since verse 1 is now handed to God, and the speaker asks Him to do it against someone. Edom is charged with words rather than with the destruction itself.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">בַּת בָּבֶל הַשְּׁדוּדָה<br>
+  אַשְׁרֵי שֶׁיְשַׁלֶּם לָךְ אֶת גְּמוּלֵךְ שֶׁגָּמַלְתְּ לָנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּת</div><div class="tr">bat</div><div class="fr">daughter of</div></div>
+      <div class="word"><div class="he">בָּבֶל</div><div class="tr"><b>BA</b>-vel</div><div class="fr">Babylon</div></div>
+      <div class="word"><div class="he">הַשְּׁדוּדָה</div><div class="tr">hash-du-<b>DA</b></div><div class="fr">the one laid waste</div></div>
+    </div>
+    <div class="stich-translation">Daughter of Babylon, you who are laid waste,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַשְׁרֵי</div><div class="tr">ash-<b>REI</b></div><div class="fr">happy is</div></div>
+      <div class="word"><div class="he">שֶׁיְשַׁלֶּם</div><div class="tr">shei-<b>SHA</b>-lem</div><div class="fr">the one who repays</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">to you</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">גְּמוּלֵךְ</div><div class="tr">gmu-<b>LECH</b></div><div class="fr">your recompense</div></div>
+      <div class="word"><div class="he">שֶׁגָּמַלְתְּ</div><div class="tr">she-ga-mal-<b>TE</b></div><div class="fr">that you dealt</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+    </div>
+    <div class="stich-translation">happy is the one who repays you what you dealt to us.</div>
+  </div>
+
+  <div class="verse-summary">The measure asked for is exact and no more than exact: what you dealt to us. The city is addressed as already destroyed, which places the curse after the fact rather than before it.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">אַשְׁרֵי שֶׁיֹּאחֵז וְנִפֵּץ אֶת עֹלָלַיִךְ<br>
+  אֶל הַסָּלַע</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַשְׁרֵי</div><div class="tr">ash-<b>REI</b></div><div class="fr">happy is</div></div>
+      <div class="word"><div class="he">שֶׁיֹּאחֵז</div><div class="tr">she-yo-<b>CHEZ</b></div><div class="fr">the one who seizes</div></div>
+      <div class="word"><div class="he">וְנִפֵּץ</div><div class="tr">ve-ni-<b>PETZ</b></div><div class="fr">and dashes</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">עֹלָלַיִךְ</div><div class="tr">o-la-la-<b>YICH</b></div><div class="fr">your infants</div></div>
+    </div>
+    <div class="stich-translation">Happy is the one who seizes and dashes your infants</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶל</div><div class="tr">el</div><div class="fr">against</div></div>
+      <div class="word"><div class="he">הַסָּלַע</div><div class="tr">ha-<b>SA</b>-la</div><div class="fr">the rock</div></div>
+    </div>
+    <div class="stich-translation">against the rock.</div>
+  </div>
+
+  <div class="verse-summary">The hardest verse in the book, and the psalm gives it no softening and no answer. It is a curse spoken by people who watched this done, and the page does not ask the reader to agree with it.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Three movements. Verses 1 to 4 are plural and set in Babylon: a group by the water, instruments hung up, a demand for entertainment, and a question. Verses 5 and 6 are a single voice under oath, and they are the only part of the psalm addressed to Jerusalem rather than about her. Verses 7 to 9 turn outward and ask for reckoning against two enemies, Edom for what it said and Babylon for what it did. Watch the verb remember. In <strong>בְּזׇכְרֵנוּ</strong> (bzoch-re-nu, v.1) it is what the exiles do and it produces weeping; in <strong>אֶזְכְּרֵכִי</strong> (ez-kre-chi, v.6) it is what the speaker swears never to stop doing; in <strong>זְכֹר</strong> (ze-chor, v.7) it is what God is asked to do, and there it produces judgement. One root carries the psalm from grief to oath to demand.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Verse 5 says only let my right hand forget, with no object, and the omission is deliberate enough that translations supply one, most often her skill. Some read the verb differently and take it as wither or become useless rather than forget, and both readings are current; what is not in dispute is that the hand named is the one that stops a lyre string. <strong>הַשְּׁדוּדָה</strong> (hash-du-da, v.8) is a passive form, the one laid waste, which sits oddly on a city still standing at the time, and readings divide between a prophetic past, an address to a city already doomed, and an emendation to the one who lays waste. <strong>וְתוֹלָלֵינוּ</strong> (ve-to-la-lei-nu, v.3), our tormentors, is rare enough that its sense is argued over. The two closing verses both open with <strong>אַשְׁרֵי</strong> (ash-rei, v.8) and <strong>אַשְׁרֵי</strong> (ash-rei, v.9), the word that opens the whole book of Psalms in verse 1 of Psalm 1, so the vocabulary of blessing is used for the thing furthest from blessing.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Verse 6 is the source of the line sung at Jewish weddings, and the custom of breaking a glass under the canopy is regularly explained by it: Jerusalem is set above the head of any joy, so the largest private joy a person has is required to carry a mark of the city's ruin. Read against verse 2 the oath also completes an argument. The hands that hung up the lyres in Babylon are the hands put at risk in verse 5, so the silence that began as a refusal becomes a permanent obligation. The final verses have never been comfortable, and the tradition has handled them mostly by leaving them in place while reading them as a report of what people in that condition say. What the psalm records is not policy but the shape grief takes when the people who caused it have gone unpunished.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The wish in verse 9 is not invented by the psalm. Isaiah 13:16 and Nahum 3:10 both describe infants dashed to pieces as the standard end of a sacked city, and the second of those is about a city that had done the sacking. The curse therefore asks for the ordinary fate of empires and asks for nothing worse, which is the only defence the plain sense offers. The mystical reading takes the whole psalm as a statement about where song comes from. Verses 1 to 4 establish that the temple repertoire cannot be produced on demand or on foreign ground, verses 5 and 6 make the speaker's own voice conditional on the city, and verses 7 to 9 are what is left when the singing stops. On that reading <strong>כִּנֹּרוֹתֵינוּ</strong> (ki-no-ro-tei-nu, v.2), our lyres, are hung up not out of defeat but because the instrument and the place are one thing, and the psalm ends in the register that remains available.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-137-en',
+  key: 'Am',
+  tempo: 58,
+  progression: '| Am Dm | Am E | Am Dm | E Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

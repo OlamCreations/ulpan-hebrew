@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 110: לְדָוִד מִזְמוֹר</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 110: Sit at My right hand</h1>
+    <div class="subtitle">תְּהִלִּים ק״י · לְדָוִד מִזְמוֹר</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 110</a></div>
+</header>
+
+<div class="t-intro">
+  Seven verses, a royal psalm built on two oracles: one in verse 1 about a throne, one in verse 4 about a priesthood, each introduced by a formula and each followed by its expansion. It is short, famous, and hard. Verse 3 is one of the most textually difficult verses in the whole book, and the ancient versions do not agree with the Masoretic text about what it says; this page prints the Masoretic text and says where the other readings come from. Watch the right hand: in verse 1 the king is seated at God's, and by verse 5 the Lord stands at the king's.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לְדָוִד מִזְמוֹר<br>
+  נְאֻם יְהֹוָה לַאדֹנִי שֵׁב לִימִינִי<br>
+  עַד אָשִׁית אֹיְבֶיךָ הֲדֹם לְרַגְלֶיךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+    </div>
+    <div class="stich-translation">Of David, a psalm.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נְאֻם</div><div class="tr">ne-<b>UM</b></div><div class="fr">the utterance of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לַאדֹנִי</div><div class="tr">la-do-<b>NI</b></div><div class="fr">to my lord</div></div>
+      <div class="word"><div class="he">שֵׁב</div><div class="tr">shev</div><div class="fr">sit</div></div>
+      <div class="word"><div class="he">לִימִינִי</div><div class="tr">li-mi-<b>NI</b></div><div class="fr">at My right hand</div></div>
+    </div>
+    <div class="stich-translation">The utterance of the LORD to my lord: sit at My right hand,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">אָשִׁית</div><div class="tr">a-<b>SHIT</b></div><div class="fr">I set</div></div>
+      <div class="word"><div class="he">אֹיְבֶיךָ</div><div class="tr">oi-vei-<b>CHA</b></div><div class="fr">your enemies</div></div>
+      <div class="word"><div class="he">הֲדֹם</div><div class="tr">ha-<b>DOM</b></div><div class="fr">a footstool</div></div>
+      <div class="word"><div class="he">לְרַגְלֶיךָ</div><div class="tr">le-rag-lei-<b>CHA</b></div><div class="fr">for your feet</div></div>
+    </div>
+    <div class="stich-translation">until I make your enemies a footstool for your feet.</div>
+  </div>
+
+  <div class="verse-summary">An oracle quoted rather than spoken. Note the vowels on the fifth word: it is my lord with a first person suffix, the form used for a human superior, and not the divine name, which would be pointed differently.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">מַטֵּה עֻזְּךָ יִשְׁלַח יְהֹוָה מִצִּיּוֹן<br>
+  רְדֵה בְּקֶרֶב אֹיְבֶיךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַטֵּה</div><div class="tr">ma-<b>TE</b></div><div class="fr">the staff of</div></div>
+      <div class="word"><div class="he">עֻזְּךָ</div><div class="tr">uz-<b>CHA</b></div><div class="fr">your strength</div></div>
+      <div class="word"><div class="he">יִשְׁלַח</div><div class="tr">yish-<b>LACH</b></div><div class="fr">will send</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">מִצִּיּוֹן</div><div class="tr">mi-tzi-<b>YON</b></div><div class="fr">from Zion</div></div>
+    </div>
+    <div class="stich-translation">The LORD will send out the staff of your strength from Zion:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רְדֵה</div><div class="tr">re-<b>DE</b></div><div class="fr">rule</div></div>
+      <div class="word"><div class="he">בְּקֶרֶב</div><div class="tr">be-<b>KE</b>-rev</div><div class="fr">in the midst of</div></div>
+      <div class="word"><div class="he">אֹיְבֶיךָ</div><div class="tr">oi-vei-<b>CHA</b></div><div class="fr">your enemies</div></div>
+    </div>
+    <div class="stich-translation">rule in the midst of your enemies.</div>
+  </div>
+
+  <div class="verse-summary">The first oracle expanded outward. The staff goes out from one place before the rule extends, and the second half is a fresh command put in the king's hand rather than a description of him.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">עַמְּךָ נְדָבֹת בְּיוֹם חֵילֶךָ<br>
+  בְּהַדְרֵי קֹדֶשׁ מֵרֶחֶם מִשְׁחָר<br>
+  לְךָ טַל יַלְדֻתֶיךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַמְּךָ</div><div class="tr">am-<b>CHA</b></div><div class="fr">your people</div></div>
+      <div class="word"><div class="he">נְדָבֹת</div><div class="tr">ne-da-<b>VOT</b></div><div class="fr">willing offerings</div></div>
+      <div class="word"><div class="he">בְּיוֹם</div><div class="tr">byom</div><div class="fr">on the day of</div></div>
+      <div class="word"><div class="he">חֵילֶךָ</div><div class="tr">chei-le-<b>CHA</b></div><div class="fr">your force</div></div>
+    </div>
+    <div class="stich-translation">Your people come willingly on the day of your muster,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּהַדְרֵי</div><div class="tr">be-had-<b>REI</b></div><div class="fr">in the splendours of</div></div>
+      <div class="word"><div class="he">קֹדֶשׁ</div><div class="tr"><b>KO</b>-desh</div><div class="fr">holiness</div></div>
+      <div class="word"><div class="he">מֵרֶחֶם</div><div class="tr">me-<b>RE</b>-chem</div><div class="fr">from the womb</div></div>
+      <div class="word"><div class="he">מִשְׁחָר</div><div class="tr">mish-<b>CHAR</b></div><div class="fr">of the dawn</div></div>
+    </div>
+    <div class="stich-translation">in holy splendour, from the womb of the dawn,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְךָ</div><div class="tr">le-<b>CHA</b></div><div class="fr">to you</div></div>
+      <div class="word"><div class="he">טַל</div><div class="tr">tal</div><div class="fr">the dew of</div></div>
+      <div class="word"><div class="he">יַלְדֻתֶיךָ</div><div class="tr">yal-du-tei-<b>CHA</b></div><div class="fr">your youth</div></div>
+    </div>
+    <div class="stich-translation">yours is the dew of your youth.</div>
+  </div>
+
+  <div class="verse-summary">The broken verse. Word by word it holds a people volunteering, a day of mustering, holiness, a womb, a dawn, dew and youth, and no reading joins those into a sentence that everyone accepts. Any translation of it, including the one printed here, is a decision.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">נִשְׁבַּע יְהֹוָה וְלֹא יִנָּחֵם<br>
+  אַתָּה כֹהֵן לְעוֹלָם<br>
+  עַל דִּבְרָתִי מַלְכִּי צֶדֶק</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נִשְׁבַּע</div><div class="tr"><b>NISH</b>-ba</div><div class="fr">has sworn</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">יִנָּחֵם</div><div class="tr">yi-na-<b>CHEM</b></div><div class="fr">He will relent</div></div>
+    </div>
+    <div class="stich-translation">The LORD has sworn and will not go back on it:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">you are</div></div>
+      <div class="word"><div class="he">כֹהֵן</div><div class="tr">cho-<b>HEN</b></div><div class="fr">a priest</div></div>
+      <div class="word"><div class="he">לְעוֹלָם</div><div class="tr">le-o-<b>LAM</b></div><div class="fr">forever</div></div>
+    </div>
+    <div class="stich-translation">you are a priest forever,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">according to</div></div>
+      <div class="word"><div class="he">דִּבְרָתִי</div><div class="tr">div-ra-<b>TI</b></div><div class="fr">the order of</div></div>
+      <div class="word"><div class="he">מַלְכִּי</div><div class="tr">mal-<b>KI</b></div><div class="fr">my king</div></div>
+      <div class="word"><div class="he">צֶדֶק</div><div class="tr"><b>TZE</b>-dek</div><div class="fr">righteousness</div></div>
+    </div>
+    <div class="stich-translation">after the order of Melchizedek.</div>
+  </div>
+
+  <div class="verse-summary">The second oracle, this time under oath. What is granted is a priesthood rather than a throne, and the model for it is a figure out of Genesis rather than anyone in Aaron's line.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">אֲדֹנָי עַל יְמִינְךָ<br>
+  מָחַץ בְּיוֹם אַפּוֹ מְלָכִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲדֹנָי</div><div class="tr">a-do-<b>NAI</b></div><div class="fr">the Lord</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">at</div></div>
+      <div class="word"><div class="he">יְמִינְךָ</div><div class="tr">ye-min-<b>CHA</b></div><div class="fr">your right hand</div></div>
+    </div>
+    <div class="stich-translation">The Lord is at your right hand;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מָחַץ</div><div class="tr">ma-<b>CHATZ</b></div><div class="fr">has crushed</div></div>
+      <div class="word"><div class="he">בְּיוֹם</div><div class="tr">byom</div><div class="fr">on the day of</div></div>
+      <div class="word"><div class="he">אַפּוֹ</div><div class="tr">a-<b>PO</b></div><div class="fr">His anger</div></div>
+      <div class="word"><div class="he">מְלָכִים</div><div class="tr">mla-<b>CHIM</b></div><div class="fr">kings</div></div>
+    </div>
+    <div class="stich-translation">He crushes kings on the day of His anger.</div>
+  </div>
+
+  <div class="verse-summary">The positions swap. In verse 1 the king sits at God's right hand; here God stands at the king's, and the verb turns violent for the first time in the psalm.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">יָדִין בַּגּוֹיִם מָלֵא גְוִיּוֹת<br>
+  מָחַץ רֹאשׁ עַל אֶרֶץ רַבָּה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָדִין</div><div class="tr">ya-<b>DIN</b></div><div class="fr">He will judge</div></div>
+      <div class="word"><div class="he">בַּגּוֹיִם</div><div class="tr">ba-go-<b>YIM</b></div><div class="fr">among the nations</div></div>
+      <div class="word"><div class="he">מָלֵא</div><div class="tr">ma-<b>LE</b></div><div class="fr">full of</div></div>
+      <div class="word"><div class="he">גְוִיּוֹת</div><div class="tr">ge-vi-<b>YOT</b></div><div class="fr">corpses</div></div>
+    </div>
+    <div class="stich-translation">He judges among the nations, filling them with corpses;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מָחַץ</div><div class="tr">ma-<b>CHATZ</b></div><div class="fr">He has crushed</div></div>
+      <div class="word"><div class="he">רֹאשׁ</div><div class="tr">rosh</div><div class="fr">the head</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">over</div></div>
+      <div class="word"><div class="he">אֶרֶץ</div><div class="tr"><b>E</b>-retz</div><div class="fr">a land</div></div>
+      <div class="word"><div class="he">רַבָּה</div><div class="tr">ra-<b>BA</b></div><div class="fr">wide</div></div>
+    </div>
+    <div class="stich-translation">He crushes the head over a wide land.</div>
+  </div>
+
+  <div class="verse-summary">Three clauses of judgment with nothing joining them. The head is singular against nations plural, which is why some read it as one specific ruler rather than as a general slaughter.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">מִנַּחַל בַּדֶּרֶךְ יִשְׁתֶּה<br>
+  עַל כֵּן יָרִים רֹאשׁ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִנַּחַל</div><div class="tr">mi-na-<b>CHAL</b></div><div class="fr">from a brook</div></div>
+      <div class="word"><div class="he">בַּדֶּרֶךְ</div><div class="tr">ba-de-<b>RECH</b></div><div class="fr">by the way</div></div>
+      <div class="word"><div class="he">יִשְׁתֶּה</div><div class="tr">yish-<b>TE</b></div><div class="fr">he will drink</div></div>
+    </div>
+    <div class="stich-translation">He drinks from a brook along the way;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">thus</div></div>
+      <div class="word"><div class="he">יָרִים</div><div class="tr">ya-<b>RIM</b></div><div class="fr">he will lift</div></div>
+      <div class="word"><div class="he">רֹאשׁ</div><div class="tr">rosh</div><div class="fr">the head</div></div>
+    </div>
+    <div class="stich-translation">therefore he lifts his head high.</div>
+  </div>
+
+  <div class="verse-summary">The scale drops from nations to one man stopping at a stream. The head that was crushed in verse 6 is the same word as the head lifted here, and the psalm ends on the second.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two oracles, two expansions and a coda. Verse 1 gives the throne and verses 2 and 3 unfold it; verse 4 gives the priesthood and verses 5 and 6 unfold what a priest-king does; verse 7 is a single picture at the end. The clearest structural fact is a pair of right hands: at <strong>לִימִינִי</strong> (li-mi-ni, v.1) the one addressed is told to sit at God's right hand, and at <strong>יְמִינְךָ</strong> (ye-min-cha, v.5) the Lord is at his. The second pair is a head: <strong>רֹאשׁ</strong> (rosh, v.6) is crushed and <strong>רֹאשׁ</strong> (rosh, v.7) is lifted, the same word both times. Two of the seven verses, 3 and 6, are difficult enough that translating them is a choice rather than a rendering, and readers should know which choice they are being handed.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Verse 3 is the crux, and every clause in it has been read more than one way. <strong>נְדָבֹת</strong> (ne-da-vot, v.3) is an abstract plural, willingnesses or freewill offerings, standing where a verb or an adjective is wanted, so the line comes out either as your people volunteer or as your people are willingness itself. <strong>חֵילֶךָ</strong> (chei-le-cha, v.3) is force, army or wealth, which makes the day either a muster or a battle. <strong>בְּהַדְרֵי</strong> (be-had-rei, v.3) in the Masoretic text is the splendours of, giving in holy splendour; a nearly identical spelling, one letter away, would give the mountains of, and translations that print on the holy mountains follow that reading rather than the pointed text. <strong>מֵרֶחֶם</strong> (me-re-chem, v.3) and <strong>מִשְׁחָר</strong> (mish-char, v.3) give from the womb of the dawn, an image with no parallel elsewhere in the Hebrew Bible. <strong>טַל</strong> (tal, v.3) and <strong>יַלְדֻתֶיךָ</strong> (yal-du-tei-cha, v.3) give the dew of your youth, read either as troops arriving like dew or as the king's own youth renewed. The ancient Greek translation vocalized the last words differently and produced a verb of begetting instead of the noun youth, which is why Greek and Latin bibles read from the womb before the morning star I have begotten you. On the Masoretic pointing the verse says nothing about begetting. One more vocalization matters, in verse 1: <strong>לַאדֹנִי</strong> (la-do-ni, v.1) is pointed la-doni, my lord, the ordinary form for addressing a human superior, and not as the divine name. Translations that render it as a second divine title are reading against the vowels this page prints.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Jewish reading of this psalm has long refused to leave the one addressed unplaceable, and it has produced more than one answer. A passage in the Talmud at Nedarim 32b takes up verse 4 in connection with Genesis 14 and Melchizedek and reads the priesthood as something transferred rather than shared. Medieval Jewish commentary largely follows that direction and identifies the addressee as Abraham, which turns verses 5 and 6 into the defeat of the kings in Genesis 14 and verse 7 into the stream Abraham drinks from on the road home. A second Jewish line reads the addressee as David himself, spoken of in the third person by one of his own court singers, which is the simplest explanation of the awkward my lord. A third reads it of the messianic king. In Christian tradition the psalm is read of Jesus and it is among the psalms the New Testament quotes most; that reading depends on taking the fourth word of verse 1 as a divine title, which the Masoretic vowels do not support, and on the Greek rendering of verse 3 rather than the Hebrew. The disagreement is old and it is genuinely a disagreement about which text is being read, not only about what it means.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>One figure holds two offices that the rest of the Hebrew Bible keeps apart. Kings are not priests and priests are not kings, and the single Genesis figure who is both is named here at <strong>מַלְכִּי</strong> (mal-ki, v.4) and <strong>צֶדֶק</strong> (tze-dek, v.4) as two separate words, my king and righteousness, and he stands entirely outside the covenant line. Mystical reading takes that as the point: the priesthood promised here is older than Aaron and older than Sinai, which is why the oath at <strong>נִשְׁבַּע</strong> (nish-ba, v.4) has to be one that cannot be revoked. The imagery of verse 3 works the same way from the other side. Womb, dawn and dew are all images of something that arrives before anyone has worked for it, and dew in particular falls unasked and unwatched. Read that way, the difficulty of the verse is not only damage in transmission but the subject itself, since what is being described is an origin, and an origin is the part that resists being put into a sentence.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-110-en',
+  key: 'Am',
+  tempo: 62,
+  progression: '| Dm Dm | Bb C | Gm A7 | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

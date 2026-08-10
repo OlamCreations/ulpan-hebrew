@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 150: הַלְלוּ יָהּ</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 150: Let every breathing thing praise Yah</h1>
+    <div class="subtitle">תְּהִלִּים ק״נ · הַלְלוּ יָהּ</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 150</a></div>
+</header>
+
+<div class="t-intro">
+  Six verses, and the last of them ends the book: Psalm 150 is the doxology that closes the fifth and final book of Tehilim and the whole collection with it. That is why there is no petition in it, no history and no complaint. The root for praise occurs thirteen times in thirty-seven words. It is said every morning as the last of the six psalms of Pesukei deZimra. Two things to watch: the four-letter name never appears, only the short Yah and El, and the prefix on the instruments is the same two-letter preposition every time, showing up as be, bi and vi depending on the sound that follows, doing the work of both with and in. The one exception is in verse 2, where a different prefix gives according to.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">הַלְלוּ יָהּ<br>
+  הַלְלוּ אֵל בְּקׇדְשׁוֹ<br>
+  הַלְלוּהוּ בִּרְקִיעַ עֻזּוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Praise Yah.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">אֵל</div><div class="tr">el</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">בְּקׇדְשׁוֹ</div><div class="tr">be-kod-<b>SHO</b></div><div class="fr">in His holy place</div></div>
+    </div>
+    <div class="stich-translation">Praise God in His holy place;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בִּרְקִיעַ</div><div class="tr">bir-<b>KI</b>-a</div><div class="fr">in the expanse of</div></div>
+      <div class="word"><div class="he">עֻזּוֹ</div><div class="tr">u-<b>ZO</b></div><div class="fr">His strength</div></div>
+    </div>
+    <div class="stich-translation">praise Him in the expanse of His strength.</div>
+  </div>
+
+  <div class="verse-summary">Two locations named before a single instrument is, one on the ground and one above it. The divine names here are the short Yah and El, and the four-letter name appears nowhere in the psalm.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">הַלְלוּהוּ בִגְבוּרֹתָיו<br>
+  הַלְלוּהוּ כְּרֹב גֻּדְלוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בִגְבוּרֹתָיו</div><div class="tr">vig-vu-ro-<b>TAV</b></div><div class="fr">for His mighty acts</div></div>
+    </div>
+    <div class="stich-translation">Praise Him for His mighty acts;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">כְּרֹב</div><div class="tr">krov</div><div class="fr">according to the abundance of</div></div>
+      <div class="word"><div class="he">גֻּדְלוֹ</div><div class="tr">gud-<b>LO</b></div><div class="fr">His greatness</div></div>
+    </div>
+    <div class="stich-translation">praise Him according to His abundant greatness.</div>
+  </div>
+
+  <div class="verse-summary">The only verse that says why. Everything after it says how. Two grounds are given, a list of things done and an attribute that was never done, and they are not ranked.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">הַלְלוּהוּ בְּתֵקַע שׁוֹפָר<br>
+  הַלְלוּהוּ בְּנֵבֶל וְכִנּוֹר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בְּתֵקַע</div><div class="tr">be-<b>TE</b>-ka</div><div class="fr">with the blast of</div></div>
+      <div class="word"><div class="he">שׁוֹפָר</div><div class="tr">sho-<b>FAR</b></div><div class="fr">the ram's horn</div></div>
+    </div>
+    <div class="stich-translation">Praise Him with the blast of the horn;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בְּנֵבֶל</div><div class="tr"><b>BNE</b>-vel</div><div class="fr">with harp</div></div>
+      <div class="word"><div class="he">וְכִנּוֹר</div><div class="tr">ve-chi-<b>NOR</b></div><div class="fr">and lyre</div></div>
+    </div>
+    <div class="stich-translation">praise Him with harp and lyre.</div>
+  </div>
+
+  <div class="verse-summary">The instruments begin, and they begin with the one that is not musical. The horn is a signal blown in single blasts, and it is placed ahead of the strings rather than among them.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">הַלְלוּהוּ בְּתֹף וּמָחוֹל<br>
+  הַלְלוּהוּ בְּמִנִּים וְעֻגָב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בְּתֹף</div><div class="tr">be-<b>TOF</b></div><div class="fr">with drum</div></div>
+      <div class="word"><div class="he">וּמָחוֹל</div><div class="tr">u-ma-<b>CHOL</b></div><div class="fr">and dance</div></div>
+    </div>
+    <div class="stich-translation">Praise Him with drum and dance;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בְּמִנִּים</div><div class="tr">be-mi-<b>NIM</b></div><div class="fr">with strings</div></div>
+      <div class="word"><div class="he">וְעֻגָב</div><div class="tr">ve-u-<b>GAV</b></div><div class="fr">and pipe</div></div>
+    </div>
+    <div class="stich-translation">praise Him with strings and pipe.</div>
+  </div>
+
+  <div class="verse-summary">The only verse containing something that is not an instrument. Dance sits in the middle of a list of things you play, which quietly makes the body one of them.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">הַלְלוּהוּ בְצִלְצְלֵי שָׁמַע<br>
+  הַלְלוּהוּ בְּצִלְצְלֵי תְרוּעָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בְצִלְצְלֵי</div><div class="tr">ve-tzil-tze-<b>LEI</b></div><div class="fr">with cymbals of</div></div>
+      <div class="word"><div class="he">שָׁמַע</div><div class="tr"><b>SHA</b>-ma</div><div class="fr">sounding</div></div>
+    </div>
+    <div class="stich-translation">Praise Him with sounding cymbals;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בְּצִלְצְלֵי</div><div class="tr">be-tzil-tze-<b>LEI</b></div><div class="fr">with cymbals of</div></div>
+      <div class="word"><div class="he">תְרוּעָה</div><div class="tr">te-ru-<b>A</b></div><div class="fr">loud blast</div></div>
+    </div>
+    <div class="stich-translation">praise Him with cymbals of loud blast.</div>
+  </div>
+
+  <div class="verse-summary">Cymbals twice, with two different words for the noise they make. This is the loudest point in the psalm and it is placed immediately before the quietest.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">כֹּל הַנְּשָׁמָה תְּהַלֵּל יָהּ<br>
+  הַלְלוּ יָהּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֹּל</div><div class="tr">kol</div><div class="fr">every</div></div>
+      <div class="word"><div class="he">הַנְּשָׁמָה</div><div class="tr">han-sha-<b>MA</b></div><div class="fr">the breath</div></div>
+      <div class="word"><div class="he">תְּהַלֵּל</div><div class="tr">te-ha-<b>LEL</b></div><div class="fr">let it praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Let every breathing thing praise Yah.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Praise Yah.</div>
+  </div>
+
+  <div class="verse-summary">The last verse of the last psalm, and it puts the instruments down. What is required at the end is breath, which is the one thing every listener already has and nobody had to acquire.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Six verses and no argument in any of them. Verse 1 gives the where, verse 2 the why, verses 3 to 5 the how, verse 6 the who. The how is a list of instruments in pairs, one pair per half-verse, running through the whole ensemble: horn, then harp and lyre, then drum and dance, then strings and pipe, then cymbals twice. Verse 6 then sets all of it aside, because nothing named in verses 3 to 5 is needed for <strong>כֹּל</strong> (kol, v.6) <strong>הַנְּשָׁמָה</strong> (han-sha-ma, v.6), every breathing thing, and the psalm closes on the two words it opened with, <strong>הַלְלוּ</strong> (hal-lu, v.6) <strong>יָהּ</strong> (yah, v.6). The count of instruments depends on decisions the text does not make for you: whether <strong>וּמָחוֹל</strong> (u-ma-chol, v.4) is an instrument or a movement, and whether the two cymbals of verse 5 are two kinds or one kind named twice.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p><strong>הַנְּשָׁמָה</strong> (han-sha-ma, v.6) is the word for breath and it is also the word for the soul, and the verse works because Hebrew does not separate them. Read as breathing thing it means everything alive; read as soul it means every soul, and the line is doing both at once. A reading repeated widely in later literature takes the phrase distributively, every breath rather than every breather, so that praise is owed once per inhalation, and what makes that reading possible is the noun itself and not anything added to it. Two of the instruments are uncertain. <strong>בְּמִנִּים</strong> (be-mi-nim, v.4) is usually rendered strings and <strong>וְעֻגָב</strong> (ve-u-gav, v.4) pipe, but both are rare and the identifications are inferred from context rather than known. <strong>שָׁמַע</strong> (sha-ma, v.5) and <strong>תְרוּעָה</strong> (te-ru-a, v.5) are two words for cymbal noise, and whether they name two instruments or two ways of striking one is not decidable from the text.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The psalm is treated as a summary of the book it closes. Where earlier psalms complain, accuse, remember and bargain, this one only commands, and the traditional reading of that is not that the trouble was resolved but that the book has run out of things to say that are not praise. The instruments have been read as a catalogue of ways to serve, with the horn as the one requiring no training and the strings as the one requiring years, so that the beginner and the expert end up in consecutive verses with the same imperative over both. The last verse is read as the widest statement in the book: the condition for praising is not knowledge, not lineage and not innocence. It is breath.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>Verse 1 names two locations, a holy place and an expanse of strength, and mystical readings take them as the lower sanctuary and the upper one, so the psalm stands in both from its first line. The thirteen occurrences of the root for praise are counted and given weight, and the instruments are read as the range of created things, each producing a different sound out of the same air or the same string. The end is the argument. Breath is what is given at the beginning of the human story and it is what is asked for at the last verse of the book, which makes the ending a return rather than a conclusion. The final two words are the two the psalm began with, so the collection closes by handing the reader an instruction and no more text in which to carry it out.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-150-en',
+  key: 'Am',
+  tempo: 138,
+  progression: '| C F | G C | Am F | G C |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

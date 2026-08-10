@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 61: לַמְנַצֵּחַ עַל</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 61: Lead me to a rock that is higher than I</h1>
+    <div class="subtitle">תְּהִלִּים ס״א · לַמְנַצֵּחַ עַל</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 61</a></div>
+</header>
+
+<div class="t-intro">
+  Nine verses that start at the far edge of the earth and end inside a tent. Everything the speaker asks for is high or covered: a rock too tall to climb unaided, a tower, a shelter under wings. Halfway through, the prayer stops speaking in the first person and prays for the king in the third, and whether that is the speaker referring to himself as king or a section added for public use is disputed. For a learner the psalm is a short course in two forms. First the lengthened imperative, an imperative with an extra vowel on the end that makes it a request rather than an order, which is how verse 2 asks twice to be heard. Then the cohortative, the first person volitive that also ends in a long vowel: let me dwell, let me take refuge, let me sing.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לַמְנַצֵּחַ עַל נְגִינַת לְדָוִד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַמְנַצֵּחַ</div><div class="tr">lam-na-<b>TZE</b>-ach</div><div class="fr">for the leader</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">on</div></div>
+      <div class="word"><div class="he">נְגִינַת</div><div class="tr">ne-gi-<b>NAT</b></div><div class="fr">stringed music</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">For the leader, on stringed music. Of David.</div>
+  </div>
+
+  <div class="verse-summary">A performance heading rather than part of the prayer. It names string accompaniment in a singular form found in no other heading in the book, where the same instruction otherwise appears as a plural with a prefix.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">שִׁמְעָה אֱלֹהִים רִנָּתִי<br>
+  הַקְשִׁיבָה תְּפִלָּתִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁמְעָה</div><div class="tr">shim-<b>A</b></div><div class="fr">hear</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִנָּתִי</div><div class="tr">ri-na-<b>TI</b></div><div class="fr">my ringing cry</div></div>
+    </div>
+    <div class="stich-translation">Hear my ringing cry, O God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַקְשִׁיבָה</div><div class="tr">hak-shi-<b>VA</b></div><div class="fr">attend to</div></div>
+      <div class="word"><div class="he">תְּפִלָּתִי</div><div class="tr">tfi-la-<b>TI</b></div><div class="fr">my prayer</div></div>
+    </div>
+    <div class="stich-translation">attend to my prayer.</div>
+  </div>
+
+  <div class="verse-summary">Two verbs of listening with two objects. The first noun is a shout, the kind of sound a person makes before it has words; the second is a formed prayer. The line asks for the same attention to both.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">מִקְצֵה הָאָרֶץ אֵלֶיךָ אֶקְרָא<br>
+  בַּעֲטֹף לִבִּי<br>
+  בְּצוּר יָרוּם מִמֶּנִּי תַנְחֵנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִקְצֵה</div><div class="tr">mik-<b>TZE</b></div><div class="fr">from the end of</div></div>
+      <div class="word"><div class="he">הָאָרֶץ</div><div class="tr">ha-<b>A</b>-retz</div><div class="fr">the earth</div></div>
+      <div class="word"><div class="he">אֵלֶיךָ</div><div class="tr">e-lei-<b>CHA</b></div><div class="fr">to You</div></div>
+      <div class="word"><div class="he">אֶקְרָא</div><div class="tr">ek-<b>RA</b></div><div class="fr">I call</div></div>
+    </div>
+    <div class="stich-translation">From the end of the earth I call to You</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּעֲטֹף</div><div class="tr">ba-a-<b>TOF</b></div><div class="fr">when it faints</div></div>
+      <div class="word"><div class="he">לִבִּי</div><div class="tr">li-<b>BI</b></div><div class="fr">my heart</div></div>
+    </div>
+    <div class="stich-translation">when my heart faints;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּצוּר</div><div class="tr">be-<b>TZUR</b></div><div class="fr">to a rock</div></div>
+      <div class="word"><div class="he">יָרוּם</div><div class="tr">ya-<b>RUM</b></div><div class="fr">it is higher</div></div>
+      <div class="word"><div class="he">מִמֶּנִּי</div><div class="tr">mi-me-<b>NI</b></div><div class="fr">than I</div></div>
+      <div class="word"><div class="he">תַנְחֵנִי</div><div class="tr">tan-che-<b>NI</b></div><div class="fr">lead me</div></div>
+    </div>
+    <div class="stich-translation">lead me to a rock that is higher than I.</div>
+  </div>
+
+  <div class="verse-summary">The whole geography of the psalm in one line. The speaker is at the outer edge, his heart is giving way, and what he asks for is not to be brought home but to be put somewhere he could not climb to on his own.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">כִּי הָיִיתָ מַחְסֶה לִי<br>
+  מִגְדַּל עֹז מִפְּנֵי אוֹיֵב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">הָיִיתָ</div><div class="tr">ha-yi-<b>TA</b></div><div class="fr">You have been</div></div>
+      <div class="word"><div class="he">מַחְסֶה</div><div class="tr">mach-<b>SE</b></div><div class="fr">a refuge</div></div>
+      <div class="word"><div class="he">לִי</div><div class="tr">li</div><div class="fr">for me</div></div>
+    </div>
+    <div class="stich-translation">For You have been a refuge for me,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִגְדַּל</div><div class="tr">mig-<b>DAL</b></div><div class="fr">a tower of</div></div>
+      <div class="word"><div class="he">עֹז</div><div class="tr">oz</div><div class="fr">strength</div></div>
+      <div class="word"><div class="he">מִפְּנֵי</div><div class="tr">mip-<b>NEI</b></div><div class="fr">from before</div></div>
+      <div class="word"><div class="he">אוֹיֵב</div><div class="tr">o-<b>YEV</b></div><div class="fr">an enemy</div></div>
+    </div>
+    <div class="stich-translation">a tower of strength in the face of the enemy.</div>
+  </div>
+
+  <div class="verse-summary">The grounds for thinking the request reasonable: it has been granted before. Both images are static, a shelter and a tower, and the enemy is never fought, only kept on the outside of something.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">אָגוּרָה בְאׇהׇלְךָ עוֹלָמִים<br>
+  אֶחֱסֶה בְסֵתֶר כְּנָפֶיךָ סֶּלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָגוּרָה</div><div class="tr">a-gu-<b>RA</b></div><div class="fr">let me dwell</div></div>
+      <div class="word"><div class="he">בְאׇהׇלְךָ</div><div class="tr">ve-o-hol-<b>CHA</b></div><div class="fr">in Your tent</div></div>
+      <div class="word"><div class="he">עוֹלָמִים</div><div class="tr">o-la-<b>MIM</b></div><div class="fr">for ages</div></div>
+    </div>
+    <div class="stich-translation">Let me dwell in Your tent for all ages;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶחֱסֶה</div><div class="tr">e-che-<b>SE</b></div><div class="fr">let me take refuge</div></div>
+      <div class="word"><div class="he">בְסֵתֶר</div><div class="tr">ve-<b>SE</b>-ter</div><div class="fr">in the covert of</div></div>
+      <div class="word"><div class="he">כְּנָפֶיךָ</div><div class="tr">kna-fei-<b>CHA</b></div><div class="fr">Your wings</div></div>
+      <div class="word"><div class="he">סֶּלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">let me take refuge in the covert of Your wings. Selah.</div>
+  </div>
+
+  <div class="verse-summary">Two more shelters, one built and one alive, and both verbs are first person volitives asking permission. The verb rendered dwell is properly to stay as a resident alien, so the speaker is asking to be a lodger rather than an owner.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">כִּי אַתָּה אֱלֹהִים שָׁמַעְתָּ לִנְדָרָי<br>
+  נָתַתָּ יְרֻשַּׁת יִרְאֵי שְׁמֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">שָׁמַעְתָּ</div><div class="tr">sha-ma-<b>TA</b></div><div class="fr">have heard</div></div>
+      <div class="word"><div class="he">לִנְדָרָי</div><div class="tr">lin-da-<b>RAI</b></div><div class="fr">my vows</div></div>
+    </div>
+    <div class="stich-translation">For You, O God, have heard my vows;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נָתַתָּ</div><div class="tr">na-ta-<b>TA</b></div><div class="fr">You have given</div></div>
+      <div class="word"><div class="he">יְרֻשַּׁת</div><div class="tr">ye-ru-<b>SHAT</b></div><div class="fr">the inheritance of</div></div>
+      <div class="word"><div class="he">יִרְאֵי</div><div class="tr">yir-<b>EI</b></div><div class="fr">those who fear</div></div>
+      <div class="word"><div class="he">שְׁמֶךָ</div><div class="tr">shme-<b>CHA</b></div><div class="fr">Your name</div></div>
+    </div>
+    <div class="stich-translation">You have given the inheritance of those who fear Your name.</div>
+  </div>
+
+  <div class="verse-summary">The hinge of the psalm. Asking stops and reporting starts: the vows have been heard, the portion has been handed over. Both verbs are past tense, which is what lets the second half of the psalm look outward.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">יָמִים עַל יְמֵי מֶלֶךְ תּוֹסִיף<br>
+  שְׁנוֹתָיו כְּמוֹ דֹר וָדֹר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָמִים</div><div class="tr">ya-<b>MIM</b></div><div class="fr">days</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">the days of</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">a king</div></div>
+      <div class="word"><div class="he">תּוֹסִיף</div><div class="tr">to-<b>SIF</b></div><div class="fr">may You add</div></div>
+    </div>
+    <div class="stich-translation">May You add days upon the days of the king;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁנוֹתָיו</div><div class="tr">shno-<b>TAV</b></div><div class="fr">his years</div></div>
+      <div class="word"><div class="he">כְּמוֹ</div><div class="tr">kmo</div><div class="fr">like</div></div>
+      <div class="word"><div class="he">דֹר</div><div class="tr">dor</div><div class="fr">generation</div></div>
+      <div class="word"><div class="he">וָדֹר</div><div class="tr">va-<b>DOR</b></div><div class="fr">and generation</div></div>
+    </div>
+    <div class="stich-translation">may his years be like generation after generation.</div>
+  </div>
+
+  <div class="verse-summary">The first of two verses about the king, and what is asked for is time. Days are stacked on days and years are stretched into generations, which is the language of a court rather than of a private prayer.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">יֵשֵׁב עוֹלָם לִפְנֵי אֱלֹהִים<br>
+  חֶסֶד וֶאֱמֶת מַן יִנְצְרֻהוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יֵשֵׁב</div><div class="tr">ye-<b>SHEV</b></div><div class="fr">may he sit</div></div>
+      <div class="word"><div class="he">עוֹלָם</div><div class="tr">o-<b>LAM</b></div><div class="fr">for ever</div></div>
+      <div class="word"><div class="he">לִפְנֵי</div><div class="tr">lif-<b>NEI</b></div><div class="fr">before</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">May he be enthroned for ever before God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֶסֶד</div><div class="tr"><b>CHE</b>-sed</div><div class="fr">kindness</div></div>
+      <div class="word"><div class="he">וֶאֱמֶת</div><div class="tr">ve-<b>E</b>-met</div><div class="fr">and truth</div></div>
+      <div class="word"><div class="he">מַן</div><div class="tr">man</div><div class="fr">appoint</div></div>
+      <div class="word"><div class="he">יִנְצְרֻהוּ</div><div class="tr">yin-tze-ru-<b>HU</b></div><div class="fr">let them guard him</div></div>
+    </div>
+    <div class="stich-translation">appoint kindness and truth to guard him.</div>
+  </div>
+
+  <div class="verse-summary">Kindness and truth are asked for as bodyguards, a pair of qualities handed a verb of guarding. The word standing between them and that verb is the hardest in the psalm and the versions do not agree on how to read it.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">כֵּן אֲזַמְּרָה שִׁמְךָ לָעַד<br>
+  לְשַׁלְּמִי נְדָרַי יוֹם יוֹם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so</div></div>
+      <div class="word"><div class="he">אֲזַמְּרָה</div><div class="tr">a-zam-<b>RA</b></div><div class="fr">let me sing</div></div>
+      <div class="word"><div class="he">שִׁמְךָ</div><div class="tr">shim-<b>CHA</b></div><div class="fr">Your name</div></div>
+      <div class="word"><div class="he">לָעַד</div><div class="tr">la-<b>AD</b></div><div class="fr">for ever</div></div>
+    </div>
+    <div class="stich-translation">So let me sing Your name for ever,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְשַׁלְּמִי</div><div class="tr">le-shal-<b>MI</b></div><div class="fr">for my paying</div></div>
+      <div class="word"><div class="he">נְדָרַי</div><div class="tr">ne-da-<b>RAI</b></div><div class="fr">my vows</div></div>
+      <div class="word"><div class="he">יוֹם</div><div class="tr">yom</div><div class="fr">day</div></div>
+      <div class="word"><div class="he">יוֹם</div><div class="tr">yom</div><div class="fr">day</div></div>
+    </div>
+    <div class="stich-translation">as I pay my vows day by day.</div>
+  </div>
+
+  <div class="verse-summary">The ending returns to the first person and to the vows of verse 6. Singing is what pays them, and the last two words, one noun said twice, turn the payment into a daily obligation instead of a single performance.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>The psalm has three parts and a clean seam between each. Verses 2 to 5 are a personal prayer from a distance, asking to be lifted and covered. Verse 6 changes tense and reports that the asking has already worked. Verses 7 and 8 pray for the king in the third person, and verse 9 comes back to the first person and closes the loop opened in verse 6: the vows that were heard are now the vows that are paid. Every image in the first part is vertical or enclosing, and none of them involves winning. A rock, a tower, a tent, a pair of wings. The enemy appears once, in verse 4, and only as something to be on the other side of.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Three places reward slowing down. In verse 3 the phrase <strong>בְּצוּר</strong> (be-tzur, v.3) <strong>יָרוּם</strong> (ya-rum, v.3) <strong>מִמֶּנִּי</strong> (mi-me-ni, v.3) has no relative pronoun: it reads literally to a rock it is higher than I, which is ordinary Hebrew and awkward English, and it is the reason translations have to insert the word that. In verse 8 the word <strong>מַן</strong> (man, v.8) is a genuine crux. Read as an imperative it means appoint or assign, which is what most English versions choose; read as a question word it would mean who, which does not fit; and the ancient versions differ, so any translation of this line is a decision rather than a reading. The heading is also unusual: <strong>נְגִינַת</strong> (ne-gi-nat, v.1) is singular, and the six other headings that call for string accompaniment all use a plural with a prefix instead.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The two verses about the king sit oddly in a private prayer, and readers have taken them in opposite directions. One line of reading treats them as the speaker praying for himself in the formal third person, which is normal royal language and keeps the psalm whole. Another treats them as a liturgical addition that let a personal prayer be used in public worship, and points to the change of person as the seam. The heading attaches the psalm to David, and the combination of a speaker cut off from the sanctuary with a prayer for the king has invited readings that place it during one of his flights, but the text names no occasion and none should be supplied for it. What the psalm does say is that the inheritance in verse 6 belongs to those who fear the name, which makes the portion a matter of relationship rather than descent.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading takes the rock of verse 3 at its word: the point of the request is that the rock is higher than the one asking, so the prayer is for an elevation he cannot generate. The verbs make the same case grammatically, since the speaker never lifts himself in this psalm, he is led, sheltered, covered and given. The covert of the wings in verse 5 is read as a concealed place rather than a safe one, a level where something is hidden rather than defended, and the tent beside it as the temporary dwelling that a soul has in a body. In that reading verse 9 is the exchange: what was received in silence is repaid in sound, every day, for as long as the arrangement lasts.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-061-en',
+  key: 'Am',
+  tempo: 68,
+  progression: '| Em Em | Am Am | Em B7 | Em Em |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

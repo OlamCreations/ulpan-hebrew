@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 124: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 124: Our help is in the name of the LORD</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ד · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 124</a></div>
+</header>
+
+<div class="t-intro">
+  Eight verses in the first person plural, and that is the lesson. Almost every line carries the suffix that means us or our: for us, against us, swallowed us, swept us away, our soul, gave us, we escaped, our help. The psalm describes a disaster that did not happen, using a construction English has to work around: had it not been for the LORD, then. The conditional is opened in verse 1, restarted in verse 2, and never formally closed, because verse 6 breaks off into a blessing instead. Three verses in a row begin with the same word for then, and the danger changes shape at each one, from a mouth to a flood to a trap. One of the fifteen Songs of Ascents, said in many Ashkenazi communities after Minchah on the Shabbatot between Sukkot and Passover, and its last verse ends with the same three words that end verse 2 of Psalm 121.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת לְדָוִד<br>
+  לוּלֵי יְהֹוָה שֶׁהָיָה לָנוּ<br>
+  יֹאמַר נָא יִשְׂרָאֵל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">A song of ascents. Of David.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לוּלֵי</div><div class="tr">lu-<b>LEI</b></div><div class="fr">had it not been</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">שֶׁהָיָה</div><div class="tr">she-ha-<b>YA</b></div><div class="fr">who was</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+    </div>
+    <div class="stich-translation">Had the LORD not been for us,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יֹאמַר</div><div class="tr">yo-<b>MAR</b></div><div class="fr">let it say</div></div>
+      <div class="word"><div class="he">נָא</div><div class="tr">na</div><div class="fr">now</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+    </div>
+    <div class="stich-translation">let Israel now say.</div>
+  </div>
+
+  <div class="verse-summary">A heading, then the start of a sentence that will not be finished, with a stage direction dropped into the middle of it. The psalm is written to be repeated by a crowd, and it says so before it has finished its first clause.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">לוּלֵי יְהֹוָה שֶׁהָיָה לָנוּ<br>
+  בְּקוּם עָלֵינוּ אָדָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לוּלֵי</div><div class="tr">lu-<b>LEI</b></div><div class="fr">had it not been</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">שֶׁהָיָה</div><div class="tr">she-ha-<b>YA</b></div><div class="fr">who was</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+    </div>
+    <div class="stich-translation">Had the LORD not been for us</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּקוּם</div><div class="tr">be-<b>KUM</b></div><div class="fr">when rose up</div></div>
+      <div class="word"><div class="he">עָלֵינוּ</div><div class="tr">a-lei-<b>NU</b></div><div class="fr">against us</div></div>
+      <div class="word"><div class="he">אָדָם</div><div class="tr">a-<b>DAM</b></div><div class="fr">a man</div></div>
+    </div>
+    <div class="stich-translation">when men rose up against us,</div>
+  </div>
+
+  <div class="verse-summary">The opening clause again, word for word, now with the danger attached. The attacker is named with the ordinary word for a human being, singular and general, which keeps the enemy unidentified on purpose.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">אֲזַי חַיִּים בְּלָעוּנוּ<br>
+  בַּחֲרוֹת אַפָּם בָּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲזַי</div><div class="tr">a-<b>ZAI</b></div><div class="fr">then</div></div>
+      <div class="word"><div class="he">חַיִּים</div><div class="tr">cha-<b>YIM</b></div><div class="fr">alive</div></div>
+      <div class="word"><div class="he">בְּלָעוּנוּ</div><div class="tr">bla-u-<b>NU</b></div><div class="fr">they would have swallowed us</div></div>
+    </div>
+    <div class="stich-translation">then they would have swallowed us alive,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּחֲרוֹת</div><div class="tr">ba-cha-<b>ROT</b></div><div class="fr">when burned</div></div>
+      <div class="word"><div class="he">אַפָּם</div><div class="tr">a-<b>PAM</b></div><div class="fr">their anger</div></div>
+      <div class="word"><div class="he">בָּנוּ</div><div class="tr">ba-<b>NU</b></div><div class="fr">against us</div></div>
+    </div>
+    <div class="stich-translation">when their anger burned against us;</div>
+  </div>
+
+  <div class="verse-summary">The first of three consequences, and the most physical. Swallowing something alive is what an animal does, and the anger is described as burning, so the picture is a mouth rather than an army.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">אֲזַי הַמַּיִם שְׁטָפוּנוּ<br>
+  נַחְלָה עָבַר עַל נַפְשֵׁנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲזַי</div><div class="tr">a-<b>ZAI</b></div><div class="fr">then</div></div>
+      <div class="word"><div class="he">הַמַּיִם</div><div class="tr">ha-<b>MA</b>-yim</div><div class="fr">the waters</div></div>
+      <div class="word"><div class="he">שְׁטָפוּנוּ</div><div class="tr">shta-fu-<b>NU</b></div><div class="fr">would have swept us away</div></div>
+    </div>
+    <div class="stich-translation">then the waters would have swept us away,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נַחְלָה</div><div class="tr">nach-<b>LA</b></div><div class="fr">a torrent</div></div>
+      <div class="word"><div class="he">עָבַר</div><div class="tr">a-<b>VAR</b></div><div class="fr">would have passed</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">over</div></div>
+      <div class="word"><div class="he">נַפְשֵׁנוּ</div><div class="tr">naf-she-<b>NU</b></div><div class="fr">our soul</div></div>
+    </div>
+    <div class="stich-translation">a torrent would have passed over our soul,</div>
+  </div>
+
+  <div class="verse-summary">The second consequence changes element. Water replaces the mouth, and the harm moves from something done to us to something passing over us, which is worse because it does not need to notice us at all.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">אֲזַי עָבַר עַל נַפְשֵׁנוּ<br>
+  הַמַּיִם הַזֵּידוֹנִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲזַי</div><div class="tr">a-<b>ZAI</b></div><div class="fr">then</div></div>
+      <div class="word"><div class="he">עָבַר</div><div class="tr">a-<b>VAR</b></div><div class="fr">would have passed</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">over</div></div>
+      <div class="word"><div class="he">נַפְשֵׁנוּ</div><div class="tr">naf-she-<b>NU</b></div><div class="fr">our soul</div></div>
+    </div>
+    <div class="stich-translation">then they would have passed over our soul,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַמַּיִם</div><div class="tr">ha-<b>MA</b>-yim</div><div class="fr">the waters</div></div>
+      <div class="word"><div class="he">הַזֵּידוֹנִים</div><div class="tr">ha-zei-do-<b>NIM</b></div><div class="fr">the raging ones</div></div>
+    </div>
+    <div class="stich-translation">the raging waters.</div>
+  </div>
+
+  <div class="verse-summary">The third repeats the second with the words in reverse order, so the waters land at the end of the line. The adjective comes from a root used for boiling over and for insolence, which makes the flood arrogant as well as deep.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">בָּרוּךְ יְהֹוָה<br>
+  שֶׁלֹּא נְתָנָנוּ טֶרֶף לְשִׁנֵּיהֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בָּרוּךְ</div><div class="tr">ba-<b>RUCH</b></div><div class="fr">blessed</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Blessed is the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁלֹּא</div><div class="tr">she-<b>LO</b></div><div class="fr">who did not</div></div>
+      <div class="word"><div class="he">נְתָנָנוּ</div><div class="tr">ne-ta-na-<b>NU</b></div><div class="fr">give us</div></div>
+      <div class="word"><div class="he">טֶרֶף</div><div class="tr"><b>TE</b>-ref</div><div class="fr">as prey</div></div>
+      <div class="word"><div class="he">לְשִׁנֵּיהֶם</div><div class="tr">le-shi-<b>NEI</b>-hem</div><div class="fr">to their teeth</div></div>
+    </div>
+    <div class="stich-translation">who did not give us as prey to their teeth.</div>
+  </div>
+
+  <div class="verse-summary">The unfinished sentence is abandoned and a blessing takes its place. Teeth bring back the mouth of verse 3, and the psalm still has not said whose teeth they are.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">נַפְשֵׁנוּ כְּצִפּוֹר נִמְלְטָה מִפַּח יוֹקְשִׁים<br>
+  הַפַּח נִשְׁבָּר וַאֲנַחְנוּ נִמְלָטְנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נַפְשֵׁנוּ</div><div class="tr">naf-she-<b>NU</b></div><div class="fr">our soul</div></div>
+      <div class="word"><div class="he">כְּצִפּוֹר</div><div class="tr">ktzi-<b>POR</b></div><div class="fr">like a bird</div></div>
+      <div class="word"><div class="he">נִמְלְטָה</div><div class="tr">nim-le-<b>TA</b></div><div class="fr">has escaped</div></div>
+      <div class="word"><div class="he">מִפַּח</div><div class="tr">mi-<b>PACH</b></div><div class="fr">from the trap of</div></div>
+      <div class="word"><div class="he">יוֹקְשִׁים</div><div class="tr">yok-<b>SHIM</b></div><div class="fr">fowlers</div></div>
+    </div>
+    <div class="stich-translation">Our soul has escaped like a bird from the fowlers' trap;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַפַּח</div><div class="tr">ha-<b>PACH</b></div><div class="fr">the trap</div></div>
+      <div class="word"><div class="he">נִשְׁבָּר</div><div class="tr">nish-<b>BAR</b></div><div class="fr">was broken</div></div>
+      <div class="word"><div class="he">וַאֲנַחְנוּ</div><div class="tr">va-a-nach-<b>NU</b></div><div class="fr">and we</div></div>
+      <div class="word"><div class="he">נִמְלָטְנוּ</div><div class="tr">nim-lat-<b>NU</b></div><div class="fr">we escaped</div></div>
+    </div>
+    <div class="stich-translation">the trap was broken, and we escaped.</div>
+  </div>
+
+  <div class="verse-summary">A third danger, the only one described as actually sprung. The verse repeats its verb at both ends, once for the bird and once for the speakers, with the breaking of the trap set between them as the thing that made both possible.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">עֶזְרֵנוּ בְּשֵׁם יְהֹוָה<br>
+  עֹשֵׂה שָׁמַיִם וָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֶזְרֵנוּ</div><div class="tr">ez-re-<b>NU</b></div><div class="fr">our help</div></div>
+      <div class="word"><div class="he">בְּשֵׁם</div><div class="tr">be-<b>SHEM</b></div><div class="fr">is in the name of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Our help is in the name of the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֹשֵׂה</div><div class="tr">o-<b>SE</b></div><div class="fr">maker of</div></div>
+      <div class="word"><div class="he">שָׁמַיִם</div><div class="tr">sha-<b>MA</b>-yim</div><div class="fr">heaven</div></div>
+      <div class="word"><div class="he">וָאָרֶץ</div><div class="tr">va-<b>A</b>-retz</div><div class="fr">and earth</div></div>
+    </div>
+    <div class="stich-translation">maker of heaven and earth.</div>
+  </div>
+
+  <div class="verse-summary">The only verse in the psalm with no danger in it. It is a formula, short enough to be quoted on its own, and it answers the whole poem by naming where the help came from rather than describing what it did.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>The shape is a sentence that breaks. Verses 1 and 2 open a counterfactual, verses 3 to 5 give three things that would have followed, and then verse 6 gives up on the syntax and blesses instead, which is more convincing than a completed sentence would have been. The three dangers escalate by changing category rather than by getting bigger: a predator, a flood, a snare. The rescue itself is never described. Nobody fights, no wall holds, no army arrives; the trap simply breaks in verse 7, in the passive, with no agent named, and verse 8 supplies the agent as a name rather than as an action.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The language of this psalm is late, and two markers show it plainly. The relative is written as a prefix in <strong>שֶׁהָיָה</strong> (she-ha-ya, v.1), <strong>שֶׁהָיָה</strong> (she-ha-ya, v.2) and <strong>שֶׁלֹּא</strong> (she-lo, v.6), where classical prose would use the separate word asher, and <strong>אֲזַי</strong> (a-zai, v.3) is a form of the word for then that belongs to the later stage of the language. Both features run through the Songs of Ascents as a group. Two words are worth checking against a translation. <strong>נַחְלָה</strong> (nach-la, v.4) is an unusual form, read by some as a noun meaning torrent and by others adverbially, so English versions differ on whether it names the water or describes how it came. <strong>הַזֵּידוֹנִים</strong> (ha-zei-do-nim, v.5) is built from a root that covers both boiling and presumption, which is why the water is called proud in older translations and raging in newer ones. Neither is wrong; the Hebrew holds both.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The enemy in this psalm has no name, no nationality and no weapon, and the danger is given only as images: teeth, water, a snare. That is what makes it reusable, and the instruction in verse 1 makes the intention explicit by handing the words to Israel to repeat rather than reporting one man's rescue. Read against the Torah's water crossings, verse 4 inverts them: there the waters go over the pursuers, here they are described as almost going over us. The psalm never claims a specific deliverance, so each generation saying it supplies its own, which is the opposite of how a historical psalm works.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading takes the three dangers as three levels of threat to the same thing, since <strong>נַפְשֵׁנוּ</strong> (naf-she-nu, v.4), <strong>נַפְשֵׁנוּ</strong> (naf-she-nu, v.5) and <strong>נַפְשֵׁנוּ</strong> (naf-she-nu, v.7) are one word, our soul, appearing at each stage. What is at risk is never property or life but nefesh, and the bird in verse 7 is that soul seen from outside, small and caught by something it did not see. The breaking of the snare is passive on purpose in this reading: the escape is not an act of the bird, and the bird's own effort is the one thing the verse leaves out. Verse 8 then says where the strength was, in the name, which is the standard way of pointing at an action without describing it.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-124-en',
+  key: 'Am',
+  tempo: 92,
+  progression: '| Am Am | Dm Am | F E7 | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

@@ -44,7 +44,23 @@ there rather than teaching each script about a new folder.
 node tools/serve.mjs 8912     # dev server that mimics GitHub Pages (unknown path -> 404.html)
 node tools/smoke.mjs          # one page per folder: assets load, modules install, redirects work
 node tools/translit-test.cjs  # transliteration vs the curated phrasebook (must stay 118/118)
+node tools/chords-test.mjs    # the harmony engine, including its injected-defect matrix
 ```
+
+For the Psalms, the Hebrew on the shipped pages is checked back against the Masoretic
+source rather than trusted:
+
+```bash
+node tools/tehilim-hebrew-check.mjs             # every page, codepoint for codepoint
+node tools/tehilim-hebrew-check.mjs --self-test # 7 injected defects, all must go red
+node tools/tehilim-build.mjs --self-test        # the divine-name gloss rule
+```
+
+The builder derives every Hebrew character from `content/tehilim/source/`, so the pages
+match "by construction" and the check should never fail. That is exactly why it exists:
+a guarantee that cannot fail is indistinguishable from no guarantee, and the check reads
+the HTML on disk, so the two can disagree. Comparison is on raw codepoints with no Unicode
+normalisation, because NFC and NFD niqqud render identically and are different text.
 
 After adding, renaming or deleting pages:
 

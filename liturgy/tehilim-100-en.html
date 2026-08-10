@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 100: מִזְמוֹר לְתוֹדָה</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 100: Serve the LORD with gladness</h1>
+    <div class="subtitle">תְּהִלִּים ק׳ · מִזְמוֹר לְתוֹדָה</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 100</a></div>
+</header>
+
+<div class="t-intro">
+  Five verses, and the only psalm in the book headed for the thank-offering. There is no complaint anywhere in it and no request: seven plural imperatives in five verses, shout, serve, come, know, enter, give thanks, bless, and one reason at the end. It is said every weekday morning in Pesukei deZimra and left out on Shabbat and festivals, on the eve of Passover and through Chol HaMoed Pesach, and on the eve of Yom Kippur. Verse 3 carries the best known ketiv/qere in the Psalter, where the consonants written and the word read are two different words that sound identical.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">מִזְמוֹר לְתוֹדָה<br>
+  הָרִיעוּ לַיהֹוָה כׇּל הָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">לְתוֹדָה</div><div class="tr">le-to-<b>DA</b></div><div class="fr">for thanksgiving</div></div>
+    </div>
+    <div class="stich-translation">A psalm for thanksgiving.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָרִיעוּ</div><div class="tr">ha-ri-<b>U</b></div><div class="fr">shout aloud</div></div>
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">lai-ho-<b>VA</b></div><div class="fr">to the LORD</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all of</div></div>
+      <div class="word"><div class="he">הָאָרֶץ</div><div class="tr">ha-<b>A</b>-retz</div><div class="fr">the earth</div></div>
+    </div>
+    <div class="stich-translation">Shout aloud to the LORD, all the earth.</div>
+  </div>
+
+  <div class="verse-summary">The heading names a sacrifice rather than a mood: the toda was the offering brought by someone who had come through danger. Then the address widens past Israel to the whole earth in two words.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">עִבְדוּ אֶת יְהֹוָה בְּשִׂמְחָה<br>
+  בֹּאוּ לְפָנָיו בִּרְנָנָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עִבְדוּ</div><div class="tr">iv-<b>DU</b></div><div class="fr">serve</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בְּשִׂמְחָה</div><div class="tr">be-sim-<b>CHA</b></div><div class="fr">with gladness</div></div>
+    </div>
+    <div class="stich-translation">Serve the LORD with gladness;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֹּאוּ</div><div class="tr">bo-<b>U</b></div><div class="fr">come</div></div>
+      <div class="word"><div class="he">לְפָנָיו</div><div class="tr">le-fa-<b>NAV</b></div><div class="fr">before Him</div></div>
+      <div class="word"><div class="he">בִּרְנָנָה</div><div class="tr">bir-na-<b>NA</b></div><div class="fr">with glad song</div></div>
+    </div>
+    <div class="stich-translation">come before Him with glad song.</div>
+  </div>
+
+  <div class="verse-summary">Two imperatives with their manner attached to each. Service and gladness are put inside one clause, which is the psalm's whole claim about what worship is supposed to feel like.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">דְּעוּ כִּי יְהֹוָה הוּא אֱלֹהִים<br>
+  הוּא עָשָׂנוּ וְלוֹ אֲנַחְנוּ<br>
+  עַמּוֹ וְצֹאן מַרְעִיתוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דְּעוּ</div><div class="tr">de-<b>U</b></div><div class="fr">know</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">that</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">He</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">Know that the LORD is God.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">He</div></div>
+      <div class="word"><div class="he">עָשָׂנוּ</div><div class="tr">a-sa-<b>NU</b></div><div class="fr">made us</div></div>
+      <div class="word"><div class="he">וְלוֹ</div><div class="tr">ve-<b>LO</b></div><div class="fr">and to Him</div></div>
+      <div class="word"><div class="he">אֲנַחְנוּ</div><div class="tr">a-nach-<b>NU</b></div><div class="fr">we are</div></div>
+    </div>
+    <div class="stich-translation">He made us, and we are His,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַמּוֹ</div><div class="tr">a-<b>MO</b></div><div class="fr">His people</div></div>
+      <div class="word"><div class="he">וְצֹאן</div><div class="tr">ve-<b>TZON</b></div><div class="fr">and the flock of</div></div>
+      <div class="word"><div class="he">מַרְעִיתוֹ</div><div class="tr">mar-i-<b>TO</b></div><div class="fr">His pasture</div></div>
+    </div>
+    <div class="stich-translation">His people and the flock of His pasture.</div>
+  </div>
+
+  <div class="verse-summary">The only verse that gives content rather than instruction, and the one with the textual crux. The consonants spell and not, the reading gives and we are His, and the two make opposite claims about who did the making.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">בֹּאוּ שְׁעָרָיו בְּתוֹדָה<br>
+  חֲצֵרֹתָיו בִּתְהִלָּה<br>
+  הוֹדוּ לוֹ<br>
+  בָּרְכוּ שְׁמוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֹּאוּ</div><div class="tr">bo-<b>U</b></div><div class="fr">enter</div></div>
+      <div class="word"><div class="he">שְׁעָרָיו</div><div class="tr">she-a-<b>RAV</b></div><div class="fr">His gates</div></div>
+      <div class="word"><div class="he">בְּתוֹדָה</div><div class="tr">be-to-<b>DA</b></div><div class="fr">with thanksgiving</div></div>
+    </div>
+    <div class="stich-translation">Enter His gates with thanksgiving,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֲצֵרֹתָיו</div><div class="tr">cha-tze-ro-<b>TAV</b></div><div class="fr">His courts</div></div>
+      <div class="word"><div class="he">בִּתְהִלָּה</div><div class="tr">bit-hi-<b>LA</b></div><div class="fr">with praise</div></div>
+    </div>
+    <div class="stich-translation">His courts with praise.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הוֹדוּ</div><div class="tr">ho-<b>DU</b></div><div class="fr">give thanks</div></div>
+      <div class="word"><div class="he">לוֹ</div><div class="tr">lo</div><div class="fr">to Him</div></div>
+    </div>
+    <div class="stich-translation">Give thanks to Him,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בָּרְכוּ</div><div class="tr">bar-<b>CHU</b></div><div class="fr">bless</div></div>
+      <div class="word"><div class="he">שְׁמוֹ</div><div class="tr">shmo</div><div class="fr">His name</div></div>
+    </div>
+    <div class="stich-translation">bless His name.</div>
+  </div>
+
+  <div class="verse-summary">Movement in space, then movement stopping. Gates, then courts, then standing still to speak, and the second half of the verse drops the architecture entirely for a name.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">כִּי טוֹב יְהֹוָה<br>
+  לְעוֹלָם חַסְדּוֹ<br>
+  וְעַד דֹּר וָדֹר אֱמוּנָתוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">is good</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">For the LORD is good;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְעוֹלָם</div><div class="tr">le-o-<b>LAM</b></div><div class="fr">forever</div></div>
+      <div class="word"><div class="he">חַסְדּוֹ</div><div class="tr">chas-<b>DO</b></div><div class="fr">His kindness</div></div>
+    </div>
+    <div class="stich-translation">His kindness is forever,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְעַד</div><div class="tr">ve-<b>AD</b></div><div class="fr">and to</div></div>
+      <div class="word"><div class="he">דֹּר</div><div class="tr">dor</div><div class="fr">generation</div></div>
+      <div class="word"><div class="he">וָדֹר</div><div class="tr">va-<b>DOR</b></div><div class="fr">and generation</div></div>
+      <div class="word"><div class="he">אֱמוּנָתוֹ</div><div class="tr">e-mu-na-<b>TO</b></div><div class="fr">His faithfulness</div></div>
+    </div>
+    <div class="stich-translation">and His faithfulness to generation after generation.</div>
+  </div>
+
+  <div class="verse-summary">The ground for everything above, and the only verse with no command in it. Kindness is measured in time and faithfulness in generations, and neither is measured in what the worshipper brought.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Five verses, seven plural imperatives, one reason. Verses 1 and 2 are the summons, verse 3 is what is to be known, verse 4 is the approach through the gates, verse 5 is the ground. The addressee is not Israel but <strong>כׇּל</strong> (kol, v.1) <strong>הָאָרֶץ</strong> (ha-a-retz, v.1), all the earth, which makes this a psalm that opens a national sanctuary to everyone within earshot. Notice that the middle verse is the only one that is not a command, and that it sits exactly where the pilgrim would still be outside: know first, enter second. Notice also that the thanksgiving of the heading, <strong>לְתוֹדָה</strong> (le-to-da, v.1), comes back as the manner of entering in <strong>בְּתוֹדָה</strong> (be-to-da, v.4), so the psalm is named after the thing you are told to carry through the gate.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p><strong>וְלוֹ</strong> (ve-lo, v.3) is the crux. The consonantal text writes it with an aleph, which spells the word for not; the Masoretic reading points it with a vav, which spells and to Him. The two are pronounced the same way, and the Masorah lists this among a group of places where the two spellings are exchanged. Written, the verse says He made us and not we ourselves, which is how the King James Version renders it. Read, it says He made us and we are His, which is what the next clause, His people and the flock of His pasture, goes on to continue. Neither is an error waiting to be cleaned up: printed Hebrew bibles still carry both, and most modern translations follow the reading while noting the writing. The other word worth stopping on is <strong>לְתוֹדָה</strong> (le-to-da, v.1), built on the root for acknowledging, which names both the thank-offering and the act of thanking, so the heading is a sacrifice and a verb at the same time.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Verse 3 is read as a chain in which each clause grounds the next: He made us, therefore we are His, therefore we are His people, therefore we are the flock of His pasture. On that reading the two versions of <strong>וְלוֹ</strong> (ve-lo, v.3) stop being rivals and become consecutive steps, we did not make ourselves and so we belong to the one who did, which is one traditional way of keeping both. The heading has also carried the psalm's liturgical history, and the reasons customarily given turn on the offering rather than on the words: the thank-offering came with leavened loaves, which is the reason given for dropping the psalm around Passover, and it was a voluntary private offering, which is the reason given for its absence on Shabbat and festivals. These are explanations attached to an existing custom, not the custom's stated source.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The end of verse 3 names the community twice, as a people and as a flock, and the two images do not say the same thing. A people has a history and a border. A flock has a pasture and an owner, and the word for pasture, <strong>מַרְעִיתוֹ</strong> (mar-i-to, v.3), carries a possessive suffix, so what is described is a relation rather than a field. The sequence in verse 4 is read as three thresholds rather than three places, gates then courts then a name, with the innermost being a word and not a room. On that reading the psalm narrows the whole way through: it begins with noise at the edges of the earth, <strong>הָרִיעוּ</strong> (ha-ri-u, v.1), and ends its movement at a single blessed name, <strong>שְׁמוֹ</strong> (shmo, v.4), before verse 5 pulls back out to generations. The narrowing and the widening are the same gesture seen from two ends.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-100-en',
+  key: 'Am',
+  tempo: 104,
+  progression: '| C G | Am F | C G | C C |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 67: לַמְנַצֵּחַ בִּנְגִינֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 67: May God be gracious to us</h1>
+    <div class="subtitle">תְּהִלִּים ס״ז · לַמְנַצֵּחַ בִּנְגִינֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 67</a></div>
+</header>
+
+<div class="t-intro">
+  Seven verses of body under a one line heading, and a shape you can see once someone points at it: the same refrain at verses 4 and 6, a blessing at 2 and 8, and the longest verse of the psalm sitting alone in the middle at verse 5. Count the words of verses 2 to 8 and there are forty nine, seven times seven, which is why this psalm is printed on shiviti plaques in the shape of a menorah and why many communities say it through the seven weeks of the Omer. Grammatically it is a drill in one form: almost every verb here is a wish rather than a report, and a learner meets that form twelve times in eight verses.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לַמְנַצֵּחַ בִּנְגִינֹת<br>
+  מִזְמוֹר שִׁיר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַמְנַצֵּחַ</div><div class="tr">lam-na-<b>TZE</b>-ach</div><div class="fr">for the leader</div></div>
+      <div class="word"><div class="he">בִּנְגִינֹת</div><div class="tr">bin-gi-<b>NOT</b></div><div class="fr">with stringed music</div></div>
+    </div>
+    <div class="stich-translation">For the leader; with stringed music.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song</div></div>
+    </div>
+    <div class="stich-translation">A psalm, a song.</div>
+  </div>
+
+  <div class="verse-summary">The heading assigns the piece to whoever runs the music and to strings, then labels it twice over, psalm and song. None of this is part of the prayer; the psalm proper starts at verse 2.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אֱלֹהִים יְחׇנֵּנוּ וִיבָרְכֵנוּ<br>
+  יָאֵר פָּנָיו אִתָּנוּ סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">יְחׇנֵּנוּ</div><div class="tr">ye-cho-ne-<b>NU</b></div><div class="fr">may He be gracious to us</div></div>
+      <div class="word"><div class="he">וִיבָרְכֵנוּ</div><div class="tr">vi-var-che-<b>NU</b></div><div class="fr">and may He bless us</div></div>
+    </div>
+    <div class="stich-translation">May God be gracious to us and bless us,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָאֵר</div><div class="tr">ya-<b>ER</b></div><div class="fr">may He make shine</div></div>
+      <div class="word"><div class="he">פָּנָיו</div><div class="tr">pa-<b>NAV</b></div><div class="fr">His face</div></div>
+      <div class="word"><div class="he">אִתָּנוּ</div><div class="tr">i-ta-<b>NU</b></div><div class="fr">with us</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">may He make His face shine with us. Selah.</div>
+  </div>
+
+  <div class="verse-summary">Three wishes in a row, all of them lifted from the priestly blessing in Numbers 6, with two changes: the blessing there is spoken over you, here a community asks it for us, and the face shines with us rather than toward us.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">לָדַעַת בָּאָרֶץ דַּרְכֶּךָ<br>
+  בְּכׇל גּוֹיִם יְשׁוּעָתֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לָדַעַת</div><div class="tr">la-da-<b>AT</b></div><div class="fr">so as to know</div></div>
+      <div class="word"><div class="he">בָּאָרֶץ</div><div class="tr">ba-<b>A</b>-retz</div><div class="fr">in the earth</div></div>
+      <div class="word"><div class="he">דַּרְכֶּךָ</div><div class="tr">dar-ke-<b>CHA</b></div><div class="fr">Your way</div></div>
+    </div>
+    <div class="stich-translation">so that Your way may be known on earth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּכׇל</div><div class="tr">be-<b>CHOL</b></div><div class="fr">among all</div></div>
+      <div class="word"><div class="he">גּוֹיִם</div><div class="tr">go-<b>YIM</b></div><div class="fr">nations</div></div>
+      <div class="word"><div class="he">יְשׁוּעָתֶךָ</div><div class="tr">ye-shu-a-te-<b>CHA</b></div><div class="fr">Your salvation</div></div>
+    </div>
+    <div class="stich-translation">Your deliverance among all nations.</div>
+  </div>
+
+  <div class="verse-summary">The purpose clause, and the whole argument of the psalm turns on it. The blessing of verse 2 is not wanted for itself but so that something becomes visible from outside, and one infinitive with a lamed carries that.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">יוֹדוּךָ עַמִּים אֱלֹהִים<br>
+  יוֹדוּךָ עַמִּים כֻּלָּם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יוֹדוּךָ</div><div class="tr">yo-du-<b>CHA</b></div><div class="fr">let them thank You</div></div>
+      <div class="word"><div class="he">עַמִּים</div><div class="tr">a-<b>MIM</b></div><div class="fr">peoples</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">Let the peoples thank You, God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יוֹדוּךָ</div><div class="tr">yo-du-<b>CHA</b></div><div class="fr">let them thank You</div></div>
+      <div class="word"><div class="he">עַמִּים</div><div class="tr">a-<b>MIM</b></div><div class="fr">peoples</div></div>
+      <div class="word"><div class="he">כֻּלָּם</div><div class="tr">ku-<b>LAM</b></div><div class="fr">all of them</div></div>
+    </div>
+    <div class="stich-translation">let the peoples thank You, all of them.</div>
+  </div>
+
+  <div class="verse-summary">The refrain. Two halves identical word for word except that the second adds all of them at the end, so the repetition widens rather than restates.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">יִשְׂמְחוּ וִירַנְּנוּ לְאֻמִּים<br>
+  כִּי תִשְׁפֹּט עַמִּים מִישֹׁר<br>
+  וּלְאֻמִּים בָּאָרֶץ תַּנְחֵם סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׂמְחוּ</div><div class="tr">yis-me-<b>CHU</b></div><div class="fr">let them rejoice</div></div>
+      <div class="word"><div class="he">וִירַנְּנוּ</div><div class="tr">vi-ran-<b>NU</b></div><div class="fr">and let them sing for joy</div></div>
+      <div class="word"><div class="he">לְאֻמִּים</div><div class="tr">le-u-<b>MIM</b></div><div class="fr">nations</div></div>
+    </div>
+    <div class="stich-translation">Let the nations be glad and sing for joy,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">תִשְׁפֹּט</div><div class="tr">tish-<b>POT</b></div><div class="fr">You judge</div></div>
+      <div class="word"><div class="he">עַמִּים</div><div class="tr">a-<b>MIM</b></div><div class="fr">peoples</div></div>
+      <div class="word"><div class="he">מִישֹׁר</div><div class="tr">mi-<b>SHOR</b></div><div class="fr">with level fairness</div></div>
+    </div>
+    <div class="stich-translation">for You judge the peoples fairly</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּלְאֻמִּים</div><div class="tr">ul-u-<b>MIM</b></div><div class="fr">and the nations</div></div>
+      <div class="word"><div class="he">בָּאָרֶץ</div><div class="tr">ba-<b>A</b>-retz</div><div class="fr">in the earth</div></div>
+      <div class="word"><div class="he">תַּנְחֵם</div><div class="tr">tan-<b>CHEM</b></div><div class="fr">You lead them</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">and lead the nations on earth. Selah.</div>
+  </div>
+
+  <div class="verse-summary">The middle verse and the longest one, and the only verse in the psalm that says what God does rather than what the peoples should do. Judging and leading are set side by side as a single act.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">יוֹדוּךָ עַמִּים אֱלֹהִים<br>
+  יוֹדוּךָ עַמִּים כֻּלָּם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יוֹדוּךָ</div><div class="tr">yo-du-<b>CHA</b></div><div class="fr">let them thank You</div></div>
+      <div class="word"><div class="he">עַמִּים</div><div class="tr">a-<b>MIM</b></div><div class="fr">peoples</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">Let the peoples thank You, God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יוֹדוּךָ</div><div class="tr">yo-du-<b>CHA</b></div><div class="fr">let them thank You</div></div>
+      <div class="word"><div class="he">עַמִּים</div><div class="tr">a-<b>MIM</b></div><div class="fr">peoples</div></div>
+      <div class="word"><div class="he">כֻּלָּם</div><div class="tr">ku-<b>LAM</b></div><div class="fr">all of them</div></div>
+    </div>
+    <div class="stich-translation">let the peoples thank You, all of them.</div>
+  </div>
+
+  <div class="verse-summary">The refrain returns without a word changed. What has happened in between is verse 5, so the same sentence now arrives with a reason attached to it.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">אֶרֶץ נָתְנָה יְבוּלָהּ<br>
+  יְבָרְכֵנוּ אֱלֹהִים אֱלֹהֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶרֶץ</div><div class="tr"><b>E</b>-retz</div><div class="fr">the earth</div></div>
+      <div class="word"><div class="he">נָתְנָה</div><div class="tr">nat-<b>NA</b></div><div class="fr">has given</div></div>
+      <div class="word"><div class="he">יְבוּלָהּ</div><div class="tr">ye-vu-<b>LAH</b></div><div class="fr">her produce</div></div>
+    </div>
+    <div class="stich-translation">The earth has given her yield;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְבָרְכֵנוּ</div><div class="tr">ye-var-che-<b>NU</b></div><div class="fr">may He bless us</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+    </div>
+    <div class="stich-translation">may God, our own God, bless us.</div>
+  </div>
+
+  <div class="verse-summary">The tense breaks. Everything so far has been a wish; here is one completed action, a harvest already in, and it is offered as the ground for asking again in the same breath.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">יְבָרְכֵנוּ אֱלֹהִים<br>
+  וְיִירְאוּ אוֹתוֹ כׇּל אַפְסֵי אָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְבָרְכֵנוּ</div><div class="tr">ye-var-che-<b>NU</b></div><div class="fr">may He bless us</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">May God bless us,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְיִירְאוּ</div><div class="tr">ve-yir-<b>U</b></div><div class="fr">and let them fear</div></div>
+      <div class="word"><div class="he">אוֹתוֹ</div><div class="tr">o-<b>TO</b></div><div class="fr">Him</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">אַפְסֵי</div><div class="tr">af-<b>SEI</b></div><div class="fr">the ends of</div></div>
+      <div class="word"><div class="he">אָרֶץ</div><div class="tr"><b>A</b>-retz</div><div class="fr">earth</div></div>
+    </div>
+    <div class="stich-translation">and let all the ends of the earth fear Him.</div>
+  </div>
+
+  <div class="verse-summary">The blessing is asked a third time and then turned outward: the last words are not about us but about the far edge of the world. The psalm ends where verse 3 said it was going.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>A ring. Verse 2 asks for blessing, verse 3 gives the reason, verses 4 and 6 are the same refrain, verse 7 reports a harvest, verse 8 asks for blessing again and lets it run to the ends of the earth. Verse 5 sits in the middle with nothing matching it, and it is the only verse whose verbs have God as subject in the present. Read the psalm outward from there and the logic is plain: we ask to be blessed, so that the way is known, so that the peoples give thanks. The harvest of <strong>אֶרֶץ</strong> (e-retz, v.7) and <strong>נָתְנָה</strong> (nat-na, v.7) is the one piece of evidence the psalm produces, and it is in the past tense while everything around it is a wish.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The name used throughout is Elohim, six times, and the four letter name does not appear once. Psalms 42 to 83 do this consistently and the section is usually called the Elohistic psalter for that reason; 67 sits inside it. Two words repay attention. <strong>מִישֹׁר</strong> (mi-shor, v.5) is a noun meaning level ground, used here for fairness, so judging straight and walking on the flat are the same picture. <strong>תַּנְחֵם</strong> (tan-chem, v.5) is a causative of the root nun chet he, to lead, and the translations here read it that way; it looks close enough to nun chet mem, to comfort, that first readers regularly take it for comfort them, and the two roots are not related. Note also <strong>אִתָּנוּ</strong> (i-ta-nu, v.2), with us, where the priestly blessing has toward us: a preposition of company rather than of direction.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The psalm is the priestly blessing turned outward. In Numbers the blessing is said by priests over Israel and stops there; here the community asks for it in the first person plural and then gives a reason that has nothing to do with itself, that the nations should know. On that reading being blessed is a job rather than a reward, and the refrain, repeated so that the peoples do the thanking, is the point of the whole thing rather than decoration. The harvest of verse 7 is why the psalm attaches easily to the season between Passover and Shavuot, and the widespread custom of saying it on each of the forty nine days of the Omer takes the word count as an invitation. The last phrase, the ends of the earth, is the widest possible object and the psalm saves it for the final two words.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>Printed as a menorah, this psalm has seven branches for its seven verses of body, with verse 5 as the central shaft, and the count of forty nine words as seven weeks of seven days. That layout is old enough to be standard on shiviti plaques and in many siddurim, and it is a reading rather than a claim about how the psalm was composed. What the layout notices is real, though: the psalm is symmetrical, it turns on its middle verse, and its numbers are sevens. The mystical reading takes the shining face of <strong>יָאֵר</strong> (ya-er, v.2) and <strong>פָּנָיו</strong> (pa-nav, v.2) as light that has to pass through something to be seen, and the nations of the refrain as what it passes through, so blessing that stops at the one blessed has not arrived yet.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-067-en',
+  key: 'Am',
+  tempo: 76,
+  progression: '| C G | Am F | C G | C C |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

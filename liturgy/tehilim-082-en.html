@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 82: מִזְמוֹר לְאָסָף</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 82: God stands in the divine assembly</h1>
+    <div class="subtitle">תְּהִלִּים פ״ב · מִזְמוֹר לְאָסָף</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 82</a></div>
+</header>
+
+<div class="t-intro">
+  Eight verses and a courtroom. God stands up inside an assembly, charges its members with judging crookedly, and sentences them to die like men. It is the psalm of the day for Tuesday. For a learner it is the cleanest drill in the book on one root: the verb for judging appears in verses 1, 2, 3 and 8 in four different forms, third person, second person plural, plural imperative and singular imperative, the root turning through the grammar while the psalm turns through its argument. Watch also who is speaking. Verse 1 is a narrator, verses 2 to 7 are God, and verse 8 is the psalmist answering from outside the room.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">מִזְמוֹר לְאָסָף<br>
+  אֱלֹהִים נִצָּב בַּעֲדַת אֵל<br>
+  בְּקֶרֶב אֱלֹהִים יִשְׁפֹּט</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">לְאָסָף</div><div class="tr">le-a-<b>SAF</b></div><div class="fr">of Asaph</div></div>
+    </div>
+    <div class="stich-translation">A psalm of Asaph.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">נִצָּב</div><div class="tr">ni-<b>TZAV</b></div><div class="fr">stands</div></div>
+      <div class="word"><div class="he">בַּעֲדַת</div><div class="tr">ba-a-<b>DAT</b></div><div class="fr">in the assembly of</div></div>
+      <div class="word"><div class="he">אֵל</div><div class="tr">el</div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">God stands in the assembly of God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּקֶרֶב</div><div class="tr">be-<b>KE</b>-rev</div><div class="fr">in the midst of</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">יִשְׁפֹּט</div><div class="tr">yish-<b>POT</b></div><div class="fr">He judges</div></div>
+    </div>
+    <div class="stich-translation">in the midst of the divine beings He judges.</div>
+  </div>
+
+  <div class="verse-summary">The scene is set in one line: a standing figure, an assembly, and judgement happening inside it rather than over it. Everything that follows is spoken in that room.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">עַד מָתַי תִּשְׁפְּטוּ עָוֶל<br>
+  וּפְנֵי רְשָׁעִים תִּשְׂאוּ סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">מָתַי</div><div class="tr">ma-<b>TAI</b></div><div class="fr">when</div></div>
+      <div class="word"><div class="he">תִּשְׁפְּטוּ</div><div class="tr">tish-<b>PTU</b></div><div class="fr">will you judge</div></div>
+      <div class="word"><div class="he">עָוֶל</div><div class="tr"><b>A</b>-vel</div><div class="fr">injustice</div></div>
+    </div>
+    <div class="stich-translation">How long will you judge unjustly,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּפְנֵי</div><div class="tr">uf-<b>NEI</b></div><div class="fr">and the faces of</div></div>
+      <div class="word"><div class="he">רְשָׁעִים</div><div class="tr">re-sha-<b>IM</b></div><div class="fr">the wicked</div></div>
+      <div class="word"><div class="he">תִּשְׂאוּ</div><div class="tr">tis-<b>U</b></div><div class="fr">will you lift up</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">and lift up the faces of the wicked? Selah.</div>
+  </div>
+
+  <div class="verse-summary">The charge. Judging injustice and lifting faces are two ways of naming one offence: deciding by who is standing in front of you instead of by what happened.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">שִׁפְטוּ דַל וְיָתוֹם<br>
+  עָנִי וָרָשׁ הַצְדִּיקוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁפְטוּ</div><div class="tr">shif-<b>TU</b></div><div class="fr">judge</div></div>
+      <div class="word"><div class="he">דַל</div><div class="tr">dal</div><div class="fr">the weak</div></div>
+      <div class="word"><div class="he">וְיָתוֹם</div><div class="tr">ve-ya-<b>TOM</b></div><div class="fr">and the orphan</div></div>
+    </div>
+    <div class="stich-translation">Judge the weak and the orphan;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עָנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">the afflicted</div></div>
+      <div class="word"><div class="he">וָרָשׁ</div><div class="tr">va-<b>RASH</b></div><div class="fr">and the destitute</div></div>
+      <div class="word"><div class="he">הַצְדִּיקוּ</div><div class="tr">hatz-di-<b>KU</b></div><div class="fr">declare righteous</div></div>
+    </div>
+    <div class="stich-translation">declare the afflicted and the destitute in the right.</div>
+  </div>
+
+  <div class="verse-summary">The job description, delivered as commands, which means it was never unknown to them. Four categories, all of them people with nobody to lean on.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">פַּלְּטוּ דַל וְאֶבְיוֹן<br>
+  מִיַּד רְשָׁעִים הַצִּילוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פַּלְּטוּ</div><div class="tr">pal-<b>TU</b></div><div class="fr">rescue</div></div>
+      <div class="word"><div class="he">דַל</div><div class="tr">dal</div><div class="fr">the weak</div></div>
+      <div class="word"><div class="he">וְאֶבְיוֹן</div><div class="tr">ve-evi-<b>ON</b></div><div class="fr">and the needy</div></div>
+    </div>
+    <div class="stich-translation">Rescue the weak and the needy;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִיַּד</div><div class="tr">mi-<b>YAD</b></div><div class="fr">from the hand of</div></div>
+      <div class="word"><div class="he">רְשָׁעִים</div><div class="tr">re-sha-<b>IM</b></div><div class="fr">the wicked</div></div>
+      <div class="word"><div class="he">הַצִּילוּ</div><div class="tr">ha-<b>TZI</b>-lu</div><div class="fr">deliver them</div></div>
+    </div>
+    <div class="stich-translation">deliver them from the hand of the wicked.</div>
+  </div>
+
+  <div class="verse-summary">The second pair of commands moves from the verdict to the extraction. Judging correctly is not enough while the wicked still have hold of the person.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">לֹא יָדְעוּ וְלֹא יָבִינוּ<br>
+  בַּחֲשֵׁכָה יִתְהַלָּכוּ<br>
+  יִמּוֹטוּ כׇּל מוֹסְדֵי אָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יָדְעוּ</div><div class="tr">yad-<b>U</b></div><div class="fr">they know</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">יָבִינוּ</div><div class="tr">ya-vi-<b>NU</b></div><div class="fr">they understand</div></div>
+    </div>
+    <div class="stich-translation">They do not know and they do not understand;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּחֲשֵׁכָה</div><div class="tr">ba-cha-she-<b>CHA</b></div><div class="fr">in darkness</div></div>
+      <div class="word"><div class="he">יִתְהַלָּכוּ</div><div class="tr">yit-ha-la-<b>CHU</b></div><div class="fr">they walk about</div></div>
+    </div>
+    <div class="stich-translation">they walk about in darkness;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִמּוֹטוּ</div><div class="tr">yi-mo-<b>TU</b></div><div class="fr">are shaken</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">מוֹסְדֵי</div><div class="tr">mos-<b>DEI</b></div><div class="fr">the foundations of</div></div>
+      <div class="word"><div class="he">אָרֶץ</div><div class="tr"><b>A</b>-retz</div><div class="fr">earth</div></div>
+    </div>
+    <div class="stich-translation">all the foundations of the earth are shaken.</div>
+  </div>
+
+  <div class="verse-summary">An aside, and the only verse addressed to nobody. Bad judging is described as a failure of sight, and then the scale jumps: the earth itself loses its footing.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">אֲנִי אָמַרְתִּי אֱלֹהִים אַתֶּם<br>
+  וּבְנֵי עֶלְיוֹן כֻּלְּכֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">אָמַרְתִּי</div><div class="tr">a-mar-<b>TI</b></div><div class="fr">I said</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">אַתֶּם</div><div class="tr"><b>A</b>-tem</div><div class="fr">you are</div></div>
+    </div>
+    <div class="stich-translation">I said: You are divine beings,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּבְנֵי</div><div class="tr">uv-<b>NEI</b></div><div class="fr">and sons of</div></div>
+      <div class="word"><div class="he">עֶלְיוֹן</div><div class="tr">eli-<b>ON</b></div><div class="fr">the Most High</div></div>
+      <div class="word"><div class="he">כֻּלְּכֶם</div><div class="tr"><b>KUL</b>-chem</div><div class="fr">all of you</div></div>
+    </div>
+    <div class="stich-translation">and sons of the Most High, all of you.</div>
+  </div>
+
+  <div class="verse-summary">The sentence opens by conceding the status. They really were called divine and sons of the Most High, which is what makes the next verse a demotion rather than an insult.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">אָכֵן כְּאָדָם תְּמוּתוּן<br>
+  וּכְאַחַד הַשָּׂרִים תִּפֹּלוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָכֵן</div><div class="tr">a-<b>CHEN</b></div><div class="fr">nevertheless</div></div>
+      <div class="word"><div class="he">כְּאָדָם</div><div class="tr">ke-a-<b>DAM</b></div><div class="fr">like a man</div></div>
+      <div class="word"><div class="he">תְּמוּתוּן</div><div class="tr">tmu-<b>TUN</b></div><div class="fr">you shall die</div></div>
+    </div>
+    <div class="stich-translation">Nevertheless you shall die like a man,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּכְאַחַד</div><div class="tr">uch-a-<b>CHAD</b></div><div class="fr">and like one of</div></div>
+      <div class="word"><div class="he">הַשָּׂרִים</div><div class="tr">ha-sa-<b>RIM</b></div><div class="fr">the princes</div></div>
+      <div class="word"><div class="he">תִּפֹּלוּ</div><div class="tr">ti-po-<b>LU</b></div><div class="fr">you shall fall</div></div>
+    </div>
+    <div class="stich-translation">and fall like one of the princes.</div>
+  </div>
+
+  <div class="verse-summary">The verdict. Not that the title was false, but that it buys no exemption from the one thing they were appointed to protect other people from.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">קוּמָה אֱלֹהִים שׇׁפְטָה הָאָרֶץ<br>
+  כִּי אַתָּה תִנְחַל בְּכׇל הַגּוֹיִם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קוּמָה</div><div class="tr">ku-<b>MA</b></div><div class="fr">arise</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">שׇׁפְטָה</div><div class="tr">shof-<b>TA</b></div><div class="fr">judge</div></div>
+      <div class="word"><div class="he">הָאָרֶץ</div><div class="tr">ha-<b>A</b>-retz</div><div class="fr">the earth</div></div>
+    </div>
+    <div class="stich-translation">Arise, O God, judge the earth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">תִנְחַל</div><div class="tr">tin-<b>CHAL</b></div><div class="fr">shall take as inheritance</div></div>
+      <div class="word"><div class="he">בְּכׇל</div><div class="tr">be-<b>CHOL</b></div><div class="fr">among all</div></div>
+      <div class="word"><div class="he">הַגּוֹיִם</div><div class="tr">ha-go-<b>YIM</b></div><div class="fr">the nations</div></div>
+    </div>
+    <div class="stich-translation">for You shall hold all the nations as Your inheritance.</div>
+  </div>
+
+  <div class="verse-summary">The psalmist speaks for the first time since verse 1. If the appointed judges are being removed, the bench is empty, and the request is that God take the whole earth himself.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>A trial in which the defendants are judges. Verse 1 is stage direction, verse 2 is the charge, verses 3 and 4 restate the neglected duty as four imperatives, verse 5 is an aside about their blindness and what it costs, verses 6 and 7 pass sentence, and verse 8 is the psalmist asking God to take the office over. Who stands in the dock is the psalm's open question, and the text does not settle it. Read one way, the elohim of <strong>אֱלֹהִים</strong> (e-lo-him, v.1) and <strong>אֱלֹהִים</strong> (e-lo-him, v.6) are human judges and the psalm is about corrupt courts. Read the other way they are members of a divine council, and the psalm is about God dismissing the powers set over the nations. Both readings are ancient and both are still held.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The root of judging runs through four forms: <strong>יִשְׁפֹּט</strong> (yish-pot, v.1), third person, He judges; <strong>תִּשְׁפְּטוּ</strong> (tish-ptu, v.2), second person plural, you judge; <strong>שִׁפְטוּ</strong> (shif-tu, v.3), plural imperative, judge; <strong>שׇׁפְטָה</strong> (shof-ta, v.8), singular imperative with the long ending, judge, this time addressed to God. The psalm is that root conjugated. <strong>וּפְנֵי</strong> (uf-nei, v.2) with <strong>תִּשְׂאוּ</strong> (tis-u, v.2) is the idiom for partiality, literally lifting the faces of the wicked, and it is the same pair of words that means showing favour when God is the subject and means corruption when a judge is. <strong>אָרֶץ</strong> (a-retz, v.5) has earth without the article and <strong>הָאָרֶץ</strong> (ha-a-retz, v.8) has it with, which is the difference between foundations giving way somewhere and the whole earth changing hands. The hardest word is the one in <strong>אֱלֹהִים</strong> (e-lo-him, v.6), since the identical form in <strong>אֱלֹהִים</strong> (e-lo-him, v.1) has to mean God himself: one noun, two referents, sometimes inside a single verse.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Verse 6 was also read as a statement about Israel rather than about judges. In that reading the words you are divine beings were said at Sinai, the status conferred there was real, and verse 7 records what happened when it was forfeited, so that dying like a man is a return to a condition that had briefly been lifted. The reading is traditional and it competes with the plain courtroom sense, which keeps the addressees on the bench from verse 1 through verse 7. What both readings share is a refusal to treat the title as empty flattery. The psalm does not say you were never gods. It says you will die anyway.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>What the psalm shows collapsing is judgement without its counterweight. <strong>יִמּוֹטוּ</strong> (yi-mo-tu, v.5), the verb used of the foundations, is the same verb the psalms use for a person being shaken, so the picture is the earth losing its footing the way a man does, and the cause named is not violence but bad courts. In the mystical idiom, strict judgement operating alone cannot hold a world together; it needs the side that gives without weighing first. Verse 8 is then not only a request for a better judge but a request for a different mode of judging, since the ground given is ownership rather than verdict: judge the earth, because it is already Yours.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-082-en',
+  key: 'Am',
+  tempo: 72,
+  progression: '| Em Em | C C | Am B7 | Em Em |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

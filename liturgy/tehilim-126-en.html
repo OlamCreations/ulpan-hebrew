@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 126: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 126: We were like dreamers</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ו · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 126</a></div>
+</header>
+
+<div class="t-intro">
+  Six verses that most people know as a tune, since this is the psalm sung before the grace after meals on Shabbat, festivals, and any day the penitential prayers are dropped. It is also the strangest of the Songs of Ascents, because it reports the return in the past tense in verse 1 and then asks for it in verse 4. Two pieces of grammar carry the second half. Verse 6 doubles the infinitive onto the verb twice, going he goes, coming he comes, which is how Hebrew intensifies without adverbs, and verses 5 and 6 build the whole ending out of one exchange, tears for glad song, repeated three times with different words.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  בְּשׁוּב יְהֹוָה אֶת שִׁיבַת צִיּוֹן<br>
+  הָיִינוּ כְּחֹלְמִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of the ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּשׁוּב</div><div class="tr">be-<b>SHUV</b></div><div class="fr">in the bringing back of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">שִׁיבַת</div><div class="tr">shi-<b>VAT</b></div><div class="fr">the return of</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">When the LORD brought back the returning of Zion,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָיִינוּ</div><div class="tr">ha-yi-<b>NU</b></div><div class="fr">we were</div></div>
+      <div class="word"><div class="he">כְּחֹלְמִים</div><div class="tr">ke-chol-<b>MIM</b></div><div class="fr">like those who dream</div></div>
+    </div>
+    <div class="stich-translation">we were like dreamers.</div>
+  </div>
+
+  <div class="verse-summary">An infinitive with a preposition on the front, which is how Hebrew says when, and the same root twice inside four words: in the returning, the return. The reaction is not joy yet, only disbelief.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אָז יִמָּלֵא שְׂחוֹק פִּינוּ<br>
+  וּלְשׁוֹנֵנוּ רִנָּה<br>
+  אָז יֹאמְרוּ בַגּוֹיִם<br>
+  הִגְדִּיל יְהֹוָה לַעֲשׂוֹת עִם אֵלֶּה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָז</div><div class="tr">az</div><div class="fr">then</div></div>
+      <div class="word"><div class="he">יִמָּלֵא</div><div class="tr">yi-ma-<b>LE</b></div><div class="fr">was filled</div></div>
+      <div class="word"><div class="he">שְׂחוֹק</div><div class="tr">schok</div><div class="fr">laughter</div></div>
+      <div class="word"><div class="he">פִּינוּ</div><div class="tr">pi-<b>NU</b></div><div class="fr">our mouth</div></div>
+    </div>
+    <div class="stich-translation">Then our mouth was filled with laughter,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּלְשׁוֹנֵנוּ</div><div class="tr">ul-sho-ne-<b>NU</b></div><div class="fr">and our tongue</div></div>
+      <div class="word"><div class="he">רִנָּה</div><div class="tr">ri-<b>NA</b></div><div class="fr">glad song</div></div>
+    </div>
+    <div class="stich-translation">and our tongue with glad song.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָז</div><div class="tr">az</div><div class="fr">then</div></div>
+      <div class="word"><div class="he">יֹאמְרוּ</div><div class="tr">yom-<b>RU</b></div><div class="fr">they said</div></div>
+      <div class="word"><div class="he">בַגּוֹיִם</div><div class="tr">va-go-<b>YIM</b></div><div class="fr">among the nations</div></div>
+    </div>
+    <div class="stich-translation">Then they said among the nations:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִגְדִּיל</div><div class="tr">hig-<b>DIL</b></div><div class="fr">has done greatly</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לַעֲשׂוֹת</div><div class="tr">la-a-<b>SOT</b></div><div class="fr">in acting</div></div>
+      <div class="word"><div class="he">עִם</div><div class="tr">im</div><div class="fr">with</div></div>
+      <div class="word"><div class="he">אֵלֶּה</div><div class="tr">e-<b>LE</b></div><div class="fr">these</div></div>
+    </div>
+    <div class="stich-translation">the LORD has done great things with them.</div>
+  </div>
+
+  <div class="verse-summary">Two thens, one for what happened in the mouth and one for what was said outside. The nations say these rather than you, and the psalm records their sentence exactly so it can repeat it in the next verse with one word changed.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">הִגְדִּיל יְהֹוָה לַעֲשׂוֹת עִמָּנוּ<br>
+  הָיִינוּ שְׂמֵחִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִגְדִּיל</div><div class="tr">hig-<b>DIL</b></div><div class="fr">has done greatly</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לַעֲשׂוֹת</div><div class="tr">la-a-<b>SOT</b></div><div class="fr">in acting</div></div>
+      <div class="word"><div class="he">עִמָּנוּ</div><div class="tr">i-ma-<b>NU</b></div><div class="fr">with us</div></div>
+    </div>
+    <div class="stich-translation">The LORD has done great things with us;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָיִינוּ</div><div class="tr">ha-yi-<b>NU</b></div><div class="fr">we were</div></div>
+      <div class="word"><div class="he">שְׂמֵחִים</div><div class="tr">sme-<b>CHIM</b></div><div class="fr">glad</div></div>
+    </div>
+    <div class="stich-translation">we were glad.</div>
+  </div>
+
+  <div class="verse-summary">The outsiders' sentence taken over word for word, with these turned into us. Nothing new is claimed; the verse consists of agreeing, which is the only place in the psalm where the speakers say something in their own voice about themselves.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">שׁוּבָה יְהֹוָה אֶת שְׁבִיתֵנוּ<br>
+  כַּאֲפִיקִים בַּנֶּגֶב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שׁוּבָה</div><div class="tr">shu-<b>VA</b></div><div class="fr">bring back</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">שְׁבִיתֵנוּ</div><div class="tr">shvi-te-<b>NU</b></div><div class="fr">our return</div></div>
+    </div>
+    <div class="stich-translation">Bring back our returning, LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כַּאֲפִיקִים</div><div class="tr">ka-a-fi-<b>KIM</b></div><div class="fr">like streambeds</div></div>
+      <div class="word"><div class="he">בַּנֶּגֶב</div><div class="tr">ba-<b>NE</b>-gev</div><div class="fr">in the Negev</div></div>
+    </div>
+    <div class="stich-translation">like streambeds in the Negev.</div>
+  </div>
+
+  <div class="verse-summary">The verse asks for what verse 1 said had already happened, which is the crux of the psalm. The image is precise rather than poetic: desert channels lie dry for most of the year and fill in an hour.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">הַזֹּרְעִים בְּדִמְעָה<br>
+  בְּרִנָּה יִקְצֹרוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַזֹּרְעִים</div><div class="tr">ha-zor-<b>IM</b></div><div class="fr">those who sow</div></div>
+      <div class="word"><div class="he">בְּדִמְעָה</div><div class="tr">bdim-<b>A</b></div><div class="fr">in tears</div></div>
+    </div>
+    <div class="stich-translation">Those who sow in tears</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּרִנָּה</div><div class="tr">bri-<b>NA</b></div><div class="fr">with glad song</div></div>
+      <div class="word"><div class="he">יִקְצֹרוּ</div><div class="tr">yik-tzo-<b>RU</b></div><div class="fr">shall reap</div></div>
+    </div>
+    <div class="stich-translation">shall reap with glad song.</div>
+  </div>
+
+  <div class="verse-summary">Four words, and in Hebrew the two nouns stand next to each other in the middle so the tears and the song touch. The word for glad song is the one from verse 2, which ties the promise to the memory.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">הָלוֹךְ יֵלֵךְ וּבָכֹה נֹשֵׂא מֶשֶׁךְ הַזָּרַע<br>
+  בֹּא יָבֹא בְרִנָּה נֹשֵׂא אֲלֻמֹּתָיו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָלוֹךְ</div><div class="tr">ha-<b>LOCH</b></div><div class="fr">going</div></div>
+      <div class="word"><div class="he">יֵלֵךְ</div><div class="tr">ye-<b>LECH</b></div><div class="fr">he goes</div></div>
+      <div class="word"><div class="he">וּבָכֹה</div><div class="tr">u-va-<b>CHO</b></div><div class="fr">and weeping</div></div>
+      <div class="word"><div class="he">נֹשֵׂא</div><div class="tr">no-<b>SE</b></div><div class="fr">carrying</div></div>
+      <div class="word"><div class="he">מֶשֶׁךְ</div><div class="tr">me-<b>SHECH</b></div><div class="fr">the pouch of</div></div>
+      <div class="word"><div class="he">הַזָּרַע</div><div class="tr">ha-<b>ZA</b>-ra</div><div class="fr">the seed</div></div>
+    </div>
+    <div class="stich-translation">He goes out, goes and weeps, carrying the pouch of seed;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֹּא</div><div class="tr">bo</div><div class="fr">coming</div></div>
+      <div class="word"><div class="he">יָבֹא</div><div class="tr">ya-<b>VO</b></div><div class="fr">he shall come</div></div>
+      <div class="word"><div class="he">בְרִנָּה</div><div class="tr">vri-<b>NA</b></div><div class="fr">with glad song</div></div>
+      <div class="word"><div class="he">נֹשֵׂא</div><div class="tr">no-<b>SE</b></div><div class="fr">carrying</div></div>
+      <div class="word"><div class="he">אֲלֻמֹּתָיו</div><div class="tr">a-lu-mo-<b>TAV</b></div><div class="fr">his sheaves</div></div>
+    </div>
+    <div class="stich-translation">he comes back, comes with glad song, carrying his sheaves.</div>
+  </div>
+
+  <div class="verse-summary">The proverb of verse 5 slowed down and given a single figure to walk it. Both halves start with the doubled verb and end with the same participle, carrying, so the only thing that changes across the verse is what is in his arms.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Three verses of memory, one of petition, two of principle. The memory is told from outside in: first what it felt like, then what it looked like to the nations, then the speakers agreeing with what the nations said. The petition in verse 4 asks for the same thing the memory reports, which means either the return happened and stopped short, or the first restoration is being used as the warrant for asking again. The psalm does not decide it. Verses 5 and 6 answer neither question and instead state the rule the whole thing runs on, that what is carried out weeping comes back as harvest.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The two phrases at the centre of the crux are related but not identical. <strong>שִׁיבַת</strong> (shi-vat, v.1), the return of Zion, is built plainly on the root for turning back. <strong>שְׁבִיתֵנוּ</strong> (shvi-te-nu, v.4) is the noun of the standing idiom that the older translations render turn the captivity and modern ones render restore the fortunes, and which root it belongs to, turning or capturing, is disputed and has been for a long time. <strong>כְּחֹלְמִים</strong> (ke-chol-mim, v.1) is usually those who dream, and the verse depends on it: the return was so unlikely it felt unreal. A minority reading attaches the word instead to a second root meaning to be restored to health, and translates like those made well. <strong>מֶשֶׁךְ</strong> (me-shech, v.6) is the same spelling as the place name in Psalm 120 verse 5, and here it is disputed too, read as the trail of seed, the seed pouch, or a measure of it. The doubled verbs in <strong>הָלוֹךְ</strong> (ha-loch, v.6) with <strong>יֵלֵךְ</strong> (ye-lech, v.6) and <strong>בֹּא</strong> (bo, v.6) with <strong>יָבֹא</strong> (ya-vo, v.6) are infinitives laid on finite verbs, the ordinary Hebrew intensifier.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The tension between verse 1 and verse 4 is the reason the psalm gets read as being about an unfinished return, and the streambeds of verse 4 sharpen it: a wadi in the Negev is not a river that has dried up, it is a channel that is dry by nature and fills all at once, so what is asked for is a reversal that arrives suddenly and not a gradual repair. Verse 2 has drawn attention for putting the confession of God's action in the mouth of the nations first and only then in Israel's, which reverses the usual order of who testifies. The sowing of verse 5 has been read as an argument about cost: the seed that goes into the ground is really lost, the weeping is not a mood but the loss itself, and the promise concerns what that loss becomes rather than denying it.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>Read mystically the psalm is about the gap between an event and the capacity to receive it. Verse 1 gives the state of a vessel too small for what it has just been handed, which is what being like a dreamer means: present at your own good and unable to hold it. Laughter and glad song in verse 2 are then the widening, and they begin in the mouth, the narrowest opening. The seed of verse 6 is the standard image for something that must go down and be hidden before it can return in a form worth carrying, and the psalm makes the weeping part of the mechanism rather than an obstacle to it. The last word, his sheaves, is the only possessive in the two closing verses: what comes back belongs to the one who went out.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-126-en',
+  key: 'Am',
+  tempo: 78,
+  progression: '| Am F | C G | Am F | G Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

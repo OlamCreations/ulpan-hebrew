@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 48: שִׁיר מִזְמוֹר</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 48: Great is the LORD in the city of our God</h1>
+    <div class="subtitle">תְּהִלִּים מ״ח · שִׁיר מִזְמוֹר</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 48</a></div>
+</header>
+
+<div class="t-intro">
+  Fifteen verses from the sons of Korah about a city rather than a person, and the psalm said on the second day of the week in the Temple list of daily psalms (Mishnah Tamid 7:4). It moves in three blocks: the city described from outside, kings who come and break apart at the sight of it, and then a congregation standing inside the temple. The last three verses are the part to watch as a learner: a string of plural imperatives, walk, circle, count, set your heart, traverse, tell, all aimed at making the next generation see what this one saw.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר מִזְמוֹר לִבְנֵי קֹרַח</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song</div></div>
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">לִבְנֵי</div><div class="tr">liv-<b>NEI</b></div><div class="fr">of the sons of</div></div>
+      <div class="word"><div class="he">קֹרַח</div><div class="tr">ko-<b>RACH</b></div><div class="fr">Korah</div></div>
+    </div>
+    <div class="stich-translation">A song, a psalm of the sons of Korah.</div>
+  </div>
+
+  <div class="verse-summary">Two genre words stacked, song and psalm, then the guild credited with eleven psalms in the book. Nothing here about David.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">גָּדוֹל יְהֹוָה וּמְהֻלָּל מְאֹד<br>
+  בְּעִיר אֱלֹהֵינוּ הַר קׇדְשׁוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גָּדוֹל</div><div class="tr">ga-<b>DOL</b></div><div class="fr">great is</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">וּמְהֻלָּל</div><div class="tr">um-hu-<b>LAL</b></div><div class="fr">and praised</div></div>
+      <div class="word"><div class="he">מְאֹד</div><div class="tr">me-<b>OD</b></div><div class="fr">greatly</div></div>
+    </div>
+    <div class="stich-translation">Great is the LORD and greatly praised</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּעִיר</div><div class="tr">be-<b>IR</b></div><div class="fr">in the city of</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">the mountain of</div></div>
+      <div class="word"><div class="he">קׇדְשׁוֹ</div><div class="tr">kod-<b>SHO</b></div><div class="fr">His holiness</div></div>
+    </div>
+    <div class="stich-translation">in the city of our God, His holy mountain.</div>
+  </div>
+
+  <div class="verse-summary">Praise is given a location before it is given a reason. The last two words are a construct chain, mountain-of His-holiness, which is how Hebrew builds an adjective it does not have.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">יְפֵה נוֹף מְשׂוֹשׂ כׇּל הָאָרֶץ<br>
+  הַר צִיּוֹן יַרְכְּתֵי צָפוֹן<br>
+  קִרְיַת מֶלֶךְ רָב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְפֵה</div><div class="tr">ye-<b>FE</b></div><div class="fr">beautiful of</div></div>
+      <div class="word"><div class="he">נוֹף</div><div class="tr">nof</div><div class="fr">height</div></div>
+      <div class="word"><div class="he">מְשׂוֹשׂ</div><div class="tr">me-<b>SOS</b></div><div class="fr">the joy of</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הָאָרֶץ</div><div class="tr">ha-<b>A</b>-retz</div><div class="fr">the earth</div></div>
+    </div>
+    <div class="stich-translation">Beautiful in height, the joy of all the earth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">mount</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+      <div class="word"><div class="he">יַרְכְּתֵי</div><div class="tr">yar-<b>KTEI</b></div><div class="fr">the far sides of</div></div>
+      <div class="word"><div class="he">צָפוֹן</div><div class="tr">tza-<b>FON</b></div><div class="fr">north</div></div>
+    </div>
+    <div class="stich-translation">Mount Zion, the far reaches of the north,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קִרְיַת</div><div class="tr">kir-<b>YAT</b></div><div class="fr">the city of</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">a king</div></div>
+      <div class="word"><div class="he">רָב</div><div class="tr">rav</div><div class="fr">great</div></div>
+    </div>
+    <div class="stich-translation">the city of a great king.</div>
+  </div>
+
+  <div class="verse-summary">Three appositions piled on one subject, with no verb in the whole verse. The claim is territorial and total: a local hill is called the joy of the entire earth.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">אֱלֹהִים בְּאַרְמְנוֹתֶיהָ<br>
+  נוֹדַע לְמִשְׂגָּב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">בְּאַרְמְנוֹתֶיהָ</div><div class="tr">be-ar-me-no-tei-<b>A</b></div><div class="fr">in her palaces</div></div>
+    </div>
+    <div class="stich-translation">God, within her palaces,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נוֹדַע</div><div class="tr"><b>NO</b>-da</div><div class="fr">is known</div></div>
+      <div class="word"><div class="he">לְמִשְׂגָּב</div><div class="tr">le-mis-<b>GAV</b></div><div class="fr">for a stronghold</div></div>
+    </div>
+    <div class="stich-translation">has made Himself known as a stronghold.</div>
+  </div>
+
+  <div class="verse-summary">The city has already been called beautiful; now it is called defensible, and the defence named is not the wall but the one living behind it.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">כִּי הִנֵּה הַמְּלָכִים נוֹעֲדוּ<br>
+  עָבְרוּ יַחְדָּו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">behold</div></div>
+      <div class="word"><div class="he">הַמְּלָכִים</div><div class="tr">ham-la-<b>CHIM</b></div><div class="fr">the kings</div></div>
+      <div class="word"><div class="he">נוֹעֲדוּ</div><div class="tr">no-a-<b>DU</b></div><div class="fr">they assembled</div></div>
+    </div>
+    <div class="stich-translation">For behold, the kings assembled,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עָבְרוּ</div><div class="tr">av-<b>RU</b></div><div class="fr">they passed on</div></div>
+      <div class="word"><div class="he">יַחְדָּו</div><div class="tr">yach-<b>DAV</b></div><div class="fr">together</div></div>
+    </div>
+    <div class="stich-translation">they advanced together.</div>
+  </div>
+
+  <div class="verse-summary">The narrative block opens. No siege is described and no army is counted; the kings are given only two verbs, gathering and marching, before the psalm cuts away.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">הֵמָּה רָאוּ כֵּן תָּמָהוּ<br>
+  נִבְהֲלוּ נֶחְפָּזוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֵמָּה</div><div class="tr">he-<b>MA</b></div><div class="fr">they</div></div>
+      <div class="word"><div class="he">רָאוּ</div><div class="tr">ra-<b>U</b></div><div class="fr">they saw</div></div>
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so</div></div>
+      <div class="word"><div class="he">תָּמָהוּ</div><div class="tr">ta-ma-<b>HU</b></div><div class="fr">they were astounded</div></div>
+    </div>
+    <div class="stich-translation">They saw, and at that they were astounded,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נִבְהֲלוּ</div><div class="tr">niv-ha-<b>LU</b></div><div class="fr">they were terrified</div></div>
+      <div class="word"><div class="he">נֶחְפָּזוּ</div><div class="tr">nech-pa-<b>ZU</b></div><div class="fr">they fled in panic</div></div>
+    </div>
+    <div class="stich-translation">they were terrified, they fled in panic.</div>
+  </div>
+
+  <div class="verse-summary">Four verbs in a row with no object and no connectives, which is the fastest verse in the psalm. Nothing is done to the kings: they look, and the looking undoes them.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">רְעָדָה אֲחָזָתַם שָׁם<br>
+  חִיל כַּיּוֹלֵדָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רְעָדָה</div><div class="tr">re-a-<b>DA</b></div><div class="fr">trembling</div></div>
+      <div class="word"><div class="he">אֲחָזָתַם</div><div class="tr">a-cha-za-<b>TAM</b></div><div class="fr">seized them</div></div>
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+    </div>
+    <div class="stich-translation">Trembling seized them there,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חִיל</div><div class="tr">chil</div><div class="fr">writhing</div></div>
+      <div class="word"><div class="he">כַּיּוֹלֵדָה</div><div class="tr">ka-yo-le-<b>DA</b></div><div class="fr">like a woman giving birth</div></div>
+    </div>
+    <div class="stich-translation">writhing like a woman in labour.</div>
+  </div>
+
+  <div class="verse-summary">The image is standard prophetic vocabulary for an army breaking, and it is deliberately humiliating: the strongest men in the region are given the body of a woman in labour.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">בְּרוּחַ קָדִים<br>
+  תְּשַׁבֵּר אֳנִיּוֹת תַּרְשִׁישׁ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּרוּחַ</div><div class="tr"><b>BRU</b>-ach</div><div class="fr">with a wind of</div></div>
+      <div class="word"><div class="he">קָדִים</div><div class="tr">ka-<b>DIM</b></div><div class="fr">the east</div></div>
+    </div>
+    <div class="stich-translation">With an east wind</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּשַׁבֵּר</div><div class="tr">tsha-<b>BER</b></div><div class="fr">You shatter</div></div>
+      <div class="word"><div class="he">אֳנִיּוֹת</div><div class="tr">o-ni-<b>YOT</b></div><div class="fr">the ships of</div></div>
+      <div class="word"><div class="he">תַּרְשִׁישׁ</div><div class="tr">tar-<b>SHISH</b></div><div class="fr">Tarshish</div></div>
+    </div>
+    <div class="stich-translation">You shatter the ships of Tarshish.</div>
+  </div>
+
+  <div class="verse-summary">The first direct address in the psalm, and the tense turns from past to present. Tarshish ships are the large cargo vessels of the period, the biggest thing a listener could picture breaking.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">כַּאֲשֶׁר שָׁמַעְנוּ כֵּן רָאִינוּ<br>
+  בְּעִיר יְהֹוָה צְבָאוֹת בְּעִיר אֱלֹהֵינוּ<br>
+  אֱלֹהִים יְכוֹנְנֶהָ עַד עוֹלָם סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כַּאֲשֶׁר</div><div class="tr">ka-<b>A</b>-sher</div><div class="fr">just as</div></div>
+      <div class="word"><div class="he">שָׁמַעְנוּ</div><div class="tr">sha-ma-<b>NU</b></div><div class="fr">we have heard</div></div>
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so</div></div>
+      <div class="word"><div class="he">רָאִינוּ</div><div class="tr">ra-i-<b>NU</b></div><div class="fr">we have seen</div></div>
+    </div>
+    <div class="stich-translation">Just as we have heard, so we have seen,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּעִיר</div><div class="tr">be-<b>IR</b></div><div class="fr">in the city of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">צְבָאוֹת</div><div class="tr">tze-va-<b>OT</b></div><div class="fr">of hosts</div></div>
+      <div class="word"><div class="he">בְּעִיר</div><div class="tr">be-<b>IR</b></div><div class="fr">in the city of</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+    </div>
+    <div class="stich-translation">in the city of the LORD of hosts, in the city of our God.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">יְכוֹנְנֶהָ</div><div class="tr">ye-chon-ne-<b>A</b></div><div class="fr">will establish her</div></div>
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">עוֹלָם</div><div class="tr">o-<b>LAM</b></div><div class="fr">ever</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">Selah</div></div>
+    </div>
+    <div class="stich-translation">May God establish her for ever. Selah.</div>
+  </div>
+
+  <div class="verse-summary">The hinge of the psalm, and the place where the speaker becomes a plural we standing inside the city. Received report and present eyesight are matched, which is the whole argument compressed into four words.</div>
+</div>
+
+<!-- VERSE 10 -->
+<div class="verse">
+  <span class="verse-num">10</span>
+  <div class="verse-full">דִּמִּינוּ אֱלֹהִים חַסְדֶּךָ<br>
+  בְּקֶרֶב הֵיכָלֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דִּמִּינוּ</div><div class="tr">di-mi-<b>NU</b></div><div class="fr">we have pictured</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">חַסְדֶּךָ</div><div class="tr">chas-de-<b>CHA</b></div><div class="fr">Your kindness</div></div>
+    </div>
+    <div class="stich-translation">We have pictured Your kindness, God,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּקֶרֶב</div><div class="tr">be-<b>KE</b>-rev</div><div class="fr">within</div></div>
+      <div class="word"><div class="he">הֵיכָלֶךָ</div><div class="tr">hei-cha-le-<b>CHA</b></div><div class="fr">Your temple</div></div>
+    </div>
+    <div class="stich-translation">within Your temple.</div>
+  </div>
+
+  <div class="verse-summary">The verb is from the root for likening and imagining, so the line is about a congregation forming a picture rather than reciting a fact. The verbs from here on all happen indoors.</div>
+</div>
+
+<!-- VERSE 11 -->
+<div class="verse">
+  <span class="verse-num">11</span>
+  <div class="verse-full">כְּשִׁמְךָ אֱלֹהִים כֵּן תְּהִלָּתְךָ<br>
+  עַל קַצְוֵי אֶרֶץ<br>
+  צֶדֶק מָלְאָה יְמִינֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּשִׁמְךָ</div><div class="tr">kshim-<b>CHA</b></div><div class="fr">like Your name</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so is</div></div>
+      <div class="word"><div class="he">תְּהִלָּתְךָ</div><div class="tr">te-hi-lat-<b>CHA</b></div><div class="fr">Your praise</div></div>
+    </div>
+    <div class="stich-translation">Like Your name, God, so is Your praise</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">to</div></div>
+      <div class="word"><div class="he">קַצְוֵי</div><div class="tr">katz-<b>VEI</b></div><div class="fr">the ends of</div></div>
+      <div class="word"><div class="he">אֶרֶץ</div><div class="tr"><b>E</b>-retz</div><div class="fr">earth</div></div>
+    </div>
+    <div class="stich-translation">to the ends of the earth.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">צֶדֶק</div><div class="tr"><b>TZE</b>-dek</div><div class="fr">righteousness</div></div>
+      <div class="word"><div class="he">מָלְאָה</div><div class="tr">mal-<b>A</b></div><div class="fr">is full</div></div>
+      <div class="word"><div class="he">יְמִינֶךָ</div><div class="tr">ye-mi-ne-<b>CHA</b></div><div class="fr">Your right hand</div></div>
+    </div>
+    <div class="stich-translation">Your right hand is full of righteousness.</div>
+  </div>
+
+  <div class="verse-summary">Reputation is treated as something with a measurable reach. The last three words invert the English order, so the learner reads righteousness, is-full, Your-right-hand.</div>
+</div>
+
+<!-- VERSE 12 -->
+<div class="verse">
+  <span class="verse-num">12</span>
+  <div class="verse-full">יִשְׂמַח הַר צִיּוֹן<br>
+  תָּגֵלְנָה בְּנוֹת יְהוּדָה<br>
+  לְמַעַן מִשְׁפָּטֶיךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׂמַח</div><div class="tr">yis-<b>MACH</b></div><div class="fr">let it rejoice</div></div>
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">mount</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">Let Mount Zion rejoice,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תָּגֵלְנָה</div><div class="tr">ta-gel-<b>NA</b></div><div class="fr">let them be glad</div></div>
+      <div class="word"><div class="he">בְּנוֹת</div><div class="tr">bnot</div><div class="fr">the daughters of</div></div>
+      <div class="word"><div class="he">יְהוּדָה</div><div class="tr">ye-hu-<b>DA</b></div><div class="fr">Judah</div></div>
+    </div>
+    <div class="stich-translation">let the daughters of Judah be glad,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">for the sake of</div></div>
+      <div class="word"><div class="he">מִשְׁפָּטֶיךָ</div><div class="tr">mish-pa-tei-<b>CHA</b></div><div class="fr">Your judgments</div></div>
+    </div>
+    <div class="stich-translation">because of Your judgments.</div>
+  </div>
+
+  <div class="verse-summary">A masculine singular verb for the mountain and a feminine plural verb for the towns, which is the clearest agreement lesson in the psalm. The daughters of Judah are the surrounding settlements, not only women.</div>
+</div>
+
+<!-- VERSE 13 -->
+<div class="verse">
+  <span class="verse-num">13</span>
+  <div class="verse-full">סֹבּוּ צִיּוֹן וְהַקִּיפוּהָ<br>
+  סִפְרוּ מִגְדָּלֶיהָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">סֹבּוּ</div><div class="tr">so-<b>BU</b></div><div class="fr">walk around</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+      <div class="word"><div class="he">וְהַקִּיפוּהָ</div><div class="tr">ve-ha-ki-fu-<b>A</b></div><div class="fr">and encircle her</div></div>
+    </div>
+    <div class="stich-translation">Walk around Zion and encircle her,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">סִפְרוּ</div><div class="tr">sif-<b>RU</b></div><div class="fr">count</div></div>
+      <div class="word"><div class="he">מִגְדָּלֶיהָ</div><div class="tr">mig-da-lei-<b>A</b></div><div class="fr">her towers</div></div>
+    </div>
+    <div class="stich-translation">count her towers.</div>
+  </div>
+
+  <div class="verse-summary">The psalm stops describing and starts giving orders. What was a claim about the city now becomes something the listener is told to verify with his own feet.</div>
+</div>
+
+<!-- VERSE 14 -->
+<div class="verse">
+  <span class="verse-num">14</span>
+  <div class="verse-full">שִׁיתוּ לִבְּכֶם לְחֵילָהֿ<br>
+  פַּסְּגוּ אַרְמְנוֹתֶיהָ<br>
+  לְמַעַן תְּסַפְּרוּ לְדוֹר אַחֲרוֹן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיתוּ</div><div class="tr">shi-<b>TU</b></div><div class="fr">set</div></div>
+      <div class="word"><div class="he">לִבְּכֶם</div><div class="tr"><b>LIB</b>-chem</div><div class="fr">your heart</div></div>
+      <div class="word"><div class="he">לְחֵילָהֿ</div><div class="tr">le-chei-<b>LA</b></div><div class="fr">to her rampart</div></div>
+    </div>
+    <div class="stich-translation">Set your heart on her rampart,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פַּסְּגוּ</div><div class="tr">pas-<b>GU</b></div><div class="fr">traverse</div></div>
+      <div class="word"><div class="he">אַרְמְנוֹתֶיהָ</div><div class="tr">ar-me-no-tei-<b>A</b></div><div class="fr">her palaces</div></div>
+    </div>
+    <div class="stich-translation">go through her palaces,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">so that</div></div>
+      <div class="word"><div class="he">תְּסַפְּרוּ</div><div class="tr">te-sap-<b>RU</b></div><div class="fr">you may recount</div></div>
+      <div class="word"><div class="he">לְדוֹר</div><div class="tr">le-<b>DOR</b></div><div class="fr">to a generation</div></div>
+      <div class="word"><div class="he">אַחֲרוֹן</div><div class="tr">a-cha-<b>RON</b></div><div class="fr">coming after</div></div>
+    </div>
+    <div class="stich-translation">so that you may recount it to a coming generation.</div>
+  </div>
+
+  <div class="verse-summary">The purpose of the tour is stated outright: the point of counting towers is having something to say later. This is the verse that turns the psalm into a teaching instrument.</div>
+</div>
+
+<!-- VERSE 15 -->
+<div class="verse">
+  <span class="verse-num">15</span>
+  <div class="verse-full">כִּי זֶה אֱלֹהִים אֱלֹהֵינוּ עוֹלָם וָעֶד<br>
+  הוּא יְנַהֲגֵנוּ עַל מוּת</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">זֶה</div><div class="tr">ze</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">is our God</div></div>
+      <div class="word"><div class="he">עוֹלָם</div><div class="tr">o-<b>LAM</b></div><div class="fr">for ever</div></div>
+      <div class="word"><div class="he">וָעֶד</div><div class="tr"><b>VA</b>-ed</div><div class="fr">and ever</div></div>
+    </div>
+    <div class="stich-translation">For this God is our God for ever and ever;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">He</div></div>
+      <div class="word"><div class="he">יְנַהֲגֵנוּ</div><div class="tr">ye-na-ha-ge-<b>NU</b></div><div class="fr">will lead us</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">beyond</div></div>
+      <div class="word"><div class="he">מוּת</div><div class="tr">mut</div><div class="fr">death</div></div>
+    </div>
+    <div class="stich-translation">He will lead us beyond death.</div>
+  </div>
+
+  <div class="verse-summary">The city drops out of view in the last verse and the object of trust turns out to be the one who lives in it. The final two words are the hardest in the psalm and are read in several ways.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Three movements. Verses 2 to 4 describe the city from outside: high, beautiful, praised, and defended by its occupant rather than its stonework. Verses 5 to 8 tell a story with almost no detail, kings gathering, seeing something, and coming apart, with the psalm never saying what they saw. Verses 9 to 15 are spoken by a plural we standing inside, and the pivot is the pairing of <strong>שָׁמַעְנוּ</strong> (sha-ma-nu, v.9) with <strong>רָאִינוּ</strong> (ra-i-nu, v.9): what the fathers reported, this congregation has now seen for itself. The ending is practical. Walk the perimeter, count the towers, look at the ramparts, then go and tell a generation that has not seen it. The psalm ends by handing the evidence forward.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Two cruxes and one geographical oddity. The oddity is <strong>יַרְכְּתֵי</strong> (yar-ktei, v.3) with the word after it, literally the far sides of the north, which is the standard biblical phrase for a remote mountain of the gods and is commonly read as language borrowed from Canaanite descriptions of Mount Zaphon and applied to a hill in Judah; that reading is widely held but it is a reconstruction, not something the psalm states. The first crux is the verb of <strong>פַּסְּגוּ</strong> (pas-gu, v.14), which occurs only here in the Bible: translations give traverse, pass between, and consider, and no reading is secure. The second is the last two words, <strong>מוּת</strong> (mut, v.15) and the preposition before it, read variously as beyond death, unto death, and, by taking the two words as one, as eternity; some connect the phrase to the musical heading of Psalm 9. The dispute is old and unresolved, and the theology people take from the verse depends on which way it is read.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>This is the psalm assigned to the second day of the week in the list of Temple psalms in Mishnah Tamid 7:4, and the Talmud in Rosh Hashanah 31a explains the daily psalms as matching the days of creation, the second day being the day of division. Read that way, the opening word of <strong>גָּדוֹל</strong> (ga-dol, v.2) is about a God who separates and then rules over what He has separated, which is exactly what the kings of verse 5 discover the hard way. The reading tradition also takes the tour of verses 13 and 14 as a rule for teaching rather than tourism: the towers are counted so that the count survives the counter. Later readers of the destroyed city read the same imperatives against ruins, which turns a survey of walls into an act of memory.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>In the kabbalistic reading the city is not primarily a place but a receiving vessel, the lowest of the divine measures, which is why she is spoken of in the feminine throughout and why her palaces, ramparts and towers can be counted at all: what can be measured is what has been given form. The kings who look and flee stand for a force that cannot bear an unmediated encounter with what is inside the walls, so it breaks apart at the boundary rather than crossing it. The last verse is then read as a route rather than a comfort: the same guide who leads within the city is said to lead beyond the place where measure stops, which is the sense the mystical reading gives to leading beyond death.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-048-en',
+  key: 'Am',
+  tempo: 84,
+  progression: '| C G | Am F | C G | C C |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

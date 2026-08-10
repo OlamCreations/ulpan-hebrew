@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 87: לִבְנֵי קֹרַח</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 87: His foundation is on the holy mountains</h1>
+    <div class="subtitle">תְּהִלִּים פ״ז · לִבְנֵי קֹרַח</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 87</a></div>
+</header>
+
+<div class="t-intro">
+  Seven verses about Jerusalem, and the hardest Hebrew on this site. This page does not smooth that over, because the difficulty is in the text and not in the translators. Verse 1 opens with His foundation before anyone has said whose. Verse 3 puts a feminine plural subject with a masculine singular verb. Verse 4 switches without warning to a first person speaker who can only be God, with nothing in the Hebrew to mark the change. Verse 5 says a man and a man with a singular verb. Verse 7 has no verb at all and two of its five words are argued over. Published translations differ from each other here more than almost anywhere in the book. What holds the fragments together is one image: a register of birthplaces in which foreign nations are entered as native to Zion.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לִבְנֵי קֹרַח מִזְמוֹר שִׁיר<br>
+  יְסוּדָתוֹ בְּהַרְרֵי קֹדֶשׁ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לִבְנֵי</div><div class="tr">liv-<b>NEI</b></div><div class="fr">of the sons of</div></div>
+      <div class="word"><div class="he">קֹרַח</div><div class="tr">ko-<b>RACH</b></div><div class="fr">Korah</div></div>
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">a psalm</div></div>
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song</div></div>
+    </div>
+    <div class="stich-translation">Of the sons of Korah. A psalm, a song.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְסוּדָתוֹ</div><div class="tr">ye-su-da-<b>TO</b></div><div class="fr">His foundation</div></div>
+      <div class="word"><div class="he">בְּהַרְרֵי</div><div class="tr">be-har-<b>REI</b></div><div class="fr">on the mountains of</div></div>
+      <div class="word"><div class="he">קֹדֶשׁ</div><div class="tr"><b>KO</b>-desh</div><div class="fr">holiness</div></div>
+    </div>
+    <div class="stich-translation">His foundation is on the holy mountains.</div>
+  </div>
+
+  <div class="verse-summary">The heading and the first line run together. The suffix on foundation, His, has no antecedent anywhere before it, so the psalm begins in the middle of a sentence whose subject arrives only in the next verse.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אֹהֵב יְהֹוָה שַׁעֲרֵי צִיּוֹן<br>
+  מִכֹּל מִשְׁכְּנוֹת יַעֲקֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֹהֵב</div><div class="tr">o-<b>HEV</b></div><div class="fr">loves</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">שַׁעֲרֵי</div><div class="tr">sha-a-<b>REI</b></div><div class="fr">the gates of</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">The LORD loves the gates of Zion</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִכֹּל</div><div class="tr">mi-<b>KOL</b></div><div class="fr">more than all</div></div>
+      <div class="word"><div class="he">מִשְׁכְּנוֹת</div><div class="tr">mish-<b>KNOT</b></div><div class="fr">the dwellings of</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+    </div>
+    <div class="stich-translation">more than all the dwellings of Jacob.</div>
+  </div>
+
+  <div class="verse-summary">The first complete sentence, and it is comparative rather than exclusive: the other dwellings are not rejected, these gates are preferred. Gates, not the city, which is the part where people are counted in and out.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">נִכְבָּדוֹת מְדֻבָּר בָּךְ<br>
+  עִיר הָאֱלֹהִים סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נִכְבָּדוֹת</div><div class="tr">nich-ba-<b>DOT</b></div><div class="fr">glorious things</div></div>
+      <div class="word"><div class="he">מְדֻבָּר</div><div class="tr">me-du-<b>BAR</b></div><div class="fr">is spoken</div></div>
+      <div class="word"><div class="he">בָּךְ</div><div class="tr">bach</div><div class="fr">in you</div></div>
+    </div>
+    <div class="stich-translation">Glorious things are spoken of you,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עִיר</div><div class="tr">ir</div><div class="fr">city of</div></div>
+      <div class="word"><div class="he">הָאֱלֹהִים</div><div class="tr">ha-e-lo-<b>HIM</b></div><div class="fr">the God</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">city of God. Selah.</div>
+  </div>
+
+  <div class="verse-summary">A passive with no agent, so nobody is named as saying the glorious things. The verb is masculine singular while its subject is feminine plural; grammarians account for that in several ways and none of them makes the mismatch go away.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">אַזְכִּיר רַהַב וּבָבֶל לְיֹדְעָי<br>
+  הִנֵּה פְלֶשֶׁת וְצֹר עִם כּוּשׁ<br>
+  זֶה יֻלַּד שָׁם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַזְכִּיר</div><div class="tr">az-<b>KIR</b></div><div class="fr">I will mention</div></div>
+      <div class="word"><div class="he">רַהַב</div><div class="tr">ra-<b>HAV</b></div><div class="fr">Rahab</div></div>
+      <div class="word"><div class="he">וּבָבֶל</div><div class="tr">u-<b>VA</b>-vel</div><div class="fr">and Babylon</div></div>
+      <div class="word"><div class="he">לְיֹדְעָי</div><div class="tr">lyod-<b>AI</b></div><div class="fr">to those who know me</div></div>
+    </div>
+    <div class="stich-translation">I will name Rahab and Babylon among those who know me;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">here is</div></div>
+      <div class="word"><div class="he">פְלֶשֶׁת</div><div class="tr"><b>FLE</b>-shet</div><div class="fr">Philistia</div></div>
+      <div class="word"><div class="he">וְצֹר</div><div class="tr">ve-<b>TZOR</b></div><div class="fr">and Tyre</div></div>
+      <div class="word"><div class="he">עִם</div><div class="tr">im</div><div class="fr">with</div></div>
+      <div class="word"><div class="he">כּוּשׁ</div><div class="tr">kush</div><div class="fr">Cush</div></div>
+    </div>
+    <div class="stich-translation">here are Philistia and Tyre, with Cush:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זֶה</div><div class="tr">ze</div><div class="fr">this one</div></div>
+      <div class="word"><div class="he">יֻלַּד</div><div class="tr">yu-<b>LAD</b></div><div class="fr">was born</div></div>
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+    </div>
+    <div class="stich-translation">this one was born there.</div>
+  </div>
+
+  <div class="verse-summary">The speaker changes to a first person who can list great powers as people who know me, which nobody but God can be saying. No word marks the change. Translations open a quotation mark here on the strength of the sense alone.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">וּלְצִיּוֹן יֵאָמַר<br>
+  אִישׁ וְאִישׁ יֻלַּד בָּהּ<br>
+  וְהוּא יְכוֹנְנֶהָ עֶלְיוֹן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּלְצִיּוֹן</div><div class="tr">ul-tzi-<b>YON</b></div><div class="fr">and of Zion</div></div>
+      <div class="word"><div class="he">יֵאָמַר</div><div class="tr">ye-a-<b>MAR</b></div><div class="fr">it shall be said</div></div>
+    </div>
+    <div class="stich-translation">And of Zion it shall be said:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִישׁ</div><div class="tr">ish</div><div class="fr">a man</div></div>
+      <div class="word"><div class="he">וְאִישׁ</div><div class="tr">ve-<b>ISH</b></div><div class="fr">and a man</div></div>
+      <div class="word"><div class="he">יֻלַּד</div><div class="tr">yu-<b>LAD</b></div><div class="fr">was born</div></div>
+      <div class="word"><div class="he">בָּהּ</div><div class="tr">bah</div><div class="fr">in her</div></div>
+    </div>
+    <div class="stich-translation">this man and that man was born in her,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְהוּא</div><div class="tr">ve-<b>HU</b></div><div class="fr">and He</div></div>
+      <div class="word"><div class="he">יְכוֹנְנֶהָ</div><div class="tr">ye-chon-ne-<b>A</b></div><div class="fr">establishes her</div></div>
+      <div class="word"><div class="he">עֶלְיוֹן</div><div class="tr">eli-<b>ON</b></div><div class="fr">the Most High</div></div>
+    </div>
+    <div class="stich-translation">and He Himself, the Most High, establishes her.</div>
+  </div>
+
+  <div class="verse-summary">The counterweight to verse 4. The nations got one clause each; Zion gets a doubled a man and a man with a singular verb, which is an idiom for each and every one, and then a builder in the last two words.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">יְהֹוָה יִסְפֹּר בִּכְתוֹב עַמִּים<br>
+  זֶה יֻלַּד שָׁם סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">יִסְפֹּר</div><div class="tr">yis-<b>POR</b></div><div class="fr">will count</div></div>
+      <div class="word"><div class="he">בִּכְתוֹב</div><div class="tr">bich-<b>TOV</b></div><div class="fr">in the registering of</div></div>
+      <div class="word"><div class="he">עַמִּים</div><div class="tr">a-<b>MIM</b></div><div class="fr">peoples</div></div>
+    </div>
+    <div class="stich-translation">The LORD will count, in the writing up of peoples:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זֶה</div><div class="tr">ze</div><div class="fr">this one</div></div>
+      <div class="word"><div class="he">יֻלַּד</div><div class="tr">yu-<b>LAD</b></div><div class="fr">was born</div></div>
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">this one was born there. Selah.</div>
+  </div>
+
+  <div class="verse-summary">The register image made explicit: a head count written down, with the same three words of verse 4 as the entry line. Whether there means Zion or each nation's own country is the argument of the whole psalm, and it is disputed.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">וְשָׁרִים כְּחֹלְלִים<br>
+  כׇּל מַעְיָנַי בָּךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשָׁרִים</div><div class="tr">ve-sha-<b>RIM</b></div><div class="fr">and singers</div></div>
+      <div class="word"><div class="he">כְּחֹלְלִים</div><div class="tr">ke-chol-<b>LIM</b></div><div class="fr">like dancers</div></div>
+    </div>
+    <div class="stich-translation">And singers alike with dancers:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">מַעְיָנַי</div><div class="tr">ma-ya-<b>NAI</b></div><div class="fr">my springs</div></div>
+      <div class="word"><div class="he">בָּךְ</div><div class="tr">bach</div><div class="fr">in you</div></div>
+    </div>
+    <div class="stich-translation">all my springs are in you.</div>
+  </div>
+
+  <div class="verse-summary">Five words, no verb, and two of them uncertain. A speaker who is never identified says all my springs are in you, and the you is feminine singular, so it has to be the city.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>The plain reading has to be assembled from pieces, because the psalm does not supply the joints. A heading, then a claim that God prefers Zion, then an unattributed report that glorious things are said of her, then a divine voice listing foreign powers, then Zion set against them, then a census, then a fragment about singers. The nations named cover the compass from Israel: Rahab and Cush to the south, Babylon to the east, Tyre to the north, Philistia on the coast. Rahab is used elsewhere in the Bible as a byname for Egypt and also for a sea monster; standing here next to Babylon it is read as Egypt. The refrain <strong>זֶה</strong> (ze, v.4) <strong>יֻלַּד</strong> (yu-lad, v.4) <strong>שָׁם</strong> (sham, v.4), this one was born there, is what carries the argument, and it is the sentence whose meaning is least settled.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The cruxes, in order. <strong>יְסוּדָתוֹ</strong> (ye-su-da-to, v.1) is a feminine abstract noun carrying a masculine suffix, so his foundation, or on another reading his founded city. <strong>בְּהַרְרֵי</strong> (be-har-rei, v.1) is a plural construct of the word for mountain with the resh doubled, a poetic form, and it does not say which mountains. <strong>נִכְבָּדוֹת</strong> (nich-ba-dot, v.3) is feminine plural, <strong>מְדֻבָּר</strong> (me-du-bar, v.3) is masculine singular, and the two are the subject and verb of the same clause. <strong>לְיֹדְעָי</strong> (lyod-ai, v.4) is a lamed plus a participle plus a first person suffix, to those knowing me, which is what forces the speaker to be God. <strong>יְכוֹנְנֶהָ</strong> (ye-chon-ne-a, v.5) carries a feminine object suffix, establishes her, with the subject held back to the following word. <strong>כְּחֹלְלִים</strong> (ke-chol-lim, v.7) is either from the root chet vav lamed, to whirl or dance, or from chet lamed lamed, to pierce and so to play a pipe, and both readings are current. <strong>מַעְיָנַי</strong> (ma-ya-nai, v.7) is the word for springs of water, but the 1917 translation printed alongside this page renders it my thoughts, from a different derivation; that single word is a fair sample of how far the versions travel apart.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The reading the psalm invites, without a name attached to it, is a birth register kept by God in which people born in Egypt, Babylon, Philistia, Tyre and Cush are entered as born in Zion. On that reading verse 6 is not counting the population of Jerusalem but recording where people belong, and belonging is assigned rather than inherited. The doubled a man and a man of verse 5 has been read as covering two kinds of person and not two births, so that the one who arrives late is written down beside the one born inside the walls. Several psalms carry the same heading, of the sons of Korah, and this one is the shortest and the strangest of them. Note what the psalm never does: it names no king, no temple rite and no enemy, only cities and a list.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading takes Zion as a mother and the census as a record of souls, which is why every verb of birth in the psalm is passive: nobody in it is described as giving birth, only as being born. The springs of verse 7 belong to the same picture, a city read as a source rather than a destination, and the last two words, in you, put everything the speaker has inside her. Verse 5 supplies the counterweight: she is established by the Most High, so the source is itself founded, and the foundation of verse 1 that had no owner turns out at the end to have one. What the reading adds to the plain sense is a direction of flow; what it does not remove is the psalm's silence about who is speaking in verses 4 and 7.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-087-en',
+  key: 'Am',
+  tempo: 72,
+  progression: '| Dm Gm | C F | Dm A | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

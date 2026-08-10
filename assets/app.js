@@ -1727,6 +1727,10 @@ function openSituations(situations, lessonId) {
     addOnce('link[rel="manifest"]', function () { var l = document.createElement('link'); l.rel = 'manifest'; l.href = window.ULPAN_BASE + 'manifest.json'; return l; });
     addOnce('meta[name="theme-color"]', function () { var m = document.createElement('meta'); m.name = 'theme-color'; m.content = '#0a0a0a'; return m; });
     addOnce('link[rel="apple-touch-icon"]', function () { var a = document.createElement('link'); a.rel = 'apple-touch-icon'; a.href = window.ULPAN_ASSETS + 'icon-192.png'; return a; });
+    // Without a declared icon the browser asks for /favicon.ico on its own and gets a 404 on
+    // every page of the site. Harmless, but it was the only console error left, and a console
+    // that is never empty is a console nobody reads.
+    addOnce('link[rel="icon"]', function () { var i = document.createElement('link'); i.rel = 'icon'; i.type = 'image/png'; i.href = window.ULPAN_ASSETS + 'icon-192.png'; return i; });
     addOnce('meta[name="apple-mobile-web-app-capable"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-capable'; m.content = 'yes'; return m; });
     addOnce('meta[name="apple-mobile-web-app-status-bar-style"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-status-bar-style'; m.content = 'black-translucent'; return m; });
     addOnce('meta[name="apple-mobile-web-app-title"]', function () { var m = document.createElement('meta'); m.name = 'apple-mobile-web-app-title'; m.content = 'Ulpan'; return m; });

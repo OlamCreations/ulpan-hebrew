@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 148: הַלְלוּ יָהּ</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 148: Praise the LORD from the heavens</h1>
+    <div class="subtitle">תְּהִלִּים קמ״ח · הַלְלוּ יָהּ</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 148</a></div>
+</header>
+
+<div class="t-intro">
+  Fourteen verses, one of the five Halleluyah psalms that close the book and are said every morning in Pesukei deZimra, so a beginner hears this one daily. Its shape is a single instruction stretched over the whole text: praise Him, followed by a list of everything that exists, in order. Verses 1 to 6 summon the heavens, verses 7 to 14 summon the earth, and each half stops at the same refrain, let them praise the name of the LORD, in verse 5 and verse 13. For a learner the value is one verb in three forms: the plain plural imperative hal'lu four times, the same imperative with the object suffix him, hal'luhu, six times, and the jussive yehal'lu, let them praise, opening both refrains. Nothing in the psalm explains how a sea creature or a mountain is supposed to comply.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">הַלְלוּ יָהּ<br>
+  הַלְלוּ אֶת יְהֹוָה מִן הַשָּׁמַיִם<br>
+  הַלְלוּהוּ בַּמְּרוֹמִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Praise Yah.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">מִן</div><div class="tr">min</div><div class="fr">from</div></div>
+      <div class="word"><div class="he">הַשָּׁמַיִם</div><div class="tr">ha-sha-<b>MA</b>-yim</div><div class="fr">the heavens</div></div>
+    </div>
+    <div class="stich-translation">Praise the LORD from the heavens;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">בַּמְּרוֹמִים</div><div class="tr">bam-ro-<b>MIM</b></div><div class="fr">in the heights</div></div>
+    </div>
+    <div class="stich-translation">praise Him in the heights.</div>
+  </div>
+
+  <div class="verse-summary">The call is issued twice before anything is named, and the location comes before the audience: from the heavens, in the heights. The psalm is organised by address rather than by argument.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">הַלְלוּהוּ כׇל מַלְאָכָיו<br>
+  הַלְלוּהוּ כׇּל צְבָאָו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">כׇל</div><div class="tr">chol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">מַלְאָכָיו</div><div class="tr">mal-a-<b>CHAV</b></div><div class="fr">His messengers</div></div>
+    </div>
+    <div class="stich-translation">Praise Him, all His messengers;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">צְבָאָו</div><div class="tr">tze-va-<b>AV</b></div><div class="fr">His hosts</div></div>
+    </div>
+    <div class="stich-translation">praise Him, all His hosts.</div>
+  </div>
+
+  <div class="verse-summary">The first two groups called are the ones that already do this. Angels and hosts are the easy case, and putting them first makes everything that follows look like the same instruction.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">הַלְלוּהוּ שֶׁמֶשׁ וְיָרֵחַ<br>
+  הַלְלוּהוּ כׇּל כּוֹכְבֵי אוֹר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">שֶׁמֶשׁ</div><div class="tr"><b>SHE</b>-mesh</div><div class="fr">sun</div></div>
+      <div class="word"><div class="he">וְיָרֵחַ</div><div class="tr">ve-ya-<b>RE</b>-ach</div><div class="fr">and moon</div></div>
+    </div>
+    <div class="stich-translation">Praise Him, sun and moon;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">כּוֹכְבֵי</div><div class="tr">koch-<b>VEI</b></div><div class="fr">the stars of</div></div>
+      <div class="word"><div class="he">אוֹר</div><div class="tr">or</div><div class="fr">light</div></div>
+    </div>
+    <div class="stich-translation">praise Him, all stars of light.</div>
+  </div>
+
+  <div class="verse-summary">Sun, moon and stars are addressed as subjects who can be told to do something. In the surrounding cultures they were gods; here they are entries on a roll call, filed between angels and water.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">הַלְלוּהוּ שְׁמֵי הַשָּׁמָיִם<br>
+  וְהַמַּיִם אֲשֶׁר מֵעַל הַשָּׁמָיִם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּהוּ</div><div class="tr">hal-lu-<b>HU</b></div><div class="fr">praise Him</div></div>
+      <div class="word"><div class="he">שְׁמֵי</div><div class="tr">shmei</div><div class="fr">heavens of</div></div>
+      <div class="word"><div class="he">הַשָּׁמָיִם</div><div class="tr">ha-sha-ma-<b>YIM</b></div><div class="fr">the heavens</div></div>
+    </div>
+    <div class="stich-translation">Praise Him, heavens of heavens,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְהַמַּיִם</div><div class="tr">ve-ha-<b>MA</b>-yim</div><div class="fr">and the waters</div></div>
+      <div class="word"><div class="he">אֲשֶׁר</div><div class="tr"><b>A</b>-sher</div><div class="fr">that</div></div>
+      <div class="word"><div class="he">מֵעַל</div><div class="tr">me-<b>AL</b></div><div class="fr">are above</div></div>
+      <div class="word"><div class="he">הַשָּׁמָיִם</div><div class="tr">ha-sha-ma-<b>YIM</b></div><div class="fr">the heavens</div></div>
+    </div>
+    <div class="stich-translation">and the waters that are above the heavens.</div>
+  </div>
+
+  <div class="verse-summary">The highest and strangest items on the list: a noun doubled in construct to mean the sky beyond the sky, and the water that the creation account places over it. The descent begins after this verse.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">יְהַלְלוּ אֶת שֵׁם יְהֹוָה<br>
+  כִּי הוּא צִוָּה וְנִבְרָאוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהַלְלוּ</div><div class="tr">ye-hal-<b>LU</b></div><div class="fr">let them praise</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">שֵׁם</div><div class="tr">shem</div><div class="fr">the name of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Let them praise the name of the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">He</div></div>
+      <div class="word"><div class="he">צִוָּה</div><div class="tr">tzi-<b>VA</b></div><div class="fr">commanded</div></div>
+      <div class="word"><div class="he">וְנִבְרָאוּ</div><div class="tr">ve-niv-ra-<b>U</b></div><div class="fr">and they were created</div></div>
+    </div>
+    <div class="stich-translation">for He commanded and they were created.</div>
+  </div>
+
+  <div class="verse-summary">The first refrain, and the only reason the psalm offers for the command: they exist because of an order. A thing that came into being by a word is being asked to answer in the same currency.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">וַיַּעֲמִידֵם לָעַד לְעוֹלָם<br>
+  חׇק נָתַן וְלֹא יַעֲבוֹר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַיַּעֲמִידֵם</div><div class="tr">va-ya-a-mi-<b>DEM</b></div><div class="fr">and He set them up</div></div>
+      <div class="word"><div class="he">לָעַד</div><div class="tr">la-<b>AD</b></div><div class="fr">for ever</div></div>
+      <div class="word"><div class="he">לְעוֹלָם</div><div class="tr">le-o-<b>LAM</b></div><div class="fr">for eternity</div></div>
+    </div>
+    <div class="stich-translation">He set them up for ever and always;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חׇק</div><div class="tr">chok</div><div class="fr">a limit</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He gave</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">יַעֲבוֹר</div><div class="tr">ya-a-<b>VOR</b></div><div class="fr">it will pass</div></div>
+    </div>
+    <div class="stich-translation">He gave a limit, and it does not pass.</div>
+  </div>
+
+  <div class="verse-summary">Permanence and a boundary in one breath. What the last clause says is disputed: either the limit itself never lapses, or nothing that was made ever crosses it.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">הַלְלוּ אֶת יְהֹוָה מִן הָאָרֶץ<br>
+  תַּנִּינִים וְכׇל תְּהֹמוֹת</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">מִן</div><div class="tr">min</div><div class="fr">from</div></div>
+      <div class="word"><div class="he">הָאָרֶץ</div><div class="tr">ha-<b>A</b>-retz</div><div class="fr">the earth</div></div>
+    </div>
+    <div class="stich-translation">Praise the LORD from the earth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תַּנִּינִים</div><div class="tr">ta-ni-<b>NIM</b></div><div class="fr">sea creatures</div></div>
+      <div class="word"><div class="he">וְכׇל</div><div class="tr">ve-<b>CHOL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">תְּהֹמוֹת</div><div class="tr">te-ho-<b>MOT</b></div><div class="fr">deeps</div></div>
+    </div>
+    <div class="stich-translation">sea creatures and all deeps;</div>
+  </div>
+
+  <div class="verse-summary">The second half opens by mirroring verse 1 exactly, with earth in place of heavens, and the first things named are the lowest and the least domesticated.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">אֵשׁ וּבָרָד שֶׁלֶג וְקִיטוֹר<br>
+  רוּחַ סְעָרָה עֹשָׂה דְבָרוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵשׁ</div><div class="tr">esh</div><div class="fr">fire</div></div>
+      <div class="word"><div class="he">וּבָרָד</div><div class="tr">u-va-<b>RAD</b></div><div class="fr">and hail</div></div>
+      <div class="word"><div class="he">שֶׁלֶג</div><div class="tr"><b>SHE</b>-leg</div><div class="fr">snow</div></div>
+      <div class="word"><div class="he">וְקִיטוֹר</div><div class="tr">ve-ki-<b>TOR</b></div><div class="fr">and vapour</div></div>
+    </div>
+    <div class="stich-translation">fire and hail, snow and vapour,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רוּחַ</div><div class="tr"><b>RU</b>-ach</div><div class="fr">wind of</div></div>
+      <div class="word"><div class="he">סְעָרָה</div><div class="tr">se-a-<b>RA</b></div><div class="fr">storm</div></div>
+      <div class="word"><div class="he">עֹשָׂה</div><div class="tr">o-<b>SA</b></div><div class="fr">doing</div></div>
+      <div class="word"><div class="he">דְבָרוֹ</div><div class="tr">dva-<b>RO</b></div><div class="fr">His word</div></div>
+    </div>
+    <div class="stich-translation">storm wind that carries out His word;</div>
+  </div>
+
+  <div class="verse-summary">Weather in one line, then the clause that governs it: doing His word. The storm is not praising in spite of being destructive, it praises by doing what it was told.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">הֶהָרִים וְכׇל גְּבָעוֹת<br>
+  עֵץ פְּרִי וְכׇל אֲרָזִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֶהָרִים</div><div class="tr">he-ha-<b>RIM</b></div><div class="fr">the mountains</div></div>
+      <div class="word"><div class="he">וְכׇל</div><div class="tr">ve-<b>CHOL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">גְּבָעוֹת</div><div class="tr">gva-<b>OT</b></div><div class="fr">hills</div></div>
+    </div>
+    <div class="stich-translation">the mountains and all hills,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֵץ</div><div class="tr">etz</div><div class="fr">trees of</div></div>
+      <div class="word"><div class="he">פְּרִי</div><div class="tr">pri</div><div class="fr">fruit</div></div>
+      <div class="word"><div class="he">וְכׇל</div><div class="tr">ve-<b>CHOL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">אֲרָזִים</div><div class="tr">a-ra-<b>ZIM</b></div><div class="fr">cedars</div></div>
+    </div>
+    <div class="stich-translation">fruit trees and all cedars;</div>
+  </div>
+
+  <div class="verse-summary">From weather to terrain to what grows on it. Fruit trees and cedars divide the plant world into what feeds people and what does not, and both are summoned on the same terms.</div>
+</div>
+
+<!-- VERSE 10 -->
+<div class="verse">
+  <span class="verse-num">10</span>
+  <div class="verse-full">הַחַיָּה וְכׇל בְּהֵמָה<br>
+  רֶמֶשׂ וְצִפּוֹר כָּנָף</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַחַיָּה</div><div class="tr">ha-cha-<b>YA</b></div><div class="fr">the wild animals</div></div>
+      <div class="word"><div class="he">וְכׇל</div><div class="tr">ve-<b>CHOL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">בְּהֵמָה</div><div class="tr">be-he-<b>MA</b></div><div class="fr">cattle</div></div>
+    </div>
+    <div class="stich-translation">the wild animals and all cattle,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רֶמֶשׂ</div><div class="tr"><b>RE</b>-mes</div><div class="fr">creeping things</div></div>
+      <div class="word"><div class="he">וְצִפּוֹר</div><div class="tr">ve-tzi-<b>POR</b></div><div class="fr">and bird of</div></div>
+      <div class="word"><div class="he">כָּנָף</div><div class="tr">ka-<b>NAF</b></div><div class="fr">wing</div></div>
+    </div>
+    <div class="stich-translation">creeping things and winged birds;</div>
+  </div>
+
+  <div class="verse-summary">Animals in six words, sorted the way the creation account sorts them: wild, domestic, creeping, winged. Nothing on this list is chosen for being impressive.</div>
+</div>
+
+<!-- VERSE 11 -->
+<div class="verse">
+  <span class="verse-num">11</span>
+  <div class="verse-full">מַלְכֵי אֶרֶץ וְכׇל לְאֻמִּים<br>
+  שָׂרִים וְכׇל שֹׁפְטֵי אָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַלְכֵי</div><div class="tr">mal-<b>CHEI</b></div><div class="fr">kings of</div></div>
+      <div class="word"><div class="he">אֶרֶץ</div><div class="tr"><b>E</b>-retz</div><div class="fr">earth</div></div>
+      <div class="word"><div class="he">וְכׇל</div><div class="tr">ve-<b>CHOL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">לְאֻמִּים</div><div class="tr">le-u-<b>MIM</b></div><div class="fr">peoples</div></div>
+    </div>
+    <div class="stich-translation">kings of the earth and all peoples,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׂרִים</div><div class="tr">sa-<b>RIM</b></div><div class="fr">princes</div></div>
+      <div class="word"><div class="he">וְכׇל</div><div class="tr">ve-<b>CHOL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">שֹׁפְטֵי</div><div class="tr">shof-<b>TEI</b></div><div class="fr">judges of</div></div>
+      <div class="word"><div class="he">אָרֶץ</div><div class="tr"><b>A</b>-retz</div><div class="fr">earth</div></div>
+    </div>
+    <div class="stich-translation">princes and all judges of the earth;</div>
+  </div>
+
+  <div class="verse-summary">Humanity enters at the top, with the people who normally receive praise rather than give it, and they are placed on the same list as hail.</div>
+</div>
+
+<!-- VERSE 12 -->
+<div class="verse">
+  <span class="verse-num">12</span>
+  <div class="verse-full">בַּחוּרִים וְגַם בְּתוּלוֹת<br>
+  זְקֵנִים עִם נְעָרִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּחוּרִים</div><div class="tr">ba-chu-<b>RIM</b></div><div class="fr">young men</div></div>
+      <div class="word"><div class="he">וְגַם</div><div class="tr">ve-<b>GAM</b></div><div class="fr">and also</div></div>
+      <div class="word"><div class="he">בְּתוּלוֹת</div><div class="tr">be-tu-<b>LOT</b></div><div class="fr">young women</div></div>
+    </div>
+    <div class="stich-translation">young men and young women too,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זְקֵנִים</div><div class="tr">ze-ke-<b>NIM</b></div><div class="fr">old men</div></div>
+      <div class="word"><div class="he">עִם</div><div class="tr">im</div><div class="fr">together with</div></div>
+      <div class="word"><div class="he">נְעָרִים</div><div class="tr">ne-a-<b>RIM</b></div><div class="fr">boys</div></div>
+    </div>
+    <div class="stich-translation">old men together with boys.</div>
+  </div>
+
+  <div class="verse-summary">The ranking collapses in a single verse. Age and office stop mattering the moment the list reaches people who hold neither.</div>
+</div>
+
+<!-- VERSE 13 -->
+<div class="verse">
+  <span class="verse-num">13</span>
+  <div class="verse-full">יְהַלְלוּ אֶת שֵׁם יְהֹוָה<br>
+  כִּי נִשְׂגָּב שְׁמוֹ לְבַדּוֹ<br>
+  הוֹדוֹ עַל אֶרֶץ וְשָׁמָיִם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהַלְלוּ</div><div class="tr">ye-hal-<b>LU</b></div><div class="fr">let them praise</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">שֵׁם</div><div class="tr">shem</div><div class="fr">the name of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Let them praise the name of the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">נִשְׂגָּב</div><div class="tr">nis-<b>GAV</b></div><div class="fr">is exalted</div></div>
+      <div class="word"><div class="he">שְׁמוֹ</div><div class="tr">shmo</div><div class="fr">His name</div></div>
+      <div class="word"><div class="he">לְבַדּוֹ</div><div class="tr">le-va-<b>DO</b></div><div class="fr">alone</div></div>
+    </div>
+    <div class="stich-translation">for His name alone is exalted;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הוֹדוֹ</div><div class="tr">ho-<b>DO</b></div><div class="fr">His splendour</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">over</div></div>
+      <div class="word"><div class="he">אֶרֶץ</div><div class="tr"><b>E</b>-retz</div><div class="fr">earth</div></div>
+      <div class="word"><div class="he">וְשָׁמָיִם</div><div class="tr">ve-sha-ma-<b>YIM</b></div><div class="fr">and heaven</div></div>
+    </div>
+    <div class="stich-translation">His splendour is over earth and heaven.</div>
+  </div>
+
+  <div class="verse-summary">The second refrain, and this time the reason given is not creation but height. The last clause puts both halves of the psalm, earth and heaven, under one word.</div>
+</div>
+
+<!-- VERSE 14 -->
+<div class="verse">
+  <span class="verse-num">14</span>
+  <div class="verse-full">וַיָּרֶם קֶרֶן לְעַמּוֹ<br>
+  תְּהִלָּה לְכׇל חֲסִידָיו<br>
+  לִבְנֵי יִשְׂרָאֵל עַם קְרֹבוֹ<br>
+  הַלְלוּ יָהּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַיָּרֶם</div><div class="tr">va-<b>YA</b>-rem</div><div class="fr">and He has raised</div></div>
+      <div class="word"><div class="he">קֶרֶן</div><div class="tr"><b>KE</b>-ren</div><div class="fr">a horn</div></div>
+      <div class="word"><div class="he">לְעַמּוֹ</div><div class="tr">le-a-<b>MO</b></div><div class="fr">for His people</div></div>
+    </div>
+    <div class="stich-translation">He has raised a horn for His people,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּהִלָּה</div><div class="tr">te-hi-<b>LA</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">לְכׇל</div><div class="tr">le-<b>CHOL</b></div><div class="fr">for all</div></div>
+      <div class="word"><div class="he">חֲסִידָיו</div><div class="tr">cha-si-<b>DAV</b></div><div class="fr">His faithful ones</div></div>
+    </div>
+    <div class="stich-translation">praise for all His faithful,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לִבְנֵי</div><div class="tr">liv-<b>NEI</b></div><div class="fr">for the children of</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">עַם</div><div class="tr">am</div><div class="fr">a people</div></div>
+      <div class="word"><div class="he">קְרֹבוֹ</div><div class="tr">kro-<b>VO</b></div><div class="fr">near to Him</div></div>
+    </div>
+    <div class="stich-translation">for the children of Israel, a people near to Him.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַלְלוּ</div><div class="tr">hal-<b>LU</b></div><div class="fr">praise</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">Yah</div></div>
+    </div>
+    <div class="stich-translation">Praise Yah.</div>
+  </div>
+
+  <div class="verse-summary">The last verse narrows from everything that exists to one people. A horn is raised, a praise is assigned, and the psalm closes on the two words it opened with.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two halves that mirror each other down to the wording. Verse 1 says from the heavens, <strong>הַשָּׁמַיִם</strong> (ha-sha-ma-yim, v.1); verse 7 says from the earth, <strong>הָאָרֶץ</strong> (ha-a-retz, v.7), with the same verb and the same preposition in front of it. Each half is a roll call and each stops at the same refrain, verse 5 and verse 13. The order inside them is spatial: down from the heavens of heavens and the waters above, through angels and lights, then across to the deeps and their creatures, up through weather, mountains, trees, animals, and finally people, who are themselves ranked from kings down to children until the ranking stops mattering. The list ends at one people standing near. Nothing in the psalm asks whether a cedar can obey.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Verse 4 shows the language making a superlative out of nothing but repetition: <strong>שְׁמֵי</strong> (shmei, v.4) and <strong>הַשָּׁמָיִם</strong> (ha-sha-ma-yim, v.4) are the same noun twice, in construct, and the phrase means the highest sky there is. Hebrew builds several superlatives this way and this is the cleanest example in the psalter. Verse 6 carries a real dispute. The clause <strong>וְלֹא</strong> (ve-lo, v.6) with <strong>יַעֲבוֹר</strong> (ya-a-vor, v.6) has no expressed subject, so it says either that the limit He gave never lapses, or that nothing crosses it; JPS 1917 chose the second and rendered it as a decree that shall not be transgressed. Verse 8 has a rare word, <strong>וְקִיטוֹר</strong> (ve-ki-tor, v.8), translated as vapour by JPS 1917 and as smoke elsewhere; the sense is something rising and visible, and the choice between the two is not settled. Finally <strong>וְצִפּוֹר</strong> (ve-tzi-por, v.10) with <strong>כָּנָף</strong> (ka-naf, v.10) says bird of wing, which is redundant on its face, and is best read as a category label rather than a description.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The problem the psalm hands a reader is that it gives orders to things that cannot hear them. Two readings answer it. One takes the summons as descriptive: a thing praises by doing what it was made to do, so the sea creature praises by being a sea creature, and verse 8 states this outright when it calls the storm wind a doer of His word. The other takes the psalm as a commission of the people who can speak, so that the list is not addressed to mountains but read aloud on their behalf, which fits its place in the morning service, where the created order is enlisted before the worshipper says anything about himself. The horn of verse 14 is read as strength restored rather than a musical instrument, and the phrase that follows it, a people near to Him, is what the whole list has been narrowing toward.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>Read mystically the two halves are two worlds and the refrains are the seam between them. What is called in the first half has no body, what is called in the second half has nothing else, and the same name is praised by both, which is the claim the psalm exists to make. The descent from the waters above the heavens to the deeps below the earth traces a full column, and the ascent back through weather, growth and speech is the same column read upward, with human beings placed at the point where the column becomes articulate. The last verse gives that position a name: a people near, <strong>קְרֹבוֹ</strong> (kro-vo, v.14). Nearness rather than height is the final term, and it arrives only after everything that is higher has already been called.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-148-en',
+  key: 'Am',
+  tempo: 104,
+  progression: '| C G | Am Em | F C | G C |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

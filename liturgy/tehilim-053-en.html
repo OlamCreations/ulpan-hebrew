@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 53: לַמְנַצֵּחַ עַל</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 53: God looked down from heaven</h1>
+    <div class="subtitle">תְּהִלִּים נ״ג · לַמְנַצֵּחַ עַל</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 53</a></div>
+</header>
+
+<div class="t-intro">
+  This is Psalm 14 again, copied into a different collection and edited on the way. Read the two pages side by side and the edits are easy to list: the heading here is longer and counts as its own verse, so every line lands one number later; the divine name is God throughout where Psalm 14 alternates and uses the four letter name; verse 4 says the whole of it has turned back where Psalm 14 says the whole has turned aside; verse 5 drops the word all before the workers of iniquity; and the two short verses 5 and 6 of Psalm 14 are replaced by one long verse 6 about scattered bones, which shares only its opening three words with what it replaced. For a learner this is the cleanest evidence in the book that these texts were sung, copied and reworked rather than fixed once.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לַמְנַצֵּחַ עַל מָחֲלַת<br>
+  מַשְׂכִּיל לְדָוִד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַמְנַצֵּחַ</div><div class="tr">lam-na-<b>TZE</b>-ach</div><div class="fr">for the leader</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">מָחֲלַת</div><div class="tr">ma-cha-<b>LAT</b></div><div class="fr">Mahalath</div></div>
+    </div>
+    <div class="stich-translation">For the leader, upon Mahalath.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַשְׂכִּיל</div><div class="tr">mas-<b>KIL</b></div><div class="fr">a maskil</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">of David</div></div>
+    </div>
+    <div class="stich-translation">A maskil of David.</div>
+  </div>
+
+  <div class="verse-summary">Psalm 14 heads its first verse with two words and then starts the poem. Here the heading grows to five words and stands alone, which is why the numbering of the two psalms never lines up again.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אָמַר נָבָל בְּלִבּוֹ אֵין אֱלֹהִים<br>
+  הִשְׁחִיתוּ וְהִתְעִיבוּ עָוֶל<br>
+  אֵין עֹשֵׂה טוֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָמַר</div><div class="tr">a-<b>MAR</b></div><div class="fr">said</div></div>
+      <div class="word"><div class="he">נָבָל</div><div class="tr">na-<b>VAL</b></div><div class="fr">a fool</div></div>
+      <div class="word"><div class="he">בְּלִבּוֹ</div><div class="tr">bli-<b>BO</b></div><div class="fr">in his heart</div></div>
+      <div class="word"><div class="he">אֵין</div><div class="tr">ein</div><div class="fr">there is no</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">A fool has said in his heart: there is no God.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִשְׁחִיתוּ</div><div class="tr">hish-chi-<b>TU</b></div><div class="fr">they have acted corruptly</div></div>
+      <div class="word"><div class="he">וְהִתְעִיבוּ</div><div class="tr">ve-hit-i-<b>VU</b></div><div class="fr">and they have made vile</div></div>
+      <div class="word"><div class="he">עָוֶל</div><div class="tr"><b>A</b>-vel</div><div class="fr">iniquity</div></div>
+    </div>
+    <div class="stich-translation">They act corruptly, they make iniquity vile;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵין</div><div class="tr">ein</div><div class="fr">there is none</div></div>
+      <div class="word"><div class="he">עֹשֵׂה</div><div class="tr">o-<b>SE</b></div><div class="fr">who does</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">good</div></div>
+    </div>
+    <div class="stich-translation">there is none who does good.</div>
+  </div>
+
+  <div class="verse-summary">Word for word the opening of Psalm 14, with two changes: the second verb here carries the conjunction, and the noun after it is iniquity rather than a deed. The indictment is the same and the vocabulary has drifted.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">אֱלֹהִים מִשָּׁמַיִם הִשְׁקִיף עַל בְּנֵי אָדָם<br>
+  לִרְאוֹת הֲיֵשׁ מַשְׂכִּיל דֹּרֵשׁ אֶת אֱלֹהִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">מִשָּׁמַיִם</div><div class="tr">mi-sha-<b>MA</b>-yim</div><div class="fr">from heaven</div></div>
+      <div class="word"><div class="he">הִשְׁקִיף</div><div class="tr">hish-<b>KIF</b></div><div class="fr">looked down</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">בְּנֵי</div><div class="tr">bnei</div><div class="fr">the sons of</div></div>
+      <div class="word"><div class="he">אָדָם</div><div class="tr">a-<b>DAM</b></div><div class="fr">man</div></div>
+    </div>
+    <div class="stich-translation">God looked down from heaven on the children of man,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לִרְאוֹת</div><div class="tr">lir-<b>OT</b></div><div class="fr">to see</div></div>
+      <div class="word"><div class="he">הֲיֵשׁ</div><div class="tr">ha-<b>YESH</b></div><div class="fr">whether there is</div></div>
+      <div class="word"><div class="he">מַשְׂכִּיל</div><div class="tr">mas-<b>KIL</b></div><div class="fr">one who has sense</div></div>
+      <div class="word"><div class="he">דֹּרֵשׁ</div><div class="tr">do-<b>RESH</b></div><div class="fr">one who seeks</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">to see whether there is anyone with sense, anyone seeking God.</div>
+  </div>
+
+  <div class="verse-summary">The one substitution that runs through the whole psalm shows here first: the subject of the looking is God, where the parallel verse in Psalm 14 uses the four letter name. The line is otherwise identical.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">כֻּלּוֹ סָג יַחְדָּו נֶאֱלָחוּ<br>
+  אֵין עֹשֵׂה טוֹב<br>
+  אֵין גַּם אֶחָד</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֻּלּוֹ</div><div class="tr">ku-<b>LO</b></div><div class="fr">the whole of it</div></div>
+      <div class="word"><div class="he">סָג</div><div class="tr">sag</div><div class="fr">has turned back</div></div>
+      <div class="word"><div class="he">יַחְדָּו</div><div class="tr">yach-<b>DAV</b></div><div class="fr">together</div></div>
+      <div class="word"><div class="he">נֶאֱלָחוּ</div><div class="tr">ne-e-la-<b>CHU</b></div><div class="fr">they have become foul</div></div>
+    </div>
+    <div class="stich-translation">Every one of them has turned back, together they have gone rotten;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵין</div><div class="tr">ein</div><div class="fr">there is none</div></div>
+      <div class="word"><div class="he">עֹשֵׂה</div><div class="tr">o-<b>SE</b></div><div class="fr">who does</div></div>
+      <div class="word"><div class="he">טוֹב</div><div class="tr">tov</div><div class="fr">good</div></div>
+    </div>
+    <div class="stich-translation">there is none who does good,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֵין</div><div class="tr">ein</div><div class="fr">there is none</div></div>
+      <div class="word"><div class="he">גַּם</div><div class="tr">gam</div><div class="fr">even</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+    </div>
+    <div class="stich-translation">not even one.</div>
+  </div>
+
+  <div class="verse-summary">Two small differences from the parallel verse: the subject is the whole of it rather than the whole, and the verb ends in a different consonant, giving turned back instead of turned aside. The sentence does the same work either way.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">הֲלֹא יָדְעוּ פֹּעֲלֵי אָוֶן<br>
+  אֹכְלֵי עַמִּי אָכְלוּ לֶחֶם<br>
+  אֱלֹהִים לֹא קָרָאוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֲלֹא</div><div class="tr">ha-<b>LO</b></div><div class="fr">do they not</div></div>
+      <div class="word"><div class="he">יָדְעוּ</div><div class="tr">yad-<b>U</b></div><div class="fr">know</div></div>
+      <div class="word"><div class="he">פֹּעֲלֵי</div><div class="tr">po-a-<b>LEI</b></div><div class="fr">the workers of</div></div>
+      <div class="word"><div class="he">אָוֶן</div><div class="tr"><b>A</b>-ven</div><div class="fr">iniquity</div></div>
+    </div>
+    <div class="stich-translation">Do they not know, these workers of iniquity,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֹכְלֵי</div><div class="tr">och-<b>LEI</b></div><div class="fr">the devourers of</div></div>
+      <div class="word"><div class="he">עַמִּי</div><div class="tr">a-<b>MI</b></div><div class="fr">my people</div></div>
+      <div class="word"><div class="he">אָכְלוּ</div><div class="tr">ach-<b>LU</b></div><div class="fr">they have eaten</div></div>
+      <div class="word"><div class="he">לֶחֶם</div><div class="tr"><b>LE</b>-chem</div><div class="fr">bread</div></div>
+    </div>
+    <div class="stich-translation">who devour my people the way they eat bread,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">קָרָאוּ</div><div class="tr">ka-ra-<b>U</b></div><div class="fr">they have called</div></div>
+    </div>
+    <div class="stich-translation">and who have not called on God?</div>
+  </div>
+
+  <div class="verse-summary">The victims arrive, as they do in Psalm 14, but the accusation is narrower by one word: there is no all before the workers of iniquity, so the charge falls on a group rather than on everyone.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">שָׁם פָּחֲדוּ פַחַד לֹא הָיָה פָחַד<br>
+  כִּי אֱלֹהִים פִּזַּר עַצְמוֹת חֹנָךְ<br>
+  הֱבִשֹׁתָה כִּי אֱלֹהִים מְאָסָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+      <div class="word"><div class="he">פָּחֲדוּ</div><div class="tr">pa-cha-<b>DU</b></div><div class="fr">they dreaded</div></div>
+      <div class="word"><div class="he">פַחַד</div><div class="tr">fa-<b>CHAD</b></div><div class="fr">a dread</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">הָיָה</div><div class="tr">ha-<b>YA</b></div><div class="fr">there was</div></div>
+      <div class="word"><div class="he">פָחַד</div><div class="tr">fa-<b>CHAD</b></div><div class="fr">dread</div></div>
+    </div>
+    <div class="stich-translation">There they were seized with dread, where there was no dread,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">פִּזַּר</div><div class="tr">pi-<b>ZAR</b></div><div class="fr">has scattered</div></div>
+      <div class="word"><div class="he">עַצְמוֹת</div><div class="tr">atz-<b>MOT</b></div><div class="fr">the bones of</div></div>
+      <div class="word"><div class="he">חֹנָךְ</div><div class="tr">cho-<b>NACH</b></div><div class="fr">the one encamping against you</div></div>
+    </div>
+    <div class="stich-translation">for God has scattered the bones of the one encamped against you;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֱבִשֹׁתָה</div><div class="tr">he-vi-sho-<b>TA</b></div><div class="fr">you have put to shame</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">מְאָסָם</div><div class="tr">me-a-<b>SAM</b></div><div class="fr">has rejected them</div></div>
+    </div>
+    <div class="stich-translation">you have put them to shame, for God has rejected them.</div>
+  </div>
+
+  <div class="verse-summary">The one verse that is genuinely new. It keeps the first three words of Psalm 14 verse 5 and then goes somewhere else: fear with no cause for fear, an enemy army left unburied, and a direct address in the second person that the earlier version never uses.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">מִי יִתֵּן מִצִּיּוֹן יְשֻׁעוֹת יִשְׂרָאֵל<br>
+  בְּשׁוּב אֱלֹהִים שְׁבוּת עַמּוֹ<br>
+  יָגֵל יַעֲקֹב יִשְׂמַח יִשְׂרָאֵל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יִתֵּן</div><div class="tr">yi-<b>TEN</b></div><div class="fr">will give</div></div>
+      <div class="word"><div class="he">מִצִּיּוֹן</div><div class="tr">mi-tzi-<b>YON</b></div><div class="fr">from Zion</div></div>
+      <div class="word"><div class="he">יְשֻׁעוֹת</div><div class="tr">ye-shu-<b>OT</b></div><div class="fr">the deliverances of</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+    </div>
+    <div class="stich-translation">Who will give the deliverance of Israel out of Zion!</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּשׁוּב</div><div class="tr">be-<b>SHUV</b></div><div class="fr">when turns back</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">שְׁבוּת</div><div class="tr">shvut</div><div class="fr">the fortunes of</div></div>
+      <div class="word"><div class="he">עַמּוֹ</div><div class="tr">a-<b>MO</b></div><div class="fr">His people</div></div>
+    </div>
+    <div class="stich-translation">When God turns back the fortunes of His people,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָגֵל</div><div class="tr">ya-<b>GEL</b></div><div class="fr">let rejoice</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+      <div class="word"><div class="he">יִשְׂמַח</div><div class="tr">yis-<b>MACH</b></div><div class="fr">let be glad</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+    </div>
+    <div class="stich-translation">let Jacob rejoice, let Israel be glad.</div>
+  </div>
+
+  <div class="verse-summary">The same closing wish, with deliverance in the plural here and the singular in Psalm 14, and God in place of the four letter name. Both psalms end by asking for something that has not happened.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Take the psalm on its own and it moves in three steps. Verses 2 to 4 state the charge and repeat its refrain, verse 5 gives the charge victims, and verse 6 shows the accused collapsing in fear. Verse 7 then steps outside the argument to ask for a rescue that has not come. The engine of the first half is the negative existential particle, three times in verses 2 and 4: there is no God, there is none doing good, there is none, not even one. Note that the fool of <strong>נָבָל</strong> (na-val, v.2) never argues his case, he says it inwardly, and the psalm answers him with a God who looks in verse 3 rather than with a proof.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Three words here are genuinely hard. The heading word <strong>מָחֲלַת</strong> (ma-cha-lat, v.1) occurs only in the headings of this psalm and one other, and there is no agreement on what it means: a tune, an instrument, or a form of the root for sickness. The verb <strong>סָג</strong> (sag, v.4) is not the verb Psalm 14 uses at the same point, and the change is one letter, which is exactly the kind of variation copying produces. Hardest is <strong>חֹנָךְ</strong> (cho-nach, v.6), which the Masoretes vocalize as one who encamps with a second person suffix, that is, the one besieging you, addressed to a listener who has not been introduced. Some readers repoint it, and the reading is disputed. The doubled construction in <strong>פָּחֲדוּ</strong> (pa-cha-du, v.6) and <strong>פַחַד</strong> (fa-chad, v.6), dreaded a dread, is a cognate accusative, Hebrew's normal way of intensifying a verb.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The pair of psalms is the case study readers return to. Psalms 42 to 83 are the stretch of the book where the divine name is largely replaced by the word God, and this psalm sits inside that stretch while its twin sits outside it, so the substitution visible between them is not a scribe's slip but a property of the collection each one landed in. On the content side, the denial of verse 2 has long been read not as atheism but as a calculation, the fool granting that there is a God and betting that God does not look, which is why verse 3 answers with looking and not with argument. Verse 6, with its unburied bones, reads as a specific military deliverance, and readers have attached it to more than one siege without the text naming any.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading takes the fear of verse 6 seriously as its own event. Nothing is reported to have struck the wicked. They are afraid where there was nothing to be afraid of, and the psalm gives that state a cause outside them, which is what the second half of the verse supplies. Read this way the psalm describes a closed system meeting something it had ruled out, and the terror is the contact itself rather than any punishment. The ending then follows the usual shape: the deliverance comes out of Zion, from a fixed point that was there the whole time, and the two names in <strong>יַעֲקֹב</strong> (ya-a-kov, v.7) and <strong>יִשְׂרָאֵל</strong> (yis-ra-el, v.7) mark one people before and after the turning.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-053-en',
+  key: 'Am',
+  tempo: 72,
+  progression: '| Dm Dm | Bb Bb | Gm A | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

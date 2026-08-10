@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 44: לַמְנַצֵּחַ לִבְנֵי</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 44: Awake, why do You sleep</h1>
+    <div class="subtitle">תְּהִלִּים מ״ד · לַמְנַצֵּחַ לִבְנֵי</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 44</a></div>
+</header>
+
+<div class="t-intro">
+  Twenty-seven verses in four movements: a remembered victory (2 to 9), a present defeat (10 to 17), a protest of innocence (18 to 23), and a demand that God wake up (24 to 27). It is a communal lament, and an unusual one, because the speakers refuse to confess any sin. For a learner it is the cleanest drill in the book for one pattern: from verse 10 onward the verbs arrive in a wall of second person forms with the suffix -nu, us, attached. You rejected us, You shamed us, You sold us, You scattered us. Read the movements in order and watch the same grammar change sides.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">לַמְנַצֵּחַ לִבְנֵי קֹרַח<br>
+  מַשְׂכִּיל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַמְנַצֵּחַ</div><div class="tr">lam-na-<b>TZE</b>-ach</div><div class="fr">for the leader</div></div>
+      <div class="word"><div class="he">לִבְנֵי</div><div class="tr">liv-<b>NEI</b></div><div class="fr">of the sons of</div></div>
+      <div class="word"><div class="he">קֹרַח</div><div class="tr">ko-<b>RACH</b></div><div class="fr">Korah</div></div>
+    </div>
+    <div class="stich-translation">For the leader. Of the sons of Korah.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַשְׂכִּיל</div><div class="tr">mas-<b>KIL</b></div><div class="fr">a maskil</div></div>
+    </div>
+    <div class="stich-translation">A maskil.</div>
+  </div>
+
+  <div class="verse-summary">The heading is not part of the prayer: a director's note, a guild of Temple singers, and a genre label. Maskil marks a psalm meant to teach something, not only to be sung.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אֱלֹהִים בְּאׇזְנֵינוּ שָׁמַעְנוּ אֲבוֹתֵינוּ סִפְּרוּ לָנוּ<br>
+  פֹּעַל פָּעַלְתָּ בִימֵיהֶם בִּימֵי קֶדֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">בְּאׇזְנֵינוּ</div><div class="tr">be-oz-nei-<b>NU</b></div><div class="fr">with our ears</div></div>
+      <div class="word"><div class="he">שָׁמַעְנוּ</div><div class="tr">sha-ma-<b>NU</b></div><div class="fr">we have heard</div></div>
+      <div class="word"><div class="he">אֲבוֹתֵינוּ</div><div class="tr">a-vo-tei-<b>NU</b></div><div class="fr">our fathers</div></div>
+      <div class="word"><div class="he">סִפְּרוּ</div><div class="tr">sip-<b>RU</b></div><div class="fr">have told</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+    </div>
+    <div class="stich-translation">O God, we have heard with our own ears, our fathers told us,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פֹּעַל</div><div class="tr">po-<b>AL</b></div><div class="fr">a deed</div></div>
+      <div class="word"><div class="he">פָּעַלְתָּ</div><div class="tr">pa-al-<b>TA</b></div><div class="fr">You did</div></div>
+      <div class="word"><div class="he">בִימֵיהֶם</div><div class="tr">vi-<b>MEI</b>-hem</div><div class="fr">in their days</div></div>
+      <div class="word"><div class="he">בִּימֵי</div><div class="tr">bi-<b>MEI</b></div><div class="fr">in the days of</div></div>
+      <div class="word"><div class="he">קֶדֶם</div><div class="tr"><b>KE</b>-dem</div><div class="fr">old</div></div>
+    </div>
+    <div class="stich-translation">of the work You did in their days, in the days of old.</div>
+  </div>
+
+  <div class="verse-summary">The psalm opens with hearing, not seeing. The whole case rests on testimony passed down a family line, which is exactly what the rest of the psalm will hold God to.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">אַתָּה יָדְךָ גּוֹיִם הוֹרַשְׁתָּ וַתִּטָּעֵם<br>
+  תָּרַע לְאֻמִּים וַתְּשַׁלְּחֵם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">יָדְךָ</div><div class="tr">yad-<b>CHA</b></div><div class="fr">with Your hand</div></div>
+      <div class="word"><div class="he">גּוֹיִם</div><div class="tr">go-<b>YIM</b></div><div class="fr">nations</div></div>
+      <div class="word"><div class="he">הוֹרַשְׁתָּ</div><div class="tr">ho-rash-<b>TA</b></div><div class="fr">You dispossessed</div></div>
+      <div class="word"><div class="he">וַתִּטָּעֵם</div><div class="tr">va-ti-ta-<b>EM</b></div><div class="fr">and You planted them</div></div>
+    </div>
+    <div class="stich-translation">You with Your own hand dispossessed nations and planted them in;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תָּרַע</div><div class="tr"><b>TA</b>-ra</div><div class="fr">You broke</div></div>
+      <div class="word"><div class="he">לְאֻמִּים</div><div class="tr">le-u-<b>MIM</b></div><div class="fr">peoples</div></div>
+      <div class="word"><div class="he">וַתְּשַׁלְּחֵם</div><div class="tr">vat-shal-<b>CHEM</b></div><div class="fr">and You sent them away</div></div>
+    </div>
+    <div class="stich-translation">You broke peoples and drove them out.</div>
+  </div>
+
+  <div class="verse-summary">Four verbs, all second person, all past. The conquest is told as the work of a hand rather than an army, and the same hand that uproots also plants.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">כִּי לֹא בְחַרְבָּם יָרְשׁוּ אָרֶץ<br>
+  וּזְרוֹעָם לֹא הוֹשִׁיעָה לָּמוֹ<br>
+  כִּי יְמִינְךָ וּזְרוֹעֲךָ וְאוֹר פָּנֶיךָ<br>
+  כִּי רְצִיתָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">בְחַרְבָּם</div><div class="tr">ve-char-<b>BAM</b></div><div class="fr">by their sword</div></div>
+      <div class="word"><div class="he">יָרְשׁוּ</div><div class="tr">yar-<b>SHU</b></div><div class="fr">did they take possession of</div></div>
+      <div class="word"><div class="he">אָרֶץ</div><div class="tr"><b>A</b>-retz</div><div class="fr">the land</div></div>
+    </div>
+    <div class="stich-translation">For not by their own sword did they take the land,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּזְרוֹעָם</div><div class="tr">uz-ro-<b>AM</b></div><div class="fr">and their arm</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">הוֹשִׁיעָה</div><div class="tr">ho-shi-<b>A</b></div><div class="fr">saved</div></div>
+      <div class="word"><div class="he">לָּמוֹ</div><div class="tr">la-<b>MO</b></div><div class="fr">them</div></div>
+    </div>
+    <div class="stich-translation">and their own arm did not save them,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">but</div></div>
+      <div class="word"><div class="he">יְמִינְךָ</div><div class="tr">ye-min-<b>CHA</b></div><div class="fr">Your right hand</div></div>
+      <div class="word"><div class="he">וּזְרוֹעֲךָ</div><div class="tr">uz-ro-a-<b>CHA</b></div><div class="fr">and Your arm</div></div>
+      <div class="word"><div class="he">וְאוֹר</div><div class="tr">ve-<b>OR</b></div><div class="fr">and the light of</div></div>
+      <div class="word"><div class="he">פָּנֶיךָ</div><div class="tr">pa-nei-<b>CHA</b></div><div class="fr">Your face</div></div>
+    </div>
+    <div class="stich-translation">but Your right hand, Your arm, and the light of Your face,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">because</div></div>
+      <div class="word"><div class="he">רְצִיתָם</div><div class="tr">re-tzi-<b>TAM</b></div><div class="fr">You favoured them</div></div>
+    </div>
+    <div class="stich-translation">because You favoured them.</div>
+  </div>
+
+  <div class="verse-summary">The point of the history lesson: the ancestors won nothing themselves. Sword, arm and land are named only to be denied, so the argument can rest on the right hand and the face.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">אַתָּה הוּא מַלְכִּי אֱלֹהִים<br>
+  צַוֵּה יְשׁוּעוֹת יַעֲקֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are He</div></div>
+      <div class="word"><div class="he">מַלְכִּי</div><div class="tr">mal-<b>KI</b></div><div class="fr">my King</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+    </div>
+    <div class="stich-translation">You are my King, O God;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">צַוֵּה</div><div class="tr">tza-<b>VE</b></div><div class="fr">command</div></div>
+      <div class="word"><div class="he">יְשׁוּעוֹת</div><div class="tr">ye-shu-<b>OT</b></div><div class="fr">the deliverances of</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+    </div>
+    <div class="stich-translation">command the deliverance of Jacob.</div>
+  </div>
+
+  <div class="verse-summary">Present tense at last. Having established what God once did, the speaker asks for the same thing now, and calls it by the old family name, Jacob.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">בְּךָ צָרֵינוּ נְנַגֵּחַ<br>
+  בְּשִׁמְךָ נָבוּס קָמֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּךָ</div><div class="tr">be-<b>CHA</b></div><div class="fr">through You</div></div>
+      <div class="word"><div class="he">צָרֵינוּ</div><div class="tr">tza-rei-<b>NU</b></div><div class="fr">our foes</div></div>
+      <div class="word"><div class="he">נְנַגֵּחַ</div><div class="tr">ne-na-<b>GE</b>-ach</div><div class="fr">we gore</div></div>
+    </div>
+    <div class="stich-translation">Through You we gore our foes;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּשִׁמְךָ</div><div class="tr">be-shim-<b>CHA</b></div><div class="fr">in Your name</div></div>
+      <div class="word"><div class="he">נָבוּס</div><div class="tr">na-<b>VUS</b></div><div class="fr">we trample</div></div>
+      <div class="word"><div class="he">קָמֵינוּ</div><div class="tr">ka-mei-<b>NU</b></div><div class="fr">those who rise against us</div></div>
+    </div>
+    <div class="stich-translation">in Your name we trample those who rise against us.</div>
+  </div>
+
+  <div class="verse-summary">The verb is borrowed from cattle: to gore with the horns. The strength is borrowed too, and the grammar says so twice, through You and in Your name.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">כִּי לֹא בְקַשְׁתִּי אֶבְטָח<br>
+  וְחַרְבִּי לֹא תוֹשִׁיעֵנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">בְקַשְׁתִּי</div><div class="tr">ve-kash-<b>TI</b></div><div class="fr">in my bow</div></div>
+      <div class="word"><div class="he">אֶבְטָח</div><div class="tr">ev-<b>TACH</b></div><div class="fr">do I trust</div></div>
+    </div>
+    <div class="stich-translation">For I do not trust in my bow,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְחַרְבִּי</div><div class="tr">ve-char-<b>BI</b></div><div class="fr">and my sword</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">תוֹשִׁיעֵנִי</div><div class="tr">to-shi-e-<b>NI</b></div><div class="fr">will save me</div></div>
+    </div>
+    <div class="stich-translation">and my sword will not save me.</div>
+  </div>
+
+  <div class="verse-summary">The denial of verse 4 repeated in the first person singular. What was said about the fathers is now said by the one praying about himself.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">כִּי הוֹשַׁעְתָּנוּ מִצָּרֵינוּ<br>
+  וּמְשַׂנְאֵינוּ הֱבִישׁוֹתָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">הוֹשַׁעְתָּנוּ</div><div class="tr">ho-sha-ta-<b>NU</b></div><div class="fr">You have saved us</div></div>
+      <div class="word"><div class="he">מִצָּרֵינוּ</div><div class="tr">mi-tza-rei-<b>NU</b></div><div class="fr">from our foes</div></div>
+    </div>
+    <div class="stich-translation">For You have saved us from our foes,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמְשַׂנְאֵינוּ</div><div class="tr">um-san-ei-<b>NU</b></div><div class="fr">and those who hate us</div></div>
+      <div class="word"><div class="he">הֱבִישׁוֹתָ</div><div class="tr">he-vi-sho-<b>TA</b></div><div class="fr">You have put to shame</div></div>
+    </div>
+    <div class="stich-translation">and You have shamed those who hate us.</div>
+  </div>
+
+  <div class="verse-summary">The last verse of the good part. Everything to here is past tense and true, and from verse 10 the same grammar will be used against God.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">בֵּאלֹהִים הִלַּלְנוּ כׇל הַיּוֹם<br>
+  וְשִׁמְךָ לְעוֹלָם נוֹדֶה סֶלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֵּאלֹהִים</div><div class="tr">be-lo-<b>HIM</b></div><div class="fr">in God</div></div>
+      <div class="word"><div class="he">הִלַּלְנוּ</div><div class="tr">hi-lal-<b>NU</b></div><div class="fr">we have boasted</div></div>
+      <div class="word"><div class="he">כׇל</div><div class="tr">chol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הַיּוֹם</div><div class="tr">ha-<b>YOM</b></div><div class="fr">the day</div></div>
+    </div>
+    <div class="stich-translation">In God we have boasted all day long,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשִׁמְךָ</div><div class="tr">ve-shim-<b>CHA</b></div><div class="fr">and Your name</div></div>
+      <div class="word"><div class="he">לְעוֹלָם</div><div class="tr">le-o-<b>LAM</b></div><div class="fr">forever</div></div>
+      <div class="word"><div class="he">נוֹדֶה</div><div class="tr">no-<b>DE</b></div><div class="fr">we will thank</div></div>
+      <div class="word"><div class="he">סֶלָה</div><div class="tr">se-<b>LA</b></div><div class="fr">selah</div></div>
+    </div>
+    <div class="stich-translation">and we will thank Your name forever. Selah.</div>
+  </div>
+
+  <div class="verse-summary">Boasting and thanks, all day and forever. Selah closes the movement, and the very next word in the psalm reverses everything said so far.</div>
+</div>
+
+<!-- VERSE 10 -->
+<div class="verse">
+  <span class="verse-num">10</span>
+  <div class="verse-full">אַף זָנַחְתָּ וַתַּכְלִימֵנוּ<br>
+  וְלֹא תֵצֵא בְּצִבְאוֹתֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַף</div><div class="tr">af</div><div class="fr">yet</div></div>
+      <div class="word"><div class="he">זָנַחְתָּ</div><div class="tr">za-nach-<b>TA</b></div><div class="fr">You have rejected</div></div>
+      <div class="word"><div class="he">וַתַּכְלִימֵנוּ</div><div class="tr">va-tach-li-me-<b>NU</b></div><div class="fr">and You have humiliated us</div></div>
+    </div>
+    <div class="stich-translation">Yet You have rejected us and put us to shame,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">תֵצֵא</div><div class="tr">te-<b>TZE</b></div><div class="fr">do You go out</div></div>
+      <div class="word"><div class="he">בְּצִבְאוֹתֵינוּ</div><div class="tr">be-tziv-o-tei-<b>NU</b></div><div class="fr">with our armies</div></div>
+    </div>
+    <div class="stich-translation">and You no longer go out with our armies.</div>
+  </div>
+
+  <div class="verse-summary">One small word turns the psalm. From here to verse 17 every verb is second person with us attached to it: You rejected us, You shamed us, You sold us.</div>
+</div>
+
+<!-- VERSE 11 -->
+<div class="verse">
+  <span class="verse-num">11</span>
+  <div class="verse-full">תְּשִׁיבֵנוּ אָחוֹר מִנִּי צָר<br>
+  וּמְשַׂנְאֵינוּ שָׁסוּ לָמוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּשִׁיבֵנוּ</div><div class="tr">tshi-ve-<b>NU</b></div><div class="fr">You make us turn</div></div>
+      <div class="word"><div class="he">אָחוֹר</div><div class="tr">a-<b>CHOR</b></div><div class="fr">back</div></div>
+      <div class="word"><div class="he">מִנִּי</div><div class="tr">mi-<b>NI</b></div><div class="fr">from</div></div>
+      <div class="word"><div class="he">צָר</div><div class="tr">tzar</div><div class="fr">the foe</div></div>
+    </div>
+    <div class="stich-translation">You make us fall back before the foe,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמְשַׂנְאֵינוּ</div><div class="tr">um-san-ei-<b>NU</b></div><div class="fr">and those who hate us</div></div>
+      <div class="word"><div class="he">שָׁסוּ</div><div class="tr">sha-<b>SU</b></div><div class="fr">have plundered</div></div>
+      <div class="word"><div class="he">לָמוֹ</div><div class="tr">la-<b>MO</b></div><div class="fr">for themselves</div></div>
+    </div>
+    <div class="stich-translation">and those who hate us plunder us at will.</div>
+  </div>
+
+  <div class="verse-summary">Retreat described as something done to the army rather than by it. The subject of the verb is God; the soldiers only move.</div>
+</div>
+
+<!-- VERSE 12 -->
+<div class="verse">
+  <span class="verse-num">12</span>
+  <div class="verse-full">תִּתְּנֵנוּ כְּצֹאן מַאֲכָל<br>
+  וּבַגּוֹיִם זֵרִיתָנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּתְּנֵנוּ</div><div class="tr">tit-ne-<b>NU</b></div><div class="fr">You give us</div></div>
+      <div class="word"><div class="he">כְּצֹאן</div><div class="tr">ktzon</div><div class="fr">like sheep</div></div>
+      <div class="word"><div class="he">מַאֲכָל</div><div class="tr">ma-a-<b>CHAL</b></div><div class="fr">for food</div></div>
+    </div>
+    <div class="stich-translation">You hand us over like sheep to be eaten,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּבַגּוֹיִם</div><div class="tr">u-va-go-<b>YIM</b></div><div class="fr">and among the nations</div></div>
+      <div class="word"><div class="he">זֵרִיתָנוּ</div><div class="tr">ze-ri-ta-<b>NU</b></div><div class="fr">You have scattered us</div></div>
+    </div>
+    <div class="stich-translation">and You have scattered us among the nations.</div>
+  </div>
+
+  <div class="verse-summary">Sheep for eating, then a people spread thin across the map. The two pictures do not match, and the jolt between them is the point.</div>
+</div>
+
+<!-- VERSE 13 -->
+<div class="verse">
+  <span class="verse-num">13</span>
+  <div class="verse-full">תִּמְכֹּר עַמְּךָ בְלֹא הוֹן<br>
+  וְלֹא רִבִּיתָ בִּמְחִירֵיהֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּמְכֹּר</div><div class="tr">tim-<b>KOR</b></div><div class="fr">You sell</div></div>
+      <div class="word"><div class="he">עַמְּךָ</div><div class="tr">am-<b>CHA</b></div><div class="fr">Your people</div></div>
+      <div class="word"><div class="he">בְלֹא</div><div class="tr">vlo</div><div class="fr">for no</div></div>
+      <div class="word"><div class="he">הוֹן</div><div class="tr">hon</div><div class="fr">wealth</div></div>
+    </div>
+    <div class="stich-translation">You sell Your people for no money,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">רִבִּיתָ</div><div class="tr">ri-bi-<b>TA</b></div><div class="fr">did You increase</div></div>
+      <div class="word"><div class="he">בִּמְחִירֵיהֶם</div><div class="tr">bim-chi-<b>REI</b>-hem</div><div class="fr">by their prices</div></div>
+    </div>
+    <div class="stich-translation">and made no profit on the price.</div>
+  </div>
+
+  <div class="verse-summary">The sale is an insult before it is a loss. The charge is not that God sold the people but that God sold them cheap and gained nothing by it.</div>
+</div>
+
+<!-- VERSE 14 -->
+<div class="verse">
+  <span class="verse-num">14</span>
+  <div class="verse-full">תְּשִׂימֵנוּ חֶרְפָּה לִשְׁכֵנֵינוּ<br>
+  לַעַג וָקֶלֶס לִסְבִיבוֹתֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּשִׂימֵנוּ</div><div class="tr">te-si-me-<b>NU</b></div><div class="fr">You make us</div></div>
+      <div class="word"><div class="he">חֶרְפָּה</div><div class="tr">cher-<b>PA</b></div><div class="fr">a reproach</div></div>
+      <div class="word"><div class="he">לִשְׁכֵנֵינוּ</div><div class="tr">lish-che-nei-<b>NU</b></div><div class="fr">to our neighbours</div></div>
+    </div>
+    <div class="stich-translation">You make us a reproach to our neighbours,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַעַג</div><div class="tr">la-<b>AG</b></div><div class="fr">mockery</div></div>
+      <div class="word"><div class="he">וָקֶלֶס</div><div class="tr">va-<b>KE</b>-les</div><div class="fr">and derision</div></div>
+      <div class="word"><div class="he">לִסְבִיבוֹתֵינוּ</div><div class="tr">lis-vi-vo-tei-<b>NU</b></div><div class="fr">to those around us</div></div>
+    </div>
+    <div class="stich-translation">mockery and derision to those around us.</div>
+  </div>
+
+  <div class="verse-summary">The damage turns social. Neighbours first, then everyone in the circle: the audience widens with each word of the verse.</div>
+</div>
+
+<!-- VERSE 15 -->
+<div class="verse">
+  <span class="verse-num">15</span>
+  <div class="verse-full">תְּשִׂימֵנוּ מָשָׁל בַּגּוֹיִם<br>
+  מְנוֹד רֹאשׁ בַּלְאֻמִּים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תְּשִׂימֵנוּ</div><div class="tr">te-si-me-<b>NU</b></div><div class="fr">You make us</div></div>
+      <div class="word"><div class="he">מָשָׁל</div><div class="tr">ma-<b>SHAL</b></div><div class="fr">a byword</div></div>
+      <div class="word"><div class="he">בַּגּוֹיִם</div><div class="tr">ba-go-<b>YIM</b></div><div class="fr">among the nations</div></div>
+    </div>
+    <div class="stich-translation">You make us a byword among the nations,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מְנוֹד</div><div class="tr">me-<b>NOD</b></div><div class="fr">a shaking of</div></div>
+      <div class="word"><div class="he">רֹאשׁ</div><div class="tr">rosh</div><div class="fr">the head</div></div>
+      <div class="word"><div class="he">בַּלְאֻמִּים</div><div class="tr">bal-u-<b>MIM</b></div><div class="fr">among the peoples</div></div>
+    </div>
+    <div class="stich-translation">a shaking of the head among the peoples.</div>
+  </div>
+
+  <div class="verse-summary">A byword is a people whose name has become an example of something. The shake of the head is the gesture that goes with saying it.</div>
+</div>
+
+<!-- VERSE 16 -->
+<div class="verse">
+  <span class="verse-num">16</span>
+  <div class="verse-full">כׇּל הַיּוֹם כְּלִמָּתִי נֶגְדִּי<br>
+  וּבֹשֶׁת פָּנַי כִּסָּתְנִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הַיּוֹם</div><div class="tr">ha-<b>YOM</b></div><div class="fr">the day</div></div>
+      <div class="word"><div class="he">כְּלִמָּתִי</div><div class="tr">kli-ma-<b>TI</b></div><div class="fr">my disgrace</div></div>
+      <div class="word"><div class="he">נֶגְדִּי</div><div class="tr">neg-<b>DI</b></div><div class="fr">is before me</div></div>
+    </div>
+    <div class="stich-translation">All day long my disgrace is in front of me,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּבֹשֶׁת</div><div class="tr">u-<b>VO</b>-shet</div><div class="fr">and the shame of</div></div>
+      <div class="word"><div class="he">פָּנַי</div><div class="tr">pa-<b>NAI</b></div><div class="fr">my face</div></div>
+      <div class="word"><div class="he">כִּסָּתְנִי</div><div class="tr">ki-sat-<b>NI</b></div><div class="fr">has covered me</div></div>
+    </div>
+    <div class="stich-translation">and the shame of my face has covered me,</div>
+  </div>
+
+  <div class="verse-summary">The we of the lament breaks into a single I for two verses. One face is made to carry the shame of the whole people.</div>
+</div>
+
+<!-- VERSE 17 -->
+<div class="verse">
+  <span class="verse-num">17</span>
+  <div class="verse-full">מִקּוֹל מְחָרֵף וּמְגַדֵּף<br>
+  מִפְּנֵי אוֹיֵב וּמִתְנַקֵּם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִקּוֹל</div><div class="tr">mi-<b>KOL</b></div><div class="fr">at the voice of</div></div>
+      <div class="word"><div class="he">מְחָרֵף</div><div class="tr">me-cha-<b>REF</b></div><div class="fr">the one who taunts</div></div>
+      <div class="word"><div class="he">וּמְגַדֵּף</div><div class="tr">um-ga-<b>DEF</b></div><div class="fr">and the one who reviles</div></div>
+    </div>
+    <div class="stich-translation">at the voice of the taunter and the reviler,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִפְּנֵי</div><div class="tr">mip-<b>NEI</b></div><div class="fr">before</div></div>
+      <div class="word"><div class="he">אוֹיֵב</div><div class="tr">o-<b>YEV</b></div><div class="fr">the enemy</div></div>
+      <div class="word"><div class="he">וּמִתְנַקֵּם</div><div class="tr">u-mit-na-<b>KEM</b></div><div class="fr">and the avenger</div></div>
+    </div>
+    <div class="stich-translation">in the face of the enemy and the avenger.</div>
+  </div>
+
+  <div class="verse-summary">Two pairs of participles, four kinds of opponent, and not one of them is fought. What wounds in this verse is a voice.</div>
+</div>
+
+<!-- VERSE 18 -->
+<div class="verse">
+  <span class="verse-num">18</span>
+  <div class="verse-full">כׇּל זֹאת בָּאַתְנוּ וְלֹא שְׁכַחֲנוּךָ<br>
+  וְלֹא שִׁקַּרְנוּ בִּבְרִיתֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">זֹאת</div><div class="tr">zot</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">בָּאַתְנוּ</div><div class="tr">ba-at-<b>NU</b></div><div class="fr">has come upon us</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">שְׁכַחֲנוּךָ</div><div class="tr">shcha-cha-nu-<b>CHA</b></div><div class="fr">have we forgotten You</div></div>
+    </div>
+    <div class="stich-translation">All this came upon us, and we did not forget You,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">שִׁקַּרְנוּ</div><div class="tr">shi-kar-<b>NU</b></div><div class="fr">have we been false</div></div>
+      <div class="word"><div class="he">בִּבְרִיתֶךָ</div><div class="tr">biv-ri-te-<b>CHA</b></div><div class="fr">to Your covenant</div></div>
+    </div>
+    <div class="stich-translation">and we were not false to Your covenant.</div>
+  </div>
+
+  <div class="verse-summary">The turn to protest. The covenant is invoked as a contract with two parties, and the speakers declare their own side of it kept.</div>
+</div>
+
+<!-- VERSE 19 -->
+<div class="verse">
+  <span class="verse-num">19</span>
+  <div class="verse-full">לֹא נָסוֹג אָחוֹר לִבֵּנוּ<br>
+  וַתֵּט אֲשֻׁרֵינוּ מִנִּי אׇרְחֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">נָסוֹג</div><div class="tr">na-<b>SOG</b></div><div class="fr">has turned</div></div>
+      <div class="word"><div class="he">אָחוֹר</div><div class="tr">a-<b>CHOR</b></div><div class="fr">back</div></div>
+      <div class="word"><div class="he">לִבֵּנוּ</div><div class="tr">li-be-<b>NU</b></div><div class="fr">our heart</div></div>
+    </div>
+    <div class="stich-translation">Our heart has not turned back,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַתֵּט</div><div class="tr">va-<b>TET</b></div><div class="fr">and nor has it swerved</div></div>
+      <div class="word"><div class="he">אֲשֻׁרֵינוּ</div><div class="tr">a-shu-rei-<b>NU</b></div><div class="fr">our steps</div></div>
+      <div class="word"><div class="he">מִנִּי</div><div class="tr">mi-<b>NI</b></div><div class="fr">from</div></div>
+      <div class="word"><div class="he">אׇרְחֶךָ</div><div class="tr">or-che-<b>CHA</b></div><div class="fr">Your path</div></div>
+    </div>
+    <div class="stich-translation">nor have our steps swerved from Your path,</div>
+  </div>
+
+  <div class="verse-summary">The word used of the army in verse 11 is used here of the heart, and denied. The body was pushed backward; the loyalty was not.</div>
+</div>
+
+<!-- VERSE 20 -->
+<div class="verse">
+  <span class="verse-num">20</span>
+  <div class="verse-full">כִּי דִכִּיתָנוּ בִּמְקוֹם תַּנִּים<br>
+  וַתְּכַס עָלֵינוּ בְצַלְמָוֶת</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">though</div></div>
+      <div class="word"><div class="he">דִכִּיתָנוּ</div><div class="tr">di-ki-ta-<b>NU</b></div><div class="fr">You crushed us</div></div>
+      <div class="word"><div class="he">בִּמְקוֹם</div><div class="tr">bim-<b>KOM</b></div><div class="fr">in a place of</div></div>
+      <div class="word"><div class="he">תַּנִּים</div><div class="tr">ta-<b>NIM</b></div><div class="fr">jackals</div></div>
+    </div>
+    <div class="stich-translation">though You crushed us in a place of jackals,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַתְּכַס</div><div class="tr">vat-<b>CHAS</b></div><div class="fr">and You covered</div></div>
+      <div class="word"><div class="he">עָלֵינוּ</div><div class="tr">a-lei-<b>NU</b></div><div class="fr">over us</div></div>
+      <div class="word"><div class="he">בְצַלְמָוֶת</div><div class="tr">ve-tzal-<b>MA</b>-vet</div><div class="fr">with deep darkness</div></div>
+    </div>
+    <div class="stich-translation">and covered us over with deep darkness.</div>
+  </div>
+
+  <div class="verse-summary">The concession inside the protest: yes, this happened, and it happened at Your hand. A place of jackals is a ruin where a town used to stand.</div>
+</div>
+
+<!-- VERSE 21 -->
+<div class="verse">
+  <span class="verse-num">21</span>
+  <div class="verse-full">אִם שָׁכַחְנוּ שֵׁם אֱלֹהֵינוּ<br>
+  וַנִּפְרֹשׂ כַּפֵּינוּ לְאֵל זָר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">שָׁכַחְנוּ</div><div class="tr">sha-chach-<b>NU</b></div><div class="fr">we had forgotten</div></div>
+      <div class="word"><div class="he">שֵׁם</div><div class="tr">shem</div><div class="fr">the name of</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+    </div>
+    <div class="stich-translation">If we had forgotten the name of our God,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַנִּפְרֹשׂ</div><div class="tr">va-nif-<b>ROS</b></div><div class="fr">and had spread out</div></div>
+      <div class="word"><div class="he">כַּפֵּינוּ</div><div class="tr">ka-pei-<b>NU</b></div><div class="fr">our palms</div></div>
+      <div class="word"><div class="he">לְאֵל</div><div class="tr">le-<b>EL</b></div><div class="fr">to a god</div></div>
+      <div class="word"><div class="he">זָר</div><div class="tr">zar</div><div class="fr">foreign</div></div>
+    </div>
+    <div class="stich-translation">or spread out our palms to a foreign god,</div>
+  </div>
+
+  <div class="verse-summary">The protest hardens into a formal oath, the kind that names the offence and leaves the penalty deliberately unspoken.</div>
+</div>
+
+<!-- VERSE 22 -->
+<div class="verse">
+  <span class="verse-num">22</span>
+  <div class="verse-full">הֲלֹא אֱלֹהִים יַחֲקׇר זֹאת<br>
+  כִּי הוּא יֹדֵעַ תַּעֲלֻמוֹת לֵב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֲלֹא</div><div class="tr">ha-<b>LO</b></div><div class="fr">would not</div></div>
+      <div class="word"><div class="he">אֱלֹהִים</div><div class="tr">e-lo-<b>HIM</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">יַחֲקׇר</div><div class="tr">ya-cha-<b>KOR</b></div><div class="fr">search out</div></div>
+      <div class="word"><div class="he">זֹאת</div><div class="tr">zot</div><div class="fr">this</div></div>
+    </div>
+    <div class="stich-translation">would God not search this out?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">He</div></div>
+      <div class="word"><div class="he">יֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">תַּעֲלֻמוֹת</div><div class="tr">ta-a-lu-<b>MOT</b></div><div class="fr">the hidden things of</div></div>
+      <div class="word"><div class="he">לֵב</div><div class="tr">lev</div><div class="fr">the heart</div></div>
+    </div>
+    <div class="stich-translation">For He knows the secrets of the heart.</div>
+  </div>
+
+  <div class="verse-summary">The oath is submitted for inspection. Since God reads what is hidden, the claim of innocence cannot be theatre, and that is the whole argument.</div>
+</div>
+
+<!-- VERSE 23 -->
+<div class="verse">
+  <span class="verse-num">23</span>
+  <div class="verse-full">כִּי עָלֶיךָ הֹרַגְנוּ כׇל הַיּוֹם<br>
+  נֶחְשַׁבְנוּ כְּצֹאן טִבְחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">עָלֶיךָ</div><div class="tr">a-lei-<b>CHA</b></div><div class="fr">for Your sake</div></div>
+      <div class="word"><div class="he">הֹרַגְנוּ</div><div class="tr">ho-rag-<b>NU</b></div><div class="fr">we are killed</div></div>
+      <div class="word"><div class="he">כׇל</div><div class="tr">chol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הַיּוֹם</div><div class="tr">ha-<b>YOM</b></div><div class="fr">the day</div></div>
+    </div>
+    <div class="stich-translation">It is for Your sake that we are killed all day long,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נֶחְשַׁבְנוּ</div><div class="tr">nech-shav-<b>NU</b></div><div class="fr">we are reckoned</div></div>
+      <div class="word"><div class="he">כְּצֹאן</div><div class="tr">ktzon</div><div class="fr">as sheep for</div></div>
+      <div class="word"><div class="he">טִבְחָה</div><div class="tr">tiv-<b>CHA</b></div><div class="fr">slaughter</div></div>
+    </div>
+    <div class="stich-translation">reckoned as sheep for the slaughter.</div>
+  </div>
+
+  <div class="verse-summary">The most quoted verse of the psalm, and the one that changes what the suffering means: not punishment, but service, and it happens daily.</div>
+</div>
+
+<!-- VERSE 24 -->
+<div class="verse">
+  <span class="verse-num">24</span>
+  <div class="verse-full">עוּרָה לָמָּה תִישַׁן אֲדֹנָי<br>
+  הָקִיצָה אַל תִּזְנַח לָנֶצַח</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עוּרָה</div><div class="tr">u-<b>RA</b></div><div class="fr">awake</div></div>
+      <div class="word"><div class="he">לָמָּה</div><div class="tr"><b>LA</b>-ma</div><div class="fr">why</div></div>
+      <div class="word"><div class="he">תִישַׁן</div><div class="tr">ti-<b>SHAN</b></div><div class="fr">do You sleep</div></div>
+      <div class="word"><div class="he">אֲדֹנָי</div><div class="tr">a-do-<b>NAI</b></div><div class="fr">my Lord</div></div>
+    </div>
+    <div class="stich-translation">Wake up. Why do You sleep, my Lord?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָקִיצָה</div><div class="tr">ha-ki-<b>TZA</b></div><div class="fr">rouse Yourself</div></div>
+      <div class="word"><div class="he">אַל</div><div class="tr">al</div><div class="fr">do not</div></div>
+      <div class="word"><div class="he">תִּזְנַח</div><div class="tr">tiz-<b>NACH</b></div><div class="fr">reject</div></div>
+      <div class="word"><div class="he">לָנֶצַח</div><div class="tr">la-ne-<b>TZACH</b></div><div class="fr">forever</div></div>
+    </div>
+    <div class="stich-translation">Rouse Yourself, do not reject us forever.</div>
+  </div>
+
+  <div class="verse-summary">The boldest verse in the psalm. The verb is the ordinary one for waking a sleeper, addressed to God, and later tradition was uneasy about repeating it.</div>
+</div>
+
+<!-- VERSE 25 -->
+<div class="verse">
+  <span class="verse-num">25</span>
+  <div class="verse-full">לָמָּה פָנֶיךָ תַסְתִּיר<br>
+  תִּשְׁכַּח עׇנְיֵנוּ וְלַחֲצֵנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לָמָּה</div><div class="tr"><b>LA</b>-ma</div><div class="fr">why</div></div>
+      <div class="word"><div class="he">פָנֶיךָ</div><div class="tr">fa-nei-<b>CHA</b></div><div class="fr">Your face</div></div>
+      <div class="word"><div class="he">תַסְתִּיר</div><div class="tr">tas-<b>TIR</b></div><div class="fr">do You hide</div></div>
+    </div>
+    <div class="stich-translation">Why do You hide Your face,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּשְׁכַּח</div><div class="tr">tish-<b>KACH</b></div><div class="fr">do You forget</div></div>
+      <div class="word"><div class="he">עׇנְיֵנוּ</div><div class="tr">on-ye-<b>NU</b></div><div class="fr">our affliction</div></div>
+      <div class="word"><div class="he">וְלַחֲצֵנוּ</div><div class="tr">ve-la-cha-tze-<b>NU</b></div><div class="fr">and our oppression</div></div>
+    </div>
+    <div class="stich-translation">and forget our affliction and our oppression?</div>
+  </div>
+
+  <div class="verse-summary">Hiding the face is the standard biblical phrase for divine withdrawal. Here it is put as a question, which assumes there is an answer.</div>
+</div>
+
+<!-- VERSE 26 -->
+<div class="verse">
+  <span class="verse-num">26</span>
+  <div class="verse-full">כִּי שָׁחָה לֶעָפָר נַפְשֵׁנוּ<br>
+  דָּבְקָה לָאָרֶץ בִּטְנֵנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">שָׁחָה</div><div class="tr">sha-<b>CHA</b></div><div class="fr">has sunk</div></div>
+      <div class="word"><div class="he">לֶעָפָר</div><div class="tr">le-a-<b>FAR</b></div><div class="fr">to the dust</div></div>
+      <div class="word"><div class="he">נַפְשֵׁנוּ</div><div class="tr">naf-she-<b>NU</b></div><div class="fr">our soul</div></div>
+    </div>
+    <div class="stich-translation">For our soul has sunk down to the dust,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דָּבְקָה</div><div class="tr">dav-<b>KA</b></div><div class="fr">clings</div></div>
+      <div class="word"><div class="he">לָאָרֶץ</div><div class="tr">la-<b>A</b>-retz</div><div class="fr">to the ground</div></div>
+      <div class="word"><div class="he">בִּטְנֵנוּ</div><div class="tr">bit-ne-<b>NU</b></div><div class="fr">our belly</div></div>
+    </div>
+    <div class="stich-translation">our belly clings to the ground.</div>
+  </div>
+
+  <div class="verse-summary">The body again, lower than in verse 16: soul in the dust, belly on the ground. The posture is prostration, and it is also defeat.</div>
+</div>
+
+<!-- VERSE 27 -->
+<div class="verse">
+  <span class="verse-num">27</span>
+  <div class="verse-full">קוּמָה עֶזְרָתָה לָּנוּ<br>
+  וּפְדֵנוּ לְמַעַן חַסְדֶּךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קוּמָה</div><div class="tr">ku-<b>MA</b></div><div class="fr">arise</div></div>
+      <div class="word"><div class="he">עֶזְרָתָה</div><div class="tr">ez-ra-<b>TA</b></div><div class="fr">as a help</div></div>
+      <div class="word"><div class="he">לָּנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+    </div>
+    <div class="stich-translation">Arise, be our help,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּפְדֵנוּ</div><div class="tr">uf-de-<b>NU</b></div><div class="fr">and redeem us</div></div>
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">for the sake of</div></div>
+      <div class="word"><div class="he">חַסְדֶּךָ</div><div class="tr">chas-de-<b>CHA</b></div><div class="fr">Your steadfast love</div></div>
+    </div>
+    <div class="stich-translation">and redeem us for the sake of Your steadfast love.</div>
+  </div>
+
+  <div class="verse-summary">No vow of praise, no promise, no confession. The psalm ends on a demand with a single reason attached, and the reason is God's own commitment.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>The psalm is built as a legal argument. Verses 2 to 9 establish the precedent: God took the land, the ancestors' swords did not, and the people have said so publicly ever since. Verse 10 opens with one word, <strong>אַף</strong> (af, v.10), yet, and everything reverses. The same second person verbs now describe rejection, retreat, a cheap sale, scattering and mockery. Verses 18 to 23 supply the piece an accusation of this kind requires, which is that the defeat is not deserved. Then the last four verses drop the argument for imperatives: wake, rouse, arise, redeem. Nothing is resolved. The psalm ends on the demand.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Two words carry the seam. <strong>אָחוֹר</strong> (a-chor, v.11), backward, is what God makes the army do in verse 11; the same word returns in verse 19 as <strong>אָחוֹר</strong> (a-chor, v.19), where the heart is said not to have gone that way, so body and loyalty are deliberately separated. The second is <strong>בְצַלְמָוֶת</strong> (ve-tzal-ma-vet, v.20), deep darkness, the compound Psalm 23 uses for the valley walked through in safety. Here it is what God spreads over the people, which reads as a quotation turned inside out. Note also the root for saving three times in the first movement: denied of their arm in verse 4, denied of the speaker's sword in verse 7, then affirmed of God in verse 8. And the verb in verse 6, <strong>נְנַגֵּחַ</strong> (ne-na-ge-ach, v.6), is taken from an ox using its horns.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Verse 24 became a liturgical problem. The Mishnah (Sotah 9:10, with a parallel at Ma'aser Sheni 5:15) records that Yohanan the High Priest put an end to the Awakeners, and the Talmud (Sotah 48a) explains that these were the Levites who said <strong>עוּרָה</strong> (u-ra, v.24) <strong>תִישַׁן</strong> (ti-shan, v.24), awake, why do You sleep, on the Temple platform each day. The objection preserved there is one line: does the Omnipresent sleep? A sentence a psalmist may shout in extremity was judged too much to fix as a daily rite. Verse 23 went the other way and became a text of martyrdom, read as the claim that a death suffered for the covenant is an act of service rather than a sentence, which is how the psalm's refusal to confess any sin is usually resolved.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The hiding of the face in verse 25, <strong>תַסְתִּיר</strong> (tas-tir, v.25), is read in the mystical literature not as absence but as a mode of presence: a concealment is still an act, and an act is still a relation. Sleep in verse 24 is read the same way, not as a lapse of attention but as a withdrawal of flow, a state that can be addressed and therefore ended, which is why the psalm can order it to stop. On this reading the refusal to confess is not defiance. If the concealment is not a response to sin, it belongs to the structure of the relationship itself, and asking why becomes the correct thing to say rather than an impertinence.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-044-en',
+  key: 'Am',
+  tempo: 58,
+  progression: '| Dm Dm | Gm Gm | Dm A7 | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

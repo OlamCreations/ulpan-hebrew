@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 134: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 134: Bless the LORD in the nights</h1>
+    <div class="subtitle">תְּהִלִּים קל״ד · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 134</a></div>
+</header>
+
+<div class="t-intro">
+  Three verses, the last of the fifteen Songs of Ascents that run from 120 to 134, and the shortest of them. It works as a call and an answer. Verses 1 and 2 are plural commands to whoever is on duty in the house of God at night; verse 3 answers in the singular, one blessing sent back to one person. That switch is the whole grammar lesson: three plural imperatives ending in -u, then a verb carrying the -cha suffix that means you, one man. Mishnah Middot 2:5 counts fifteen steps rising from the Women's Court to the Court of Israel, corresponding to the fifteen Songs of Ascents, and says the Levites sang on them.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  הִנֵּה בָּרְכוּ אֶת יְהֹוָה כׇּל עַבְדֵי יְהֹוָה<br>
+  הָעֹמְדִים בְּבֵית יְהֹוָה בַּלֵּילוֹת</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of the ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">behold</div></div>
+      <div class="word"><div class="he">בָּרְכוּ</div><div class="tr">bar-<b>CHU</b></div><div class="fr">bless</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">עַבְדֵי</div><div class="tr">av-<b>DEI</b></div><div class="fr">servants of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">Behold, bless the LORD, all servants of the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הָעֹמְדִים</div><div class="tr">ha-om-<b>DIM</b></div><div class="fr">who stand</div></div>
+      <div class="word"><div class="he">בְּבֵית</div><div class="tr">be-<b>VEIT</b></div><div class="fr">in the house of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בַּלֵּילוֹת</div><div class="tr">ba-lei-<b>LOT</b></div><div class="fr">in the nights</div></div>
+    </div>
+    <div class="stich-translation">who stand in the house of the LORD in the nights.</div>
+  </div>
+
+  <div class="verse-summary">The address is to whoever is on duty when nobody is watching. Three of the thirteen words are the divine name, and the last word is what makes the verse specific: this is the shift no one sees.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">שְׂאוּ יְדֵכֶם קֹדֶשׁ<br>
+  וּבָרְכוּ אֶת יְהֹוָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׂאוּ</div><div class="tr">se-<b>U</b></div><div class="fr">lift up</div></div>
+      <div class="word"><div class="he">יְדֵכֶם</div><div class="tr">ye-<b>DE</b>-chem</div><div class="fr">your hands</div></div>
+      <div class="word"><div class="he">קֹדֶשׁ</div><div class="tr"><b>KO</b>-desh</div><div class="fr">holiness</div></div>
+    </div>
+    <div class="stich-translation">Lift up your hands toward the holy place,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּבָרְכוּ</div><div class="tr">u-var-<b>CHU</b></div><div class="fr">and bless</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(object marker)</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">and bless the LORD.</div>
+  </div>
+
+  <div class="verse-summary">The same command with a gesture attached. Hands first, then the blessing, and the middle word of the line carries no preposition at all, which is where the translations part company.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">יְבָרֶכְךָ יְהֹוָה מִצִּיּוֹן<br>
+  עֹשֵׂה שָׁמַיִם וָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְבָרֶכְךָ</div><div class="tr">ye-va-rech-<b>CHA</b></div><div class="fr">may He bless you</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">מִצִּיּוֹן</div><div class="tr">mi-tzi-<b>YON</b></div><div class="fr">from Zion</div></div>
+    </div>
+    <div class="stich-translation">May the LORD bless you from Zion,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֹשֵׂה</div><div class="tr">o-<b>SE</b></div><div class="fr">the maker of</div></div>
+      <div class="word"><div class="he">שָׁמַיִם</div><div class="tr">sha-<b>MA</b>-yim</div><div class="fr">heaven</div></div>
+      <div class="word"><div class="he">וָאָרֶץ</div><div class="tr">va-<b>A</b>-retz</div><div class="fr">and earth</div></div>
+    </div>
+    <div class="stich-translation">the maker of heaven and earth.</div>
+  </div>
+
+  <div class="verse-summary">The direction reverses. Everything before this is people blessing God; here one person is blessed back, and the blessing comes out of the place where the people addressed are standing.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two speakers, or one speaker and one answer. Verses 1 and 2 give three plural commands, <strong>בָּרְכוּ</strong> (bar-chu, v.1), <strong>שְׂאוּ</strong> (se-u, v.2) and <strong>וּבָרְכוּ</strong> (u-var-chu, v.2), all addressed to the servants standing in the house at night. Verse 3 replies with <strong>יְבָרֶכְךָ</strong> (ye-va-rech-cha, v.3), a verb whose suffix is singular, so the group is answered one at a time. The night is not decoration. <strong>הָעֹמְדִים</strong> (ha-om-dim, v.1) is a participle of standing, which is the ordinary word for being on duty in the sanctuary, and <strong>בַּלֵּילוֹת</strong> (ba-lei-lot, v.1) puts that duty in the plural of nights, meaning night after night rather than one occasion. Read straight, the psalm is a shift handover: the people leaving tell the people staying to keep blessing, and the people staying send a blessing back.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>The crux is <strong>קֹדֶשׁ</strong> (ko-desh, v.2). The word is a bare noun, holiness or the holy place, with no preposition in front of it, so the line can be read as lift your hands toward the sanctuary or as lift your hands in holiness. The reading is genuinely disputed and the Hebrew does not decide it; older English versions take the first, and commentators who read the noun adverbially take the second. Note also that one root, b-r-k, carries the whole psalm: the servants bless in verse 1, bless again in verse 2, and are blessed in verse 3. The same verb runs in both directions, which raises the old question of what it can mean for a person to bless God, since nothing is added to Him by it.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The last three words of the psalm, <strong>עֹשֵׂה</strong> (o-se, v.3) to <strong>וָאָרֶץ</strong> (va-a-retz, v.3), are a fixed formula that appears four other times in the book, at 115:15, 121:2, 124:8 and 146:6. Two of those, 121 and 124, are inside this same collection of fifteen, so the group of Songs of Ascents closes on the phrase it has been using all along. The placement is pointed: a sequence of psalms about going up to Jerusalem ends not at a festival crowd but with a handful of people awake at night, and the blessing they receive is credited not to the Temple but to the maker of everything. The servants standing at night are usually identified with the priests and Levites of the watch; the psalm itself names no office, and the reading that extends it to anyone awake in the house of God is available from the plain text.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>Night in the mystical reading is the condition of service without visible result, which is why this psalm and not a daytime one closes the ascent. The kabbalistic literature hears in the root of blessing the word for a pool, and reads a blessing as a drawing down of what has gathered above, so the two directions of the psalm are one circuit rather than an exchange of compliments: the servants raise their hands, and what comes back down through <strong>מִצִּיּוֹן</strong> (mi-tzi-yon, v.3), from Zion, is what they raised. The hands of <strong>יְדֵכֶם</strong> (ye-de-chem, v.2) matter for the same reason. Blessing is described as something done with the body in a specific place at a specific hour, not as a state of mind, and the psalm ends by naming the maker of heaven and earth to keep that local circuit attached to the whole of it.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-134-en',
+  key: 'Am',
+  tempo: 58,
+  progression: '| Am Am | F G | Am Em | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 127: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 127: Unless the LORD builds the house</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ז · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 127</a></div>
+</header>
+
+<div class="t-intro">
+  Five verses, the only Song of Ascents attached to Solomon, and the only one in the group that argues instead of praising. The first two verses are about effort that comes to nothing, and they turn on one word repeated three times that means emptiness or futility. The last three are about children, which is what the psalm offers as the thing that does get built. Whether the two halves began as one poem is disputed; they are joined by the ordinary Hebrew word for a house, which means a building in verse 1 and a household everywhere after. Verse 2 ends with one of the more contested lines in the book: it can be read as He gives His beloved sleep, or as He gives to His beloved while he sleeps, and the difference decides what kind of consolation the psalm is offering.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת לִשְׁלֹמֹה<br>
+  אִם יְהֹוָה לֹא יִבְנֶה בַיִת<br>
+  שָׁוְא עָמְלוּ בוֹנָיו בּוֹ<br>
+  אִם יְהֹוָה לֹא יִשְׁמׇר עִיר<br>
+  שָׁוְא שָׁקַד שׁוֹמֵר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+      <div class="word"><div class="he">לִשְׁלֹמֹה</div><div class="tr">lish-lo-<b>MO</b></div><div class="fr">of Solomon</div></div>
+    </div>
+    <div class="stich-translation">A song of ascents. Of Solomon.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">does not</div></div>
+      <div class="word"><div class="he">יִבְנֶה</div><div class="tr">yiv-<b>NE</b></div><div class="fr">build</div></div>
+      <div class="word"><div class="he">בַיִת</div><div class="tr"><b>VA</b>-yit</div><div class="fr">a house</div></div>
+    </div>
+    <div class="stich-translation">If the LORD does not build a house,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁוְא</div><div class="tr">shav</div><div class="fr">in vain</div></div>
+      <div class="word"><div class="he">עָמְלוּ</div><div class="tr">am-<b>LU</b></div><div class="fr">they have laboured</div></div>
+      <div class="word"><div class="he">בוֹנָיו</div><div class="tr">vo-<b>NAV</b></div><div class="fr">its builders</div></div>
+      <div class="word"><div class="he">בּוֹ</div><div class="tr">bo</div><div class="fr">on it</div></div>
+    </div>
+    <div class="stich-translation">its builders have laboured on it in vain.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">does not</div></div>
+      <div class="word"><div class="he">יִשְׁמׇר</div><div class="tr">yish-<b>MOR</b></div><div class="fr">keep</div></div>
+      <div class="word"><div class="he">עִיר</div><div class="tr">ir</div><div class="fr">a city</div></div>
+    </div>
+    <div class="stich-translation">If the LORD does not keep a city,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁוְא</div><div class="tr">shav</div><div class="fr">in vain</div></div>
+      <div class="word"><div class="he">שָׁקַד</div><div class="tr">sha-<b>KAD</b></div><div class="fr">he has kept awake</div></div>
+      <div class="word"><div class="he">שׁוֹמֵר</div><div class="tr">sho-<b>MER</b></div><div class="fr">the watchman</div></div>
+    </div>
+    <div class="stich-translation">the watchman has stayed awake in vain.</div>
+  </div>
+
+  <div class="verse-summary">The thesis, stated twice in the same shape: a condition about God, then a verdict of emptiness on the human work. Building and guarding are the two things a settlement needs, and both are handed upward in the same breath.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">שָׁוְא לָכֶם<br>
+  מַשְׁכִּימֵי קוּם מְאַחֲרֵי שֶׁבֶת<br>
+  אֹכְלֵי לֶחֶם הָעֲצָבִים<br>
+  כֵּן יִתֵּן לִידִידוֹ שֵׁנָא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁוְא</div><div class="tr">shav</div><div class="fr">in vain</div></div>
+      <div class="word"><div class="he">לָכֶם</div><div class="tr"><b>LA</b>-chem</div><div class="fr">for you</div></div>
+    </div>
+    <div class="stich-translation">It is in vain for you,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַשְׁכִּימֵי</div><div class="tr">mash-ki-<b>MEI</b></div><div class="fr">those rising early to</div></div>
+      <div class="word"><div class="he">קוּם</div><div class="tr">kum</div><div class="fr">get up</div></div>
+      <div class="word"><div class="he">מְאַחֲרֵי</div><div class="tr">me-a-cha-<b>REI</b></div><div class="fr">those delaying</div></div>
+      <div class="word"><div class="he">שֶׁבֶת</div><div class="tr"><b>SHE</b>-vet</div><div class="fr">to sit</div></div>
+    </div>
+    <div class="stich-translation">you who rise early and sit late,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֹכְלֵי</div><div class="tr">och-<b>LEI</b></div><div class="fr">eaters of</div></div>
+      <div class="word"><div class="he">לֶחֶם</div><div class="tr"><b>LE</b>-chem</div><div class="fr">the bread of</div></div>
+      <div class="word"><div class="he">הָעֲצָבִים</div><div class="tr">ha-a-tza-<b>VIM</b></div><div class="fr">toil</div></div>
+    </div>
+    <div class="stich-translation">who eat the bread of toil;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so</div></div>
+      <div class="word"><div class="he">יִתֵּן</div><div class="tr">yi-<b>TEN</b></div><div class="fr">He gives</div></div>
+      <div class="word"><div class="he">לִידִידוֹ</div><div class="tr">li-di-<b>DO</b></div><div class="fr">to His beloved</div></div>
+      <div class="word"><div class="he">שֵׁנָא</div><div class="tr">she-<b>NA</b></div><div class="fr">sleep</div></div>
+    </div>
+    <div class="stich-translation">so He gives to His beloved in sleep.</div>
+  </div>
+
+  <div class="verse-summary">The argument moves from institutions to a person's day. Rising early and sitting late are the two ends of overwork, and what is eaten between them is called the bread of pain, not the bread of effort.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">הִנֵּה נַחֲלַת יְהֹוָה בָּנִים<br>
+  שָׂכָר פְּרִי הַבָּטֶן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">behold</div></div>
+      <div class="word"><div class="he">נַחֲלַת</div><div class="tr">na-cha-<b>LAT</b></div><div class="fr">the inheritance of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בָּנִים</div><div class="tr">ba-<b>NIM</b></div><div class="fr">sons</div></div>
+    </div>
+    <div class="stich-translation">Look: sons are an inheritance from the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׂכָר</div><div class="tr">sa-<b>CHAR</b></div><div class="fr">a reward</div></div>
+      <div class="word"><div class="he">פְּרִי</div><div class="tr">pri</div><div class="fr">the fruit of</div></div>
+      <div class="word"><div class="he">הַבָּטֶן</div><div class="tr">ha-<b>BA</b>-ten</div><div class="fr">the womb</div></div>
+    </div>
+    <div class="stich-translation">a reward, the fruit of the womb.</div>
+  </div>
+
+  <div class="verse-summary">The turn. What was called futile is not replaced by nothing but by children, and both nouns in the verse are transactional: an inherited portion and a wage. Neither is something a person can work harder to obtain.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">כְּחִצִּים בְּיַד גִּבּוֹר<br>
+  כֵּן בְּנֵי הַנְּעוּרִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּחִצִּים</div><div class="tr">ke-chi-<b>TZIM</b></div><div class="fr">like arrows</div></div>
+      <div class="word"><div class="he">בְּיַד</div><div class="tr">byad</div><div class="fr">in the hand of</div></div>
+      <div class="word"><div class="he">גִּבּוֹר</div><div class="tr">gi-<b>BOR</b></div><div class="fr">a warrior</div></div>
+    </div>
+    <div class="stich-translation">Like arrows in a warrior's hand,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֵּן</div><div class="tr">ken</div><div class="fr">so are</div></div>
+      <div class="word"><div class="he">בְּנֵי</div><div class="tr">bnei</div><div class="fr">the sons of</div></div>
+      <div class="word"><div class="he">הַנְּעוּרִים</div><div class="tr">han-u-<b>RIM</b></div><div class="fr">the youth</div></div>
+    </div>
+    <div class="stich-translation">so are the sons of one's youth.</div>
+  </div>
+
+  <div class="verse-summary">The simile is military rather than domestic. Arrows exist to be released, so the image already contains the children leaving the hand that holds them, which is the point of having them early.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">אַשְׁרֵי הַגֶּבֶר אֲשֶׁר מִלֵּא אֶת אַשְׁפָּתוֹ מֵהֶם<br>
+  לֹא יֵבֹשׁוּ כִּי<br>
+  יְדַבְּרוּ אֶת אוֹיְבִים בַּשָּׁעַר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַשְׁרֵי</div><div class="tr">ash-<b>REI</b></div><div class="fr">happy is</div></div>
+      <div class="word"><div class="he">הַגֶּבֶר</div><div class="tr">ha-<b>GE</b>-ver</div><div class="fr">the man</div></div>
+      <div class="word"><div class="he">אֲשֶׁר</div><div class="tr"><b>A</b>-sher</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">מִלֵּא</div><div class="tr">mi-<b>LE</b></div><div class="fr">has filled</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">אַשְׁפָּתוֹ</div><div class="tr">ash-pa-<b>TO</b></div><div class="fr">his quiver</div></div>
+      <div class="word"><div class="he">מֵהֶם</div><div class="tr"><b>ME</b>-hem</div><div class="fr">with them</div></div>
+    </div>
+    <div class="stich-translation">Happy is the man who has filled his quiver with them.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יֵבֹשׁוּ</div><div class="tr">ye-vo-<b>SHU</b></div><div class="fr">they will be put to shame</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">when</div></div>
+    </div>
+    <div class="stich-translation">They will not be put to shame</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְדַבְּרוּ</div><div class="tr">ye-dab-<b>RU</b></div><div class="fr">they speak</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">with</div></div>
+      <div class="word"><div class="he">אוֹיְבִים</div><div class="tr">oi-<b>VIM</b></div><div class="fr">enemies</div></div>
+      <div class="word"><div class="he">בַּשָּׁעַר</div><div class="tr">ba-sha-<b>AR</b></div><div class="fr">in the gate</div></div>
+    </div>
+    <div class="stich-translation">when they speak with enemies in the gate.</div>
+  </div>
+
+  <div class="verse-summary">The reward becomes concrete, and it is not affection. The gate is where legal cases were heard, so what the psalm counts as the payoff is having people beside you in a dispute.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two halves that share a subject. Verses 1 and 2 say that building, guarding and overwork produce nothing on their own; verses 3 to 5 say what does arrive, and it arrives as a gift rather than as a wage earned. The bridge between them is the word house, which in verse 1 is a structure with builders and in verse 3 becomes a family, since Hebrew uses the same noun for both. Read that way the psalm is not two poems awkwardly joined but one argument that changes what it means by the word it started with. The word for emptiness appears three times, twice in verse 1 and once at the head of verse 2, and each time it is placed first in its clause, before the work it is about to cancel.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Verse 2 is the crux. The last word, <strong>שֵׁנָא</strong> (she-na, v.2), is spelled with a final aleph, a spelling found nowhere else for the ordinary noun meaning sleep, and how it functions in the sentence is disputed: as a direct object it gives He grants sleep to His beloved, and read adverbially it gives He grants to His beloved while asleep. The two readings turn the verse into different arguments, one about rest and one about effortless provision, and both are current. There is also a name buried in the line. The word <strong>לִידִידוֹ</strong> (li-di-do, v.2), His beloved, is built on the same root as Yedidyah, the name Nathan gives Solomon in 2 Samuel 12:25, and the heading of this psalm names Solomon. In verse 5 note that the particle <strong>אֶת</strong> (et, v.5) looks identical to the object marker at <strong>אֶת</strong> (et, v.5) but is the preposition meaning with, which is why the sons speak with enemies rather than speaking them.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>Solomon built the house in Jerusalem, and the tradition has generally read the house of verse 1 as that one, which makes the opening line something close to self criticism attributed to the builder himself. The word carries a second sense in the same breath, since a house in Hebrew is also a dynasty, and both of Solomon's houses were promised to him rather than achieved. Verse 2 has had a long life outside the psalm as an argument against anxious labour, and the emphasis it usually receives falls on the futility rather than on the sleep. The psalm never says that work is worthless, only that work without the condition in verse 1 is empty, and the difference between those two claims is where most of the commentary lives.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading works from the two verbs of verse 1, building and keeping, and treats them as the two operations that any vessel requires: it has to be made, and then it has to be held. Human effort can perform both and neither will hold without what is above them, which is why the verse gives the same verdict twice. Sleep in verse 2 is then not an image of laziness but of the one state in which a person stops adding to himself, and the reading takes it as the condition for receiving anything at all. Children in verse 3 are the plainest case of that, since nothing in the process is earned by the one who receives them, and the arrows of verse 4 make the point again from the other side: the value of a thing you are given is that it leaves.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-127-en',
+  key: 'Am',
+  tempo: 76,
+  progression: '| G Em | C D | G Em | C G |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

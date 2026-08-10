@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 129: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 129: Much have they harassed me from my youth</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ט · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 129</a></div>
+</header>
+
+<div class="t-intro">
+  A Song of Ascents in two halves that do not match. Verses 1 to 4 are a survivor's report, spoken by Israel in the first person singular: they harassed me, they plowed my back, and they did not win. Verses 5 to 8 turn to those who hate Zion and ask that they come to nothing, and the way the psalm does that is by describing a harvest that never happens. Watch the last verse. The greeting that reapers and passers by exchanged in a field is quoted in full, inside a sentence saying that nobody will say it, so the psalm ends on a blessing it has just withheld. Grammatically the first half drills the plural perfect, they did, and the second half the jussive, let them be.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  רַבַּת צְרָרוּנִי מִנְּעוּרַי<br>
+  יֹאמַר נָא יִשְׂרָאֵל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבַּת</div><div class="tr">ra-<b>BAT</b></div><div class="fr">much</div></div>
+      <div class="word"><div class="he">צְרָרוּנִי</div><div class="tr">tze-ra-ru-<b>NI</b></div><div class="fr">they have harassed me</div></div>
+      <div class="word"><div class="he">מִנְּעוּרַי</div><div class="tr">min-u-<b>RAI</b></div><div class="fr">from my youth</div></div>
+    </div>
+    <div class="stich-translation">Much have they harassed me from my youth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יֹאמַר</div><div class="tr">yo-<b>MAR</b></div><div class="fr">let him say</div></div>
+      <div class="word"><div class="he">נָא</div><div class="tr">na</div><div class="fr">now</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+    </div>
+    <div class="stich-translation">let Israel now say,</div>
+  </div>
+
+  <div class="verse-summary">The line is given here and again in verse 2, with the instruction to repeat it placed between the two. The psalm builds its own call and response into itself instead of leaving it to the room.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">רַבַּת צְרָרוּנִי מִנְּעוּרָי<br>
+  גַּם לֹא יָכְלוּ לִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבַּת</div><div class="tr">ra-<b>BAT</b></div><div class="fr">much</div></div>
+      <div class="word"><div class="he">צְרָרוּנִי</div><div class="tr">tze-ra-ru-<b>NI</b></div><div class="fr">they have harassed me</div></div>
+      <div class="word"><div class="he">מִנְּעוּרָי</div><div class="tr">min-u-<b>RAI</b></div><div class="fr">from my youth</div></div>
+    </div>
+    <div class="stich-translation">Much have they harassed me from my youth,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גַּם</div><div class="tr">gam</div><div class="fr">yet</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יָכְלוּ</div><div class="tr">yach-<b>LU</b></div><div class="fr">they have prevailed</div></div>
+      <div class="word"><div class="he">לִי</div><div class="tr">li</div><div class="fr">against me</div></div>
+    </div>
+    <div class="stich-translation">yet they have not overcome me.</div>
+  </div>
+
+  <div class="verse-summary">The repetition arrives with a correction attached. Everything before the word yet is the enemy's version of the story, and the four words after it are the psalm's answer to it.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">עַל גַּבִּי חָרְשׁוּ חֹרְשִׁים<br>
+  הֶאֱרִיכוּ לְמַעֲנִיתָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">גַּבִּי</div><div class="tr">ga-<b>BI</b></div><div class="fr">my back</div></div>
+      <div class="word"><div class="he">חָרְשׁוּ</div><div class="tr">char-<b>SHU</b></div><div class="fr">plowed</div></div>
+      <div class="word"><div class="he">חֹרְשִׁים</div><div class="tr">chor-<b>SHIM</b></div><div class="fr">plowmen</div></div>
+    </div>
+    <div class="stich-translation">Plowmen plowed across my back;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֶאֱרִיכוּ</div><div class="tr">he-e-ri-<b>CHU</b></div><div class="fr">they made long</div></div>
+      <div class="word"><div class="he">לְמַעֲנִיתָם</div><div class="tr">le-ma-a-ni-<b>TAM</b></div><div class="fr">their furrow</div></div>
+    </div>
+    <div class="stich-translation">they drew their furrow long.</div>
+  </div>
+
+  <div class="verse-summary">The image is farming and the enemy is the farmer. The back is a field, the furrows are the wounds, and the length of the furrow is offered as the measure of how long it went on.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">יְהֹוָה צַדִּיק<br>
+  קִצֵּץ עֲבוֹת רְשָׁעִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">צַדִּיק</div><div class="tr">tza-<b>DIK</b></div><div class="fr">is righteous</div></div>
+    </div>
+    <div class="stich-translation">The LORD is righteous;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קִצֵּץ</div><div class="tr">ki-<b>TZETZ</b></div><div class="fr">He has cut</div></div>
+      <div class="word"><div class="he">עֲבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">the ropes of</div></div>
+      <div class="word"><div class="he">רְשָׁעִים</div><div class="tr">re-sha-<b>IM</b></div><div class="fr">the wicked</div></div>
+    </div>
+    <div class="stich-translation">He has cut the ropes of the wicked.</div>
+  </div>
+
+  <div class="verse-summary">The turn, and it is one word wide: righteous. No rescue is narrated, only the cutting of the ropes, which in the plowing picture of verse 3 are what tie the animal to the blade.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">יֵבֹשׁוּ וְיִסֹּגוּ אָחוֹר<br>
+  כֹּל שֹׂנְאֵי צִיּוֹן</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יֵבֹשׁוּ</div><div class="tr">ye-vo-<b>SHU</b></div><div class="fr">let them be ashamed</div></div>
+      <div class="word"><div class="he">וְיִסֹּגוּ</div><div class="tr">ve-yi-so-<b>GU</b></div><div class="fr">and let them fall back</div></div>
+      <div class="word"><div class="he">אָחוֹר</div><div class="tr">a-<b>CHOR</b></div><div class="fr">backward</div></div>
+    </div>
+    <div class="stich-translation">Let them be shamed and driven back,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֹּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">שֹׂנְאֵי</div><div class="tr">son-<b>EI</b></div><div class="fr">those who hate</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">all who hate Zion.</div>
+  </div>
+
+  <div class="verse-summary">The second half opens. The verbs change to wishes and the enemy is named for the first time, no longer an unspecified they but people defined by what they hate.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">יִהְיוּ כַּחֲצִיר גַּגּוֹת<br>
+  שֶׁקַּדְמַת שָׁלַף יָבֵשׁ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִהְיוּ</div><div class="tr">yih-<b>U</b></div><div class="fr">let them be</div></div>
+      <div class="word"><div class="he">כַּחֲצִיר</div><div class="tr">ka-cha-<b>TZIR</b></div><div class="fr">like grass of</div></div>
+      <div class="word"><div class="he">גַּגּוֹת</div><div class="tr">ga-<b>GOT</b></div><div class="fr">rooftops</div></div>
+    </div>
+    <div class="stich-translation">Let them be like grass on rooftops,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁקַּדְמַת</div><div class="tr">she-kad-<b>MAT</b></div><div class="fr">which before</div></div>
+      <div class="word"><div class="he">שָׁלַף</div><div class="tr">sha-<b>LAF</b></div><div class="fr">it is drawn out</div></div>
+      <div class="word"><div class="he">יָבֵשׁ</div><div class="tr">ya-<b>VESH</b></div><div class="fr">has withered</div></div>
+    </div>
+    <div class="stich-translation">which dries up before it is drawn out.</div>
+  </div>
+
+  <div class="verse-summary">Grass rooting in the dirt that gathers on a flat mud roof, with nothing underneath it to hold water. The last three words are hard and their exact sense is disputed.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">שֶׁלֹּא מִלֵּא כַפּוֹ קוֹצֵר<br>
+  וְחִצְנוֹ מְעַמֵּר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁלֹּא</div><div class="tr">she-<b>LO</b></div><div class="fr">with which not</div></div>
+      <div class="word"><div class="he">מִלֵּא</div><div class="tr">mi-<b>LE</b></div><div class="fr">has filled</div></div>
+      <div class="word"><div class="he">כַפּוֹ</div><div class="tr">cha-<b>PO</b></div><div class="fr">his palm</div></div>
+      <div class="word"><div class="he">קוֹצֵר</div><div class="tr">ko-<b>TZER</b></div><div class="fr">a reaper</div></div>
+    </div>
+    <div class="stich-translation">with which no reaper fills his hand,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְחִצְנוֹ</div><div class="tr">ve-chitz-<b>NO</b></div><div class="fr">nor his lap</div></div>
+      <div class="word"><div class="he">מְעַמֵּר</div><div class="tr">me-a-<b>MER</b></div><div class="fr">one binding sheaves</div></div>
+    </div>
+    <div class="stich-translation">nor a binder of sheaves his lap.</div>
+  </div>
+
+  <div class="verse-summary">The failed harvest is measured by two empty containers, the reaper's fist and the fold of the binder's garment. Nothing is destroyed here; there is simply nothing to pick up.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">וְלֹא אָמְרוּ הָעֹבְרִים<br>
+  בִּרְכַּת יְהֹוָה אֲלֵיכֶם<br>
+  בֵּרַכְנוּ אֶתְכֶם בְּשֵׁם יְהֹוָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">אָמְרוּ</div><div class="tr">am-<b>RU</b></div><div class="fr">have said</div></div>
+      <div class="word"><div class="he">הָעֹבְרִים</div><div class="tr">ha-ov-<b>RIM</b></div><div class="fr">the passers by</div></div>
+    </div>
+    <div class="stich-translation">and the passers by have never said:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בִּרְכַּת</div><div class="tr">bir-<b>KAT</b></div><div class="fr">the blessing of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">אֲלֵיכֶם</div><div class="tr">a-<b>LEI</b>-chem</div><div class="fr">be upon you</div></div>
+    </div>
+    <div class="stich-translation">the blessing of the LORD be upon you;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֵּרַכְנוּ</div><div class="tr">be-rach-<b>NU</b></div><div class="fr">we bless</div></div>
+      <div class="word"><div class="he">אֶתְכֶם</div><div class="tr"><b>ET</b>-chem</div><div class="fr">you</div></div>
+      <div class="word"><div class="he">בְּשֵׁם</div><div class="tr">be-<b>SHEM</b></div><div class="fr">in the name of</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">we bless you in the name of the LORD.</div>
+  </div>
+
+  <div class="verse-summary">The greeting that belongs to a field at harvest time is quoted whole and then denied. The psalm closes on the name of the LORD twice over, inside a sentence about words nobody says.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two halves, joined at verse 4. The first half is testimony: a long persecution stated twice, an image of it as plowing, and then one flat sentence about God that ends it. The second half is a request, and it is made entirely out of farming that fails. Grass on a roof cannot root, so it dies standing; there is nothing for a reaper to grip; and because there is no harvest, the greeting people call across a field never gets called. The chain is tight. Verse 4 cuts the ropes of the plow, verses 6 to 8 remove the crop, so the enemy loses first the tool and then the yield. Note that <strong>צְרָרוּנִי</strong> (tze-ra-ru-ni, v.1) and the same word in verse 2 mean harassed or hemmed in rather than defeated: the psalm never claims the persecution failed to hurt.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p><strong>רַבַּת</strong> (ra-bat, v.1) is a feminine form used adverbially, much or greatly, and it is the first word of the quotation both times. The verb after it is from the root tzade resh resh, whose other outputs are narrowness and distress, so being harassed and being squeezed into a tight place are one word in Hebrew. <strong>לְמַעֲנִיתָם</strong> (le-ma-a-ni-tam, v.3) is a rare noun for the strip a plow cuts in one pass, which is why the boast about length works. <strong>שֶׁקַּדְמַת</strong> (she-kad-mat, v.6) and <strong>שָׁלַף</strong> (sha-laf, v.6) are the hard place: the first is a construct form meaning before or prior to, the second a perfect verb usually taken as drawn out or plucked, and the resulting clause has been read as withers before it is pulled and as withers before it shoots up. Both are current and the difference matters, because one has the grass die after it grows and the other has it die first. <strong>וְחִצְנוֹ</strong> (ve-chitz-no, v.7) is the fold of a garment used as a carrying pouch.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>From my youth has been read as national rather than personal: not one man's childhood but Israel's, which puts Egypt at the start of the list. The instruction in <strong>יֹאמַר</strong> (yo-mar, v.1) <strong>נָא</strong> (na, v.1) <strong>יִשְׂרָאֵל</strong> (yis-ra-el, v.1), let Israel now say, uses the same three words that open the responses in Psalm 118, so the line is built for a crowd to repeat and the psalm expects to be said aloud by more than one person. The greeting of verse 8 is not invented for the curse; the book of Ruth records exactly that exchange between a landowner and his reapers in a barley field, which is how we know it was ordinary speech. Withholding it is therefore not a curse in words but the removal of an occasion for words, and that is the psalm's harshest move: the wicked are not cursed, they are left out of a conversation.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>Read for depth rather than for events, the psalm is about rooting. The speaker has been cut at from youth and is still standing, which means the roots go under the damage; the enemy is asked to become the opposite, growth with no soil under it, tall for a morning and dry by noon. The ropes of <strong>עֲבוֹת</strong> (a-vot, v.4) are read as the bindings that hold a person to a work not their own, and the one act attributed to God in the whole psalm is cutting them, not lifting the plowman off the field. Verse 8 then closes the circle: a blessing said in the name has to pass through someone, and where there is no harvest there is no one to pass it through. The last two words of the psalm are the name, and they are on the wrong side of a negative, which is a way of ending on it without granting it.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-129-en',
+  key: 'Am',
+  tempo: 72,
+  progression: '| Dm Am | Bb F | Gm A | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

@@ -15,7 +15,7 @@
  *
  * Usage: node tools/tehilim-validate.mjs 23 [24 25 ...]     (or --all)
  */
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -64,6 +64,24 @@ export function validatePsalm(n) {
     });
   }
 
+  // 2b. {{verse.word}} references must point at a word that exists. A bad index
+  // throws at build time, long after the author has gone; several authors wrote
+  // their own throwaway script to check this, which is the sign it belongs here.
+  (function scanRefs(node, path) {
+    if (typeof node === 'string') {
+      for (const m of node.matchAll(/\{\{(\d+)\.(\d+)\}\}/g)) {
+        const verse = data.verses.find(v => v.n === Number(m[1]));
+        if (!verse) { errs.push(`psalm ${n}: ${m[0]} at ${path} names verse ${m[1]}, which the psalm does not have`); continue; }
+        if (!verse.words[Number(m[2])]) {
+          errs.push(`psalm ${n}: ${m[0]} at ${path} wants word ${m[2]} of verse ${m[1]}, which has ${verse.words.length}`);
+        }
+      }
+      return;
+    }
+    if (Array.isArray(node)) return node.forEach((v, i) => scanRefs(v, `${path}[${i}]`));
+    if (node && typeof node === 'object') return Object.entries(node).forEach(([k, v]) => scanRefs(v, `${path}.${k}`));
+  })(content, 'content');
+
   // 3. verses
   if (!Array.isArray(content.verses)) return errs.concat(`psalm ${n}: no verses array`);
   if (content.verses.length !== data.verses.length) {
@@ -111,7 +129,19 @@ export function validatePsalm(n) {
 }
 
 // -------------------------------------------------------------- cli
-const args = process.argv.slice(2);
+/* Only when run directly. tehilim-build.mjs imports validatePsalm, and without
+   this guard the import re-ran this CLI against the build's own argv: harmless
+   with psalm numbers, but `--self-test` produced a bare "0/0 valid", which reads
+   like a validation result and is not one. */
+/* Compared through realpathSync, not as strings: C:\dev is a junction onto
+   D:\dev on this machine, so import.meta.url resolves to D: while argv[1] keeps
+   the C: the user typed, and the two are never equal however the path is
+   normalised. The first version of this guard silenced the CLI completely. */
+const isMain = (() => {
+  try { return realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1] || ''); }
+  catch { return false; }
+})();
+const args = isMain ? process.argv.slice(2) : [];
 if (args.length) {
   let list = args.filter(a => /^\d+$/.test(a)).map(Number);
   if (args.includes('--all')) {

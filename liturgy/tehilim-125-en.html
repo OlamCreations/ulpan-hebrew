@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 125: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 125: Those who trust are like Mount Zion</h1>
+    <div class="subtitle">תְּהִלִּים קכ״ה · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 125</a></div>
+</header>
+
+<div class="t-intro">
+  Five verses in the middle of the Songs of Ascents, and unlike Psalm 120 this one has arrived: the first two verses stand in the hills around Jerusalem and look at how the city is held. The psalm names no person. Everyone in it is a participle or an adjective, those who trust, the righteous, the good, the upright, those who bend aside, those who do wrong, so the whole argument is about kinds of people rather than about anybody in particular. Verse 3 is the hinge and the surprising part: the reason given for limiting how long oppression may last is not the suffering it causes but what it would do to the people under it.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  הַבֹּטְחִים בַּיהֹוָה כְּהַר צִיּוֹן<br>
+  לֹא יִמּוֹט לְעוֹלָם יֵשֵׁב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of the ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הַבֹּטְחִים</div><div class="tr">ha-bot-<b>CHIM</b></div><div class="fr">those who trust</div></div>
+      <div class="word"><div class="he">בַּיהֹוָה</div><div class="tr">bai-ho-<b>VA</b></div><div class="fr">in the LORD</div></div>
+      <div class="word"><div class="he">כְּהַר</div><div class="tr">ke-<b>HAR</b></div><div class="fr">like the mountain of</div></div>
+      <div class="word"><div class="he">צִיּוֹן</div><div class="tr">tzi-<b>YON</b></div><div class="fr">Zion</div></div>
+    </div>
+    <div class="stich-translation">Those who trust in the LORD are like Mount Zion:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יִמּוֹט</div><div class="tr">yi-<b>MOT</b></div><div class="fr">it is shaken</div></div>
+      <div class="word"><div class="he">לְעוֹלָם</div><div class="tr">le-o-<b>LAM</b></div><div class="fr">forever</div></div>
+      <div class="word"><div class="he">יֵשֵׁב</div><div class="tr">ye-<b>SHEV</b></div><div class="fr">it sits</div></div>
+    </div>
+    <div class="stich-translation">it is not shaken, it sits forever.</div>
+  </div>
+
+  <div class="verse-summary">The comparison is to a mountain, and the two verbs that follow it are unremarkable ones: it is not moved, it sits. The claim is stability rather than height, which matters because Zion is not the highest ground in view.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">יְרוּשָׁלַ͏ִם הָרִים סָבִיב לָהּ<br>
+  וַיהֹוָה סָבִיב לְעַמּוֹ<br>
+  מֵעַתָּה וְעַד עוֹלָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְרוּשָׁלַ͏ִם</div><div class="tr">ye-ru-sha-<b>LA͏m</b></div><div class="fr">Jerusalem</div></div>
+      <div class="word"><div class="he">הָרִים</div><div class="tr">ha-<b>RIM</b></div><div class="fr">mountains</div></div>
+      <div class="word"><div class="he">סָבִיב</div><div class="tr">sa-<b>VIV</b></div><div class="fr">are round about</div></div>
+      <div class="word"><div class="he">לָהּ</div><div class="tr">lah</div><div class="fr">her</div></div>
+    </div>
+    <div class="stich-translation">Jerusalem, mountains are around her,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַיהֹוָה</div><div class="tr">vai-ho-<b>VA</b></div><div class="fr">and the LORD</div></div>
+      <div class="word"><div class="he">סָבִיב</div><div class="tr">sa-<b>VIV</b></div><div class="fr">is round about</div></div>
+      <div class="word"><div class="he">לְעַמּוֹ</div><div class="tr">le-a-<b>MO</b></div><div class="fr">His people</div></div>
+    </div>
+    <div class="stich-translation">and the LORD is around His people,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מֵעַתָּה</div><div class="tr">me-a-<b>TA</b></div><div class="fr">from now</div></div>
+      <div class="word"><div class="he">וְעַד</div><div class="tr">ve-<b>AD</b></div><div class="fr">and until</div></div>
+      <div class="word"><div class="he">עוֹלָם</div><div class="tr">o-<b>LAM</b></div><div class="fr">forever</div></div>
+    </div>
+    <div class="stich-translation">from now and for all time.</div>
+  </div>
+
+  <div class="verse-summary">One word does the work twice, around, first of the hills and then of God, so the second line is the first line with the terms swapped. Neither half has a verb in Hebrew, which leaves the arrangement standing rather than happening.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">כִּי לֹא יָנוּחַ שֵׁבֶט הָרֶשַׁע<br>
+  עַל גּוֹרַל הַצַּדִּיקִים<br>
+  לְמַעַן לֹא יִשְׁלְחוּ הַצַּדִּיקִים בְּעַוְלָתָה יְדֵיהֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יָנוּחַ</div><div class="tr">ya-<b>NU</b>-ach</div><div class="fr">shall rest</div></div>
+      <div class="word"><div class="he">שֵׁבֶט</div><div class="tr"><b>SHE</b>-vet</div><div class="fr">the rod of</div></div>
+      <div class="word"><div class="he">הָרֶשַׁע</div><div class="tr">ha-<b>RE</b>-sha</div><div class="fr">the wickedness</div></div>
+    </div>
+    <div class="stich-translation">For the sceptre of wickedness shall not rest</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">גּוֹרַל</div><div class="tr">go-<b>RAL</b></div><div class="fr">the allotment of</div></div>
+      <div class="word"><div class="he">הַצַּדִּיקִים</div><div class="tr">ha-tza-di-<b>KIM</b></div><div class="fr">the righteous</div></div>
+    </div>
+    <div class="stich-translation">on the allotted land of the righteous,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמַעַן</div><div class="tr">le-ma-<b>AN</b></div><div class="fr">so that</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יִשְׁלְחוּ</div><div class="tr">yish-le-<b>CHU</b></div><div class="fr">they put forth</div></div>
+      <div class="word"><div class="he">הַצַּדִּיקִים</div><div class="tr">ha-tza-di-<b>KIM</b></div><div class="fr">the righteous</div></div>
+      <div class="word"><div class="he">בְּעַוְלָתָה</div><div class="tr">be-av-la-<b>TA</b></div><div class="fr">to wrongdoing</div></div>
+      <div class="word"><div class="he">יְדֵיהֶם</div><div class="tr">ye-<b>DEI</b>-hem</div><div class="fr">their hands</div></div>
+    </div>
+    <div class="stich-translation">so that the righteous do not put out their hands to wrongdoing.</div>
+  </div>
+
+  <div class="verse-summary">The verse concedes that the rod is there, and only denies that it will settle. The purpose clause is the point: prolonged pressure is treated as a thing that would eventually turn honest hands, and the limit exists to prevent that.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">הֵיטִיבָה יְהֹוָה לַטּוֹבִים<br>
+  וְלִישָׁרִים בְּלִבּוֹתָם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הֵיטִיבָה</div><div class="tr">hei-ti-<b>VA</b></div><div class="fr">do good</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לַטּוֹבִים</div><div class="tr">la-to-<b>VIM</b></div><div class="fr">to the good</div></div>
+    </div>
+    <div class="stich-translation">Do good, LORD, to the good,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְלִישָׁרִים</div><div class="tr">ve-li-sha-<b>RIM</b></div><div class="fr">and to the upright</div></div>
+      <div class="word"><div class="he">בְּלִבּוֹתָם</div><div class="tr">bli-bo-<b>TAM</b></div><div class="fr">in their hearts</div></div>
+    </div>
+    <div class="stich-translation">and to those upright in their hearts.</div>
+  </div>
+
+  <div class="verse-summary">The first request in the psalm, and it comes after the description rather than before it. The verb and its object are the same root, do good to the good, which in Hebrew reads as a claim about fitness rather than as a pun.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">וְהַמַּטִּים עֲקַלְקַלּוֹתָם יוֹלִיכֵם יְהֹוָה<br>
+  אֶת פֹּעֲלֵי הָאָוֶן<br>
+  שָׁלוֹם עַל יִשְׂרָאֵל</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְהַמַּטִּים</div><div class="tr">ve-ha-ma-<b>TIM</b></div><div class="fr">but those who turn aside to</div></div>
+      <div class="word"><div class="he">עֲקַלְקַלּוֹתָם</div><div class="tr">a-kal-ka-lo-<b>TAM</b></div><div class="fr">their crooked ways</div></div>
+      <div class="word"><div class="he">יוֹלִיכֵם</div><div class="tr">yo-li-<b>CHEM</b></div><div class="fr">may He lead them off</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+    </div>
+    <div class="stich-translation">But those who bend off into their twisted ways, may the LORD march them away</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">together with</div></div>
+      <div class="word"><div class="he">פֹּעֲלֵי</div><div class="tr">po-a-<b>LEI</b></div><div class="fr">the workers of</div></div>
+      <div class="word"><div class="he">הָאָוֶן</div><div class="tr">ha-<b>A</b>-ven</div><div class="fr">iniquity</div></div>
+    </div>
+    <div class="stich-translation">with the workers of wrong.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁלוֹם</div><div class="tr">sha-<b>LOM</b></div><div class="fr">peace</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+    </div>
+    <div class="stich-translation">Peace upon Israel.</div>
+  </div>
+
+  <div class="verse-summary">The last three words are not attached to the sentence before them by anything, and they introduce a word the psalm has not used until now. After four verses of sorting people into two groups, it ends by saying one thing over all of them.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two verses of description, one of limit, two of prayer. The description works by a single image held from two sides: those who trust are like the mountain, and the mountain is itself ringed by mountains, so the psalm gets from geology to protection without arguing for it. Verse 3 then admits what the first two verses seemed to deny, that a rod of wickedness can lie on the land of the righteous, and restricts only its duration. Verses 4 and 5 turn the description into two requests pointing opposite ways, and the final phrase steps outside both.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p><strong>יִמּוֹט</strong> (yi-mot, v.1) and the corresponding word in Psalm 93 verse 1 are the same verb, not be shaken, said there of the world and here of the person who trusts, which is the whole comparison in one root. <strong>שֵׁבֶט</strong> (she-vet, v.3) is the ordinary word for a rod or a sceptre, and also the word for a tribe, so it carries both the beating and the authority that permits it. <strong>גּוֹרַל</strong> (go-ral, v.3) is the lot, the word for land assigned by casting lots, so what the rod rests on is not property but an allotment, something received rather than earned. <strong>עֲקַלְקַלּוֹתָם</strong> (a-kal-ka-lo-tam, v.5) occurs nowhere else in the book: a reduplicated form of the root for crooked, so the ways are not merely bent but bent and bent again. <strong>אֶת</strong> (et, v.5) is disputed. Read as the object marker it makes the crooked ones and the workers of wrong one group; read as the preposition with, which is how most translations take it here, it makes them two groups sent off together.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The reasoning of verse 3 is the part that gets discussed, because it does not say oppression will end for the sake of the oppressed. It says it will end so that the righteous do not stretch out their hands to wrongdoing, which treats sustained injustice as corrosive to the people enduring it, and reads the limit as protection of their integrity rather than of their comfort. The final phrase has been read two ways that both survive in use: as a blessing pronounced over the whole people once the sorting of verses 4 and 5 is done, and as a liturgical closing that turns a psalm about two classes into a prayer for one nation. The same three words end Psalm 128, and those two verses are the only places in the book where they appear.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The mystical reading takes the two circles of verse 2 as one figure drawn twice. The hills around Jerusalem are visible and fixed, and the surrounding named in the second half is neither, so the verse teaches how to read the invisible from the visible rather than instead of it. Trust in <strong>הַבֹּטְחִים</strong> (ha-bot-chim, v.1) is a participle, a continuous action and not a decision made once, which is why the psalm can compare a person to a mountain without claiming that the person is strong. On this reading verse 3 describes a limit built into the structure itself: the rod may pass over the allotment but cannot take up residence on it, because what is allotted was never the rod's to hold.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-125-en',
+  key: 'Am',
+  tempo: 66,
+  progression: '| G Em | C D | G Em | C G |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

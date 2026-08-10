@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehilim 132: שִׁיר הַמַּעֲלוֹת</title>
+<!-- These pages do not load app.js, which is what injects the icon everywhere else, so
+     without this line their browser tab is blank and they ask for a /favicon.ico that
+     does not exist. Declared here rather than adding app.js: nothing else in it is used. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<style>
+/* Only what this page does differently. The rest is in assets/liturgy.css. */
+.verses-grid {
+    column-count: 3;
+    column-gap: 10px;
+    direction: rtl;        /* columns flow right-to-left: verset 1 top-right */
+  }
+/* moved to global PARDES card */
+  .verses-grid .verse {
+    position: relative;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 8px 12px 6px;
+    margin-bottom: 2px;     /* tight card stacking */
+    border-radius: 4px;
+  }
+/* Verse number: tiny absolute marker in top-left corner, zero vertical impact */
+  .verses-grid .verse-num {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    color: var(--text-faint);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+.verses-grid .word .he {
+    font-size: 20px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+@media (max-width: 1100px) {
+    .verses-grid { column-count: 2; }
+  }
+@media (max-width: 700px) {
+    .verses-grid { column-count: 1; }
+  }
+</style>
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Tehilim 132: LORD, remember David</h1>
+    <div class="subtitle">תְּהִלִּים קל״ב · שִׁיר הַמַּעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ps 132</a></div>
+</header>
+
+<div class="t-intro">
+  Eighteen verses, the longest of the fifteen Songs of Ascents, and the only one built on two oaths that answer each other. In the first half a man swears he will not sleep until he has found God a place; in the second half God swears back, to David, about a throne. Verses 8 to 10 turn up almost word for word at the close of Solomon's dedication prayer in 2 Chronicles 6, which is the clearest sign of where the psalm belonged. Watch the verb for clothing: it is asked for in verse 9, granted in a changed form in verse 16, and turned against the enemies in verse 18.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display">| <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Am">Am</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Em">Em</span> | <span class="chord" data-chord="Am">Am</span>  <span class="chord" data-chord="Dm">Dm</span> | <span class="chord" data-chord="Em">Em</span>  <span class="chord" data-chord="Am">Am</span> |</div>
+  <div class="meta-line">~70 BPM · 4/4 · gentle thumb-index-middle arpeggio · one bar per stich, two bars per verse · to reset the progression: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid">
+<!-- VERSE 1 -->
+<div class="verse">
+  <span class="verse-num">1</span>
+  <div class="verse-full">שִׁיר הַמַּעֲלוֹת<br>
+  זְכוֹר יְהֹוָה לְדָוִד אֵת כׇּל עֻנּוֹתוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">a song of</div></div>
+      <div class="word"><div class="he">הַמַּעֲלוֹת</div><div class="tr">ha-ma-a-<b>LOT</b></div><div class="fr">the ascents</div></div>
+    </div>
+    <div class="stich-translation">A song of ascents.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זְכוֹר</div><div class="tr">ze-<b>CHOR</b></div><div class="fr">remember</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">for David</div></div>
+      <div class="word"><div class="he">אֵת</div><div class="tr">et</div><div class="fr">the object marker</div></div>
+      <div class="word"><div class="he">כׇּל</div><div class="tr">kol</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">עֻנּוֹתוֹ</div><div class="tr">u-no-<b>TO</b></div><div class="fr">his affliction</div></div>
+    </div>
+    <div class="stich-translation">LORD, remember for David all his affliction,</div>
+  </div>
+
+  <div class="verse-summary">The psalm opens by asking God to remember, and what is to be remembered is not David's merit but his hardship. The request is filed before any argument for it is made.</div>
+</div>
+
+<!-- VERSE 2 -->
+<div class="verse">
+  <span class="verse-num">2</span>
+  <div class="verse-full">אֲשֶׁר נִשְׁבַּע לַיהֹוָה נָדַר<br>
+  לַאֲבִיר יַעֲקֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲשֶׁר</div><div class="tr"><b>A</b>-sher</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">נִשְׁבַּע</div><div class="tr"><b>NISH</b>-ba</div><div class="fr">he swore</div></div>
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">lai-ho-<b>VA</b></div><div class="fr">to the LORD</div></div>
+      <div class="word"><div class="he">נָדַר</div><div class="tr">na-<b>DAR</b></div><div class="fr">he vowed</div></div>
+    </div>
+    <div class="stich-translation">how he swore to the LORD, vowed</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַאֲבִיר</div><div class="tr">la-a-<b>VIR</b></div><div class="fr">to the Mighty One of</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+    </div>
+    <div class="stich-translation">to the Mighty One of Jacob:</div>
+  </div>
+
+  <div class="verse-summary">The content of the memory is an oath. This verb returns in verse 11 with the parties reversed, and that reversal is what joins the two halves of the psalm.</div>
+</div>
+
+<!-- VERSE 3 -->
+<div class="verse">
+  <span class="verse-num">3</span>
+  <div class="verse-full">אִם אָבֹא בְּאֹהֶל בֵּיתִי<br>
+  אִם אֶעֱלֶה עַל עֶרֶשׂ יְצוּעָי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">אָבֹא</div><div class="tr">a-<b>VO</b></div><div class="fr">I come</div></div>
+      <div class="word"><div class="he">בְּאֹהֶל</div><div class="tr">be-<b>O</b>-hel</div><div class="fr">into the tent of</div></div>
+      <div class="word"><div class="he">בֵּיתִי</div><div class="tr">bei-<b>TI</b></div><div class="fr">my house</div></div>
+    </div>
+    <div class="stich-translation">I will not come into the tent of my house,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">אֶעֱלֶה</div><div class="tr">e-e-<b>LE</b></div><div class="fr">I go up</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">עֶרֶשׂ</div><div class="tr"><b>E</b>-res</div><div class="fr">the couch of</div></div>
+      <div class="word"><div class="he">יְצוּעָי</div><div class="tr">ye-tzu-<b>AI</b></div><div class="fr">my bedding</div></div>
+    </div>
+    <div class="stich-translation">I will not go up onto the couch of my bed,</div>
+  </div>
+
+  <div class="verse-summary">Hebrew oaths are stated as half a sentence. The word opening each line means if, and the curse that would complete it is left unsaid, so the effect in English is a flat refusal.</div>
+</div>
+
+<!-- VERSE 4 -->
+<div class="verse">
+  <span class="verse-num">4</span>
+  <div class="verse-full">אִם אֶתֵּן שְׁנַת לְעֵינָי<br>
+  לְעַפְעַפַּי תְּנוּמָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">אֶתֵּן</div><div class="tr">e-<b>TEN</b></div><div class="fr">I give</div></div>
+      <div class="word"><div class="he">שְׁנַת</div><div class="tr">shnat</div><div class="fr">sleep</div></div>
+      <div class="word"><div class="he">לְעֵינָי</div><div class="tr">le-ei-<b>NAI</b></div><div class="fr">to my eyes</div></div>
+    </div>
+    <div class="stich-translation">I will not give sleep to my eyes,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְעַפְעַפַּי</div><div class="tr">le-af-a-<b>PAI</b></div><div class="fr">to my eyelids</div></div>
+      <div class="word"><div class="he">תְּנוּמָה</div><div class="tr">te-nu-<b>MA</b></div><div class="fr">slumber</div></div>
+    </div>
+    <div class="stich-translation">slumber to my eyelids,</div>
+  </div>
+
+  <div class="verse-summary">Sleep and slumber, eyes and eyelids: the second line narrows the first. The self denial is total but domestic, a man refusing his own bed rather than performing a feat.</div>
+</div>
+
+<!-- VERSE 5 -->
+<div class="verse">
+  <span class="verse-num">5</span>
+  <div class="verse-full">עַד אֶמְצָא מָקוֹם לַיהֹוָה<br>
+  מִשְׁכָּנוֹת לַאֲבִיר יַעֲקֹב</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">until</div></div>
+      <div class="word"><div class="he">אֶמְצָא</div><div class="tr">em-<b>TZA</b></div><div class="fr">I find</div></div>
+      <div class="word"><div class="he">מָקוֹם</div><div class="tr">ma-<b>KOM</b></div><div class="fr">a place</div></div>
+      <div class="word"><div class="he">לַיהֹוָה</div><div class="tr">lai-ho-<b>VA</b></div><div class="fr">for the LORD</div></div>
+    </div>
+    <div class="stich-translation">until I find a place for the LORD,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִשְׁכָּנוֹת</div><div class="tr">mish-ka-<b>NOT</b></div><div class="fr">dwelling places</div></div>
+      <div class="word"><div class="he">לַאֲבִיר</div><div class="tr">la-a-<b>VIR</b></div><div class="fr">for the Mighty One of</div></div>
+      <div class="word"><div class="he">יַעֲקֹב</div><div class="tr">ya-a-<b>KOV</b></div><div class="fr">Jacob</div></div>
+    </div>
+    <div class="stich-translation">dwellings for the Mighty One of Jacob.</div>
+  </div>
+
+  <div class="verse-summary">The point of the sleeplessness. A place for God is the object of the whole vow, and the wording keeps both the ark and the city unnamed.</div>
+</div>
+
+<!-- VERSE 6 -->
+<div class="verse">
+  <span class="verse-num">6</span>
+  <div class="verse-full">הִנֵּה שְׁמַעֲנוּהָ בְאֶפְרָתָה<br>
+  מְצָאנוּהָ בִּשְׂדֵי יָעַר</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">הִנֵּה</div><div class="tr">hi-<b>NE</b></div><div class="fr">behold</div></div>
+      <div class="word"><div class="he">שְׁמַעֲנוּהָ</div><div class="tr">shma-a-nu-<b>A</b></div><div class="fr">we heard of it</div></div>
+      <div class="word"><div class="he">בְאֶפְרָתָה</div><div class="tr">ve-ef-ra-<b>TA</b></div><div class="fr">in Ephrathah</div></div>
+    </div>
+    <div class="stich-translation">Look, we heard of it in Ephrathah;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מְצָאנוּהָ</div><div class="tr">me-tza-nu-<b>A</b></div><div class="fr">we found it</div></div>
+      <div class="word"><div class="he">בִּשְׂדֵי</div><div class="tr">bis-<b>DEI</b></div><div class="fr">in the fields of</div></div>
+      <div class="word"><div class="he">יָעַר</div><div class="tr">ya-<b>AR</b></div><div class="fr">forest</div></div>
+    </div>
+    <div class="stich-translation">we found it in the fields of the forest.</div>
+  </div>
+
+  <div class="verse-summary">The voice turns plural and becomes a search party. Two place names, both of them contested, mark where the thing was heard of and where it was found.</div>
+</div>
+
+<!-- VERSE 7 -->
+<div class="verse">
+  <span class="verse-num">7</span>
+  <div class="verse-full">נָבוֹאָה לְמִשְׁכְּנוֹתָיו<br>
+  נִשְׁתַּחֲוֶה לַהֲדֹם רַגְלָיו</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נָבוֹאָה</div><div class="tr">na-vo-<b>A</b></div><div class="fr">let us come</div></div>
+      <div class="word"><div class="he">לְמִשְׁכְּנוֹתָיו</div><div class="tr">le-mish-kno-<b>TAV</b></div><div class="fr">to His dwelling places</div></div>
+    </div>
+    <div class="stich-translation">Let us come to His dwellings,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נִשְׁתַּחֲוֶה</div><div class="tr">nish-ta-cha-<b>VE</b></div><div class="fr">let us bow down</div></div>
+      <div class="word"><div class="he">לַהֲדֹם</div><div class="tr">la-ha-<b>DOM</b></div><div class="fr">at the footstool of</div></div>
+      <div class="word"><div class="he">רַגְלָיו</div><div class="tr">rag-<b>LAV</b></div><div class="fr">His feet</div></div>
+    </div>
+    <div class="stich-translation">let us bow down at the footstool of His feet.</div>
+  </div>
+
+  <div class="verse-summary">The procession starts moving. Two cohortative verbs, let us come and let us bow, put the singer inside the crowd rather than in front of it.</div>
+</div>
+
+<!-- VERSE 8 -->
+<div class="verse">
+  <span class="verse-num">8</span>
+  <div class="verse-full">קוּמָה יְהֹוָה לִמְנוּחָתֶךָ<br>
+  אַתָּה וַאֲרוֹן עֻזֶּךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קוּמָה</div><div class="tr">ku-<b>MA</b></div><div class="fr">arise</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לִמְנוּחָתֶךָ</div><div class="tr">lim-nu-cha-te-<b>CHA</b></div><div class="fr">to Your resting place</div></div>
+    </div>
+    <div class="stich-translation">Arise, LORD, to Your resting place,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַתָּה</div><div class="tr">a-<b>TA</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">וַאֲרוֹן</div><div class="tr">va-a-<b>RON</b></div><div class="fr">and the ark of</div></div>
+      <div class="word"><div class="he">עֻזֶּךָ</div><div class="tr">u-ze-<b>CHA</b></div><div class="fr">Your strength</div></div>
+    </div>
+    <div class="stich-translation">You and the ark of Your strength.</div>
+  </div>
+
+  <div class="verse-summary">The line borrows the formula spoken whenever the ark set out in the wilderness, with rest put where travel used to be. The journey is being declared over.</div>
+</div>
+
+<!-- VERSE 9 -->
+<div class="verse">
+  <span class="verse-num">9</span>
+  <div class="verse-full">כֹּהֲנֶיךָ יִלְבְּשׁוּ צֶדֶק<br>
+  וַחֲסִידֶיךָ יְרַנֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כֹּהֲנֶיךָ</div><div class="tr">ko-ha-nei-<b>CHA</b></div><div class="fr">Your priests</div></div>
+      <div class="word"><div class="he">יִלְבְּשׁוּ</div><div class="tr">yil-be-<b>SHU</b></div><div class="fr">let them wear</div></div>
+      <div class="word"><div class="he">צֶדֶק</div><div class="tr"><b>TZE</b>-dek</div><div class="fr">righteousness</div></div>
+    </div>
+    <div class="stich-translation">Let Your priests be clothed in righteousness,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַחֲסִידֶיךָ</div><div class="tr">va-cha-si-dei-<b>CHA</b></div><div class="fr">and Your faithful ones</div></div>
+      <div class="word"><div class="he">יְרַנֵּנוּ</div><div class="tr">ye-ra-ne-<b>NU</b></div><div class="fr">let them shout for joy</div></div>
+    </div>
+    <div class="stich-translation">and let Your faithful ones sing out.</div>
+  </div>
+
+  <div class="verse-summary">The first of the two requests that get answered later. Note exactly what is asked for here, righteousness, and hold it against what arrives in verse 16.</div>
+</div>
+
+<!-- VERSE 10 -->
+<div class="verse">
+  <span class="verse-num">10</span>
+  <div class="verse-full">בַּעֲבוּר דָּוִד עַבְדֶּךָ<br>
+  אַל תָּשֵׁב פְּנֵי מְשִׁיחֶךָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בַּעֲבוּר</div><div class="tr">ba-a-<b>VUR</b></div><div class="fr">for the sake of</div></div>
+      <div class="word"><div class="he">דָּוִד</div><div class="tr">da-<b>VID</b></div><div class="fr">David</div></div>
+      <div class="word"><div class="he">עַבְדֶּךָ</div><div class="tr">av-de-<b>CHA</b></div><div class="fr">Your servant</div></div>
+    </div>
+    <div class="stich-translation">For the sake of David Your servant,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַל</div><div class="tr">al</div><div class="fr">do not</div></div>
+      <div class="word"><div class="he">תָּשֵׁב</div><div class="tr">ta-<b>SHEV</b></div><div class="fr">turn away</div></div>
+      <div class="word"><div class="he">פְּנֵי</div><div class="tr">pnei</div><div class="fr">the face of</div></div>
+      <div class="word"><div class="he">מְשִׁיחֶךָ</div><div class="tr">me-shi-che-<b>CHA</b></div><div class="fr">Your anointed one</div></div>
+    </div>
+    <div class="stich-translation">do not turn away the face of Your anointed.</div>
+  </div>
+
+  <div class="verse-summary">The plea rests entirely on someone else. David is long dead, and the whole argument is that a promise made to him is still owed to whoever sits in his place.</div>
+</div>
+
+<!-- VERSE 11 -->
+<div class="verse">
+  <span class="verse-num">11</span>
+  <div class="verse-full">נִשְׁבַּע יְהֹוָה לְדָוִד אֱמֶת<br>
+  לֹא יָשׁוּב מִמֶּנָּה<br>
+  מִפְּרִי בִטְנְךָ אָשִׁית לְכִסֵּא לָךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נִשְׁבַּע</div><div class="tr"><b>NISH</b>-ba</div><div class="fr">he swore</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">to David</div></div>
+      <div class="word"><div class="he">אֱמֶת</div><div class="tr"><b>E</b>-met</div><div class="fr">truth</div></div>
+    </div>
+    <div class="stich-translation">The LORD swore to David a truth</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יָשׁוּב</div><div class="tr">ya-<b>SHUV</b></div><div class="fr">he will turn back</div></div>
+      <div class="word"><div class="he">מִמֶּנָּה</div><div class="tr">mi-me-<b>NA</b></div><div class="fr">from it</div></div>
+    </div>
+    <div class="stich-translation">from which He will not turn back:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מִפְּרִי</div><div class="tr">mip-<b>RI</b></div><div class="fr">from the fruit of</div></div>
+      <div class="word"><div class="he">בִטְנְךָ</div><div class="tr">vit-ne-<b>CHA</b></div><div class="fr">your body</div></div>
+      <div class="word"><div class="he">אָשִׁית</div><div class="tr">a-<b>SHIT</b></div><div class="fr">I will set</div></div>
+      <div class="word"><div class="he">לְכִסֵּא</div><div class="tr">le-chi-<b>SE</b></div><div class="fr">for the throne</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">for you</div></div>
+    </div>
+    <div class="stich-translation">of the fruit of your body I will set on your throne.</div>
+  </div>
+
+  <div class="verse-summary">The pivot of the psalm. The verb of verse 2 comes back with the parties exchanged: now God is the one swearing, and David is the one sworn to. Everything after this is answer, not request.</div>
+</div>
+
+<!-- VERSE 12 -->
+<div class="verse">
+  <span class="verse-num">12</span>
+  <div class="verse-full">אִם יִשְׁמְרוּ בָנֶיךָ בְּרִיתִי וְעֵדֹתִי זוֹ אֲלַמְּדֵם<br>
+  גַּם בְּנֵיהֶם עֲדֵי עַד יֵשְׁבוּ לְכִסֵּא לָךְ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">יִשְׁמְרוּ</div><div class="tr">yish-<b>MRU</b></div><div class="fr">they keep</div></div>
+      <div class="word"><div class="he">בָנֶיךָ</div><div class="tr">va-nei-<b>CHA</b></div><div class="fr">your sons</div></div>
+      <div class="word"><div class="he">בְּרִיתִי</div><div class="tr">bri-<b>TI</b></div><div class="fr">My covenant</div></div>
+      <div class="word"><div class="he">וְעֵדֹתִי</div><div class="tr">ve-e-do-<b>TI</b></div><div class="fr">and My testimony</div></div>
+      <div class="word"><div class="he">זוֹ</div><div class="tr">zo</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">אֲלַמְּדֵם</div><div class="tr">a-lam-<b>DEM</b></div><div class="fr">I shall teach them</div></div>
+    </div>
+    <div class="stich-translation">If your sons keep My covenant, and this testimony of Mine that I teach them,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">גַּם</div><div class="tr">gam</div><div class="fr">also</div></div>
+      <div class="word"><div class="he">בְּנֵיהֶם</div><div class="tr"><b>BNEI</b>-hem</div><div class="fr">their sons</div></div>
+      <div class="word"><div class="he">עֲדֵי</div><div class="tr">a-<b>DEI</b></div><div class="fr">unto</div></div>
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">perpetuity</div></div>
+      <div class="word"><div class="he">יֵשְׁבוּ</div><div class="tr">yesh-<b>VU</b></div><div class="fr">they shall sit</div></div>
+      <div class="word"><div class="he">לְכִסֵּא</div><div class="tr">le-chi-<b>SE</b></div><div class="fr">for the throne</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">for you</div></div>
+    </div>
+    <div class="stich-translation">their sons too, for ever, shall sit on your throne.</div>
+  </div>
+
+  <div class="verse-summary">A condition attached to an oath that the previous verse called unturnable. Whether the grant is absolute or conditional is read both ways, and the psalm itself does not settle it.</div>
+</div>
+
+<!-- VERSE 13 -->
+<div class="verse">
+  <span class="verse-num">13</span>
+  <div class="verse-full">כִּי בָחַר יְהֹוָה בְּצִיּוֹן<br>
+  אִוָּהּ לְמוֹשָׁב לוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">בָחַר</div><div class="tr">va-<b>CHAR</b></div><div class="fr">has chosen</div></div>
+      <div class="word"><div class="he">יְהֹוָה</div><div class="tr">a-do-<b>NAY</b></div><div class="fr">the LORD</div></div>
+      <div class="word"><div class="he">בְּצִיּוֹן</div><div class="tr">be-tzi-<b>YON</b></div><div class="fr">in Zion</div></div>
+    </div>
+    <div class="stich-translation">For the LORD has chosen Zion;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִוָּהּ</div><div class="tr">i-<b>VAH</b></div><div class="fr">He desired her</div></div>
+      <div class="word"><div class="he">לְמוֹשָׁב</div><div class="tr">le-mo-<b>SHAV</b></div><div class="fr">for a seat</div></div>
+      <div class="word"><div class="he">לוֹ</div><div class="tr">lo</div><div class="fr">for Himself</div></div>
+    </div>
+    <div class="stich-translation">He desired it for His seat.</div>
+  </div>
+
+  <div class="verse-summary">The reason underneath both oaths. Not that David found a place, but that God chose one, and the choosing is stated in the vocabulary of wanting.</div>
+</div>
+
+<!-- VERSE 14 -->
+<div class="verse">
+  <span class="verse-num">14</span>
+  <div class="verse-full">זֹאת מְנוּחָתִי עֲדֵי עַד<br>
+  פֹּה אֵשֵׁב כִּי אִוִּתִיהָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זֹאת</div><div class="tr">zot</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">מְנוּחָתִי</div><div class="tr">me-nu-cha-<b>TI</b></div><div class="fr">My resting place</div></div>
+      <div class="word"><div class="he">עֲדֵי</div><div class="tr">a-<b>DEI</b></div><div class="fr">unto</div></div>
+      <div class="word"><div class="he">עַד</div><div class="tr">ad</div><div class="fr">perpetuity</div></div>
+    </div>
+    <div class="stich-translation">This is My resting place for ever;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פֹּה</div><div class="tr">po</div><div class="fr">here</div></div>
+      <div class="word"><div class="he">אֵשֵׁב</div><div class="tr">e-<b>SHEV</b></div><div class="fr">I will dwell</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אִוִּתִיהָ</div><div class="tr">i-vi-ti-<b>A</b></div><div class="fr">I have desired her</div></div>
+    </div>
+    <div class="stich-translation">here I will dwell, for I have desired it.</div>
+  </div>
+
+  <div class="verse-summary">God speaks in the first person for the first time. The resting place David went out looking for in verse 5 is claimed here, using the same word he used.</div>
+</div>
+
+<!-- VERSE 15 -->
+<div class="verse">
+  <span class="verse-num">15</span>
+  <div class="verse-full">צֵידָהּ בָּרֵךְ אֲבָרֵךְ<br>
+  אֶבְיוֹנֶיהָ אַשְׂבִּיעַ לָחֶם</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">צֵידָהּ</div><div class="tr">tzei-<b>DAH</b></div><div class="fr">her provision</div></div>
+      <div class="word"><div class="he">בָּרֵךְ</div><div class="tr">ba-<b>RECH</b></div><div class="fr">blessing</div></div>
+      <div class="word"><div class="he">אֲבָרֵךְ</div><div class="tr">a-va-<b>RECH</b></div><div class="fr">I will bless</div></div>
+    </div>
+    <div class="stich-translation">I will greatly bless her provision;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶבְיוֹנֶיהָ</div><div class="tr">evi-o-nei-<b>A</b></div><div class="fr">her needy ones</div></div>
+      <div class="word"><div class="he">אַשְׂבִּיעַ</div><div class="tr">as-<b>BI</b>-a</div><div class="fr">I will satisfy</div></div>
+      <div class="word"><div class="he">לָחֶם</div><div class="tr"><b>LA</b>-chem</div><div class="fr">with bread</div></div>
+    </div>
+    <div class="stich-translation">I will satisfy her needy with bread.</div>
+  </div>
+
+  <div class="verse-summary">The blessing begins with food, and with the poor. Before priests, kings or crowns, the city gets provisions and its needy get fed.</div>
+</div>
+
+<!-- VERSE 16 -->
+<div class="verse">
+  <span class="verse-num">16</span>
+  <div class="verse-full">וְכֹהֲנֶיהָ אַלְבִּישׁ יֶשַׁע<br>
+  וַחֲסִידֶיהָ רַנֵּן יְרַנֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְכֹהֲנֶיהָ</div><div class="tr">ve-cho-ha-nei-<b>A</b></div><div class="fr">and her priests</div></div>
+      <div class="word"><div class="he">אַלְבִּישׁ</div><div class="tr">al-<b>BISH</b></div><div class="fr">I will clothe</div></div>
+      <div class="word"><div class="he">יֶשַׁע</div><div class="tr"><b>YE</b>-sha</div><div class="fr">salvation</div></div>
+    </div>
+    <div class="stich-translation">Her priests I will clothe in salvation,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וַחֲסִידֶיהָ</div><div class="tr">va-cha-si-dei-<b>A</b></div><div class="fr">and her faithful ones</div></div>
+      <div class="word"><div class="he">רַנֵּן</div><div class="tr">ra-<b>NEN</b></div><div class="fr">shouting</div></div>
+      <div class="word"><div class="he">יְרַנֵּנוּ</div><div class="tr">ye-ra-ne-<b>NU</b></div><div class="fr">they shall shout for joy</div></div>
+    </div>
+    <div class="stich-translation">and her faithful ones will shout aloud for joy.</div>
+  </div>
+
+  <div class="verse-summary">The answer to verse 9, and it does not match the request. Righteousness was asked for and salvation is given, and the shout is doubled by an emphatic verb form.</div>
+</div>
+
+<!-- VERSE 17 -->
+<div class="verse">
+  <span class="verse-num">17</span>
+  <div class="verse-full">שָׁם אַצְמִיחַ קֶרֶן לְדָוִד<br>
+  עָרַכְתִּי נֵר לִמְשִׁיחִי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+      <div class="word"><div class="he">אַצְמִיחַ</div><div class="tr">atz-<b>MI</b>-ach</div><div class="fr">I will make sprout</div></div>
+      <div class="word"><div class="he">קֶרֶן</div><div class="tr"><b>KE</b>-ren</div><div class="fr">a horn</div></div>
+      <div class="word"><div class="he">לְדָוִד</div><div class="tr">le-da-<b>VID</b></div><div class="fr">for David</div></div>
+    </div>
+    <div class="stich-translation">There I will make a horn sprout for David;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עָרַכְתִּי</div><div class="tr">a-rach-<b>TI</b></div><div class="fr">I have arranged</div></div>
+      <div class="word"><div class="he">נֵר</div><div class="tr">ner</div><div class="fr">a lamp</div></div>
+      <div class="word"><div class="he">לִמְשִׁיחִי</div><div class="tr">lim-shi-<b>CHI</b></div><div class="fr">for My anointed one</div></div>
+    </div>
+    <div class="stich-translation">I have set out a lamp for My anointed.</div>
+  </div>
+
+  <div class="verse-summary">Two royal images, a horn that sprouts and a lamp kept ready. Both are living things: the dynasty is described as a plant and a flame, never as a building.</div>
+</div>
+
+<!-- VERSE 18 -->
+<div class="verse">
+  <span class="verse-num">18</span>
+  <div class="verse-full">אוֹיְבָיו אַלְבִּישׁ בֹּשֶׁת<br>
+  וְעָלָיו יָצִיץ נִזְרוֹ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אוֹיְבָיו</div><div class="tr">oi-<b>VAV</b></div><div class="fr">his enemies</div></div>
+      <div class="word"><div class="he">אַלְבִּישׁ</div><div class="tr">al-<b>BISH</b></div><div class="fr">I will clothe</div></div>
+      <div class="word"><div class="he">בֹּשֶׁת</div><div class="tr"><b>BO</b>-shet</div><div class="fr">shame</div></div>
+    </div>
+    <div class="stich-translation">His enemies I will clothe in shame,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְעָלָיו</div><div class="tr">ve-a-<b>LAV</b></div><div class="fr">but upon him</div></div>
+      <div class="word"><div class="he">יָצִיץ</div><div class="tr">ya-<b>TZITZ</b></div><div class="fr">will gleam</div></div>
+      <div class="word"><div class="he">נִזְרוֹ</div><div class="tr">niz-<b>RO</b></div><div class="fr">his crown</div></div>
+    </div>
+    <div class="stich-translation">but on him his crown will gleam.</div>
+  </div>
+
+  <div class="verse-summary">The clothing verb runs a third time, and this time it dresses the opposition. The psalm ends on a contrast rather than on a request.</div>
+</div>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ PARDES analysis: פרדס</h3>
+  <div class="pardes-intro">The four levels of Jewish reading of the sacred text: פשט Peshat (literal meaning), רמז Remez (symbolic allusion), דרש Drash (midrashic interpretation), סוד Sod (mystical meaning). The word פרדס means "orchard", each level is a fruit.</div>
+
+    <div class="pardes-level">
+    <h4>פשט · Peshat: literal meaning</h4>
+    <p>Two halves, hinged on one verb. Verses 1 to 10 are the human side: a vow not to rest until God has a place, a search at <strong>בְאֶפְרָתָה</strong> (ve-ef-ra-ta, v.6) and <strong>יָעַר</strong> (ya-ar, v.6), a procession, and a plea that leans on a dead king's name. Verses 11 to 18 are the reply, spoken by God, and each request of the first half comes back altered. The prayer at <strong>קוּמָה</strong> (ku-ma, v.8) takes the words said whenever the ark set out in the wilderness and swaps the destination from marching to rest. Verses 8 to 10 appear again at the close of Solomon's dedication prayer in 2 Chronicles 6, which places this psalm in the world of the Temple rather than the road.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>רמז · Remez: allusion</h4>
+    <p>Three grammatical details carry the argument. First, the oaths at <strong>אִם</strong> (im, v.3) and <strong>אִם</strong> (im, v.12) open with the word if and never finish the sentence: a biblical oath cuts itself off before the self curse, so if I enter my house means I certainly will not. Second, the verb for clothing runs at <strong>יִלְבְּשׁוּ</strong> (yil-be-shu, v.9), <strong>אַלְבִּישׁ</strong> (al-bish, v.16) and <strong>אַלְבִּישׁ</strong> (al-bish, v.18), and the garment differs each time, so the request is granted, upgraded, then turned on the enemies. Third, <strong>בָּרֵךְ</strong> (ba-rech, v.15) sets an infinitive beside its own finite verb, the ordinary Hebrew way of saying that the thing will happen and there is no arguing about it. The two place names of verse 6 are disputed: Ephrathah is usually read as the region of Bethlehem and the fields of <strong>יָעַר</strong> (ya-ar, v.6) as Kiriath-Jearim, where the ark stood before David moved it, but that identification is an inference from the names and is not stated in the psalm.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>דרש · Drash: midrashic reading</h4>
+    <p>The tension readers keep returning to is between <strong>נִשְׁבַּע</strong> (nish-ba, v.11), an oath God says He will not turn back from, and the condition in verse 12 that hangs the throne on whether David's sons keep the covenant. One line of reading takes the promise as unconditional and the condition as governing only unbroken rule; another takes the whole grant as conditional and the exile as its proof. Both readings are old, and this psalm does not decide between them. Verse 10 is the classic text for arguing from the merit of someone already dead: the petitioner offers nothing of his own and asks only that an old commitment be honoured. Chronicles puts that same sentence in Solomon's mouth at the moment the Temple is dedicated, which is a use of the psalm rather than a comment on it.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>סוד · Sod: mystical reading</h4>
+    <p>The controlling word is rest. It is the destination in <strong>קוּמָה</strong> (ku-ma, v.8) and God's own claim in verse 14, and in the mystical reading rest is not the absence of work but the state in which presence settles into a place and stops moving, which is why the same root names what the Sabbath is for. Zion is chosen by desire at <strong>אִוָּהּ</strong> (i-vah, v.13) and desired again at <strong>אִוִּתִיהָ</strong> (i-vi-ti-a, v.14), so the longing runs in both directions and the dwelling is something wanted before it is something built. The crown of the last verse blossoms rather than shines, which keeps the king inside the same vocabulary of growth already used for the horn and the lamp.</p>
+  </div>
+
+</div>
+
+<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-source">Hebrew text: Miqra according to the Masorah (MAM), after the Aleppo Codex, via Sefaria, CC BY-SA. English: The Holy Scriptures, a New Translation (JPS 1917), via Sefaria, public domain. Transliteration generated by this site's own engine (assets/translit.js).</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+window.SONG_CHORDS = {
+  id: 'tehilim-132-en',
+  key: 'Am',
+  tempo: 72,
+  progression: '| Dm Dm | Gm Dm | B♭ C | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>
