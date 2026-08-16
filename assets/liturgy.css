@@ -387,3 +387,31 @@ html.light .verses-grid .stich-chords .chord:hover { color: #000; }
   border-top: 1px solid var(--border);
 }
 .t-provenance strong { color: var(--text-dim); font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   SONG GRID — what a song page needs that a psalm page does not.
+   --------------------------------------------------------------------------
+   style.css pins html .verses-grid to three equal columns with !important on
+   every declaration, which is right for a psalm: 6 to 40 short verses fill them.
+   A song is not shaped like that. Half of these have one stanza — a single
+   biblical verse — and in a three-column RTL grid that one card sits alone in
+   the right-hand third with two thirds of the page empty beside it.
+
+   So the builder counts the stanzas and writes the count into data-cols, and the
+   attribute selector below carries enough specificity to answer style.css. This
+   is layout following content instead of content being poured into a fixed
+   layout, and it costs one attribute. */
+html .verses-grid[data-cols="1"] {
+  grid-template-columns: 1fr !important;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+html .verses-grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr) !important; }
+
+/* The whole sung line, and the note under the stanza. Both are hidden inside a
+   psalm grid — deliberately, the psalm design moved that material into the
+   PARDES card. A song is the other way round: the line is the unit you sing, and
+   nobody sings a word grid. So the song grid puts them back. */
+.song-grid .verse-full { display: block; }
+.song-grid .verse-summary { display: block; }

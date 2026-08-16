@@ -239,8 +239,21 @@ async function scaffold(entry) {
   const dropped = [];
   const lines = [];
   for (const line of rawLines) {
-    if (!hasNiqqud(line)) { dropped.push({ why: 'editorial (no vowel points)', line }); continue; }
+    /* Editorial matter is judged by PROPORTION, not by "has no points at all".
+       The first version asked whether the line carried any vowel point, and the
+       colophon of Yom Zeh Mechubad slipped through on the strength of a single
+       stray tsere the edition puts on one word — one pointed word out of seven,
+       and the page would have printed "author, R. Israel, righteous convert, of
+       the 12th century" as a line of the song. A sung line in these editions is
+       pointed throughout; editorial matter is bare apart from accidents. Half is
+       a wide margin either way, which is what makes it safe to apply blind. */
     const words = line.split(' ');
+    const hebrew = words.filter(w => /[א-ת]/.test(w));
+    const pointed = hebrew.filter(hasNiqqud).length;
+    if (!hebrew.length || pointed * 2 < hebrew.length) {
+      dropped.push({ why: `editorial (${pointed}/${hebrew.length} words pointed)`, line });
+      continue;
+    }
     const kept = [];
     for (let i = 0; i < words.length; i++) {
       if (isVariantMarker(words[i])) {

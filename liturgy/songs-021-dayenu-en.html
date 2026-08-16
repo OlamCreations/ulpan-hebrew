@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dayenu: כַּמָה מַעֲלוֹת</title>
+<!-- Like the psalm pages, these do not load app.js, which is what injects the
+     icon everywhere else. Without this line the browser tab is blank and the
+     page asks for a /favicon.ico that does not exist. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<!-- No per-page <style>. The seven hand-written song pages each carry ~150 lines
+     of duplicated CSS, which is why fixing the chord line on one of them fixed it
+     on none of the others. Everything this page needs is in liturgy.css. -->
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Dayenu: It would have been enough for us</h1>
+    <div class="subtitle">Pesach seder, in the middle of the telling · כַּמָה מַעֲלוֹת</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Dayenu</a></div>
+</header>
+
+<div class="t-intro">
+  Fifteen steps out of Egypt, and after each one the table shouts the same word: it would have been enough. Enough for what, exactly, is left unsaid, and that is the argument. The song does not claim that any single step would really have sufficed — you cannot leave Egypt and stop at the edge of the sea. It claims that each one, taken on its own, would have deserved thanks. Grammatically it is the easiest long text in the Haggadah: the same two-clause frame fifteen times, and the second half of one verse becomes the first half of the next.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display"><strong>Key: Am · 3 chords used ·</strong>&nbsp; <span class="chord" data-chord="Am">Am</span> · <span class="chord" data-chord="Dm">Dm</span> · <span class="chord" data-chord="E">E</span></div>
+  <div class="meta-line">120 BPM · 4/4 · the loudest thing in the first half of the seder · fifteen steps, each ending on the same word, and the table shouts that word · to reset the chord panel: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid song-grid" data-cols="3">
+<!-- STANZA 1 -->
+<div class="verse">
+  <span class="verse-num">1 · how many</span>
+  <div class="verse-full">כַּמָה מַעֲלוֹת טוֹבוֹת לַמָּקוֹם עָלֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כַּמָה</div><div class="tr">ka-<b>MA</b></div><div class="fr">how many</div></div>
+      <div class="word"><div class="he">מַעֲלוֹת</div><div class="tr">ma-a-<b>LOT</b></div><div class="fr">degrees of</div></div>
+      <div class="word"><div class="he">טוֹבוֹת</div><div class="tr">to-<b>VOT</b></div><div class="fr">good</div></div>
+      <div class="word"><div class="he">לַמָּקוֹם</div><div class="tr">la-ma-<b>KOM</b></div><div class="fr">for the Place, that is, for God</div></div>
+      <div class="word"><div class="he">עָלֵינוּ</div><div class="tr">a-lei-<b>NU</b></div><div class="fr">upon us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">How many good favours the Place has done for us!</div>
+  </div>
+
+  <div class="verse-summary"><strong>לַמָּקוֹם</strong> (la-ma-kom) is one of the old names for God, literally "the Place", and it is the one the Haggadah uses here. <strong>מַעֲלוֹת</strong> (ma-a-lot) means steps or degrees — the favours are being counted as a staircase, which is exactly what the next fifteen verses climb.</div>
+</div>
+
+<!-- STANZA 2 -->
+<div class="verse">
+  <span class="verse-num">2 · out of Egypt</span>
+  <div class="verse-full">אִלּוּ הוֹצִיאָנוּ מִמִּצְרַיִם וְלֹא עָשָׂה בָהֶם שְׁפָטִים דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">הוֹצִיאָנוּ</div><div class="tr">ho-tzi-a-<b>NU</b></div><div class="fr">He had brought us out</div></div>
+      <div class="word"><div class="he">מִמִּצְרַיִם</div><div class="tr">mi-mitz-<b>RA</b>-yim</div><div class="fr">from Egypt</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">עָשָׂה</div><div class="tr">a-<b>SA</b></div><div class="fr">He had done</div></div>
+      <div class="word"><div class="he">בָהֶם</div><div class="tr"><b>VA</b>-hem</div><div class="fr">against them</div></div>
+      <div class="word"><div class="he">שְׁפָטִים</div><div class="tr">shfa-<b>TIM</b></div><div class="fr">judgements</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He brought us out of Egypt and not carried out judgements against them — enough for us!</div>
+  </div>
+
+  <div class="verse-summary">The frame: if He had done X and not done Y, dayenu. Every following verse takes the Y of this one and makes it the X of the next, so the song is a chain and you always know what comes first.</div>
+</div>
+
+<!-- STANZA 3 -->
+<div class="verse">
+  <span class="verse-num">3 · judgements</span>
+  <div class="verse-full">אִלּוּ עָשָׂה בָהֶם שְׁפָטִים וְלֹא עָשָׂה בֵאלֹהֵיהֶם דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">עָשָׂה</div><div class="tr">a-<b>SA</b></div><div class="fr">He had done</div></div>
+      <div class="word"><div class="he">בָהֶם</div><div class="tr"><b>VA</b>-hem</div><div class="fr">against them</div></div>
+      <div class="word"><div class="he">שְׁפָטִים</div><div class="tr">shfa-<b>TIM</b></div><div class="fr">judgements</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">עָשָׂה</div><div class="tr">a-<b>SA</b></div><div class="fr">He had done</div></div>
+      <div class="word"><div class="he">בֵאלֹהֵיהֶם</div><div class="tr">ve-lo-<b>HEI</b>-hem</div><div class="fr">against their gods</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He carried out judgements against them and not against their gods — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 4 -->
+<div class="verse">
+  <span class="verse-num">4 · their gods</span>
+  <div class="verse-full">אִלּוּ עָשָׂה בֵאלֹהֵיהֶם וְלֹא הָרַג אֶת בְּכוֹרֵיהֶם דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">עָשָׂה</div><div class="tr">a-<b>SA</b></div><div class="fr">He had done</div></div>
+      <div class="word"><div class="he">בֵאלֹהֵיהֶם</div><div class="tr">ve-lo-<b>HEI</b>-hem</div><div class="fr">against their gods</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">הָרַג</div><div class="tr">ha-<b>RAG</b></div><div class="fr">He had killed</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">בְּכוֹרֵיהֶם</div><div class="tr">be-cho-<b>REI</b>-hem</div><div class="fr">their firstborn</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He acted against their gods and not killed their firstborn — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 5 -->
+<div class="verse">
+  <span class="verse-num">5 · the firstborn</span>
+  <div class="verse-full">אִלּוּ הָרַג אֶת בְּכוֹרֵיהֶם וְלֹא נָתַן לָנוּ אֶת מָמוֹנָם דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">הָרַג</div><div class="tr">ha-<b>RAG</b></div><div class="fr">He had killed</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">בְּכוֹרֵיהֶם</div><div class="tr">be-cho-<b>REI</b>-hem</div><div class="fr">their firstborn</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He had given</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">מָמוֹנָם</div><div class="tr">ma-mo-<b>NAM</b></div><div class="fr">their wealth</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He killed their firstborn and not given us their wealth — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 6 -->
+<div class="verse">
+  <span class="verse-num">6 · their wealth</span>
+  <div class="verse-full">אִלּוּ נָתַן לָנוּ אֶת מָמוֹנָם וְלֹא קָרַע לָנוּ אֶת הַיָּם דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He had given</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">מָמוֹנָם</div><div class="tr">ma-mo-<b>NAM</b></div><div class="fr">their wealth</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">קָרַע</div><div class="tr"><b>KA</b>-ra</div><div class="fr">He had split</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַיָּם</div><div class="tr">ha-<b>YAM</b></div><div class="fr">the sea</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He given us their wealth and not split the sea for us — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 7 -->
+<div class="verse">
+  <span class="verse-num">7 · the sea</span>
+  <div class="verse-full">אִלּוּ קָרַע לָנוּ אֶת הַיָּם וְלֹא הֶעֱבִירָנוּ בְתוֹכוֹ בֶּחָרָבָה דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">קָרַע</div><div class="tr"><b>KA</b>-ra</div><div class="fr">He had split</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַיָּם</div><div class="tr">ha-<b>YAM</b></div><div class="fr">the sea</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">הֶעֱבִירָנוּ</div><div class="tr">he-e-vi-ra-<b>NU</b></div><div class="fr">He had brought us across</div></div>
+      <div class="word"><div class="he">בְתוֹכוֹ</div><div class="tr">ve-to-<b>CHO</b></div><div class="fr">through the middle of it</div></div>
+      <div class="word"><div class="he">בֶּחָרָבָה</div><div class="tr">be-cha-ra-<b>VA</b></div><div class="fr">on dry ground</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He split the sea for us and not brought us through it on dry ground — enough for us!</div>
+  </div>
+
+  <div class="verse-summary"><strong>בֶּחָרָבָה</strong> (be-cha-ra-va) is dry ground, and it is the detail Exodus insists on: not merely a path, but a dry one. The song keeps the detail.</div>
+</div>
+
+<!-- STANZA 8 -->
+<div class="verse">
+  <span class="verse-num">8 · dry ground</span>
+  <div class="verse-full">אִלּוּ הֶעֱבִירָנוּ בְתוֹכוֹ בֶּחָרָבָה וְלֹא שִׁקַּע צָרֵנוּ בְתוֹכוֹ דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">הֶעֱבִירָנוּ</div><div class="tr">he-e-vi-ra-<b>NU</b></div><div class="fr">He had brought us across</div></div>
+      <div class="word"><div class="he">בְתוֹכוֹ</div><div class="tr">ve-to-<b>CHO</b></div><div class="fr">through the middle of it</div></div>
+      <div class="word"><div class="he">בֶּחָרָבָה</div><div class="tr">be-cha-ra-<b>VA</b></div><div class="fr">on dry ground</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">שִׁקַּע</div><div class="tr"><b>SHI</b>-ka</div><div class="fr">He had sunk</div></div>
+      <div class="word"><div class="he">צָרֵנוּ</div><div class="tr">tza-re-<b>NU</b></div><div class="fr">our oppressors</div></div>
+      <div class="word"><div class="he">בְתוֹכוֹ</div><div class="tr">ve-to-<b>CHO</b></div><div class="fr">through the middle of it</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He brought us through it on dry ground and not sunk our oppressors in it — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 9 -->
+<div class="verse">
+  <span class="verse-num">9 · the oppressors</span>
+  <div class="verse-full">אִלּוּ שִׁקַּע צָרֵנוּ בְתוֹכוֹ וְלֹא סִפֵּק צָרְכֵּנוּ בַּמִדְבָּר אַרְבָּעִים שָׁנָה דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">שִׁקַּע</div><div class="tr"><b>SHI</b>-ka</div><div class="fr">He had sunk</div></div>
+      <div class="word"><div class="he">צָרֵנוּ</div><div class="tr">tza-re-<b>NU</b></div><div class="fr">our oppressors</div></div>
+      <div class="word"><div class="he">בְתוֹכוֹ</div><div class="tr">ve-to-<b>CHO</b></div><div class="fr">through the middle of it</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">סִפֵּק</div><div class="tr">si-<b>PEK</b></div><div class="fr">He had supplied</div></div>
+      <div class="word"><div class="he">צָרְכֵּנוּ</div><div class="tr">tzar-ke-<b>NU</b></div><div class="fr">our needs</div></div>
+      <div class="word"><div class="he">בַּמִדְבָּר</div><div class="tr">ba-mid-<b>BAR</b></div><div class="fr">in the wilderness</div></div>
+      <div class="word"><div class="he">אַרְבָּעִים</div><div class="tr">ar-ba-<b>IM</b></div><div class="fr">forty</div></div>
+      <div class="word"><div class="he">שָׁנָה</div><div class="tr">sha-<b>NA</b></div><div class="fr">years</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He sunk our oppressors in it and not supplied our needs in the wilderness for forty years — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 10 -->
+<div class="verse">
+  <span class="verse-num">10 · forty years</span>
+  <div class="verse-full">אִלּוּ סִפֵּק צָרְכֵּנוּ בַּמִּדְבָּר אַרְבָּעִים שָׁנָה וְלֹא הֶאֱכִילָנוּ אֶת הַמָּן דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">סִפֵּק</div><div class="tr">si-<b>PEK</b></div><div class="fr">He had supplied</div></div>
+      <div class="word"><div class="he">צָרְכֵּנוּ</div><div class="tr">tzar-ke-<b>NU</b></div><div class="fr">our needs</div></div>
+      <div class="word"><div class="he">בַּמִּדְבָּר</div><div class="tr">ba-mid-<b>BAR</b></div><div class="fr">in the wilderness</div></div>
+      <div class="word"><div class="he">אַרְבָּעִים</div><div class="tr">ar-ba-<b>IM</b></div><div class="fr">forty</div></div>
+      <div class="word"><div class="he">שָׁנָה</div><div class="tr">sha-<b>NA</b></div><div class="fr">years</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">הֶאֱכִילָנוּ</div><div class="tr">he-e-chi-la-<b>NU</b></div><div class="fr">He had fed us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַמָּן</div><div class="tr">ha-<b>MAN</b></div><div class="fr">the manna</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He supplied our needs in the wilderness for forty years and not fed us the manna — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 11 -->
+<div class="verse">
+  <span class="verse-num">11 · the manna</span>
+  <div class="verse-full">אִלּוּ הֶאֱכִילָנוּ אֶת הַמָּן וְלֹא נָתַן לָנוּ אֶת הַשַּׁבָּת דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">הֶאֱכִילָנוּ</div><div class="tr">he-e-chi-la-<b>NU</b></div><div class="fr">He had fed us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַמָּן</div><div class="tr">ha-<b>MAN</b></div><div class="fr">the manna</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He had given</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַשַּׁבָּת</div><div class="tr">ha-sha-<b>BAT</b></div><div class="fr">the Sabbath</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He fed us the manna and not given us the Sabbath — enough for us!</div>
+  </div>
+
+  <div class="verse-summary">The Sabbath arrives between food and revelation, before Sinai. In this ordering it is not a commandment given at the mountain; it is something handed over in the desert, with the manna.</div>
+</div>
+
+<!-- STANZA 12 -->
+<div class="verse">
+  <span class="verse-num">12 · the Sabbath</span>
+  <div class="verse-full">אִלּוּ נָתַן לָנוּ אֶת הַשַּׁבָּת וְלֹא קֵרְבָנוּ לִפְנֵי הַר סִינַי דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He had given</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַשַּׁבָּת</div><div class="tr">ha-sha-<b>BAT</b></div><div class="fr">the Sabbath</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">קֵרְבָנוּ</div><div class="tr">ker-va-<b>NU</b></div><div class="fr">He had brought us near</div></div>
+      <div class="word"><div class="he">לִפְנֵי</div><div class="tr">lif-<b>NEI</b></div><div class="fr">before</div></div>
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">mount</div></div>
+      <div class="word"><div class="he">סִינַי</div><div class="tr">si-<b>NAI</b></div><div class="fr">Sinai</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He given us the Sabbath and not brought us before Mount Sinai — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 13 -->
+<div class="verse">
+  <span class="verse-num">13 · Sinai</span>
+  <div class="verse-full">אִלּוּ קֵרְבָנוּ לִפְנֵי הַר סִינַי וְלא נָתַן לָנוּ אֶת הַתּוֹרָה דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">קֵרְבָנוּ</div><div class="tr">ker-va-<b>NU</b></div><div class="fr">He had brought us near</div></div>
+      <div class="word"><div class="he">לִפְנֵי</div><div class="tr">lif-<b>NEI</b></div><div class="fr">before</div></div>
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">mount</div></div>
+      <div class="word"><div class="he">סִינַי</div><div class="tr">si-<b>NAI</b></div><div class="fr">Sinai</div></div>
+      <div class="word"><div class="he">וְלא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He had given</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַתּוֹרָה</div><div class="tr">ha-to-<b>RA</b></div><div class="fr">the Torah</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He brought us before Mount Sinai and not given us the Torah — enough for us!</div>
+  </div>
+
+  <div class="verse-summary">Standing at the mountain and receiving what was said there are counted as two separate favours. That separation is the boldest line in the song: arriving would have been enough.</div>
+</div>
+
+<!-- STANZA 14 -->
+<div class="verse">
+  <span class="verse-num">14 · the Torah</span>
+  <div class="verse-full">אִלּוּ נָתַן לָנוּ אֶת הַתּוֹרָה וְלֹא הִכְנִיסָנוּ לְאֶרֶץ יִשְׂרָאֵל דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">נָתַן</div><div class="tr">na-<b>TAN</b></div><div class="fr">He had given</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַתּוֹרָה</div><div class="tr">ha-to-<b>RA</b></div><div class="fr">the Torah</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">הִכְנִיסָנוּ</div><div class="tr">hich-ni-sa-<b>NU</b></div><div class="fr">He had brought us into</div></div>
+      <div class="word"><div class="he">לְאֶרֶץ</div><div class="tr">le-<b>E</b>-retz</div><div class="fr">the land of</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He given us the Torah and not brought us into the land of Israel — enough for us!</div>
+  </div>
+</div>
+
+<!-- STANZA 15 -->
+<div class="verse">
+  <span class="verse-num">15 · the land</span>
+  <div class="verse-full">אִלּוּ הִכְנִיסָנוּ לְאֶרֶץ יִשְׂרָאֵל וְלֹא בָנָה לָּנוּ אֶת בֵּית הַבְּחִירָה דַּיֵּנוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אִלּוּ</div><div class="tr">i-<b>LU</b></div><div class="fr">if</div></div>
+      <div class="word"><div class="he">הִכְנִיסָנוּ</div><div class="tr">hich-ni-sa-<b>NU</b></div><div class="fr">He had brought us into</div></div>
+      <div class="word"><div class="he">לְאֶרֶץ</div><div class="tr">le-<b>E</b>-retz</div><div class="fr">the land of</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">וְלֹא</div><div class="tr">ve-<b>LO</b></div><div class="fr">and not</div></div>
+      <div class="word"><div class="he">בָנָה</div><div class="tr">va-<b>NA</b></div><div class="fr">He had built</div></div>
+      <div class="word"><div class="he">לָּנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">בֵּית</div><div class="tr">beit</div><div class="fr">the house of</div></div>
+      <div class="word"><div class="he">הַבְּחִירָה</div><div class="tr">hab-chi-<b>RA</b></div><div class="fr">the choosing, the Temple</div></div>
+      <div class="word"><div class="he">דַּיֵּנוּ</div><div class="tr">da-ye-<b>NU</b></div><div class="fr">it would have been enough for us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Had He brought us into the land of Israel and not built us the Temple — enough for us!</div>
+  </div>
+
+  <div class="verse-summary">The staircase ends at the Temple, which is the one item on the list that is not standing today. The song counts it anyway, in the past tense, alongside fourteen things that happened.</div>
+</div>
+
+<!-- STANZA 16 -->
+<div class="verse">
+  <span class="verse-num">16 · all of it together</span>
+  <div class="verse-full">עַל אַחַת כַּמָה וְכַמָה טוֹבָה כְפוּלָה וּמְכֻפֶּלֶת לַמָּקוֹם עָלֵינוּ שֶׁהוֹצִיאָנוּ מִמִּצְרַיִם וְעָשָׂה בָהֶם שְׁפָטִים וְעָשָׂה בֵאלֹהֵיהֶם וְהָרַג אֶת בְּכוֹרֵיהֶם וְנָתַן לָנוּ אֶת מָמוֹנָם וְקָרַע לָנוּ אֶת הַיָּם וְהֶעֱבִירָנוּ בְתוֹכוֹ בֶּחָרָבָה וְשִׁקַּע צָרֵנוּ בְתוֹכוֹ וְסִפֵּק צָרְכֵּנוּ בַּמִדְבָּר אַרְבָּעִים שָׁנָה וְהֶאֱכִילָנוּ אֶת הַמָּן וְנָתַן לָנוּ אֶת הַשַּׁבָּת וְקֵרְבָנוּ לִפְנֵי הַר סִינַי וְנָתַן לָנוּ אֶת הַתּוֹרָה וְהִכְנִיסָנוּ לְאֶרֶץ יִשְׂרָאֵל וּבָנָה לָּנוּ אֶת בֵּית הַבְּחִירָה לְכַפֵּר עַל כָּל עֲוֹנוֹתֵינוּ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">upon</div></div>
+      <div class="word"><div class="he">אַחַת</div><div class="tr">a-<b>CHAT</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">כַּמָה</div><div class="tr">ka-<b>MA</b></div><div class="fr">how much</div></div>
+      <div class="word"><div class="he">וְכַמָה</div><div class="tr">ve-cha-<b>MA</b></div><div class="fr">and how much</div></div>
+      <div class="word"><div class="he">טוֹבָה</div><div class="tr">to-<b>VA</b></div><div class="fr">goodness</div></div>
+      <div class="word"><div class="he">כְפוּלָה</div><div class="tr">che-fu-<b>LA</b></div><div class="fr">doubled</div></div>
+      <div class="word"><div class="he">וּמְכֻפֶּלֶת</div><div class="tr">um-chu-<b>PE</b>-let</div><div class="fr">and redoubled</div></div>
+      <div class="word"><div class="he">לַמָּקוֹם</div><div class="tr">la-ma-<b>KOM</b></div><div class="fr">of the Place</div></div>
+      <div class="word"><div class="he">עָלֵינוּ</div><div class="tr">a-lei-<b>NU</b></div><div class="fr">upon us</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">How much more so, doubled and redoubled, is the goodness of the Place toward us:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁהוֹצִיאָנוּ</div><div class="tr">she-ho-tzi-a-<b>NU</b></div><div class="fr">that He brought us out</div></div>
+      <div class="word"><div class="he">מִמִּצְרַיִם</div><div class="tr">mi-mitz-<b>RA</b>-yim</div><div class="fr">from Egypt</div></div>
+      <div class="word"><div class="he">וְעָשָׂה</div><div class="tr">ve-a-<b>SA</b></div><div class="fr">and He carried out</div></div>
+      <div class="word"><div class="he">בָהֶם</div><div class="tr"><b>VA</b>-hem</div><div class="fr">against them</div></div>
+      <div class="word"><div class="he">שְׁפָטִים</div><div class="tr">shfa-<b>TIM</b></div><div class="fr">judgements</div></div>
+      <div class="word"><div class="he">וְעָשָׂה</div><div class="tr">ve-a-<b>SA</b></div><div class="fr">and He acted</div></div>
+      <div class="word"><div class="he">בֵאלֹהֵיהֶם</div><div class="tr">ve-lo-<b>HEI</b>-hem</div><div class="fr">against their gods</div></div>
+      <div class="word"><div class="he">וְהָרַג</div><div class="tr">ve-ha-<b>RAG</b></div><div class="fr">and He killed</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">בְּכוֹרֵיהֶם</div><div class="tr">be-cho-<b>REI</b>-hem</div><div class="fr">their firstborn</div></div>
+      <div class="word"><div class="he">וְנָתַן</div><div class="tr">ve-na-<b>TAN</b></div><div class="fr">and He gave</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">מָמוֹנָם</div><div class="tr">ma-mo-<b>NAM</b></div><div class="fr">their wealth</div></div>
+      <div class="word"><div class="he">וְקָרַע</div><div class="tr">ve-<b>KA</b>-ra</div><div class="fr">and He split</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַיָּם</div><div class="tr">ha-<b>YAM</b></div><div class="fr">the sea</div></div>
+      <div class="word"><div class="he">וְהֶעֱבִירָנוּ</div><div class="tr">ve-he-e-vi-ra-<b>NU</b></div><div class="fr">and He brought us across</div></div>
+      <div class="word"><div class="he">בְתוֹכוֹ</div><div class="tr">ve-to-<b>CHO</b></div><div class="fr">through the middle of it</div></div>
+      <div class="word"><div class="he">בֶּחָרָבָה</div><div class="tr">be-cha-ra-<b>VA</b></div><div class="fr">on dry ground</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">that He brought us out of Egypt, and carried out judgements against them, and against their gods, and killed their firstborn, and gave us their wealth, and split the sea for us, and brought us through it on dry ground,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשִׁקַּע</div><div class="tr">ve-<b>SHI</b>-ka</div><div class="fr">and He sank</div></div>
+      <div class="word"><div class="he">צָרֵנוּ</div><div class="tr">tza-re-<b>NU</b></div><div class="fr">our oppressors</div></div>
+      <div class="word"><div class="he">בְתוֹכוֹ</div><div class="tr">ve-to-<b>CHO</b></div><div class="fr">through the middle of it</div></div>
+      <div class="word"><div class="he">וְסִפֵּק</div><div class="tr">ve-si-<b>PEK</b></div><div class="fr">and He supplied</div></div>
+      <div class="word"><div class="he">צָרְכֵּנוּ</div><div class="tr">tzar-ke-<b>NU</b></div><div class="fr">our needs</div></div>
+      <div class="word"><div class="he">בַּמִדְבָּר</div><div class="tr">ba-mid-<b>BAR</b></div><div class="fr">in the wilderness</div></div>
+      <div class="word"><div class="he">אַרְבָּעִים</div><div class="tr">ar-ba-<b>IM</b></div><div class="fr">forty</div></div>
+      <div class="word"><div class="he">שָׁנָה</div><div class="tr">sha-<b>NA</b></div><div class="fr">years</div></div>
+      <div class="word"><div class="he">וְהֶאֱכִילָנוּ</div><div class="tr">ve-he-e-chi-la-<b>NU</b></div><div class="fr">and He fed us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַמָּן</div><div class="tr">ha-<b>MAN</b></div><div class="fr">the manna</div></div>
+      <div class="word"><div class="he">וְנָתַן</div><div class="tr">ve-na-<b>TAN</b></div><div class="fr">and He gave</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַשַּׁבָּת</div><div class="tr">ha-sha-<b>BAT</b></div><div class="fr">the Sabbath</div></div>
+      <div class="word"><div class="he">וְקֵרְבָנוּ</div><div class="tr">ve-ker-va-<b>NU</b></div><div class="fr">and He brought us near</div></div>
+      <div class="word"><div class="he">לִפְנֵי</div><div class="tr">lif-<b>NEI</b></div><div class="fr">before</div></div>
+      <div class="word"><div class="he">הַר</div><div class="tr">har</div><div class="fr">mount</div></div>
+      <div class="word"><div class="he">סִינַי</div><div class="tr">si-<b>NAI</b></div><div class="fr">Sinai</div></div>
+      <div class="word"><div class="he">וְנָתַן</div><div class="tr">ve-na-<b>TAN</b></div><div class="fr">and He gave</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">to us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">הַתּוֹרָה</div><div class="tr">ha-to-<b>RA</b></div><div class="fr">the Torah</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and sank our oppressors in it, and supplied our needs in the wilderness for forty years, and fed us the manna, and gave us the Sabbath, and brought us before Mount Sinai, and gave us the Torah,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְהִכְנִיסָנוּ</div><div class="tr">ve-hich-ni-sa-<b>NU</b></div><div class="fr">and He brought us into</div></div>
+      <div class="word"><div class="he">לְאֶרֶץ</div><div class="tr">le-<b>E</b>-retz</div><div class="fr">the land of</div></div>
+      <div class="word"><div class="he">יִשְׂרָאֵל</div><div class="tr">yis-ra-<b>EL</b></div><div class="fr">Israel</div></div>
+      <div class="word"><div class="he">וּבָנָה</div><div class="tr">u-va-<b>NA</b></div><div class="fr">and He built</div></div>
+      <div class="word"><div class="he">לָּנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">בֵּית</div><div class="tr">beit</div><div class="fr">the house of</div></div>
+      <div class="word"><div class="he">הַבְּחִירָה</div><div class="tr">hab-chi-<b>RA</b></div><div class="fr">the choosing</div></div>
+      <div class="word"><div class="he">לְכַפֵּר</div><div class="tr">le-cha-<b>PER</b></div><div class="fr">to atone</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">כָּל</div><div class="tr">kal</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">עֲוֹנוֹתֵינוּ</div><div class="tr">a-o-no-tei-<b>NU</b></div><div class="fr">our wrongs</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and brought us into the land of Israel, and built us the house of the choosing, to atone for all our wrongs.</div>
+  </div>
+
+  <div class="verse-summary">The last verse withdraws the whole argument, politely. Each step alone would have been enough — and He did all of them. Note the grammar shift: the fifteen verses used <strong>אִלּוּ</strong> (i-lu), "if", a hypothetical; this one uses <strong>שֶׁהוֹצִיאָנוּ</strong> (she-ho-tzi-a-nu), "that He did", a plain statement of fact. Fifteen verses of counterfactual, then one of indicative.</div>
+</div>
+</div>
+
+<div class="chant-tip">
+  <h3>♫ Singing notes</h3>
+  <ul>
+    <li>The word <strong>דַּיֵּנוּ</strong> (da-ye-nu) is shouted, not sung, and it is shouted by everyone including the people who are not following the Hebrew. Leave a beat for it.</li>
+    <li>Many tables sing the word three times at the end of each verse. Some sing it once. Follow the house.</li>
+    <li>The first half of each verse is the second half of the one before, so a table that has lost its place can always rejoin at the next <strong>אִלּוּ</strong> (i-lu).</li>
+    <li>The final verse is not shouted. It is read or sung straight through, and it is noticeably longer than everything before it — do not let the room start clapping.</li>
+  </ul>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ About this song</h3>
+  <div class="pardes-level">
+    <h4>Where it sits</h4>
+    <p>In the Magid section, after the recounting of the plagues and before the explanation of the Passover offering, matzah and bitter herbs. It is the moment the seder stops being a lesson and becomes a party, which is roughly halfway through the evening.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>The claim it is making</h4>
+    <p>Read strictly, several steps could not have stood alone — the sea without the crossing, Sinai without the Torah. The song is not making a logical claim about sufficiency but a claim about gratitude: that each item deserves its own thanks rather than being absorbed into the total. The final verse then supplies the total anyway.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Fifteen</h4>
+    <p>The number of steps matches other fifteens in the seder — the fifteen sections of the evening, the fifteen Songs of Ascents in Psalms, the fifteen steps of the Temple. Whether that is design or a pattern read in afterwards is not something this page can settle.</p>
+  </div>
+</div>
+
+<footer>Dayenu · כַּמָה מַעֲלוֹת · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-provenance">
+  <strong>Hebrew:</strong> Haggadah, Magid, Dayenu · Pesach Haggadah · Public Domain, via Sefaria, pinned in this repo at content/songs/source/021.json.
+  English gloss lines authored for this site; the source translation is used as raw material only. Transliteration generated by this site's own engine (assets/translit.js).
+</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   The key is DERIVED from the grid below by tools/chord-key.mjs and never typed:
+   the psalm template held it as a literal and shipped 'Am' over 126 grids that
+   were in other keys, which sent songKey() and the shuffle generator into the
+   wrong scale. */
+window.SONG_CHORDS = {
+  id: 'songs-021-dayenu-en',
+  key: 'Am',
+  tempo: 120,
+  progression: '| Am Am | Dm Am | E E | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

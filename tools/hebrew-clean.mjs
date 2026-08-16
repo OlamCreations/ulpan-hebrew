@@ -50,11 +50,29 @@ const NIQQUD = [
   0x05B8, 0x05B9, 0x05BA, 0x05BB, 0x05BC, 0x05C1, 0x05C2, 0x05C7
 ];
 
-/* The maqaf joins two words into one printed unit. Each side is its own word
-   cell on the page, so it becomes a space. BOTH forms: MAM writes U+05BE, Daat
-   Siddur Ashkenaz writes an ASCII hyphen. Handling only the Hebrew one left
-   עַד-אָנָה as a single cell whose transliteration ran the two words together. */
-const MAQAF = /[־-]/g;
+/* The maqaf joins two words into one printed unit; each side is its own word
+   cell on the page, so it becomes a space. Handling only the Hebrew U+05BE left
+   the Daat spelling of the same phrase as a single cell whose transliteration
+   ran the two words together.
+
+   Dashes of every width, not only the maqaf. Daat writes an ASCII hyphen where
+   MAM writes U+05BE, and the Haggadah uses an en dash as a phrase separator —
+   Ma Nishtana has four of them, and each one became a word cell of its own with
+   a transliteration of "–". Built from codepoints rather than written as a
+   literal class: the earlier literal held two members and reading it told you
+   nothing about which two. */
+/* Each member goes in as a \u escape, not as the character itself. Joining the
+   raw characters put U+002D in the middle of the class, where a hyphen means a
+   RANGE, so the class read "U+05BE through U+2010" and deleted every Hebrew
+   letter and vowel between them. Ma Nishtana came back as 133 empty words. The
+   self-test caught it on the first run, which is the entire argument for having
+   one: this is not a mistake anybody spots by reading the line. */
+const MAQAF = new RegExp(
+  '[' + [0x05BE, 0x002D, 0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015]
+    .map(c => '\\u' + c.toString(16).padStart(4, '0'))
+    .join('') + ']',
+  'g'
+);
 
 /* Invisible formatting characters: the bidi controls, plus U+034F COMBINING
    GRAPHEME JOINER. They change nothing on screen and everything in a codepoint
@@ -122,6 +140,8 @@ function selfTest() {
     ['bidi mark removed',                  'בָת‏',                               'בָת'],
     ['petucha removed',                    'בָת {פ}',                            'בָת'],
     ['combining grapheme joiner removed',  'בָ͏ת',                                'בָת'],
+    ['en dash is a separator, not a word', 'בָ – תָ',                            'בָ תָ'],
+    ['em dash likewise',                   'בָ — תָ',                            'בָ תָ'],
     ['shin dot survives',                  'שָׁ',                                     'שָׁ'],
     ['runs of space collapse',             '  בָ   תָ  ',                        'בָ תָ']
   ];

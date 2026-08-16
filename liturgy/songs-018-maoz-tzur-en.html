@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maoz Tzur: מָעוֹז צוּר</title>
+<!-- Like the psalm pages, these do not load app.js, which is what injects the
+     icon everywhere else. Without this line the browser tab is blank and the
+     page asks for a /favicon.ico that does not exist. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<!-- No per-page <style>. The seven hand-written song pages each carry ~150 lines
+     of duplicated CSS, which is why fixing the chord line on one of them fixed it
+     on none of the others. Everything this page needs is in liturgy.css. -->
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Maoz Tzur: Rock of my salvation</h1>
+    <div class="subtitle">Chanukah, after lighting the candles · מָעוֹז צוּר</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Maoz Tzur</a></div>
+</header>
+
+<div class="t-intro">
+  Sung every night of Chanukah once the candles are lit, and the tune is one of the few in the Ashkenazi repertoire that everyone in the room already knows. What is less known is the shape of the poem: six stanzas, each about a different exile — Egypt, Babylon, Haman, the Greeks — and the acrostic of the first letters spells the poet's name. Most tables sing the first stanza and stop, which is a pity, because the first stanza is the only one that is not about history.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display"><strong>Key: Am · 3 chords used ·</strong>&nbsp; <span class="chord" data-chord="Am">Am</span> · <span class="chord" data-chord="Dm">Dm</span> · <span class="chord" data-chord="E">E</span></div>
+  <div class="meta-line">96 BPM · 4/4 · sung standing, in front of the lit candles · six stanzas of four lines each, and the first is the only one most households sing · to reset the chord panel: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid song-grid" data-cols="3">
+<!-- STANZA 1 -->
+<div class="verse">
+  <span class="verse-num">1 · the dedication</span>
+  <div class="verse-full">מָעוֹז צוּר יְשׁוּעָתִי לְךָ נָאֶה לְשַׁבֵּחַ<br>
+  תִּכּוֹן בֵּית תְּפִלָּתִי וְשָׁם תּוֹדָה נְזַבֵּחַ<br>
+  לְעֵת תָּכִין מַטְבֵּחַ מִצָּר הַמְנַבֵּחַ<br>
+  אָז אֶגְמוֹר בְּשִׁיר מִזְמוֹר חֲנֻכַּת הַמִּזְבֵּחַ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מָעוֹז</div><div class="tr">ma-<b>OZ</b></div><div class="fr">stronghold of</div></div>
+      <div class="word"><div class="he">צוּר</div><div class="tr">tzur</div><div class="fr">rock of</div></div>
+      <div class="word"><div class="he">יְשׁוּעָתִי</div><div class="tr">ye-shu-a-<b>TI</b></div><div class="fr">my salvation</div></div>
+      <div class="word"><div class="he">לְךָ</div><div class="tr">le-<b>CHA</b></div><div class="fr">to You</div></div>
+      <div class="word"><div class="he">נָאֶה</div><div class="tr">na-<b>E</b></div><div class="fr">it is fitting</div></div>
+      <div class="word"><div class="he">לְשַׁבֵּחַ</div><div class="tr">le-sha-<b>BE</b>-ach</div><div class="fr">to praise</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Rock of my salvation, it is fitting to praise You.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּכּוֹן</div><div class="tr">ti-<b>KON</b></div><div class="fr">may it be established</div></div>
+      <div class="word"><div class="he">בֵּית</div><div class="tr">beit</div><div class="fr">the house of</div></div>
+      <div class="word"><div class="he">תְּפִלָּתִי</div><div class="tr">tfi-la-<b>TI</b></div><div class="fr">my prayer</div></div>
+      <div class="word"><div class="he">וְשָׁם</div><div class="tr">ve-<b>SHAM</b></div><div class="fr">and there</div></div>
+      <div class="word"><div class="he">תּוֹדָה</div><div class="tr">to-<b>DA</b></div><div class="fr">thanksgiving</div></div>
+      <div class="word"><div class="he">נְזַבֵּחַ</div><div class="tr">ne-za-<b>BE</b>-ach</div><div class="fr">we will offer</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Let my house of prayer be established, and there we will offer thanks.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְעֵת</div><div class="tr">le-<b>ET</b></div><div class="fr">at the time</div></div>
+      <div class="word"><div class="he">תָּכִין</div><div class="tr">ta-<b>CHIN</b></div><div class="fr">You prepare</div></div>
+      <div class="word"><div class="he">מַטְבֵּחַ</div><div class="tr">mat-<b>BE</b>-ach</div><div class="fr">a slaughter</div></div>
+      <div class="word"><div class="he">מִצָּר</div><div class="tr">mi-<b>TZAR</b></div><div class="fr">from the foe</div></div>
+      <div class="word"><div class="he">הַמְנַבֵּחַ</div><div class="tr">ham-na-<b>BE</b>-ach</div><div class="fr">the blaspheming one</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">When You prepare the slaughter of the blaspheming foe,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָז</div><div class="tr">az</div><div class="fr">then</div></div>
+      <div class="word"><div class="he">אֶגְמוֹר</div><div class="tr">eg-<b>MOR</b></div><div class="fr">I will finish</div></div>
+      <div class="word"><div class="he">בְּשִׁיר</div><div class="tr">be-<b>SHIR</b></div><div class="fr">with a song of</div></div>
+      <div class="word"><div class="he">מִזְמוֹר</div><div class="tr">miz-<b>MOR</b></div><div class="fr">psalm</div></div>
+      <div class="word"><div class="he">חֲנֻכַּת</div><div class="tr">cha-nu-<b>KAT</b></div><div class="fr">the dedication of</div></div>
+      <div class="word"><div class="he">הַמִּזְבֵּחַ</div><div class="tr">ha-miz-<b>BE</b>-ach</div><div class="fr">the altar</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">then I will finish, with a song of psalm, the dedication of the altar.</div>
+  </div>
+
+  <div class="verse-summary">Four lines that rhyme on the same syllable — <strong>לְשַׁבֵּחַ</strong> (le-sha-be-ach), <strong>נְזַבֵּחַ</strong> (ne-za-be-ach), <strong>הַמְנַבֵּחַ</strong> (ham-na-be-ach), <strong>הַמִּזְבֵּחַ</strong> (ha-miz-be-ach) all end in -be-ach — and that rhyme is doing an argument. <strong>חֲנֻכַּת</strong> (cha-nu-kat) is the word chanukah itself: dedication. The poem announces its own subject in its last word, and the festival is named after it.</div>
+</div>
+
+<!-- STANZA 2 -->
+<div class="verse">
+  <span class="verse-num">2 · Egypt</span>
+  <div class="verse-full">רָעוֹת שָׂבְעָה נַפְשִׁי בְּיָגוֹן כֹּחִי כִּלָה<br>
+  חַיַּי מָרְרוּ בְּקוֹשִׁי בְּשִׁעְבּוּד מַלְכוּת עֶגְלָה<br>
+  וּבְיָדוֹ הַגְּדוֹלָה הוֹצִיא אֶת הַסְּגֻלָּה<br>
+  חֵיל פַּרְעֹה וְכָל זַרְעוֹ יָרְדוּ כְאֶבֶן בִּמְצוּלָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רָעוֹת</div><div class="tr">ra-<b>OT</b></div><div class="fr">troubles</div></div>
+      <div class="word"><div class="he">שָׂבְעָה</div><div class="tr">sav-<b>A</b></div><div class="fr">was sated</div></div>
+      <div class="word"><div class="he">נַפְשִׁי</div><div class="tr">naf-<b>SHI</b></div><div class="fr">my soul</div></div>
+      <div class="word"><div class="he">בְּיָגוֹן</div><div class="tr">bya-<b>GON</b></div><div class="fr">with grief</div></div>
+      <div class="word"><div class="he">כֹּחִי</div><div class="tr">ko-<b>CHI</b></div><div class="fr">my strength</div></div>
+      <div class="word"><div class="he">כִּלָה</div><div class="tr">ki-<b>LA</b></div><div class="fr">it consumed</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">My soul was sated with troubles, my strength consumed with grief.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חַיַּי</div><div class="tr">cha-<b>YAI</b></div><div class="fr">my life</div></div>
+      <div class="word"><div class="he">מָרְרוּ</div><div class="tr">mar-<b>RU</b></div><div class="fr">they embittered</div></div>
+      <div class="word"><div class="he">בְּקוֹשִׁי</div><div class="tr">be-ko-<b>SHI</b></div><div class="fr">with hardship</div></div>
+      <div class="word"><div class="he">בְּשִׁעְבּוּד</div><div class="tr">be-shi-<b>BUD</b></div><div class="fr">under the servitude of</div></div>
+      <div class="word"><div class="he">מַלְכוּת</div><div class="tr">mal-<b>CHUT</b></div><div class="fr">the kingdom of</div></div>
+      <div class="word"><div class="he">עֶגְלָה</div><div class="tr">eg-<b>LA</b></div><div class="fr">the calf</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">They embittered my life with hardship, under the rule of the calf-kingdom.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּבְיָדוֹ</div><div class="tr">uv-ya-<b>DO</b></div><div class="fr">and with His hand</div></div>
+      <div class="word"><div class="he">הַגְּדוֹלָה</div><div class="tr">hag-do-<b>LA</b></div><div class="fr">the great</div></div>
+      <div class="word"><div class="he">הוֹצִיא</div><div class="tr">ho-<b>TZI</b></div><div class="fr">He brought out</div></div>
+      <div class="word"><div class="he">אֶת</div><div class="tr">et</div><div class="fr">the</div></div>
+      <div class="word"><div class="he">הַסְּגֻלָּה</div><div class="tr">has-gu-<b>LA</b></div><div class="fr">treasured people</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">But with His great hand He brought out the treasured people,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֵיל</div><div class="tr">cheil</div><div class="fr">the army of</div></div>
+      <div class="word"><div class="he">פַּרְעֹה</div><div class="tr">par-<b>O</b></div><div class="fr">Pharaoh</div></div>
+      <div class="word"><div class="he">וְכָל</div><div class="tr">ve-<b>CHAL</b></div><div class="fr">and all</div></div>
+      <div class="word"><div class="he">זַרְעוֹ</div><div class="tr">zar-<b>O</b></div><div class="fr">his seed</div></div>
+      <div class="word"><div class="he">יָרְדוּ</div><div class="tr">yar-<b>DU</b></div><div class="fr">went down</div></div>
+      <div class="word"><div class="he">כְאֶבֶן</div><div class="tr">che-<b>E</b>-ven</div><div class="fr">like a stone</div></div>
+      <div class="word"><div class="he">בִּמְצוּלָה</div><div class="tr">bim-tzu-<b>LA</b></div><div class="fr">into the deep</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">the army of Pharaoh and all his seed went down like a stone into the deep.</div>
+  </div>
+
+  <div class="verse-summary"><strong>כְאֶבֶן</strong> (che-e-ven) and <strong>בִּמְצוּלָה</strong> (bim-tzu-la) are lifted straight out of the Song of the Sea in Exodus 15, where the same two words close the same image. The poem quotes rather than describes, and it will do this in every stanza.</div>
+</div>
+
+<!-- STANZA 3 -->
+<div class="verse">
+  <span class="verse-num">3 · Babylon</span>
+  <div class="verse-full">דְּבִיר קָדְשׁוֹ הֱבִיאַנִי וְגַם שָׁם לֹא שָׁקַטְתִּי<br>
+  וּבָא נוֹגֵשׂ וְהִגְלַנִי כִּי זָרִים עָבַדְתִּי<br>
+  וְיֵין רַעַל מָסַכְתִּי כִּמְעַט שֶׁעָבַרְתִּי<br>
+  קֵץ בָּבֶל זְרֻבָּבֶל לְקֵץ שִׁבְעִים נוֹשָׁעְתִּי</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דְּבִיר</div><div class="tr">dvir</div><div class="fr">the sanctuary of</div></div>
+      <div class="word"><div class="he">קָדְשׁוֹ</div><div class="tr">kad-<b>SHO</b></div><div class="fr">His holiness</div></div>
+      <div class="word"><div class="he">הֱבִיאַנִי</div><div class="tr">he-vi-a-<b>NI</b></div><div class="fr">He brought me</div></div>
+      <div class="word"><div class="he">וְגַם</div><div class="tr">ve-<b>GAM</b></div><div class="fr">and even</div></div>
+      <div class="word"><div class="he">שָׁם</div><div class="tr">sham</div><div class="fr">there</div></div>
+      <div class="word"><div class="he">לֹא</div><div class="tr">lo</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">שָׁקַטְתִּי</div><div class="tr">sha-kat-<b>TI</b></div><div class="fr">I rested</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">He brought me to His holy sanctuary, and even there I found no rest.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּבָא</div><div class="tr">u-<b>VA</b></div><div class="fr">and there came</div></div>
+      <div class="word"><div class="he">נוֹגֵשׂ</div><div class="tr">no-<b>GES</b></div><div class="fr">an oppressor</div></div>
+      <div class="word"><div class="he">וְהִגְלַנִי</div><div class="tr">ve-hig-la-<b>NI</b></div><div class="fr">and he exiled me</div></div>
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">זָרִים</div><div class="tr">za-<b>RIM</b></div><div class="fr">strangers</div></div>
+      <div class="word"><div class="he">עָבַדְתִּי</div><div class="tr">a-vad-<b>TI</b></div><div class="fr">I served</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">An oppressor came and exiled me, for I had served strangers,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְיֵין</div><div class="tr">ve-<b>YEIN</b></div><div class="fr">and wine of</div></div>
+      <div class="word"><div class="he">רַעַל</div><div class="tr">ra-<b>AL</b></div><div class="fr">poison</div></div>
+      <div class="word"><div class="he">מָסַכְתִּי</div><div class="tr">ma-sach-<b>TI</b></div><div class="fr">I drank</div></div>
+      <div class="word"><div class="he">כִּמְעַט</div><div class="tr">kim-<b>AT</b></div><div class="fr">barely</div></div>
+      <div class="word"><div class="he">שֶׁעָבַרְתִּי</div><div class="tr">she-a-var-<b>TI</b></div><div class="fr">that I passed</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and I drank wine of poison; I had barely passed through</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קֵץ</div><div class="tr">ketz</div><div class="fr">the end of</div></div>
+      <div class="word"><div class="he">בָּבֶל</div><div class="tr"><b>BA</b>-vel</div><div class="fr">Babylon</div></div>
+      <div class="word"><div class="he">זְרֻבָּבֶל</div><div class="tr">ze-ru-<b>BA</b>-vel</div><div class="fr">Zerubbabel</div></div>
+      <div class="word"><div class="he">לְקֵץ</div><div class="tr">le-<b>KETZ</b></div><div class="fr">at the end of</div></div>
+      <div class="word"><div class="he">שִׁבְעִים</div><div class="tr">shiv-<b>IM</b></div><div class="fr">seventy</div></div>
+      <div class="word"><div class="he">נוֹשָׁעְתִּי</div><div class="tr">no-sha-<b>TI</b></div><div class="fr">I was saved</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">when Babylon's end came through Zerubbabel; after seventy years I was saved.</div>
+  </div>
+
+  <div class="verse-summary"><strong>בָּבֶל</strong> (ba-vel) and <strong>זְרֻבָּבֶל</strong> (ze-ru-ba-vel) sit side by side on purpose: the name of the empire and the name of the man who ended it share three consonants. The poem is built out of that kind of pun, and it is a great deal easier to remember a stanza when you can hear the joke in it.</div>
+</div>
+
+<!-- STANZA 4 -->
+<div class="verse">
+  <span class="verse-num">4 · Haman</span>
+  <div class="verse-full">כְּרוֹת קוֹמַת בְּרוֹשׁ בִּקֵּשׁ אֲגָגִי בֶּן הַמְּדָתָא<br>
+  וְנִהְיָתָה לוֹ לְפַח וּלְמוֹקֵשׁ וְגַאֲוָתוֹ נִשְׁבָּתָה<br>
+  רֹאשׁ יְמִינִי נִשֵּׂאתָ וְאוֹיֵב שְׁמוֹ מָחִיתָ<br>
+  רֹב בָּנָיו וְקִנְיָנָיו עַל הָעֵץ תָּלִיתָ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כְּרוֹת</div><div class="tr">krot</div><div class="fr">to cut down</div></div>
+      <div class="word"><div class="he">קוֹמַת</div><div class="tr">ko-<b>MAT</b></div><div class="fr">the height of</div></div>
+      <div class="word"><div class="he">בְּרוֹשׁ</div><div class="tr">brosh</div><div class="fr">cypress</div></div>
+      <div class="word"><div class="he">בִּקֵּשׁ</div><div class="tr">bi-<b>KESH</b></div><div class="fr">he sought</div></div>
+      <div class="word"><div class="he">אֲגָגִי</div><div class="tr">a-ga-<b>GI</b></div><div class="fr">the Agagite</div></div>
+      <div class="word"><div class="he">בֶּן</div><div class="tr">ben</div><div class="fr">son of</div></div>
+      <div class="word"><div class="he">הַמְּדָתָא</div><div class="tr">ham-da-<b>TA</b></div><div class="fr">Hammedatha</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">The Agagite, son of Hammedatha, sought to cut down the tall cypress,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְנִהְיָתָה</div><div class="tr">ve-nih-ya-<b>TA</b></div><div class="fr">and it became</div></div>
+      <div class="word"><div class="he">לוֹ</div><div class="tr">lo</div><div class="fr">for him</div></div>
+      <div class="word"><div class="he">לְפַח</div><div class="tr">le-<b>FACH</b></div><div class="fr">a snare</div></div>
+      <div class="word"><div class="he">וּלְמוֹקֵשׁ</div><div class="tr">ul-mo-<b>KESH</b></div><div class="fr">and a trap</div></div>
+      <div class="word"><div class="he">וְגַאֲוָתוֹ</div><div class="tr">ve-ga-a-va-<b>TO</b></div><div class="fr">and his arrogance</div></div>
+      <div class="word"><div class="he">נִשְׁבָּתָה</div><div class="tr">nish-ba-<b>TA</b></div><div class="fr">was stilled</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">but it became a snare and a trap for him, and his arrogance was stilled.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רֹאשׁ</div><div class="tr">rosh</div><div class="fr">the head of</div></div>
+      <div class="word"><div class="he">יְמִינִי</div><div class="tr">ye-mi-<b>NI</b></div><div class="fr">the Benjaminite</div></div>
+      <div class="word"><div class="he">נִשֵּׂאתָ</div><div class="tr">ni-se-<b>TA</b></div><div class="fr">You lifted</div></div>
+      <div class="word"><div class="he">וְאוֹיֵב</div><div class="tr">ve-o-<b>YEV</b></div><div class="fr">and the enemy</div></div>
+      <div class="word"><div class="he">שְׁמוֹ</div><div class="tr">shmo</div><div class="fr">his name</div></div>
+      <div class="word"><div class="he">מָחִיתָ</div><div class="tr">ma-chi-<b>TA</b></div><div class="fr">You blotted out</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">You lifted the head of the Benjaminite, and blotted out the enemy's name;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רֹב</div><div class="tr">rov</div><div class="fr">the many of</div></div>
+      <div class="word"><div class="he">בָּנָיו</div><div class="tr">ba-<b>NAV</b></div><div class="fr">his sons</div></div>
+      <div class="word"><div class="he">וְקִנְיָנָיו</div><div class="tr">ve-kin-ya-<b>NAV</b></div><div class="fr">and his possessions</div></div>
+      <div class="word"><div class="he">עַל</div><div class="tr">al</div><div class="fr">on</div></div>
+      <div class="word"><div class="he">הָעֵץ</div><div class="tr">ha-<b>ETZ</b></div><div class="fr">the tree</div></div>
+      <div class="word"><div class="he">תָּלִיתָ</div><div class="tr">ta-li-<b>TA</b></div><div class="fr">You hanged</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">the many sons he had, and his possessions, You hanged on the gallows.</div>
+  </div>
+
+  <div class="verse-summary"><strong>בְּרוֹשׁ</strong> (brosh) is a cypress, and it means Mordechai — the poem never names him, it calls him a tall tree, and then <strong>יְמִינִי</strong> (ye-mi-ni) names his tribe instead. Naming by association rather than directly is the ordinary manner of a piyyut, and it is why these poems reward a second reading.</div>
+</div>
+
+<!-- STANZA 5 -->
+<div class="verse">
+  <span class="verse-num">5 · the Greeks</span>
+  <div class="verse-full">יְוָנִים נִקְבְּצוּ עָלַי אֲזַי בִּימֵי חַשְׁמַנִּים<br>
+  וּפָרְצוּ חוֹמוֹת מִגְדָּלַי וְטִמְּאוּ כָּל הַשְּׁמָנִים<br>
+  וּמִנּוֹתַר קַנְקַנִּים נַעֲשָׂה נֵס לַשּׁוֹשַׁנִּים<br>
+  בְּנֵי בִינָה יְמֵי שְׁמוֹנָה קָבְעוּ שִׁיר וּרְנָנִים</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יְוָנִים</div><div class="tr">ye-va-<b>NIM</b></div><div class="fr">Greeks</div></div>
+      <div class="word"><div class="he">נִקְבְּצוּ</div><div class="tr">nik-be-<b>TZU</b></div><div class="fr">gathered</div></div>
+      <div class="word"><div class="he">עָלַי</div><div class="tr">a-<b>LAI</b></div><div class="fr">against me</div></div>
+      <div class="word"><div class="he">אֲזַי</div><div class="tr">a-<b>ZAI</b></div><div class="fr">then</div></div>
+      <div class="word"><div class="he">בִּימֵי</div><div class="tr">bi-<b>MEI</b></div><div class="fr">in the days of</div></div>
+      <div class="word"><div class="he">חַשְׁמַנִּים</div><div class="tr">chash-ma-<b>NIM</b></div><div class="fr">the Hasmoneans</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">The Greeks gathered against me, then, in the days of the Hasmoneans,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּפָרְצוּ</div><div class="tr">u-far-<b>TZU</b></div><div class="fr">and they breached</div></div>
+      <div class="word"><div class="he">חוֹמוֹת</div><div class="tr">cho-<b>MOT</b></div><div class="fr">the walls of</div></div>
+      <div class="word"><div class="he">מִגְדָּלַי</div><div class="tr">mig-da-<b>LAI</b></div><div class="fr">my towers</div></div>
+      <div class="word"><div class="he">וְטִמְּאוּ</div><div class="tr">ve-tim-<b>U</b></div><div class="fr">and they defiled</div></div>
+      <div class="word"><div class="he">כָּל</div><div class="tr">kal</div><div class="fr">all</div></div>
+      <div class="word"><div class="he">הַשְּׁמָנִים</div><div class="tr">hash-ma-<b>NIM</b></div><div class="fr">the oils</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and they breached the walls of my towers, and defiled all the oils.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וּמִנּוֹתַר</div><div class="tr">u-mi-no-<b>TAR</b></div><div class="fr">and from what remained of</div></div>
+      <div class="word"><div class="he">קַנְקַנִּים</div><div class="tr">kan-ka-<b>NIM</b></div><div class="fr">the jars</div></div>
+      <div class="word"><div class="he">נַעֲשָׂה</div><div class="tr">na-a-<b>SA</b></div><div class="fr">was done</div></div>
+      <div class="word"><div class="he">נֵס</div><div class="tr">nes</div><div class="fr">a miracle</div></div>
+      <div class="word"><div class="he">לַשּׁוֹשַׁנִּים</div><div class="tr">la-sho-sha-<b>NIM</b></div><div class="fr">for the roses</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">And from the one jar that remained, a miracle was done for the roses.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּנֵי</div><div class="tr">bnei</div><div class="fr">the sons of</div></div>
+      <div class="word"><div class="he">בִינָה</div><div class="tr">vi-<b>NA</b></div><div class="fr">understanding</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">קָבְעוּ</div><div class="tr">kav-<b>U</b></div><div class="fr">they fixed</div></div>
+      <div class="word"><div class="he">שִׁיר</div><div class="tr">shir</div><div class="fr">song</div></div>
+      <div class="word"><div class="he">וּרְנָנִים</div><div class="tr">ur-na-<b>NIM</b></div><div class="fr">and rejoicing</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Men of understanding fixed eight days for song and rejoicing.</div>
+  </div>
+
+  <div class="verse-summary">This is the only stanza about Chanukah, and it arrives fifth. <strong>לַשּׁוֹשַׁנִּים</strong> (la-sho-sha-nim) — roses — is the poem's word for the people of Israel, and <strong>שְׁמוֹנָה</strong> (shmo-na) is the number eight, which is the whole festival in one word. Everything a household actually celebrates this week is compressed into four lines out of twenty-four.</div>
+</div>
+
+<!-- STANZA 6 -->
+<div class="verse">
+  <span class="verse-num">6 · the plea</span>
+  <div class="verse-full">חֲשׂוֹף זְרוֹעַ קָדְשֶׁךָ וְקָרֵב קֵץ הַיְשׁוּעָה<br>
+  נְקֹם נִקְמַת דַּם עֲבָדֶיךָ מֵאֻמָּה הָרְשָׁעָה<br>
+  כִּי אָרְכָה לָנוּ הַשָּׁעָה וְאֵין קֵץ לִימֵי הָרָעָה<br>
+  דְּחֵה אַדְמוֹן בְּצֵל צַלְמוֹן הָקֵם לָנוּ רוֹעֶה שִׁבְעָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֲשׂוֹף</div><div class="tr">cha-<b>SOF</b></div><div class="fr">bare! (2ms)</div></div>
+      <div class="word"><div class="he">זְרוֹעַ</div><div class="tr">ze-<b>RO</b>-a</div><div class="fr">the arm of</div></div>
+      <div class="word"><div class="he">קָדְשֶׁךָ</div><div class="tr">kad-she-<b>CHA</b></div><div class="fr">Your holiness</div></div>
+      <div class="word"><div class="he">וְקָרֵב</div><div class="tr">ve-ka-<b>REV</b></div><div class="fr">and bring near</div></div>
+      <div class="word"><div class="he">קֵץ</div><div class="tr">ketz</div><div class="fr">the end of</div></div>
+      <div class="word"><div class="he">הַיְשׁוּעָה</div><div class="tr">hai-shu-<b>A</b></div><div class="fr">the salvation</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Bare Your holy arm and bring near the end of the salvation.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">נְקֹם</div><div class="tr">ne-<b>KOM</b></div><div class="fr">avenge! (2ms)</div></div>
+      <div class="word"><div class="he">נִקְמַת</div><div class="tr">nik-<b>MAT</b></div><div class="fr">the vengeance of</div></div>
+      <div class="word"><div class="he">דַּם</div><div class="tr">dam</div><div class="fr">the blood of</div></div>
+      <div class="word"><div class="he">עֲבָדֶיךָ</div><div class="tr">a-va-dei-<b>CHA</b></div><div class="fr">Your servants</div></div>
+      <div class="word"><div class="he">מֵאֻמָּה</div><div class="tr">me-u-<b>MA</b></div><div class="fr">from the nation</div></div>
+      <div class="word"><div class="he">הָרְשָׁעָה</div><div class="tr">har-sha-<b>A</b></div><div class="fr">the wicked</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Avenge the blood of Your servants upon the wicked nation,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">כִּי</div><div class="tr">ki</div><div class="fr">for</div></div>
+      <div class="word"><div class="he">אָרְכָה</div><div class="tr">ar-<b>CHA</b></div><div class="fr">it has grown long</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+      <div class="word"><div class="he">הַשָּׁעָה</div><div class="tr">ha-sha-<b>A</b></div><div class="fr">the hour</div></div>
+      <div class="word"><div class="he">וְאֵין</div><div class="tr">ve-<b>EIN</b></div><div class="fr">and there is no</div></div>
+      <div class="word"><div class="he">קֵץ</div><div class="tr">ketz</div><div class="fr">end</div></div>
+      <div class="word"><div class="he">לִימֵי</div><div class="tr">li-<b>MEI</b></div><div class="fr">to the days of</div></div>
+      <div class="word"><div class="he">הָרָעָה</div><div class="tr">ha-ra-<b>A</b></div><div class="fr">the evil</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">for the hour has grown long for us, and there is no end to the days of evil.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דְּחֵה</div><div class="tr">de-<b>CHE</b></div><div class="fr">thrust back! (2ms)</div></div>
+      <div class="word"><div class="he">אַדְמוֹן</div><div class="tr">ad-<b>MON</b></div><div class="fr">the red one</div></div>
+      <div class="word"><div class="he">בְּצֵל</div><div class="tr">be-<b>TZEL</b></div><div class="fr">into the shadow of</div></div>
+      <div class="word"><div class="he">צַלְמוֹן</div><div class="tr">tzal-<b>MON</b></div><div class="fr">deep darkness</div></div>
+      <div class="word"><div class="he">הָקֵם</div><div class="tr">ha-<b>KEM</b></div><div class="fr">raise up! (2ms)</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+      <div class="word"><div class="he">רוֹעֶה</div><div class="tr">ro-<b>E</b></div><div class="fr">a shepherd</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Thrust back the red one into the deepest shadow; raise up for us the seven shepherds.</div>
+  </div>
+
+  <div class="verse-summary">The sixth stanza is often omitted from printed siddurim and from most tables, and it is the one place the poem stops narrating and starts demanding. Whether to sing it is a decision each household makes; it is printed here because a poem with its last stanza removed is a different poem.</div>
+</div>
+</div>
+
+<div class="chant-tip">
+  <h3>♫ Singing notes</h3>
+  <ul>
+    <li>Everyone sings the first stanza. Whether the table goes on to the other five is a household habit — ask before you launch into the second.</li>
+    <li>The melody is strophic: the same eight bars carry all six stanzas, so once you have the first you have all of them.</li>
+    <li>Lines one and two are the question, lines three and four are the answer. Let the voice lift at the end of line two and settle at the end of line four.</li>
+    <li>It is sung standing, in front of the candles, immediately after the blessings and while the flames are still small.</li>
+    <li>Around 96 BPM in a room; slower if the group is mostly reading it off a page for the first time.</li>
+  </ul>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ About this song</h3>
+  <div class="pardes-level">
+    <h4>The acrostic</h4>
+    <p>The first letters of the five original stanzas spell the name Mordechai. The sixth stanza does not fit that acrostic and is generally taken to be a later addition, which is one reason it is printed in some editions and not others.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Five exiles, one festival</h4>
+    <p>Egypt, Babylon, Haman, the Greeks, and then the present. Chanukah occupies one stanza of five. The poem treats the festival as one entry in a series rather than as its subject, and the last stanza makes the series open-ended.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>The tune</h4>
+    <p>The melody now sung almost everywhere in the Ashkenazi world is a much later borrowing than the words, which are medieval. It is not reproduced here, and it does not need to be: you will hear it the first night you are in anyone's home during the festival.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Text and licence</h4>
+    <p>The Hebrew on this page is the Daat Siddur Ashkenaz text, in the public domain, taken from Sefaria and pinned in this repository. Two variant readings marked in that edition were removed rather than printed, since they are alternatives to a word and not extra words to sing.</p>
+  </div>
+</div>
+
+<footer>Maoz Tzur · מָעוֹז צוּר · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-provenance">
+  <strong>Hebrew:</strong> Siddur Ashkenaz, Festivals, Chanukah, Service for Lighting Chanukah Candles, Maoz Tzur · Daat Siddur Ashkenaz · Public Domain, via Sefaria, pinned in this repo at content/songs/source/018.json.
+  English gloss lines authored for this site; the source translation is used as raw material only. Transliteration generated by this site's own engine (assets/translit.js).
+</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   The key is DERIVED from the grid below by tools/chord-key.mjs and never typed:
+   the psalm template held it as a literal and shipped 'Am' over 126 grids that
+   were in other keys, which sent songKey() and the shuffle generator into the
+   wrong scale. */
+window.SONG_CHORDS = {
+  id: 'songs-018-maoz-tzur-en',
+  key: 'Am',
+  tempo: 96,
+  progression: '| Am Am | Dm Am | E E | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

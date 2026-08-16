@@ -72,6 +72,19 @@ export function buildSong(n) {
     return `<strong>${word.he}</strong> (${readingOf(word.he, word.tr).toLowerCase()})`;
   });
 
+  /* A per-song glossary, keyed on the TRANSLITERATION rather than on the Hebrew.
+     Chad Gadya is 196 word cells over about twenty distinct words; Echad Mi
+     Yodea is 345 over fewer still. Writing each gloss out per line would be a
+     thousand lines of copying, and copying is where inconsistency comes from —
+     the same word glossed three ways in three stanzas.
+
+     Keyed on the transliteration because the authored file may not contain
+     Hebrew, which songs-validate.mjs enforces. That is a constraint, not a
+     workaround: the transliteration is machine-generated from the pinned text,
+     so an author cannot mistype it into matching the wrong word. A line-level
+     gloss always wins, for the places where context changes the sense. */
+  const VOCAB = content.vocab && typeof content.vocab === 'object' ? content.vocab : {};
+
   const firstWords = source.lines[0].words
     .slice(0, CONV.page.titleWordCount)
     .map(w => w.he)
@@ -85,22 +98,34 @@ export function buildSong(n) {
     const srcLines = source.lines.slice(st.from, st.to + 1);
     const full = srcLines.map(l => esc(l.he)).join('<br>\n  ');
 
-    const stichs = srcLines.map((src, k) => {
+    /* A source line is normally one sung line and becomes one stich. The Tanakh
+       songs break that: their "line" is a whole biblical verse of twenty-odd
+       words, which nobody sings in one breath and which renders as an unreadable
+       wall of word cells. So a line may declare stichs at WORD level, exactly as
+       a psalm verse does, and the builder emits one per range. Absent, the whole
+       line is a single stich and nothing changes. */
+    const stichs = srcLines.flatMap((src, k) => {
       const ln = st.lines[k];
-      const authored = Array.isArray(ln.glosses) ? ln.glosses : [];
-      const words = src.words.map((w, wi) => {
-        const gloss = (authored[wi] || '').trim() || (w.gloss || '').trim();
-        return `<div class="word"><div class="he">${esc(w.he)}</div>`
-          + `<div class="tr">${boldStress(readingOf(w.he, w.tr))}</div>`
-          + `<div class="fr">${esc(gloss)}</div></div>`;
-      }).join('\n      ');
+      const ranges = Array.isArray(ln.stichs) && ln.stichs.length
+        ? ln.stichs
+        : [{ from: 0, to: src.words.length - 1, en: ln.en, glosses: ln.glosses, chords: ln.chords }];
 
-      const chords = ln.chords
-        ? `\n    <div class="stich-chords">${chordLineHtml(ln.chords)}</div>`
-        : '';
+      return ranges.map(r => {
+        const authored = Array.isArray(r.glosses) ? r.glosses : [];
+        const words = src.words.slice(r.from, r.to + 1).map((w, j) => {
+          const gloss = (authored[j] || '').trim() || (VOCAB[readingOf(w.he, w.tr)] || VOCAB[w.tr] || '').trim() || (w.gloss || '').trim();
+          return `<div class="word"><div class="he">${esc(w.he)}</div>`
+            + `<div class="tr">${boldStress(readingOf(w.he, w.tr))}</div>`
+            + `<div class="fr">${esc(gloss)}</div></div>`;
+        }).join('\n      ');
 
-      return `  <div class="stich">\n    <div class="stich-words">\n      ${words}\n    </div>${chords}\n`
-        + `    <div class="stich-translation">${expand(ln.en)}</div>\n  </div>`;
+        const chords = r.chords
+          ? `\n    <div class="stich-chords">${chordLineHtml(r.chords)}</div>`
+          : '';
+
+        return `  <div class="stich">\n    <div class="stich-words">\n      ${words}\n    </div>${chords}\n`
+          + `    <div class="stich-translation">${expand(r.en)}</div>\n  </div>`;
+      });
     }).join('\n\n');
 
     const summary = st.summary
@@ -134,6 +159,7 @@ export function buildSong(n) {
     .replaceAll('{{HE_TITLE}}', esc(heTitle))
     .replaceAll('{{HE_FIRST_WORDS}}', esc(firstWords))
     .replaceAll('{{INTRO}}', expand(content.intro))
+        .replaceAll('{{COLS}}', String(Math.min(3, content.stanzas.length)))
     .replaceAll('{{STANZAS}}', stanzaHtml)
     .replaceAll('{{CHANT_TIPS}}', tips)
     .replaceAll('{{ABOUT}}', about)

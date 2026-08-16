@@ -25,6 +25,13 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 
 const REGISTRY = JSON.parse(readFileSync(join(ROOT, 'content', 'songs', 'index.json'), 'utf8')).songs;
+const CONV = JSON.parse(readFileSync(join(ROOT, 'data', 'songs-conventions.json'), 'utf8'));
+
+/* The reading the page will show, which readAs may correct away from the raw
+   transliteration. The vocab must be keyed on what an author SEES, so this has
+   to match the builder exactly — otherwise the validator demands a gloss for a
+   key the builder will never look up, or passes one it will never find. */
+const readingOf = (he, tr) => (CONV.readAs && CONV.readAs[he]) || tr;
 
 const HEBREW = /[֐-׿]/;
 const PLACEHOLDER = /\b(TODO|TBD|FIXME|lorem ipsum|placeholder)\b/i;
@@ -89,6 +96,16 @@ export function validateSong(n) {
     errs.push(`song ${n}: no stanzas`);
     return errs;
   }
+  /* Same fallback chain the builder uses: line gloss, then the per-song
+     vocabulary keyed on transliteration, then whatever the source carried.
+     If this list and the builder ever disagree, the validator passes a file
+     that then builds a page with blank cells — so they are written to be
+     read side by side. */
+  const VOCAB = content.vocab && typeof content.vocab === 'object' ? content.vocab : {};
+  for (const [k, v] of Object.entries(VOCAB)) {
+    if (typeof v !== 'string' || !v.trim()) errs.push(`song ${n}: vocab entry "${k}" has no gloss`);
+  }
+
   let expected = 0;
   for (const [si, st] of content.stanzas.entries()) {
     const where = `stanza ${st.n ?? si + 1}`;
@@ -105,13 +122,44 @@ export function validateSong(n) {
     }
     st.lines.forEach((ln, k) => {
       const idx = st.from + k;
-      if (!ln || typeof ln.en !== 'string' || !ln.en.trim()) errs.push(`song ${n}: ${where} line ${idx} has no English`);
-      // 5. every word ends up with a gloss: authored here, or pre-filled in the source
       const src = source.lines[idx];
       if (!src) return;
+
+      /* A line is one stich unless it declares word-level ranges. Those ranges
+         obey the same rule as psalm stichs: cover every word once, in order. A
+         range that skips a word drops it off the page, and nothing downstream
+         would notice — the stanza would still look complete. */
+      const ranges = Array.isArray(ln.stichs) && ln.stichs.length ? ln.stichs : null;
+      if (ranges) {
+        let want = 0;
+        ranges.forEach((r, ri) => {
+          const at = `${where} line ${idx} stich ${ri}`;
+          if (!Number.isInteger(r.from) || !Number.isInteger(r.to)) { errs.push(`song ${n}: ${at} has no from/to word indices`); return; }
+          if (r.from !== want) errs.push(`song ${n}: ${at} starts at word ${r.from}, expected ${want} — a word would be skipped or repeated`);
+          if (r.to < r.from) errs.push(`song ${n}: ${at} ends (${r.to}) before it starts (${r.from})`);
+          if (r.to >= src.words.length) errs.push(`song ${n}: ${at} runs to word ${r.to}, the line has ${src.words.length}`);
+          want = r.to + 1;
+          if (typeof r.en !== 'string' || !r.en.trim()) errs.push(`song ${n}: ${at} has no English`);
+          const g = Array.isArray(r.glosses) ? r.glosses : [];
+          const span = r.to - r.from + 1;
+          if (g.length > span) errs.push(`song ${n}: ${at} has ${g.length} glosses for ${span} words`);
+          for (let j = 0; j < span; j++) {
+            const w = src.words[r.from + j];
+            if (!w) continue;
+            if (!((g[j] || '').trim() || (VOCAB[readingOf(w.he, w.tr)] || VOCAB[w.tr] || '').trim() || (w.gloss || '').trim())) errs.push(`song ${n}: ${at} word ${r.from + j} has no gloss`);
+          }
+        });
+        if (want !== src.words.length) {
+          errs.push(`song ${n}: ${where} line ${idx} stichs cover ${want} of ${src.words.length} words — the rest would vanish`);
+        }
+        if (ln.en) errs.push(`song ${n}: ${where} line ${idx} has both stichs and a line-level en; only one can reach the page`);
+        return;
+      }
+
+      if (typeof ln.en !== 'string' || !ln.en.trim()) errs.push(`song ${n}: ${where} line ${idx} has no English`);
       const authored = Array.isArray(ln.glosses) ? ln.glosses : [];
       src.words.forEach((w, wi) => {
-        const g = (authored[wi] || '').trim() || (w.gloss || '').trim();
+        const g = (authored[wi] || '').trim() || (VOCAB[readingOf(w.he, w.tr)] || VOCAB[w.tr] || '').trim() || (w.gloss || '').trim();
         if (!g) errs.push(`song ${n}: ${where} line ${idx} word ${wi} has no gloss`);
       });
       if (authored.length > src.words.length) {

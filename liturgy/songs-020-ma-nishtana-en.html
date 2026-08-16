@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ma Nishtana: מַה נִּשְׁתַּנָּה</title>
+<!-- Like the psalm pages, these do not load app.js, which is what injects the
+     icon everywhere else. Without this line the browser tab is blank and the
+     page asks for a /favicon.ico that does not exist. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<!-- No per-page <style>. The seven hand-written song pages each carry ~150 lines
+     of duplicated CSS, which is why fixing the chord line on one of them fixed it
+     on none of the others. Everything this page needs is in liturgy.css. -->
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Ma Nishtana: Why is this night different</h1>
+    <div class="subtitle">Pesach seder, asked by the youngest at the table · מַה נִּשְׁתַּנָּה</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Ma Nishtana</a></div>
+</header>
+
+<div class="t-intro">
+  The four questions, asked at the seder by the youngest child who can read them, and the first long piece of Hebrew most people ever learn by heart. It is built to be learnable: one opening line, then four contrasts with identical grammar, so once you can hear the first you can predict all four. It is also not really four questions. There is one question — why is this night different — and four observations that answer it, each of the form on all other nights we do X, on this night Y.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display"><strong>Key: Dm · 3 chords used ·</strong>&nbsp; <span class="chord" data-chord="Dm">Dm</span> · <span class="chord" data-chord="Gm">Gm</span> · <span class="chord" data-chord="A">A</span></div>
+  <div class="meta-line">88 BPM · 4/4 · chanted rather than sung, by the youngest person who can manage it · one opening question and four contrasts, each with the same two halves · to reset the chord panel: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid song-grid" data-cols="1">
+<!-- STANZA 1 -->
+<div class="verse">
+  <span class="verse-num">1 · the question</span>
+  <div class="verse-full">מַה נִּשְׁתַּנָּה הַלַּיְלָה הַזֶּה מִכָּל הַלֵּילוֹת שֶׁבְּכָל הַלֵּילוֹת אָנוּ אוֹכְלִין חָמֵץ וּמַצָּה הַלַּיְלָה הַזֶּה כֻּלּוֹ מַצָּה שֶׁבְּכָל הַלֵּילוֹת אָנוּ אוֹכְלִין שְׁאָר יְרָקוֹת הַלַּיְלָה הַזֶּה כֻּלּוֹ מָרוֹר שֶׁבְּכָל הַלֵּילוֹת אֵין אָנוּ מַטְבִּילִין אֲפִילוּ פַּעַם אֶחָת הַלַּיְלָה הַזֶּה שְׁתֵּי פְעָמִים שֶׁבְּכָל הַלֵּילוֹת אָנוּ אוֹכְלִין בֵּין יוֹשְׁבִין וּבֵין מְסֻבִּין הַלַּיְלָה הַזֶּה כֻּלָּנוּ מְסֻבִּין</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מַה</div><div class="tr">ma</div><div class="fr">what</div></div>
+      <div class="word"><div class="he">נִּשְׁתַּנָּה</div><div class="tr">nish-ta-<b>NA</b></div><div class="fr">is different</div></div>
+      <div class="word"><div class="he">הַלַּיְלָה</div><div class="tr">ha-lai-<b>LA</b></div><div class="fr">the night</div></div>
+      <div class="word"><div class="he">הַזֶּה</div><div class="tr">ha-<b>ZE</b></div><div class="fr">this</div></div>
+      <div class="word"><div class="he">מִכָּל</div><div class="tr">mi-<b>KAL</b></div><div class="fr">from all</div></div>
+      <div class="word"><div class="he">הַלֵּילוֹת</div><div class="tr">ha-lei-<b>LOT</b></div><div class="fr">the nights</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Why is this night different from all other nights?</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁבְּכָל</div><div class="tr">sheb-<b>CHAL</b></div><div class="fr">that on all</div></div>
+      <div class="word"><div class="he">הַלֵּילוֹת</div><div class="tr">ha-lei-<b>LOT</b></div><div class="fr">the nights</div></div>
+      <div class="word"><div class="he">אָנוּ</div><div class="tr">a-<b>NU</b></div><div class="fr">we</div></div>
+      <div class="word"><div class="he">אוֹכְלִין</div><div class="tr">och-<b>LIN</b></div><div class="fr">eat</div></div>
+      <div class="word"><div class="he">חָמֵץ</div><div class="tr">cha-<b>METZ</b></div><div class="fr">leavened bread</div></div>
+      <div class="word"><div class="he">וּמַצָּה</div><div class="tr">u-ma-<b>TZA</b></div><div class="fr">and matzah</div></div>
+      <div class="word"><div class="he">הַלַּיְלָה</div><div class="tr">ha-lai-<b>LA</b></div><div class="fr">the night</div></div>
+      <div class="word"><div class="he">הַזֶּה</div><div class="tr">ha-<b>ZE</b></div><div class="fr">this</div></div>
+      <div class="word"><div class="he">כֻּלּוֹ</div><div class="tr">ku-<b>LO</b></div><div class="fr">all of it</div></div>
+      <div class="word"><div class="he">מַצָּה</div><div class="tr">ma-<b>TZA</b></div><div class="fr">matzah</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">On all other nights we eat leavened bread and matzah; this night, only matzah.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁבְּכָל</div><div class="tr">sheb-<b>CHAL</b></div><div class="fr">that on all</div></div>
+      <div class="word"><div class="he">הַלֵּילוֹת</div><div class="tr">ha-lei-<b>LOT</b></div><div class="fr">the nights</div></div>
+      <div class="word"><div class="he">אָנוּ</div><div class="tr">a-<b>NU</b></div><div class="fr">we</div></div>
+      <div class="word"><div class="he">אוֹכְלִין</div><div class="tr">och-<b>LIN</b></div><div class="fr">eat</div></div>
+      <div class="word"><div class="he">שְׁאָר</div><div class="tr">she-<b>AR</b></div><div class="fr">the rest of</div></div>
+      <div class="word"><div class="he">יְרָקוֹת</div><div class="tr">ye-ra-<b>KOT</b></div><div class="fr">vegetables</div></div>
+      <div class="word"><div class="he">הַלַּיְלָה</div><div class="tr">ha-lai-<b>LA</b></div><div class="fr">the night</div></div>
+      <div class="word"><div class="he">הַזֶּה</div><div class="tr">ha-<b>ZE</b></div><div class="fr">this</div></div>
+      <div class="word"><div class="he">כֻּלּוֹ</div><div class="tr">ku-<b>LO</b></div><div class="fr">all of it</div></div>
+      <div class="word"><div class="he">מָרוֹר</div><div class="tr">ma-<b>ROR</b></div><div class="fr">bitter herb</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">On all other nights we eat other vegetables; this night, bitter herbs.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁבְּכָל</div><div class="tr">sheb-<b>CHAL</b></div><div class="fr">that on all</div></div>
+      <div class="word"><div class="he">הַלֵּילוֹת</div><div class="tr">ha-lei-<b>LOT</b></div><div class="fr">the nights</div></div>
+      <div class="word"><div class="he">אֵין</div><div class="tr">ein</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">אָנוּ</div><div class="tr">a-<b>NU</b></div><div class="fr">we</div></div>
+      <div class="word"><div class="he">מַטְבִּילִין</div><div class="tr">mat-bi-<b>LIN</b></div><div class="fr">dip</div></div>
+      <div class="word"><div class="he">אֲפִילוּ</div><div class="tr">a-fi-<b>LU</b></div><div class="fr">even</div></div>
+      <div class="word"><div class="he">פַּעַם</div><div class="tr">pa-<b>AM</b></div><div class="fr">time</div></div>
+      <div class="word"><div class="he">אֶחָת</div><div class="tr">e-<b>CHAT</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">הַלַּיְלָה</div><div class="tr">ha-lai-<b>LA</b></div><div class="fr">the night</div></div>
+      <div class="word"><div class="he">הַזֶּה</div><div class="tr">ha-<b>ZE</b></div><div class="fr">this</div></div>
+      <div class="word"><div class="he">שְׁתֵּי</div><div class="tr">shtei</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">פְעָמִים</div><div class="tr">fe-a-<b>MIM</b></div><div class="fr">times</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">On all other nights we do not dip even once; this night, twice.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שֶׁבְּכָל</div><div class="tr">sheb-<b>CHAL</b></div><div class="fr">that on all</div></div>
+      <div class="word"><div class="he">הַלֵּילוֹת</div><div class="tr">ha-lei-<b>LOT</b></div><div class="fr">the nights</div></div>
+      <div class="word"><div class="he">אָנוּ</div><div class="tr">a-<b>NU</b></div><div class="fr">we</div></div>
+      <div class="word"><div class="he">אוֹכְלִין</div><div class="tr">och-<b>LIN</b></div><div class="fr">eat</div></div>
+      <div class="word"><div class="he">בֵּין</div><div class="tr">bein</div><div class="fr">between</div></div>
+      <div class="word"><div class="he">יוֹשְׁבִין</div><div class="tr">yosh-<b>VIN</b></div><div class="fr">sitting</div></div>
+      <div class="word"><div class="he">וּבֵין</div><div class="tr">u-<b>VEIN</b></div><div class="fr">and between</div></div>
+      <div class="word"><div class="he">מְסֻבִּין</div><div class="tr">me-su-<b>BIN</b></div><div class="fr">reclining</div></div>
+      <div class="word"><div class="he">הַלַּיְלָה</div><div class="tr">ha-lai-<b>LA</b></div><div class="fr">the night</div></div>
+      <div class="word"><div class="he">הַזֶּה</div><div class="tr">ha-<b>ZE</b></div><div class="fr">this</div></div>
+      <div class="word"><div class="he">כֻּלָּנוּ</div><div class="tr">ku-la-<b>NU</b></div><div class="fr">all of us</div></div>
+      <div class="word"><div class="he">מְסֻבִּין</div><div class="tr">me-su-<b>BIN</b></div><div class="fr">reclining</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">On all other nights we eat either sitting up or reclining; this night, we all recline.</div>
+  </div>
+
+  <div class="verse-summary">Four contrasts, one grammar. Each begins <strong>שֶׁבְּכָל</strong> (sheb-chal) — literally "that on all" — and each pivots on <strong>הַלַּיְלָה</strong> (ha-lai-la), "this night", with no verb at all in the second half. Hebrew does not need one: "this night — all of it matzah" is a complete sentence. Notice too that <strong>כֻּלּוֹ</strong> (ku-lo), <strong>כֻּלּוֹ</strong> (ku-lo) and <strong>כֻּלָּנוּ</strong> (ku-la-nu) are the same word wearing three endings: all of it, all of it, all of us. The suffix is doing the work a separate pronoun does in English.</div>
+</div>
+</div>
+
+<div class="chant-tip">
+  <h3>♫ Singing notes</h3>
+  <ul>
+    <li>Traditionally the youngest person at the table who can manage it. If several children are close in age they usually do it together, and nobody minds.</li>
+    <li>It is chanted on a recitation tune rather than sung as a song, so the pace follows the reader, not the guitar. If you are playing, follow.</li>
+    <li>Each of the four has the same melodic shape, rising through the first half and falling on the second. Learn one, you have four.</li>
+    <li>The last one is the finish and is usually taken a little slower, so the table knows to answer.</li>
+  </ul>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ About this song</h3>
+  <div class="pardes-level">
+    <h4>Where the four come from</h4>
+    <p>The Mishnah in tractate Pesachim gives the child's questions, and its list is not identical to the one recited today — the question about roasted meat belonged to a time when the Passover offering was still brought, and it dropped out. The reclining question took its place.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Reclining</h4>
+    <p><strong>מְסֻבִּין</strong> (me-su-bin) and <strong>מְסֻבִּין</strong> (me-su-bin) describe eating propped on the left side, the posture of a free person at a Roman banquet. The fourth contrast is therefore not about food at all; it is about who you are while eating it, which is the point the whole evening is making.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Dipping twice</h4>
+    <p>The two dippings are the karpas into salt water early in the evening and the bitter herb into charoset later. The question notices a detail of the choreography, which is what a child at the table would in fact notice.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>The rubric that is not here</h4>
+    <p>The Haggadah text on Sefaria carries a stage direction before this passage — remove the plate, pour the second cup, the child asks. It is instruction to the host, not words to be recited, and the scaffold dropped it rather than printing it as a line of the song.</p>
+  </div>
+</div>
+
+<footer>Ma Nishtana · מַה נִּשְׁתַּנָּה · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-provenance">
+  <strong>Hebrew:</strong> Haggadah, Magid, Ma Nishtana · Pesach Haggadah · Public Domain, via Sefaria, pinned in this repo at content/songs/source/020.json.
+  English gloss lines authored for this site; the source translation is used as raw material only. Transliteration generated by this site's own engine (assets/translit.js).
+</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   The key is DERIVED from the grid below by tools/chord-key.mjs and never typed:
+   the psalm template held it as a literal and shipped 'Am' over 126 grids that
+   were in other keys, which sent songKey() and the shuffle generator into the
+   wrong scale. */
+window.SONG_CHORDS = {
+  id: 'songs-020-ma-nishtana-en',
+  key: 'Dm',
+  tempo: 88,
+  progression: '| Dm Dm | Gm Dm | A A | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>
