@@ -20,6 +20,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createRequire } from 'node:module';
 import { validatePsalm } from './tehilim-validate.mjs';
+import { deriveKey } from './chord-key.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -125,6 +126,12 @@ export function buildPsalm(n) {
 
   const template = readFileSync(join(ROOT, 'tools', 'fixtures', 'tehilim-page.html'), 'utf8');
 
+  /* One grid, read once. The key used to be a literal in the template and was
+     wrong on 126 of 140 pages; deriving it here means the two can no longer
+     disagree, and deriveKey throws rather than name a key it cannot read. */
+  const progression = content.progression || '| Am Am | Em Em | Am Dm | Em Am |';
+  const key = deriveKey(progression, `psalm ${n}`);
+
   const html = template
     .replaceAll('{{CSS_VERSION}}', CONV.page.cssVersion)
     .replaceAll('{{N}}', String(n))
@@ -135,7 +142,8 @@ export function buildPsalm(n) {
     .replaceAll('{{INTRO}}', expandRefs(content.intro, data, n))
     .replaceAll('{{VERSES}}', verseHtml)
     .replaceAll('{{PARDES}}', pardes)
-    .replaceAll('{{PROGRESSION}}', content.progression || '| Am Am | Em Em | Am Dm | Em Am |')
+    .replaceAll('{{PROGRESSION}}', progression)
+    .replaceAll('{{KEY}}', key)
     .replaceAll('{{TEMPO}}', String(content.tempo || 70))
     .replaceAll('{{ATTR_HE}}', esc(CONV.attribution.hebrew))
     .replaceAll('{{ATTR_EN}}', esc(CONV.attribution.english))

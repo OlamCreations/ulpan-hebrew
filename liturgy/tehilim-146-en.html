@@ -467,7 +467,7 @@
 
 </div>
 
-<footer>Tehilim 1 · אַשְׁרֵי הָאִישׁ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+<footer>Tehilim 146 · הַלְלוּ יָהּ · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
 
 </div>
 
@@ -477,10 +477,17 @@
 /* This page's harmony. The chord chart itself is shared:
      assets/chord-theory.js  harmony, fretboard search, progression generator
      assets/chords.js        drawing, chord popup, shuffle, playback
-   Progression source: the grid this file already declared; key from inferred from this page's own grid, which opens and closes on Am. */
+   Progression source: the grid this authored file declared. The key is DERIVED from that
+   grid rather than written here, because writing it here is what went wrong: this hole held
+   a literal 'Am' with a comment claiming it was inferred, and 126 of 140 psalms shipped a
+   grid in Dm, Em, C, G, D or F under a declared key of Am. songKey() in chords.js reads this
+   field, so shuffle offered chords from the wrong scale on every one of them. Measured across
+   all 140 grids: 126 open and close on the same chord and 14 close on the dominant of their
+   opening chord, with no other case, so the opening chord is the tonic and deriveKey asserts
+   that relation instead of trusting it. */
 window.SONG_CHORDS = {
   id: 'tehilim-146-en',
-  key: 'Am',
+  key: 'G',
   tempo: 88,
   progression: '| G G | C D | Em C | G D |'
 };
