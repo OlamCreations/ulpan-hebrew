@@ -15,7 +15,20 @@
  */
 import { readFile, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { reportPath } from './paths.mjs';
+import { snapshot as driverSnapshot, sig, settle as driverSettle, READ as driverREAD } from './translator-driver.mjs';
+
+/* Which translit.js produced the transliterations in this capture. Anything that RE-DERIVES
+   a transliteration later — tools/translator-invariants.mjs does — is comparing two programs
+   unless it can check they are the same one. Judging a July capture with an August engine
+   produced 86 confident violations, every one of them the diff between the two engines. */
+const ENGINE = createHash('sha256')
+  .update(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'translit.js')))
+  .digest('hex').slice(0, 12);
 
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const BASE = (arg('--base', 'http://localhost:8912')).replace(/\/$/, '');
@@ -43,44 +56,11 @@ page.on('pageerror', (e) => netErrors.push({ at: Date.now(), jsError: e.message 
 await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
 await page.waitForSelector('#qs-input', { timeout: 15000 });
 
-/** Read the rendered result tree the way a user reads it: sections, then cards. */
-const READ = () => {
-  const out = { sections: [], hint: null };
-  const res = document.getElementById('qs-results');
-  if (!res) return out;
-  // Kept on every record so an empty result can be diagnosed instead of guessed at: rawLen 0
-  // means the container really was cleared, rawLen > 0 means this reader failed to parse what
-  // was on screen. Those are opposite bugs and they look identical without this number.
-  out.rawLen = res.innerHTML.length;
-  out.inputAtRead = (document.getElementById('qs-input') || {}).value;
-  const hint = res.querySelector('.qs-hint');
-  if (hint) out.hint = hint.textContent.trim();
-  let current = null;
-  for (const el of res.children) {
-    if (el.classList.contains('qs-sub')) { current = { title: el.textContent.trim(), cards: [] }; out.sections.push(current); continue; }
-    const cards = el.classList.contains('qs-card') ? [el] : Array.from(el.querySelectorAll(':scope > .qs-card'));
-    for (const c of cards) {
-      if (!current) { current = { title: '(unlabelled)', cards: [] }; out.sections.push(current); }
-      current.cards.push({
-        he: (c.querySelector('.qs-he') || {}).textContent || null,
-        cursive: (c.querySelector('.qs-he-cursive') || {}).textContent || null,
-        tr: (c.querySelector('.qs-tr') || {}).textContent || null,
-        en: (c.querySelector('.qs-en') || {}).textContent || null,
-        breakdown: (c.querySelector('.qs-break-out') || {}).textContent || null,
-      });
-    }
-  }
-  // The natural-version block renders outside the card list.
-  const nat = res.querySelector('.qs-nat-out');
-  if (nat && nat.textContent.trim()) {
-    out.natural = Array.from(nat.querySelectorAll('.qs-card')).map((c) => ({
-      he: (c.querySelector('.qs-he') || {}).textContent || null,
-      tr: (c.querySelector('.qs-tr') || {}).textContent || null,
-      en: (c.querySelector('.qs-en') || {}).textContent || null,
-    }));
-  }
-  return out;
-};
+/* READ, snapshot and settle now live in tools/translator-driver.mjs, imported above. They were
+   duplicated here and in the metamorphic runner, and the synchronisation is the part of this
+   harness that has been got wrong twice — each time producing a confident green. Two copies
+   would drift and there would be no way to know which numbers to believe. */
+const READ = driverREAD;
 
 /*
  * Waiting correctly here is the whole ballgame. The input is debounced by 350ms, so for the
@@ -93,59 +73,13 @@ const READ = () => {
  * it starts online work and removes it when done. Sequence: wait for work to start (or for
  * an offline-only result to appear), wait for it to finish, then confirm stability.
  */
-const snapshot = () => page.evaluate(() => {
-  const r = document.getElementById('qs-results');
-  if (!r) return { busy: false, len: 0, cards: 0, loading: false };
-  return {
-    busy: r.getAttribute('aria-busy') === 'true',
-    len: r.innerHTML.length,
-    cards: r.querySelectorAll('.qs-card').length,
-    // The positive "still working" marker. aria-busy alone is not enough: see settle().
-    loading: !!r.querySelector('.qs-loading'),
-  };
-});
-
-/**
- * @param {string} beforeKey snapshot signature taken BEFORE typing, so we can tell the new
- *   render from the previous query's results still sitting on screen.
- */
-async function settle(beforeKey, maxMs = 20000) {
-  const t0 = Date.now();
-  const sig = (s) => `${s.busy}|${s.len}|${s.cards}|${s.loading}`;
-
-  // 1. The NEW render has started — detected as a change from the pre-typing state, never as
-  //    "there is something on screen". Clearing the field does not clear the results (that
-  //    render is cancelled by the 350ms debounce), so the container still holds the PREVIOUS
-  //    query's cards: treating non-empty as "started" passes instantly on stale content.
-  let started = false;
-  while (Date.now() - t0 < 4000) {
-    const s = await snapshot();
-    if (sig(s) !== beforeKey || s.busy || s.loading) { started = true; break; }
-    await page.waitForTimeout(100);
-  }
-  if (!started) return { settled: true, rendered: false };   // genuinely produced nothing
-
-  // 2. Work finished. Wait on BOTH signals: the loading line is what the user sees, and it
-  //    outlives aria-busy on a slow request. Waiting only on aria-busy let the loading line
-  //    itself sit still for the stability window and be recorded as a finished empty result —
-  //    which is exactly how this probe invented 20 failures the engine never had.
-  while (Date.now() - t0 < maxMs) {
-    const s = await snapshot();
-    if (!s.busy && !s.loading) break;
-    await page.waitForTimeout(150);
-  }
-
-  // 3. Stable for a beat (late sections can still land after aria-busy clears).
-  let last = '', stableSince = 0;
-  while (Date.now() - t0 < maxMs) {
-    const s = await snapshot();
-    const key = sig(s);
-    if (key === last) { if (!stableSince) stableSince = Date.now(); else if (Date.now() - stableSince > 600) return { settled: true, rendered: true }; }
-    else { last = key; stableSince = 0; }
-    await page.waitForTimeout(150);
-  }
-  return { settled: false, rendered: true };
-}
+/* Synchronisation lives in tools/translator-driver.mjs. It was duplicated here and would have
+   been duplicated again in the metamorphic runner; waiting correctly is the part of this
+   harness that has been got wrong twice, each time producing a confident green — 40 invented
+   failures the first time and 20 the second. Two copies drift and there is then no way to know
+   which numbers to believe. The two traps and their fixes are documented in that file. */
+const snapshot = () => driverSnapshot(page);
+const settle = (beforeKey, maxMs) => driverSettle(page, beforeKey, maxMs);
 
 const records = [];
 let n = 0;
@@ -181,7 +115,7 @@ await browser.close();
 
 const out = reportPath('translator-capture.json');
 await writeFile(out, JSON.stringify({
-  captured: new Date().toISOString(), base: BASE,
+  captured: new Date().toISOString(), base: BASE, engine: ENGINE,
   options: { nat: WANT_NAT, breakdown: WANT_BREAK }, records,
 }, null, 1) + '\n', 'utf8');
 

@@ -110,3 +110,33 @@ if (notIdempotent.length || rewritten.length > CEILING) {
   console.error('\nFAIL: cleanDictaForDisplay is not safe to apply to displayed Hebrew.');
   process.exit(1);
 }
+
+/* ---------------------------------------------------------------- convention drift
+ * The score above is PHONEME-level on purpose: normSyl folds kh into ch and tz into ts before
+ * comparing, because both spell the same sound and the test is about the sound. That is the
+ * right call for that test and it leaves a second property unmeasured — WHICH spelling the
+ * learner is shown — and nothing else in this repository was measuring it either.
+ *
+ * It matters because the live translator puts both on one screen. A phrase that hits the
+ * phrasebook is shown with the phrasebook's own `tr`; the card under it is transliterated by
+ * translit.js. So "sli-KHA" and "sli-CHA", "tsa-RIKH" and "tza-RICH", appear together as if
+ * they were different words. Found by tools/translator-invariants.mjs, which derives the
+ * transliteration from the Hebrew on the card and had 13 mismatches, every one of them this.
+ *
+ * The site's scheme is ch/tz — that is what translit.js emits everywhere and what every
+ * generated page carries. This counts the verified data that disagrees, and holds the number
+ * where it is so it cannot quietly grow.
+ */
+const OFF_SCHEME_CEILING = 35;   // measured, not chosen: the number today. Any increase fails.
+const offScheme = [];
+for (const p of data) {
+  if (!p.tr) continue;
+  if (/kh|ts/i.test(p.tr)) offScheme.push(`${p.he}  ->  ${p.tr}`);
+}
+console.log(`\nconvention: the site writes ch and tz; phrasebook rows written kh or ts`);
+console.log(`  off-scheme : ${offScheme.length} of ${data.length} (ceiling ${OFF_SCHEME_CEILING})`);
+for (const s of offScheme.slice(0, 5)) console.log(`     ${s}`);
+if (offScheme.length > OFF_SCHEME_CEILING) {
+  console.error(`\nFAIL: ${offScheme.length} rows use kh/ts where the engine uses ch/tz — the translator will show both spellings side by side.`);
+  process.exit(1);
+}
