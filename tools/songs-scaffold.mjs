@@ -213,8 +213,35 @@ async function scaffold(entry) {
 
   /* Flat lines, in order. The empty strings are dropped as the typesetting they
      are; see the header for what happened when they were read as stanza breaks. */
-  const rawLines = he.text.flatMap(linesOf);
+  let rawLines = he.text.flatMap(linesOf);
   if (!rawLines.length) throw new Error(`song ${entry.n}: no Hebrew lines returned for ${entry.ref}`);
+
+  /* Not every <br> in Daat is a line break. Some are column breaks that fall
+     INSIDE a word, leaving its one-letter prefix stranded at the end of the line
+     and the rest at the start of the next: Baruch El Elyon ends a line on the
+     definite article and opens the next on Shabbat. Split there, the page shows
+     a word cell containing an article and nothing else, transliterated "a", and
+     the word it belongs to loses its article.
+
+     A line-final token of a single Hebrew letter plus its vowel cannot be a word
+     in its own right — every such letter is a prefix — so the two lines are
+     rejoined. Measured across all 22 songs the rule fires exactly twice, both in
+     this song, and never on a line that was genuinely complete. */
+  const PREFIX_LETTERS = 'הובלכמש';
+  const orphanPrefix = line => {
+    const last = line.split(' ').pop() || '';
+    const letters = [...last].filter(c => c >= 'א' && c <= 'ת');
+    return letters.length === 1 && PREFIX_LETTERS.includes(letters[0]);
+  };
+  const joined = [];
+  for (const line of rawLines) {
+    if (joined.length && orphanPrefix(joined[joined.length - 1])) {
+      joined[joined.length - 1] = joined[joined.length - 1] + line;   // no space: it is one word
+    } else {
+      joined.push(line);
+    }
+  }
+  rawLines = joined;
 
   /* An edition prints more than the song. Two kinds of intruder appear here, and
      both would otherwise become a line someone tries to sing:

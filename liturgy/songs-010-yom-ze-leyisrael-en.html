@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yom Zeh LeYisrael: יוֹם זֶה</title>
+<!-- Like the psalm pages, these do not load app.js, which is what injects the
+     icon everywhere else. Without this line the browser tab is blank and the
+     page asks for a /favicon.ico that does not exist. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<!-- No per-page <style>. The seven hand-written song pages each carry ~150 lines
+     of duplicated CSS, which is why fixing the chord line on one of them fixed it
+     on none of the others. Everything this page needs is in liturgy.css. -->
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Yom Zeh LeYisrael: This day is light and joy for Israel</h1>
+    <div class="subtitle">Friday night, at the table · יוֹם זֶה</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Yom Zeh LeYisrael</a></div>
+</header>
+
+<div class="t-intro">
+  Two words close every stanza and open the song: Sabbath of rest. Eleven stanzas, three lines each, and the last line of every one lands on that phrase — which is why a table can sing this for ten minutes with only three words of Hebrew between them. The tune is one of the most loved in the Ashkenazi repertoire and is often hummed long after the words have run out.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display"><strong>Key: Dm · 3 chords used ·</strong>&nbsp; <span class="chord" data-chord="Dm">Dm</span> · <span class="chord" data-chord="Gm">Gm</span> · <span class="chord" data-chord="A">A</span></div>
+  <div class="meta-line">88 BPM · 4/4 · Friday night, and one of the best-loved tunes in the whole repertoire · eleven short stanzas, each ending on the same two words · to reset the chord panel: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid song-grid" data-cols="3">
+<!-- STANZA 1 -->
+<div class="verse">
+  <span class="verse-num">1 · refrain</span>
+  <div class="verse-full">יוֹם זֶה לְיִשְׂרָאֵל אוֹרָה וְשִׂמְחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יוֹם</div><div class="tr">yom</div><div class="fr">day</div></div>
+      <div class="word"><div class="he">זֶה</div><div class="tr">ze</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">לְיִשְׂרָאֵל</div><div class="tr">lyis-ra-<b>EL</b></div><div class="fr">for Israel</div></div>
+      <div class="word"><div class="he">אוֹרָה</div><div class="tr">o-<b>RA</b></div><div class="fr">is light</div></div>
+      <div class="word"><div class="he">וְשִׂמְחָה</div><div class="tr">ve-sim-<b>CHA</b></div><div class="fr">and joy</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">This day for Israel is light and joy: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary">Seven words that come back as the opening of the song and, in their last two, as the close of every stanza. <strong>אוֹרָה</strong> (o-ra) and <strong>וְשִׂמְחָה</strong> (ve-sim-cha) — light and joy — are from Esther, where they describe what the Jews had when the decree was lifted.</div>
+</div>
+
+<!-- STANZA 2 -->
+<div class="verse">
+  <span class="verse-num">2 · at Sinai</span>
+  <div class="verse-full">צִוִּיתָ פִּקּוּדִים בְּמַעֲמַד סִינַי<br>
+  שַׁבָּת וּמוֹעֲדִים לִשְׁמֹר בְּכָל שָׁנַי<br>
+  לַעֲרוֹךְ לְפָנַי מַשְׂאֵת וַאֲרוּחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">צִוִּיתָ</div><div class="tr">tzi-vi-<b>TA</b></div><div class="fr">You commanded</div></div>
+      <div class="word"><div class="he">פִּקּוּדִים</div><div class="tr">pi-ku-<b>DIM</b></div><div class="fr">precepts</div></div>
+      <div class="word"><div class="he">בְּמַעֲמַד</div><div class="tr">be-ma-a-<b>MAD</b></div><div class="fr">at the standing of</div></div>
+      <div class="word"><div class="he">סִינַי</div><div class="tr">si-<b>NAI</b></div><div class="fr">Sinai</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">You commanded precepts at the standing at Sinai,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">וּמוֹעֲדִים</div><div class="tr">u-mo-a-<b>DIM</b></div><div class="fr">and festivals</div></div>
+      <div class="word"><div class="he">לִשְׁמֹר</div><div class="tr">lish-<b>MOR</b></div><div class="fr">to keep</div></div>
+      <div class="word"><div class="he">בְּכָל</div><div class="tr">be-<b>CHAL</b></div><div class="fr">in all</div></div>
+      <div class="word"><div class="he">שָׁנַי</div><div class="tr">sha-<b>NAI</b></div><div class="fr">my years</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">the Sabbath and the festivals, to keep all my years,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לַעֲרוֹךְ</div><div class="tr">la-a-<b>ROCH</b></div><div class="fr">to set out</div></div>
+      <div class="word"><div class="he">לְפָנַי</div><div class="tr">le-fa-<b>NAI</b></div><div class="fr">before me</div></div>
+      <div class="word"><div class="he">מַשְׂאֵת</div><div class="tr">mas-<b>ET</b></div><div class="fr">an offering</div></div>
+      <div class="word"><div class="he">וַאֲרוּחָה</div><div class="tr">va-a-ru-<b>CHA</b></div><div class="fr">and a prepared meal</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">to set before me an offering and a prepared meal: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary"><strong>בְּמַעֲמַד</strong> (be-ma-a-mad) is the standing at Sinai, the fixed Hebrew name for that scene. The stanza moves from a mountain to a laid table in three lines, which is the poem's habit.</div>
+</div>
+
+<!-- STANZA 3 -->
+<div class="verse">
+  <span class="verse-num">3 · the extra soul</span>
+  <div class="verse-full">חֶמְדַּת הַלְּבָבוֹת לְאֻמָּה שְׁבוּרָה<br>
+  לִנְפָשׁוֹת נִכְאָבוֹת נְשָׁמָה יְתֵרָה<br>
+  לְנֶפֶשׁ מְצֵרָה יָסִיר אֲנָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֶמְדַּת</div><div class="tr">chem-<b>DAT</b></div><div class="fr">the desire of</div></div>
+      <div class="word"><div class="he">הַלְּבָבוֹת</div><div class="tr">hal-va-<b>VOT</b></div><div class="fr">the hearts</div></div>
+      <div class="word"><div class="he">לְאֻמָּה</div><div class="tr">le-u-<b>MA</b></div><div class="fr">for a nation</div></div>
+      <div class="word"><div class="he">שְׁבוּרָה</div><div class="tr">shvu-<b>RA</b></div><div class="fr">broken</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">The desire of hearts for a broken people,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לִנְפָשׁוֹת</div><div class="tr">lin-fa-<b>SHOT</b></div><div class="fr">for souls</div></div>
+      <div class="word"><div class="he">נִכְאָבוֹת</div><div class="tr">nich-a-<b>VOT</b></div><div class="fr">pained</div></div>
+      <div class="word"><div class="he">נְשָׁמָה</div><div class="tr">ne-sha-<b>MA</b></div><div class="fr">a soul</div></div>
+      <div class="word"><div class="he">יְתֵרָה</div><div class="tr">ye-te-<b>RA</b></div><div class="fr">additional</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">for pained souls, an additional soul;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְנֶפֶשׁ</div><div class="tr">le-<b>NE</b>-fesh</div><div class="fr">for a soul</div></div>
+      <div class="word"><div class="he">מְצֵרָה</div><div class="tr">me-tze-<b>RA</b></div><div class="fr">in distress</div></div>
+      <div class="word"><div class="he">יָסִיר</div><div class="tr">ya-<b>SIR</b></div><div class="fr">He will remove</div></div>
+      <div class="word"><div class="he">אֲנָחָה</div><div class="tr">a-na-<b>CHA</b></div><div class="fr">sighing</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">from a soul in distress He will remove sighing: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary"><strong>נְשָׁמָה</strong> (ne-sha-ma) and <strong>יְתֵרָה</strong> (ye-te-ra) are the additional soul — the Talmudic idea that a person receives an extra soul for the day and loses it when the day ends. This is the stanza the tune is usually saddest on.</div>
+</div>
+
+<!-- STANZA 4 -->
+<div class="verse">
+  <span class="verse-num">4 · the sixth day</span>
+  <div class="verse-full">קִדַּשְׁתָּ בֵּרַכְתָּ אוֹתוֹ מִכָּל יָמִים<br>
+  בְּשֵׁשֶׁת כִּלִּיתָ מְלֶאכֶת עוֹלָמִים<br>
+  בּוֹ מָצְאוּ עֲגוּמִים הַשְׁקֵט וּבִטְחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קִדַּשְׁתָּ</div><div class="tr">ki-dash-<b>TA</b></div><div class="fr">You sanctified</div></div>
+      <div class="word"><div class="he">בֵּרַכְתָּ</div><div class="tr">be-rach-<b>TA</b></div><div class="fr">You blessed</div></div>
+      <div class="word"><div class="he">אוֹתוֹ</div><div class="tr">o-<b>TO</b></div><div class="fr">it</div></div>
+      <div class="word"><div class="he">מִכָּל</div><div class="tr">mi-<b>KAL</b></div><div class="fr">above all</div></div>
+      <div class="word"><div class="he">יָמִים</div><div class="tr">ya-<b>MIM</b></div><div class="fr">days</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">You sanctified it and blessed it above all days,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּשֵׁשֶׁת</div><div class="tr">be-<b>SHE</b>-shet</div><div class="fr">in six</div></div>
+      <div class="word"><div class="he">כִּלִּיתָ</div><div class="tr">ki-li-<b>TA</b></div><div class="fr">You completed</div></div>
+      <div class="word"><div class="he">מְלֶאכֶת</div><div class="tr"><b>MLE</b>-chet</div><div class="fr">the work of</div></div>
+      <div class="word"><div class="he">עוֹלָמִים</div><div class="tr">o-la-<b>MIM</b></div><div class="fr">worlds</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">in six You completed the work of worlds;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בּוֹ</div><div class="tr">bo</div><div class="fr">on it</div></div>
+      <div class="word"><div class="he">מָצְאוּ</div><div class="tr">matz-<b>U</b></div><div class="fr">found</div></div>
+      <div class="word"><div class="he">עֲגוּמִים</div><div class="tr">a-gu-<b>MIM</b></div><div class="fr">the grieving</div></div>
+      <div class="word"><div class="he">הַשְׁקֵט</div><div class="tr">hash-<b>KET</b></div><div class="fr">quiet</div></div>
+      <div class="word"><div class="he">וּבִטְחָה</div><div class="tr">u-vit-<b>CHA</b></div><div class="fr">and trust</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">on it the grieving found quiet and trust: a Sabbath of rest.</div>
+  </div>
+</div>
+
+<!-- STANZA 5 -->
+<div class="verse">
+  <span class="verse-num">5 · no work</span>
+  <div class="verse-full">לְאִסּוּר מְלָאכָה צִוִּיתָנוּ נוֹרָא<br>
+  אֶזְכֶּה הוֹד מְלוּכָה אִם שַׁבָּת אֶשְׁמוֹרָה<br>
+  אַקְרִיב שַׁי לַמּוֹרָא מִנְחָה מֶרְקָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְאִסּוּר</div><div class="tr">le-i-<b>SUR</b></div><div class="fr">for the prohibition of</div></div>
+      <div class="word"><div class="he">מְלָאכָה</div><div class="tr">mla-<b>CHA</b></div><div class="fr">work</div></div>
+      <div class="word"><div class="he">צִוִּיתָנוּ</div><div class="tr">tzi-vi-ta-<b>NU</b></div><div class="fr">You commanded us</div></div>
+      <div class="word"><div class="he">נוֹרָא</div><div class="tr">no-<b>RA</b></div><div class="fr">awesome one</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">For the prohibition of work You commanded us, Awesome One;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶזְכֶּה</div><div class="tr">ez-<b>KE</b></div><div class="fr">may I merit</div></div>
+      <div class="word"><div class="he">הוֹד</div><div class="tr">hod</div><div class="fr">the splendour of</div></div>
+      <div class="word"><div class="he">מְלוּכָה</div><div class="tr">mlu-<b>CHA</b></div><div class="fr">kingship</div></div>
+      <div class="word"><div class="he">אִם</div><div class="tr">im</div><div class="fr">if</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">אֶשְׁמוֹרָה</div><div class="tr">esh-mo-<b>RA</b></div><div class="fr">I keep</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">may I merit the splendour of kingship, if I keep the Sabbath;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַקְרִיב</div><div class="tr">ak-<b>RIV</b></div><div class="fr">I will offer</div></div>
+      <div class="word"><div class="he">שַׁי</div><div class="tr">shai</div><div class="fr">a gift</div></div>
+      <div class="word"><div class="he">לַמּוֹרָא</div><div class="tr">la-mo-<b>RA</b></div><div class="fr">to the awesome one</div></div>
+      <div class="word"><div class="he">מִנְחָה</div><div class="tr">min-<b>CHA</b></div><div class="fr">an offering</div></div>
+      <div class="word"><div class="he">מֶרְקָחָה</div><div class="tr">mer-ka-<b>CHA</b></div><div class="fr">of spices</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">I will offer a gift to the Awesome One, an offering of spices: a Sabbath of rest.</div>
+  </div>
+</div>
+
+<!-- STANZA 6 -->
+<div class="verse">
+  <span class="verse-num">6 · a song for You</span>
+  <div class="verse-full">וְשִׁיר אֶעֱרָךְ לָךְ בְּנִגּוּן וּנְעִימָה<br>
+  מוּל תִּפְאֶרֶת גָּדְלָךְ נַפְשִׁי לְךָ כָּמַהּ<br>
+  לִסְגֻלָּה תְּמִימָה קַיֵּם הַבְטָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְשִׁיר</div><div class="tr">ve-<b>SHIR</b></div><div class="fr">and a song</div></div>
+      <div class="word"><div class="he">אֶעֱרָךְ</div><div class="tr">e-e-<b>RACH</b></div><div class="fr">I will arrange</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">for You</div></div>
+      <div class="word"><div class="he">בְּנִגּוּן</div><div class="tr">bni-<b>GUN</b></div><div class="fr">with melody</div></div>
+      <div class="word"><div class="he">וּנְעִימָה</div><div class="tr">un-i-<b>MA</b></div><div class="fr">and sweetness</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">And a song I will arrange for You, with melody and sweetness,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מוּל</div><div class="tr">mul</div><div class="fr">before</div></div>
+      <div class="word"><div class="he">תִּפְאֶרֶת</div><div class="tr">tif-<b>E</b>-ret</div><div class="fr">the beauty of</div></div>
+      <div class="word"><div class="he">גָּדְלָךְ</div><div class="tr">gad-<b>LACH</b></div><div class="fr">Your greatness</div></div>
+      <div class="word"><div class="he">נַפְשִׁי</div><div class="tr">naf-<b>SHI</b></div><div class="fr">my soul</div></div>
+      <div class="word"><div class="he">לְךָ</div><div class="tr">le-<b>CHA</b></div><div class="fr">for You</div></div>
+      <div class="word"><div class="he">כָּמַהּ</div><div class="tr">ka-<b>MAH</b></div><div class="fr">has longed</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">before the beauty of Your greatness my soul has longed for You;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לִסְגֻלָּה</div><div class="tr">lis-gu-<b>LA</b></div><div class="fr">for a treasured people</div></div>
+      <div class="word"><div class="he">תְּמִימָה</div><div class="tr">tmi-<b>MA</b></div><div class="fr">whole</div></div>
+      <div class="word"><div class="he">קַיֵּם</div><div class="tr">ka-<b>YEM</b></div><div class="fr">fulfil!</div></div>
+      <div class="word"><div class="he">הַבְטָחָה</div><div class="tr">hav-ta-<b>CHA</b></div><div class="fr">the promise</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">for a whole treasured people, fulfil the promise: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary"><strong>בְּנִגּוּן</strong> (bni-gun) is the word for a melody without words, the niggun. The poem names its own performance: a song arranged with a tune, being sung at the table it describes.</div>
+</div>
+
+<!-- STANZA 7 -->
+<div class="verse">
+  <span class="verse-num">7 · accept my prayer</span>
+  <div class="verse-full">רְצֵה תְּפִלָּתִי כְּמוֹ קָרְבַּן נַחְשׁוֹן<br>
+  וְיוֹם מְנוּחָתִי בְּרִנָּה וּבְשָׂשׂוֹן<br>
+  חָבִיב כְּבַת אִישׁוֹן בְּרֹב הַצְלָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רְצֵה</div><div class="tr">re-<b>TZE</b></div><div class="fr">accept!</div></div>
+      <div class="word"><div class="he">תְּפִלָּתִי</div><div class="tr">tfi-la-<b>TI</b></div><div class="fr">my prayer</div></div>
+      <div class="word"><div class="he">כְּמוֹ</div><div class="tr">kmo</div><div class="fr">like</div></div>
+      <div class="word"><div class="he">קָרְבַּן</div><div class="tr">kar-<b>BAN</b></div><div class="fr">the offering of</div></div>
+      <div class="word"><div class="he">נַחְשׁוֹן</div><div class="tr">nach-<b>SHON</b></div><div class="fr">Nachshon</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Accept my prayer like the offering of Nachshon,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְיוֹם</div><div class="tr">vei-<b>OM</b></div><div class="fr">and on the day of</div></div>
+      <div class="word"><div class="he">מְנוּחָתִי</div><div class="tr">me-nu-cha-<b>TI</b></div><div class="fr">my rest</div></div>
+      <div class="word"><div class="he">בְּרִנָּה</div><div class="tr">bri-<b>NA</b></div><div class="fr">in joy</div></div>
+      <div class="word"><div class="he">וּבְשָׂשׂוֹן</div><div class="tr">uv-sa-<b>SON</b></div><div class="fr">and in gladness</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and on the day of my rest, in joy and gladness;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חָבִיב</div><div class="tr">cha-<b>VIV</b></div><div class="fr">beloved</div></div>
+      <div class="word"><div class="he">כְּבַת</div><div class="tr">ke-<b>VAT</b></div><div class="fr">as the pupil of</div></div>
+      <div class="word"><div class="he">אִישׁוֹן</div><div class="tr">i-<b>SHON</b></div><div class="fr">an eye</div></div>
+      <div class="word"><div class="he">בְּרֹב</div><div class="tr">brov</div><div class="fr">with abundance of</div></div>
+      <div class="word"><div class="he">הַצְלָחָה</div><div class="tr">hatz-la-<b>CHA</b></div><div class="fr">success</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">beloved as the pupil of an eye, with much success: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary"><strong>נַחְשׁוֹן</strong> (nach-shon) is Nachshon ben Aminadav, the prince of Judah who brought the first offering at the dedication of the Tabernacle in Numbers 7 — and, in the midrash, the first man into the sea. Named here without explanation, as these poems always do.</div>
+</div>
+
+<!-- STANZA 8 -->
+<div class="verse">
+  <span class="verse-num">8 · we have hoped</span>
+  <div class="verse-full">יִשְׁעֲךָ קִוִּינוּ יָהּ אַדִּיר אַדִּירִים<br>
+  בֶּן דָּוִד מַלְכֵּנוּ שְׁלַח נָא לָעִבְרִים<br>
+  וְיִקְרָא לִדְרוֹרִים רֶוַח וַהֲנָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יִשְׁעֲךָ</div><div class="tr">yish-a-<b>CHA</b></div><div class="fr">Your salvation</div></div>
+      <div class="word"><div class="he">קִוִּינוּ</div><div class="tr">ki-vi-<b>NU</b></div><div class="fr">we have hoped for</div></div>
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">אַדִּיר</div><div class="tr">a-<b>DIR</b></div><div class="fr">mighty one of</div></div>
+      <div class="word"><div class="he">אַדִּירִים</div><div class="tr">a-di-<b>RIM</b></div><div class="fr">the mighty</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">For Your salvation we have hoped, God, mightiest of the mighty;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בֶּן</div><div class="tr">ben</div><div class="fr">the son of</div></div>
+      <div class="word"><div class="he">דָּוִד</div><div class="tr">da-<b>VID</b></div><div class="fr">David</div></div>
+      <div class="word"><div class="he">מַלְכֵּנוּ</div><div class="tr">mal-ke-<b>NU</b></div><div class="fr">our king</div></div>
+      <div class="word"><div class="he">שְׁלַח</div><div class="tr">shlach</div><div class="fr">send!</div></div>
+      <div class="word"><div class="he">נָא</div><div class="tr">na</div><div class="fr">now</div></div>
+      <div class="word"><div class="he">לָעִבְרִים</div><div class="tr">la-iv-<b>RIM</b></div><div class="fr">to the blind</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">son of David our king, send now to the blind,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְיִקְרָא</div><div class="tr">ve-yik-<b>RA</b></div><div class="fr">and He will proclaim</div></div>
+      <div class="word"><div class="he">לִדְרוֹרִים</div><div class="tr">lid-ro-<b>RIM</b></div><div class="fr">freedoms</div></div>
+      <div class="word"><div class="he">רֶוַח</div><div class="tr">re-<b>VACH</b></div><div class="fr">relief</div></div>
+      <div class="word"><div class="he">וַהֲנָחָה</div><div class="tr">va-ha-na-<b>CHA</b></div><div class="fr">and ease</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and He will proclaim freedom, relief and ease: a Sabbath of rest.</div>
+  </div>
+</div>
+
+<!-- STANZA 9 -->
+<div class="verse">
+  <span class="verse-num">9 · please, answer us</span>
+  <div class="verse-full">אָנָּא עֶלְיוֹן נוֹרָא הַבִּיטָה עָנְיֵנוּ<br>
+  פְּדֵנוּ בִּמְהֵרָה חָנֵּנוּ וַעֲנֵנוּ<br>
+  שַׂמַּח נַפְשֵׁנוּ בְּאוֹר וְשִׂמְחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אָנָּא</div><div class="tr">a-<b>NA</b></div><div class="fr">please</div></div>
+      <div class="word"><div class="he">עֶלְיוֹן</div><div class="tr">eli-<b>ON</b></div><div class="fr">most high</div></div>
+      <div class="word"><div class="he">נוֹרָא</div><div class="tr">no-<b>RA</b></div><div class="fr">awesome one</div></div>
+      <div class="word"><div class="he">הַבִּיטָה</div><div class="tr">ha-bi-<b>TA</b></div><div class="fr">look!</div></div>
+      <div class="word"><div class="he">עָנְיֵנוּ</div><div class="tr">an-ye-<b>NU</b></div><div class="fr">answer us!</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Please, exalted and awesome One, look and answer us;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פְּדֵנוּ</div><div class="tr">pe-de-<b>NU</b></div><div class="fr">redeem us!</div></div>
+      <div class="word"><div class="he">בִּמְהֵרָה</div><div class="tr">bim-he-<b>RA</b></div><div class="fr">quickly</div></div>
+      <div class="word"><div class="he">חָנֵּנוּ</div><div class="tr">cha-ne-<b>NU</b></div><div class="fr">be gracious to us!</div></div>
+      <div class="word"><div class="he">וַעֲנֵנוּ</div><div class="tr">va-a-ne-<b>NU</b></div><div class="fr">and answer us!</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">redeem us quickly, be gracious to us and answer us;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שַׂמַּח</div><div class="tr">sa-<b>MACH</b></div><div class="fr">gladden!</div></div>
+      <div class="word"><div class="he">נַפְשֵׁנוּ</div><div class="tr">naf-she-<b>NU</b></div><div class="fr">our soul</div></div>
+      <div class="word"><div class="he">בְּאוֹר</div><div class="tr">be-<b>OR</b></div><div class="fr">with light</div></div>
+      <div class="word"><div class="he">וְשִׂמְחָה</div><div class="tr">ve-sim-<b>CHA</b></div><div class="fr">and joy</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">gladden our soul with light and joy: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary">Four imperatives in two lines, all addressed to God, all in the plural — look, answer, redeem, be gracious. The stanza before this one asked on behalf of the blind; this one asks on behalf of everyone at the table.</div>
+</div>
+
+<!-- STANZA 10 -->
+<div class="verse">
+  <span class="verse-num">10 · renew the sanctuary</span>
+  <div class="verse-full">חַדֵּשׁ מִקְדָּשֵׁנוּ זָכְרָה נֶחֱרֶבֶת<br>
+  טוּבְךָ מוֹשִׁיעֵנוּ תְּנָה לַנֶּעֱצֶבֶת<br>
+  בְּשַׁבָּת יוֹשֶׁבֶת בִּזְמִיר וּשְׁבָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חַדֵּשׁ</div><div class="tr">cha-<b>DESH</b></div><div class="fr">renew!</div></div>
+      <div class="word"><div class="he">מִקְדָּשֵׁנוּ</div><div class="tr">mik-da-she-<b>NU</b></div><div class="fr">our sanctuary</div></div>
+      <div class="word"><div class="he">זָכְרָה</div><div class="tr">zach-<b>RA</b></div><div class="fr">remember!</div></div>
+      <div class="word"><div class="he">נֶחֱרֶבֶת</div><div class="tr">ne-che-<b>RE</b>-vet</div><div class="fr">the ruined one</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Renew our sanctuary; remember the ruined city;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">טוּבְךָ</div><div class="tr">tuv-<b>CHA</b></div><div class="fr">Your goodness</div></div>
+      <div class="word"><div class="he">מוֹשִׁיעֵנוּ</div><div class="tr">mo-shi-e-<b>NU</b></div><div class="fr">our saviour</div></div>
+      <div class="word"><div class="he">תְּנָה</div><div class="tr">te-<b>NA</b></div><div class="fr">give!</div></div>
+      <div class="word"><div class="he">לַנֶּעֱצֶבֶת</div><div class="tr">la-ne-e-<b>TZE</b>-vet</div><div class="fr">to the grieving one</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Your goodness, our Saviour, give to the grieving woman</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּשַׁבָּת</div><div class="tr">be-sha-<b>BAT</b></div><div class="fr">on the Sabbath</div></div>
+      <div class="word"><div class="he">יוֹשֶׁבֶת</div><div class="tr">yo-<b>SHE</b>-vet</div><div class="fr">who sits</div></div>
+      <div class="word"><div class="he">בִּזְמִיר</div><div class="tr">biz-<b>MIR</b></div><div class="fr">in song</div></div>
+      <div class="word"><div class="he">וּשְׁבָחָה</div><div class="tr">ush-va-<b>CHA</b></div><div class="fr">and praise</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">who sits on the Sabbath in song and praise: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary"><strong>נֶחֱרֶבֶת</strong> (ne-che-re-vet) and <strong>לַנֶּעֱצֶבֶת</strong> (la-ne-e-tze-vet) are both feminine — the ruined city and the grieving woman are the same figure, Jerusalem, which Hebrew treats as a woman throughout the prophets.</div>
+</div>
+
+<!-- STANZA 11 -->
+<div class="verse">
+  <span class="verse-num">11 · remember for us</span>
+  <div class="verse-full">זְכוֹר קָדוֹשׁ לָנוּ בִּזְכוּת יִקְרַת הַיּוֹם<br>
+  שְׁמוֹר נָא אוֹתָנוּ בְּיוֹם זֶה וּבְכָל יוֹם<br>
+  דּוֹדִי צַח וְאָיוֹם תָּבִיא רְוָחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">זְכוֹר</div><div class="tr">ze-<b>CHOR</b></div><div class="fr">remember!</div></div>
+      <div class="word"><div class="he">קָדוֹשׁ</div><div class="tr">ka-<b>DOSH</b></div><div class="fr">holy one</div></div>
+      <div class="word"><div class="he">לָנוּ</div><div class="tr">la-<b>NU</b></div><div class="fr">for us</div></div>
+      <div class="word"><div class="he">בִּזְכוּת</div><div class="tr">biz-<b>CHUT</b></div><div class="fr">by the merit of</div></div>
+      <div class="word"><div class="he">יִקְרַת</div><div class="tr">yik-<b>RAT</b></div><div class="fr">the preciousness of</div></div>
+      <div class="word"><div class="he">הַיּוֹם</div><div class="tr">ha-<b>YOM</b></div><div class="fr">the day</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Remember for us, Holy One, by the merit of the preciousness of the day;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁמוֹר</div><div class="tr">shmor</div><div class="fr">guard!</div></div>
+      <div class="word"><div class="he">נָא</div><div class="tr">na</div><div class="fr">please</div></div>
+      <div class="word"><div class="he">אוֹתָנוּ</div><div class="tr">o-ta-<b>NU</b></div><div class="fr">us</div></div>
+      <div class="word"><div class="he">בְּיוֹם</div><div class="tr">byom</div><div class="fr">on the day</div></div>
+      <div class="word"><div class="he">זֶה</div><div class="tr">ze</div><div class="fr">this</div></div>
+      <div class="word"><div class="he">וּבְכָל</div><div class="tr">uv-<b>CHAL</b></div><div class="fr">and on every</div></div>
+      <div class="word"><div class="he">יוֹם</div><div class="tr">yom</div><div class="fr">day</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">guard us, please, on this day and on every day;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">דּוֹדִי</div><div class="tr">do-<b>DI</b></div><div class="fr">my beloved</div></div>
+      <div class="word"><div class="he">צַח</div><div class="tr">tzach</div><div class="fr">bright</div></div>
+      <div class="word"><div class="he">וְאָיוֹם</div><div class="tr">ve-ai-<b>OM</b></div><div class="fr">and awesome</div></div>
+      <div class="word"><div class="he">תָּבִיא</div><div class="tr">ta-<b>VI</b></div><div class="fr">bring!</div></div>
+      <div class="word"><div class="he">רְוָחָה</div><div class="tr">re-va-<b>CHA</b></div><div class="fr">relief</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">my Beloved, bright and awesome, bring relief: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary"><strong>דּוֹדִי</strong> (do-di), <strong>צַח</strong> (tzach) and <strong>וְאָיוֹם</strong> (ve-ai-om) — my beloved, bright and ruddy — is from the Song of Songs, and using it as a name for God is standard in this poetry and startling the first time you meet it.</div>
+</div>
+
+<!-- STANZA 12 -->
+<div class="verse">
+  <span class="verse-num">12 · let it be heard</span>
+  <div class="verse-full">קוֹל רִנָּה וִישׁוּעָה לְיִשְׂרָאֵל הַשְׁמִיעָה<br>
+  בְּבֹא חֶזְיוֹן תְּשׁוּעָה צוּר מַצְמִיחַ יְשׁוּעָה<br>
+  אוֹר שִׁמְשִׁי הוֹפִיעָה תָּמִיד הַזְרִיחָה שַׁבָּת מְנוּחָה</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">קוֹל</div><div class="tr">kol</div><div class="fr">a voice of</div></div>
+      <div class="word"><div class="he">רִנָּה</div><div class="tr">ri-<b>NA</b></div><div class="fr">song</div></div>
+      <div class="word"><div class="he">וִישׁוּעָה</div><div class="tr">vi-shu-<b>A</b></div><div class="fr">and salvation</div></div>
+      <div class="word"><div class="he">לְיִשְׂרָאֵל</div><div class="tr">lyis-ra-<b>EL</b></div><div class="fr">for Israel</div></div>
+      <div class="word"><div class="he">הַשְׁמִיעָה</div><div class="tr">hash-mi-<b>A</b></div><div class="fr">let it be heard</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">A voice of song and salvation, let it be heard for Israel,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בְּבֹא</div><div class="tr">be-<b>VO</b></div><div class="fr">when there comes</div></div>
+      <div class="word"><div class="he">חֶזְיוֹן</div><div class="tr">chezi-<b>ON</b></div><div class="fr">a vision of</div></div>
+      <div class="word"><div class="he">תְּשׁוּעָה</div><div class="tr">tshu-<b>A</b></div><div class="fr">deliverance</div></div>
+      <div class="word"><div class="he">צוּר</div><div class="tr">tzur</div><div class="fr">the rock</div></div>
+      <div class="word"><div class="he">מַצְמִיחַ</div><div class="tr">matz-<b>MI</b>-ach</div><div class="fr">who causes to grow</div></div>
+      <div class="word"><div class="he">יְשׁוּעָה</div><div class="tr">ye-shu-<b>A</b></div><div class="fr">salvation</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">when the vision of deliverance comes, the Rock who makes salvation grow;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אוֹר</div><div class="tr">or</div><div class="fr">light of</div></div>
+      <div class="word"><div class="he">שִׁמְשִׁי</div><div class="tr">shim-<b>SHI</b></div><div class="fr">my sun</div></div>
+      <div class="word"><div class="he">הוֹפִיעָה</div><div class="tr">ho-fi-<b>A</b></div><div class="fr">appear!</div></div>
+      <div class="word"><div class="he">תָּמִיד</div><div class="tr">ta-<b>MID</b></div><div class="fr">always</div></div>
+      <div class="word"><div class="he">הַזְרִיחָה</div><div class="tr">haz-ri-<b>CHA</b></div><div class="fr">shine!</div></div>
+      <div class="word"><div class="he">שַׁבָּת</div><div class="tr">sha-<b>BAT</b></div><div class="fr">Sabbath</div></div>
+      <div class="word"><div class="he">מְנוּחָה</div><div class="tr">me-nu-<b>CHA</b></div><div class="fr">of rest</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">light of my sun, appear, shine always: a Sabbath of rest.</div>
+  </div>
+
+  <div class="verse-summary">The poem ends on the sun, which is where a Friday night song about light should end — and on the same two words that have closed every stanza since the first.</div>
+</div>
+</div>
+
+<div class="chant-tip">
+  <h3>♫ Singing notes</h3>
+  <ul>
+    <li>The two closing words are the whole song for a guest. They arrive at the end of every stanza, and a table will land on them together whether or not anyone knows the verses.</li>
+    <li>Slower than most: around 88 BPM. The melody is worth taking time over and is often hummed after the words stop.</li>
+    <li>Three lines per stanza, and the third is always longer — it carries the refrain words. Give it room.</li>
+    <li>Twelve stanzas is more than most tables sing. Four or five is normal; the tune usually outlasts the text.</li>
+  </ul>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ About this song</h3>
+  <div class="pardes-level">
+    <h4>The acrostic</h4>
+    <p>The opening letters of the stanzas spell the name Yitzchak. Which Yitzchak is not established, and the poem is usually dated by its style rather than by any external record.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>The additional soul</h4>
+    <p>The third stanza names the neshamah yeterah, the extra soul the Talmud says a person receives for the Sabbath and loses when it ends. That idea is why havdalah uses spices — to revive the ordinary soul left behind — and this poem is one of the places a learner is most likely to meet it.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>The tune</h4>
+    <p>The melody now sung across the Ashkenazi world is later than the words and is one of the most recognisable in the repertoire. It is not reproduced here; the chord grid is a suggestion for accompanying it, not a transcription of it.</p>
+  </div>
+</div>
+
+<footer>Yom Zeh LeYisrael · יוֹם זֶה · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-provenance">
+  <strong>Hebrew:</strong> Siddur Ashkenaz, Shabbat, Shabbat Evening, Zemirot for Shabbat Evening, Yom zeh L'yisrael · The Metsudah siddur, 1981 · CC-BY, via Sefaria, pinned in this repo at content/songs/source/010.json.
+  English gloss lines authored for this site; the source translation is used as raw material only. Transliteration generated by this site's own engine (assets/translit.js).
+</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   The key is DERIVED from the grid below by tools/chord-key.mjs and never typed:
+   the psalm template held it as a literal and shipped 'Am' over 126 grids that
+   were in other keys, which sent songKey() and the shuffle generator into the
+   wrong scale. */
+window.SONG_CHORDS = {
+  id: 'songs-010-yom-ze-leyisrael-en',
+  key: 'Dm',
+  tempo: 88,
+  progression: '| Dm Dm | Gm Dm | A A | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>
