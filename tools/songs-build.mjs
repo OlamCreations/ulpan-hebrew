@@ -33,6 +33,13 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 /** translit.js emits the stressed syllable in capitals; the pages show it bold. */
 const boldStress = tr => esc(tr).replace(/(^|-)([^-\s]*[A-Z][^-\s]*)/g, (m, sep, syl) => sep + '<b>' + syl + '</b>');
 
+/* The reading a learner should say, which is not always the spelling. Same
+   mechanism as the psalm builder, and it exists here for the same word: the
+   Masoretic text spells Jerusalem with no yod before the final mem and it is
+   read as though the yod were there. translit.js reads the spelling, correctly,
+   and produced ye-ru-sha-LAm. Keyed on the exact vocalized string. */
+const readingOf = (he, tr) => (CONV.readAs && CONV.readAs[he]) || tr;
+
 /** Chord symbols become hoverable chips; bar lines and separators stay text. */
 function chordLineHtml(spec) {
   return String(spec).split(/(\s+)/).map(tok => {
@@ -62,7 +69,7 @@ export function buildSong(n) {
     const line = source.lines[Number(li)];
     const word = line && line.words[Number(wi)];
     if (!word) throw new Error(`song ${n}: reference ${m} points at no word`);
-    return `<strong>${word.he}</strong> (${word.tr.toLowerCase()})`;
+    return `<strong>${word.he}</strong> (${readingOf(word.he, word.tr).toLowerCase()})`;
   });
 
   const firstWords = source.lines[0].words
@@ -84,7 +91,7 @@ export function buildSong(n) {
       const words = src.words.map((w, wi) => {
         const gloss = (authored[wi] || '').trim() || (w.gloss || '').trim();
         return `<div class="word"><div class="he">${esc(w.he)}</div>`
-          + `<div class="tr">${boldStress(w.tr)}</div>`
+          + `<div class="tr">${boldStress(readingOf(w.he, w.tr))}</div>`
           + `<div class="fr">${esc(gloss)}</div></div>`;
       }).join('\n      ');
 

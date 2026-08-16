@@ -56,9 +56,16 @@ const NIQQUD = [
    עַד-אָנָה as a single cell whose transliteration ran the two words together. */
 const MAQAF = /[־-]/g;
 
-/* Directional marks. Invisible, and they end up inside a word cell where they
-   change nothing on screen and everything in a codepoint comparison. */
-const BIDI = /[‎‏‪-‮⁦-⁩]/g;
+/* Invisible formatting characters: the bidi controls, plus U+034F COMBINING
+   GRAPHEME JOINER. They change nothing on screen and everything in a codepoint
+   comparison, and they end up inside a word cell.
+
+   The CGJ is not hypothetical. MAM spells Jerusalem with one, between the patah
+   and the hiriq, to stop the two vowels being reordered by normalisation. It
+   passed straight through the transliterator, which romanised it as nothing and
+   emitted "ye-ru-sha-LA<CGJ>m": a transliteration with an invisible character
+   sitting inside it, which no amount of looking at the page would ever reveal. */
+const INVISIBLE = /[‎‏‪-‮⁦-⁩͏]/g;
 
 /* Does this line carry any vowel point? Used by the song scaffold two ways:
    to reject a whole edition that is unpointed, and to tell a sung line from
@@ -81,7 +88,7 @@ export function cleanLine(s) {
   return stripParagraphMarks(s)
     .replace(CANTILLATION, '')
     .replace(MAQAF, ' ')
-    .replace(BIDI, '')
+    .replace(INVISIBLE, '')
     .replace(/[.,;:!?]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -114,6 +121,7 @@ function selfTest() {
     ['sof pasuk removed',                  'בָת׃',                               'בָת'],
     ['bidi mark removed',                  'בָת‏',                               'בָת'],
     ['petucha removed',                    'בָת {פ}',                            'בָת'],
+    ['combining grapheme joiner removed',  'בָ͏ת',                                'בָת'],
     ['shin dot survives',                  'שָׁ',                                     'שָׁ'],
     ['runs of space collapse',             '  בָ   תָ  ',                        'בָ תָ']
   ];
