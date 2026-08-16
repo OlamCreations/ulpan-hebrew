@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echad Mi Yodea: אֶחָד מִי</title>
+<!-- Like the psalm pages, these do not load app.js, which is what injects the
+     icon everywhere else. Without this line the browser tab is blank and the
+     page asks for a /favicon.ico that does not exist. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<!-- No per-page <style>. The seven hand-written song pages each carry ~150 lines
+     of duplicated CSS, which is why fixing the chord line on one of them fixed it
+     on none of the others. Everything this page needs is in liturgy.css. -->
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Echad Mi Yodea: Who knows one?</h1>
+    <div class="subtitle">Pesach seder, near the end of the night · אֶחָד מִי</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Echad Mi Yodea</a></div>
+</header>
+
+<div class="t-intro">
+  A counting song in thirteen verses, sung near the end of the seder when the reading is finished and the table wants a competition. Each verse asks who knows a number, answers with what that number counts in Jewish tradition, and then recites everything below it back down to one. By verse thirteen that is forty-five words without a breath, and the whole point is to see who can still get there.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display"><strong>Key: Am · 3 chords used ·</strong>&nbsp; <span class="chord" data-chord="Am">Am</span> · <span class="chord" data-chord="Dm">Dm</span> · <span class="chord" data-chord="E">E</span></div>
+  <div class="meta-line">132 BPM · 4/4 · fast and getting faster · thirteen verses, each one counting back down to one, so the last verse is forty-five words in a single breath · to reset the chord panel: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid song-grid" data-cols="3">
+<!-- STANZA 1 -->
+<div class="verse">
+  <span class="verse-num">1 · one</span>
+  <div class="verse-full">אֶחָד מִי יוֹדֵעַ אֶחָד אֲנִי יוֹדֵעַ אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="E">E</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows one? I know one: one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">The frame that never changes: who knows N, I know N, N is X — and then the countdown. <strong>שֶׁבַּשָּׁמַיִם</strong> (she-ba-sha-ma-yim) and <strong>וּבָאָרֶץ</strong> (u-va-a-retz) close every one of the thirteen verses, so if you can say the first verse you can end all of them.</div>
+</div>
+
+<!-- STANZA 2 -->
+<div class="verse">
+  <span class="verse-num">2 · two</span>
+  <div class="verse-full">שְׁנַיִם מִי יוֹדֵעַ שְׁנַיִם אֲנִי יוֹדֵעַ שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁנַיִם</div><div class="tr"><b>SHNA</b>-yim</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁנַיִם</div><div class="tr"><b>SHNA</b>-yim</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows two? I know two: two are the tablets of the covenant. One is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">The tablets Moses brought down from Sinai. Note that <strong>שְׁנַיִם</strong> (shna-yim) and <strong>שְׁנֵי</strong> (shnei) are the same number in two forms — the free-standing form and the construct, used before the thing counted. Hebrew changes the shape of a number depending on what follows it, and this song shows the pair side by side thirteen times.</div>
+</div>
+
+<!-- STANZA 3 -->
+<div class="verse">
+  <span class="verse-num">3 · three</span>
+  <div class="verse-full">שְׁלֹשָׁה מִי יוֹדֵעַ שְׁלֹשָׁה אֲנִי יוֹדֵעַ שְׁלֹשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁלֹשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁלֹשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁלֹשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows three? I know three: three are the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">Abraham, Isaac and Jacob. From here every verse is the previous verse with one line stacked on top, which is the same engine as Chad Gadya later in the evening.</div>
+</div>
+
+<!-- STANZA 4 -->
+<div class="verse">
+  <span class="verse-num">4 · four</span>
+  <div class="verse-full">אַרְבַּע מִי יוֹדֵעַ אַרְבַּע אֲנִי יוֹדֵעַ אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows four? I know four: four are the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">Sarah, Rebecca, Rachel and Leah. Four and three sit together in every remaining verse, so the mothers are never recited without the fathers following.</div>
+</div>
+
+<!-- STANZA 5 -->
+<div class="verse">
+  <span class="verse-num">5 · five</span>
+  <div class="verse-full">חֲמִשָּׁה מִי יוֹדֵעַ חֲמִשָּׁה אֲנִי יוֹדֵעַ חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows five? I know five: five are the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary"><strong>חוּמְשֵׁי</strong> (chum-shei) is literally "fifths of" — the five fifths of the Torah, which is how Hebrew names the Pentateuch. It counts the parts rather than the books.</div>
+</div>
+
+<!-- STANZA 6 -->
+<div class="verse">
+  <span class="verse-num">6 · six</span>
+  <div class="verse-full">שִׁשָּׂה מִי יוֹדֵעַ שִׁשָּׂה אֲנִי יוֹדֵעַ שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלֹשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁשָּׂה</div><div class="tr">shi-<b>SA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שִׁשָּׂה</div><div class="tr">shi-<b>SA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלֹשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows six? I know six: six are the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">The six divisions of the Mishnah, which is why the whole work is nicknamed by a word meaning "six orders". This verse is where the song stops counting things everyone knows and starts counting things you learn in a study hall.</div>
+</div>
+
+<!-- STANZA 7 -->
+<div class="verse">
+  <span class="verse-num">7 · seven</span>
+  <div class="verse-full">שִׁבְעָה מִי יוֹדֵעַ שִׁבְעָה אֲנִי יוֹדֵעַ שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows seven? I know seven: seven are the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+</div>
+
+<!-- STANZA 8 -->
+<div class="verse">
+  <span class="verse-num">8 · eight</span>
+  <div class="verse-full">שְׁמוֹנָה מִי יוֹדֵעַ שְׁמוֹנָה אֲנִי יוֹדֵעַ שְׁמוֹנָה יְמֵי מִילָה שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">מִילָה</div><div class="tr">mi-<b>LA</b></div><div class="fr">circumcision</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows eight? I know eight: eight are the days to circumcision, seven the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">Eight days until a boy is circumcised, and nine months until a child is born in the next verse. The song counts a human life alongside the tablets and the Mishnah without any change of tone.</div>
+</div>
+
+<!-- STANZA 9 -->
+<div class="verse">
+  <span class="verse-num">9 · nine</span>
+  <div class="verse-full">תִּשְׁעָה מִי יוֹדֵעַ תִּשְׁעָה אֲנִי יוֹדֵעַ תִּשְׁעָה יַרְחֵי לֵדָה שְׁמוֹנָה יְמֵי מִילָה שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלֹשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">יַרְחֵי</div><div class="tr">yar-<b>CHEI</b></div><div class="fr">months of</div></div>
+      <div class="word"><div class="he">לֵדָה</div><div class="tr">le-<b>DA</b></div><div class="fr">childbirth</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">מִילָה</div><div class="tr">mi-<b>LA</b></div><div class="fr">circumcision</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלֹשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows nine? I know nine: nine are the months of childbirth, eight the days to circumcision, seven the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+</div>
+
+<!-- STANZA 10 -->
+<div class="verse">
+  <span class="verse-num">10 · ten</span>
+  <div class="verse-full">עֲשָֹרָה מִי יוֹדֵעַ עֲשָֹרָה אֲנִי יוֹדֵעַ עֲשָׂרָה דִבְּרַיָא תִּשְׁעָה יַרְחֵי לֵדָה שְׁמוֹנָה יְמֵי מִילָה שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עֲשָֹרָה</div><div class="tr">a-sha-<b>RA</b></div><div class="fr">ten</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">עֲשָֹרָה</div><div class="tr">a-sha-<b>RA</b></div><div class="fr">ten</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">עֲשָׂרָה</div><div class="tr">a-sa-<b>RA</b></div><div class="fr">ten</div></div>
+      <div class="word"><div class="he">דִבְּרַיָא</div><div class="tr">dib-ra-<b>YA</b></div><div class="fr">commandments</div></div>
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">יַרְחֵי</div><div class="tr">yar-<b>CHEI</b></div><div class="fr">months of</div></div>
+      <div class="word"><div class="he">לֵדָה</div><div class="tr">le-<b>DA</b></div><div class="fr">childbirth</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">מִילָה</div><div class="tr">mi-<b>LA</b></div><div class="fr">circumcision</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows ten? I know ten: ten are the commandments, nine the months of childbirth, eight the days to circumcision, seven the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary"><strong>תִּשְׁעָה</strong> (tish-a) is Aramaic, not Hebrew — the word for the commandments here takes an Aramaic ending, as do the stars, the tribes and the attributes in the last three verses. The song switches language as it climbs.</div>
+</div>
+
+<!-- STANZA 11 -->
+<div class="verse">
+  <span class="verse-num">11 · eleven</span>
+  <div class="verse-full">אַחַד עָשָׂר מִי יוֹדֵעַ אַחַד עָשָׂר אֲנִי יוֹדֵעַ אַחַד עָשָׂר כּוֹכְבַיָּא עֲשָׂרָה דִבְּרַיָא תִּשְׁעָה יַרְחֵי לֵדָה שְׁמוֹנָה יְמֵי מִילָה שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַחַד</div><div class="tr">a-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">אַחַד</div><div class="tr">a-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">אַחַד</div><div class="tr">a-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">כּוֹכְבַיָּא</div><div class="tr">koch-va-<b>YA</b></div><div class="fr">stars</div></div>
+      <div class="word"><div class="he">עֲשָׂרָה</div><div class="tr">a-sa-<b>RA</b></div><div class="fr">ten</div></div>
+      <div class="word"><div class="he">דִבְּרַיָא</div><div class="tr">dib-ra-<b>YA</b></div><div class="fr">commandments</div></div>
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">יַרְחֵי</div><div class="tr">yar-<b>CHEI</b></div><div class="fr">months of</div></div>
+      <div class="word"><div class="he">לֵדָה</div><div class="tr">le-<b>DA</b></div><div class="fr">childbirth</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">מִילָה</div><div class="tr">mi-<b>LA</b></div><div class="fr">circumcision</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows eleven? I know eleven: eleven are the stars in Joseph's dream, ten the commandments, nine the months of childbirth, eight the days to circumcision, seven the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">The eleven stars are Joseph's dream in Genesis 37 — his eleven brothers bowing to him. It is the only entry on the list that refers to a single scene rather than to a category.</div>
+</div>
+
+<!-- STANZA 12 -->
+<div class="verse">
+  <span class="verse-num">12 · twelve</span>
+  <div class="verse-full">שְׁנֵים עָשָׂר מִי יוֹדֵעַ שְׁנֵים עָשָׂר אֲנִי יוֹדֵעַ שְׁנֵים עָשָׂר שִׁבְטַיָּא אַחַד עָשָׂר כּוֹכְבַיָּא עֲשָׂרָה דִבְּרַיָא תִּשְׁעָה יַרְחֵי לֵדָה שְׁמוֹנָה יְמֵי מִילָה שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁנֵים</div><div class="tr">shneim</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁנֵים</div><div class="tr">shneim</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁנֵים</div><div class="tr">shneim</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">שִׁבְטַיָּא</div><div class="tr">shiv-ta-<b>YA</b></div><div class="fr">tribes</div></div>
+      <div class="word"><div class="he">אַחַד</div><div class="tr">a-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">כּוֹכְבַיָּא</div><div class="tr">koch-va-<b>YA</b></div><div class="fr">stars</div></div>
+      <div class="word"><div class="he">עֲשָׂרָה</div><div class="tr">a-sa-<b>RA</b></div><div class="fr">ten</div></div>
+      <div class="word"><div class="he">דִבְּרַיָא</div><div class="tr">dib-ra-<b>YA</b></div><div class="fr">commandments</div></div>
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">יַרְחֵי</div><div class="tr">yar-<b>CHEI</b></div><div class="fr">months of</div></div>
+      <div class="word"><div class="he">לֵדָה</div><div class="tr">le-<b>DA</b></div><div class="fr">childbirth</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">מִילָה</div><div class="tr">mi-<b>LA</b></div><div class="fr">circumcision</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows twelve? I know twelve: twelve are the tribes, eleven the stars, ten the commandments, nine the months of childbirth, eight the days to circumcision, seven the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+</div>
+
+<!-- STANZA 13 -->
+<div class="verse">
+  <span class="verse-num">13 · thirteen</span>
+  <div class="verse-full">שְׁלשָׁה עָשָׂר מִי יוֹדֵעַ שְׁלשָׁה עָשָׂר אֲנִי יוֹדֵעַ שְׁלשָׁה עָשָׂר מִדַּיָּא שְׁנֵים עָשָׂר שִׁבְטַיָּא אַחַד עָשָׂר כּוֹכְבַיָּא עֲשָׂרָה דִבְּרַיָא תִּשְׁעָה יַרְחֵי לֵדָה שְׁמוֹנָה יְמֵי מִילָה שִׁבְעָה יְמֵי שַׁבָּתָא שִׁשָּׁה סִדְרֵי מִשְׁנָה חֲמִשָּׁה חוּמְשֵׁי תוֹרָה אַרְבַּע אִמָּהוֹת שְׁלשָׁה אָבוֹת שְׁנֵי לֻחוֹת הַבְּרִית אֶחָד אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם וּבָאָרֶץ</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">מִי</div><div class="tr">mi</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">אֲנִי</div><div class="tr">a-<b>NI</b></div><div class="fr">I</div></div>
+      <div class="word"><div class="he">יוֹדֵעַ</div><div class="tr">yo-<b>DE</b>-a</div><div class="fr">knows</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">מִדַּיָּא</div><div class="tr">mi-da-<b>YA</b></div><div class="fr">attributes</div></div>
+      <div class="word"><div class="he">שְׁנֵים</div><div class="tr">shneim</div><div class="fr">two</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">שִׁבְטַיָּא</div><div class="tr">shiv-ta-<b>YA</b></div><div class="fr">tribes</div></div>
+      <div class="word"><div class="he">אַחַד</div><div class="tr">a-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">עָשָׂר</div><div class="tr">a-<b>SAR</b></div><div class="fr">-teen</div></div>
+      <div class="word"><div class="he">כּוֹכְבַיָּא</div><div class="tr">koch-va-<b>YA</b></div><div class="fr">stars</div></div>
+      <div class="word"><div class="he">עֲשָׂרָה</div><div class="tr">a-sa-<b>RA</b></div><div class="fr">ten</div></div>
+      <div class="word"><div class="he">דִבְּרַיָא</div><div class="tr">dib-ra-<b>YA</b></div><div class="fr">commandments</div></div>
+      <div class="word"><div class="he">תִּשְׁעָה</div><div class="tr">tish-<b>A</b></div><div class="fr">nine</div></div>
+      <div class="word"><div class="he">יַרְחֵי</div><div class="tr">yar-<b>CHEI</b></div><div class="fr">months of</div></div>
+      <div class="word"><div class="he">לֵדָה</div><div class="tr">le-<b>DA</b></div><div class="fr">childbirth</div></div>
+      <div class="word"><div class="he">שְׁמוֹנָה</div><div class="tr">shmo-<b>NA</b></div><div class="fr">eight</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">מִילָה</div><div class="tr">mi-<b>LA</b></div><div class="fr">circumcision</div></div>
+      <div class="word"><div class="he">שִׁבְעָה</div><div class="tr">shiv-<b>A</b></div><div class="fr">seven</div></div>
+      <div class="word"><div class="he">יְמֵי</div><div class="tr">ye-<b>MEI</b></div><div class="fr">days of</div></div>
+      <div class="word"><div class="he">שַׁבָּתָא</div><div class="tr">sha-ba-<b>TA</b></div><div class="fr">the week</div></div>
+      <div class="word"><div class="he">שִׁשָּׁה</div><div class="tr">shi-<b>SHA</b></div><div class="fr">six</div></div>
+      <div class="word"><div class="he">סִדְרֵי</div><div class="tr">sid-<b>REI</b></div><div class="fr">orders of</div></div>
+      <div class="word"><div class="he">מִשְׁנָה</div><div class="tr">mish-<b>NA</b></div><div class="fr">Mishnah</div></div>
+      <div class="word"><div class="he">חֲמִשָּׁה</div><div class="tr">cha-mi-<b>SHA</b></div><div class="fr">five</div></div>
+      <div class="word"><div class="he">חוּמְשֵׁי</div><div class="tr">chum-<b>SHEI</b></div><div class="fr">fifths of</div></div>
+      <div class="word"><div class="he">תוֹרָה</div><div class="tr">to-<b>RA</b></div><div class="fr">Torah</div></div>
+      <div class="word"><div class="he">אַרְבַּע</div><div class="tr"><b>AR</b>-ba</div><div class="fr">four</div></div>
+      <div class="word"><div class="he">אִמָּהוֹת</div><div class="tr">i-ma-<b>HOT</b></div><div class="fr">mothers, the matriarchs</div></div>
+      <div class="word"><div class="he">שְׁלשָׁה</div><div class="tr">shlo-<b>SHA</b></div><div class="fr">three</div></div>
+      <div class="word"><div class="he">אָבוֹת</div><div class="tr">a-<b>VOT</b></div><div class="fr">fathers, the patriarchs</div></div>
+      <div class="word"><div class="he">שְׁנֵי</div><div class="tr">shnei</div><div class="fr">the two</div></div>
+      <div class="word"><div class="he">לֻחוֹת</div><div class="tr">lu-<b>CHOT</b></div><div class="fr">tablets of</div></div>
+      <div class="word"><div class="he">הַבְּרִית</div><div class="tr">hab-<b>RIT</b></div><div class="fr">the covenant</div></div>
+      <div class="word"><div class="he">אֶחָד</div><div class="tr">e-<b>CHAD</b></div><div class="fr">one</div></div>
+      <div class="word"><div class="he">אֱלֹהֵינוּ</div><div class="tr">e-lo-hei-<b>NU</b></div><div class="fr">our God</div></div>
+      <div class="word"><div class="he">שֶׁבַּשָּׁמַיִם</div><div class="tr">she-ba-sha-<b>MA</b>-yim</div><div class="fr">who is in the heavens</div></div>
+      <div class="word"><div class="he">וּבָאָרֶץ</div><div class="tr">u-va-<b>A</b>-retz</div><div class="fr">and on the earth</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="E">E</span> <span class="sep">|</span> <span class="chord" data-chord="Am">Am</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Who knows thirteen? I know thirteen: thirteen are the attributes, twelve the tribes, eleven the stars, ten the commandments, nine the months of childbirth, eight the days to circumcision, seven the days of the week, six the orders of the Mishnah, five the books of the Torah, four the matriarchs, three the patriarchs, two the tablets of the covenant, one is our God, in the heavens and on the earth.</div>
+  </div>
+
+  <div class="verse-summary">The thirteen attributes of mercy, from Exodus 34. Forty-five words in one verse, and the table is racing by now. The song ends where it began, on <strong>שֶׁבַּשָּׁמַיִם</strong> (she-ba-sha-ma-yim) and <strong>וּבָאָרֶץ</strong> (u-va-a-retz), which have closed every verse since the first.</div>
+</div>
+</div>
+
+<div class="chant-tip">
+  <h3>♫ Singing notes</h3>
+  <ul>
+    <li>It is a race. The tempo climbs verse by verse and the last three are usually a shambles, which is the intended outcome.</li>
+    <li>The countdown is the hard part; the question is the easy part. A table that has lost the thread rejoins at <strong>מִי</strong> (mi), since every verse opens the same way.</li>
+    <li>One person usually leads the question and the whole table answers. Swapping the lead each verse is common and makes it harder, which is the point.</li>
+    <li>In some communities each number gets its own melodic turn. If the table has one, follow it — do not flatten thirteen verses into one shape.</li>
+  </ul>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ About this song</h3>
+  <div class="pardes-level">
+    <h4>Where it sits</h4>
+    <p>In Nirtzah, the closing section of the seder, with Adir Hu before it and Chad Gadya after. All three are late additions, all three are counting or list songs, and all three arrive when the formal reading is over.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Two languages</h4>
+    <p>The frame is Hebrew and several of the answers are Aramaic — the commandments, the stars, the tribes and the attributes all take Aramaic plural endings. That mixture is a clue to how the song was assembled rather than composed, over time and from more than one source.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Not only Jewish</h4>
+    <p>Cumulative counting songs of this exact form exist across medieval Europe in several languages, some religious and some not. Which direction the borrowing ran is not settled, and this page does not claim it is.</p>
+  </div>
+</div>
+
+<footer>Echad Mi Yodea · אֶחָד מִי · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-provenance">
+  <strong>Hebrew:</strong> Haggadah, Nirtzah, Echad Mi Yodea · Pesach Haggadah · Public Domain, via Sefaria, pinned in this repo at content/songs/source/022.json.
+  English gloss lines authored for this site; the source translation is used as raw material only. Transliteration generated by this site's own engine (assets/translit.js).
+</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   The key is DERIVED from the grid below by tools/chord-key.mjs and never typed:
+   the psalm template held it as a literal and shipped 'Am' over 126 grids that
+   were in other keys, which sent songKey() and the shuffle generator into the
+   wrong scale. */
+window.SONG_CHORDS = {
+  id: 'songs-022-echad-mi-yodea-en',
+  key: 'Am',
+  tempo: 132,
+  progression: '| Am Am | Dm Am | E E | Am Am |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>

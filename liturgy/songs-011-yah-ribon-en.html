@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' https://translate.google.com blob: data:; connect-src 'self' https://translate.googleapis.com https://inputtools.google.com https://api.mymemory.translated.net https://ulpan-morph.olamcreations.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yah Ribon: יָהּ רִבּוֹן</title>
+<!-- Like the psalm pages, these do not load app.js, which is what injects the
+     icon everywhere else. Without this line the browser tab is blank and the
+     page asks for a /favicon.ico that does not exist. -->
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<script>(function(){try{if(localStorage.getItem('theme')!=='dark')document.documentElement.classList.add('light');}catch(e){}})();</script>
+<link rel="stylesheet" href="../assets/style.css?v=tehilim1">
+<link rel="stylesheet" href="../assets/liturgy.css">
+<link rel="stylesheet" href="../assets/chords.css">
+<!-- No per-page <style>. The seven hand-written song pages each carry ~150 lines
+     of duplicated CSS, which is why fixing the chord line on one of them fixed it
+     on none of the others. Everything this page needs is in liturgy.css. -->
+</head>
+<body><div class="container">
+
+<a href="../index.html" class="back">← Back to lessons</a>
+
+<header>
+  <div>
+    <h1>Yah Ribon: God, Master of all worlds</h1>
+    <div class="subtitle">Friday night, at the table · יָהּ רִבּוֹן</div>
+  </div>
+  <div class="nav"><a href="../index.html">Home</a><a href="#" class="active">Yah Ribon</a></div>
+</header>
+
+<div class="t-intro">
+  The one zemer at the Friday night table that is not in Hebrew. Israel Najara wrote it in Aramaic in sixteenth-century Safed, and its first letters spell his name. Aramaic is close enough to Hebrew that a learner can follow most of it and far enough that the differences jump out: the definite article is a final vowel instead of a prefix, the relative particle is a single syllable, and the word for "you" is not the one you have been taught. Singing it once teaches you more about the relation between the two languages than a chapter would.
+</div>
+
+<div class="t-chord">
+  <div class="label-row">
+    <span class="label">♫ Guitar suggestion, hover a chord to explore or change</span>
+  </div>
+  <div class="tuning-row">
+    <span class="tuning-label">♪ Tuning</span>
+    <select id="tuning-preset">
+      <option value="standard">Standard (E A D G B E)</option>
+      <option value="drop-d">Drop D (D A D G B E)</option>
+      <option value="dadgad">DADGAD (D A D G A D)</option>
+      <option value="open-d">Open D (D A D F# A D)</option>
+      <option value="open-g">Open G (D G D G B D)</option>
+      <option value="open-c">Open C (C G C G C E)</option>
+      <option value="half-down">½ step down (Eb…)</option>
+      <option value="full-down">Whole step down (D G C F A D)</option>
+      <option value="custom">Custom…</option>
+    </select>
+    <input id="tuning-custom" type="text" placeholder="e.g. D A D G A D" hidden>
+    <span class="tuning-current" id="tuning-current">E A D G B E</span>
+  </div>
+  <div class="progression" id="progression-display"><strong>Key: Dm · 3 chords used ·</strong>&nbsp; <span class="chord" data-chord="Dm">Dm</span> · <span class="chord" data-chord="Gm">Gm</span> · <span class="chord" data-chord="A">A</span></div>
+  <div class="meta-line">84 BPM · 4/4 · one of the slower zemirot, sung sitting, usually late in the meal · five stanzas, each answered by the two-line refrain · to reset the chord panel: <button id="prog-reset" class="link-btn" type="button">↺ restore default</button></div>
+</div>
+
+<div class="active-voicings" id="active-voicings">
+  <div class="av-title">Active voicings · printable
+    <button id="print-btn" class="link-btn" type="button">🖶 print</button>
+  </div>
+  <div class="voicings-grid" id="active-voicings-grid"></div>
+  <div class="av-hint">The voicing displayed for each chord is the one you selected in its popup. Navigate with the popup arrows to change.</div>
+</div>
+
+
+<div class="verses-grid song-grid" data-cols="3">
+<!-- STANZA 1 -->
+<div class="verse">
+  <span class="verse-num">1 · refrain</span>
+  <div class="verse-full">יָהּ רִבּוֹן עָלַם וְעָלְמַיָּא<br>
+  אַנְתְּ הוּא מַלְכָּא מֶלֶךְ מַלְכַיָּא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִבּוֹן</div><div class="tr">ri-<b>BON</b></div><div class="fr">master of</div></div>
+      <div class="word"><div class="he">עָלַם</div><div class="tr">a-<b>LAM</b></div><div class="fr">the world</div></div>
+      <div class="word"><div class="he">וְעָלְמַיָּא</div><div class="tr">ve-al-ma-<b>YA</b></div><div class="fr">and the worlds</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, Master of this world and all worlds,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אַנְתְּ</div><div class="tr">an-<b>TE</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are</div></div>
+      <div class="word"><div class="he">מַלְכָּא</div><div class="tr">mal-<b>KA</b></div><div class="fr">the King</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">king of</div></div>
+      <div class="word"><div class="he">מַלְכַיָּא</div><div class="tr">mal-cha-<b>YA</b></div><div class="fr">the kings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">You are the King, King of kings.</div>
+  </div>
+
+  <div class="verse-summary">Four features of Aramaic in nine words. <strong>וְעָלְמַיָּא</strong> (ve-al-ma-ya) ends in the vowel that means "the" — the article is a suffix, not a prefix. <strong>אַנְתְּ</strong> (an-te) is "you", where Hebrew says atah. <strong>מַלְכָּא</strong> (mal-ka) and <strong>מַלְכַיָּא</strong> (mal-cha-ya) are king and kings with the same final vowel doing the same work. Learn this refrain and the rest of the poem stops being foreign.</div>
+</div>
+
+<!-- STANZA 2 -->
+<div class="verse">
+  <span class="verse-num">2 · the work of Your might</span>
+  <div class="verse-full">עוֹבַד גְבוּרְתֵּךְ וְתִמְהַיָּא<br>
+  שְׁפַר קֳדָמָךְ לְהַחֲוָיָא<br>
+  יָהּ רִבּוֹן עָלַם וְעָלְמַיָּא אַנְתְּ הוּא מַלְכָּא מֶלֶךְ מַלְכַיָּא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עוֹבַד</div><div class="tr">o-<b>VAD</b></div><div class="fr">the work of</div></div>
+      <div class="word"><div class="he">גְבוּרְתֵּךְ</div><div class="tr">gvur-<b>TECH</b></div><div class="fr">Your might</div></div>
+      <div class="word"><div class="he">וְתִמְהַיָּא</div><div class="tr">ve-tim-ha-<b>YA</b></div><div class="fr">and Your wonders</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">The work of Your might and Your wonders —</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁפַר</div><div class="tr">shfar</div><div class="fr">it is pleasing</div></div>
+      <div class="word"><div class="he">קֳדָמָךְ</div><div class="tr">ko-da-<b>MACH</b></div><div class="fr">before You</div></div>
+      <div class="word"><div class="he">לְהַחֲוָיָא</div><div class="tr">le-ha-cha-va-<b>YA</b></div><div class="fr">to declare</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">it is fitting to declare it before You.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִבּוֹן</div><div class="tr">ri-<b>BON</b></div><div class="fr">master of</div></div>
+      <div class="word"><div class="he">עָלַם</div><div class="tr">a-<b>LAM</b></div><div class="fr">the world</div></div>
+      <div class="word"><div class="he">וְעָלְמַיָּא</div><div class="tr">ve-al-ma-<b>YA</b></div><div class="fr">and the worlds</div></div>
+      <div class="word"><div class="he">אַנְתְּ</div><div class="tr">an-<b>TE</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are</div></div>
+      <div class="word"><div class="he">מַלְכָּא</div><div class="tr">mal-<b>KA</b></div><div class="fr">the King</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">king of</div></div>
+      <div class="word"><div class="he">מַלְכַיָּא</div><div class="tr">mal-cha-<b>YA</b></div><div class="fr">the kings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, Master of this world and all worlds, You are the King, King of kings.</div>
+  </div>
+
+  <div class="verse-summary"><strong>קֳדָמָךְ</strong> (ko-da-mach) means "before You", and the root is the same one behind kodem, "earlier" — a word that means both in front of in space and before in time. The stanza is two lines long, which is the shortest in the poem.</div>
+</div>
+
+<!-- STANZA 3 -->
+<div class="verse">
+  <span class="verse-num">3 · morning and evening</span>
+  <div class="verse-full">שְׁבָחִין אֲסַדֵּר צַפְרָא וְרַמְשָׁא<br>
+  לָךְ אֱלָהָא קַדִּישָׁא דִּי בְרָא כָּל נַפְשָׁא<br>
+  עִירִין קַדִּישִׁין וּבְנֵי אֱנָשָׁא<br>
+  חֵיוַת בְּרָא וְעוֹפֵי שְׁמַיָּא<br>
+  יָהּ רִבּוֹן עָלַם וְעָלְמַיָּא אַנְתְּ הוּא מַלְכָּא מֶלֶךְ מַלְכַיָּא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">שְׁבָחִין</div><div class="tr">shva-<b>CHIN</b></div><div class="fr">praises</div></div>
+      <div class="word"><div class="he">אֲסַדֵּר</div><div class="tr">a-sa-<b>DER</b></div><div class="fr">I will set in order</div></div>
+      <div class="word"><div class="he">צַפְרָא</div><div class="tr">tzaf-<b>RA</b></div><div class="fr">morning</div></div>
+      <div class="word"><div class="he">וְרַמְשָׁא</div><div class="tr">ve-ram-<b>SHA</b></div><div class="fr">and evening</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Praises I will set in order, morning and evening,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">to You</div></div>
+      <div class="word"><div class="he">אֱלָהָא</div><div class="tr">e-la-<b>HA</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">קַדִּישָׁא</div><div class="tr">ka-di-<b>SHA</b></div><div class="fr">holy</div></div>
+      <div class="word"><div class="he">דִּי</div><div class="tr">di</div><div class="fr">who</div></div>
+      <div class="word"><div class="he">בְרָא</div><div class="tr">vra</div><div class="fr">created</div></div>
+      <div class="word"><div class="he">כָּל</div><div class="tr">kal</div><div class="fr">every</div></div>
+      <div class="word"><div class="he">נַפְשָׁא</div><div class="tr">naf-<b>SHA</b></div><div class="fr">living soul</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">to You, holy God, who created every living soul:</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עִירִין</div><div class="tr">i-<b>RIN</b></div><div class="fr">watchers</div></div>
+      <div class="word"><div class="he">קַדִּישִׁין</div><div class="tr">ka-di-<b>SHIN</b></div><div class="fr">holy ones</div></div>
+      <div class="word"><div class="he">וּבְנֵי</div><div class="tr">uv-<b>NEI</b></div><div class="fr">and the sons of</div></div>
+      <div class="word"><div class="he">אֱנָשָׁא</div><div class="tr">e-na-<b>SHA</b></div><div class="fr">man</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">holy angels and human beings,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">חֵיוַת</div><div class="tr">chei-<b>VAT</b></div><div class="fr">the beast of</div></div>
+      <div class="word"><div class="he">בְּרָא</div><div class="tr">bra</div><div class="fr">the field</div></div>
+      <div class="word"><div class="he">וְעוֹפֵי</div><div class="tr">ve-o-<b>FEI</b></div><div class="fr">and the bird of</div></div>
+      <div class="word"><div class="he">שְׁמַיָּא</div><div class="tr">shma-<b>YA</b></div><div class="fr">heaven</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">the beasts of the field and the birds of heaven.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִבּוֹן</div><div class="tr">ri-<b>BON</b></div><div class="fr">master of</div></div>
+      <div class="word"><div class="he">עָלַם</div><div class="tr">a-<b>LAM</b></div><div class="fr">the world</div></div>
+      <div class="word"><div class="he">וְעָלְמַיָּא</div><div class="tr">ve-al-ma-<b>YA</b></div><div class="fr">and the worlds</div></div>
+      <div class="word"><div class="he">אַנְתְּ</div><div class="tr">an-<b>TE</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are</div></div>
+      <div class="word"><div class="he">מַלְכָּא</div><div class="tr">mal-<b>KA</b></div><div class="fr">the King</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">king of</div></div>
+      <div class="word"><div class="he">מַלְכַיָּא</div><div class="tr">mal-cha-<b>YA</b></div><div class="fr">the kings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, Master of this world and all worlds, You are the King, King of kings.</div>
+  </div>
+
+  <div class="verse-summary"><strong>חֵיוַת</strong> (chei-vat) through <strong>שְׁמַיָּא</strong> (shma-ya) is the same list Genesis 1 makes, in the same order, and <strong>עִירִין</strong> (i-rin) is a word from Daniel — the only book of the Tanakh with substantial Aramaic in it, which is where Najara got the register.</div>
+</div>
+
+<!-- STANZA 4 -->
+<div class="verse">
+  <span class="verse-num">4 · great are Your works</span>
+  <div class="verse-full">רַבְרְבִין עוֹבְדֵךְ וְתַקִּיפִין<br>
+  מָכִיךְ רָמַיָּא וְזַקִּיף כְּפִיפִין<br>
+  לוּ יִחְיֶה גְבַר שְׁנִין אַלְפִין<br>
+  לָא יֵעוֹל גְּבוּרְתֵּךְ בְּחוּשְׁבָּנַיָּא<br>
+  יָהּ רִבּוֹן עָלַם וְעָלְמַיָּא אַנְתְּ הוּא מַלְכָּא מֶלֶךְ מַלְכַיָּא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">רַבְרְבִין</div><div class="tr">rav-re-<b>VIN</b></div><div class="fr">great things</div></div>
+      <div class="word"><div class="he">עוֹבְדֵךְ</div><div class="tr">ov-<b>DECH</b></div><div class="fr">Your works</div></div>
+      <div class="word"><div class="he">וְתַקִּיפִין</div><div class="tr">ve-ta-ki-<b>FIN</b></div><div class="fr">and mighty</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Great are Your works and mighty,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">מָכִיךְ</div><div class="tr">ma-<b>CHICH</b></div><div class="fr">bringing low</div></div>
+      <div class="word"><div class="he">רָמַיָּא</div><div class="tr">ra-ma-<b>YA</b></div><div class="fr">the haughty</div></div>
+      <div class="word"><div class="he">וְזַקִּיף</div><div class="tr">ve-za-<b>KIF</b></div><div class="fr">and raising</div></div>
+      <div class="word"><div class="he">כְּפִיפִין</div><div class="tr">kfi-<b>FIN</b></div><div class="fr">the bent</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">bringing down the haughty and raising up the bent;</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לוּ</div><div class="tr">lu</div><div class="fr">if only</div></div>
+      <div class="word"><div class="he">יִחְיֶה</div><div class="tr">yich-<b>YE</b></div><div class="fr">he would live</div></div>
+      <div class="word"><div class="he">גְבַר</div><div class="tr">gvar</div><div class="fr">a man</div></div>
+      <div class="word"><div class="he">שְׁנִין</div><div class="tr">shnin</div><div class="fr">years</div></div>
+      <div class="word"><div class="he">אַלְפִין</div><div class="tr">al-<b>FIN</b></div><div class="fr">thousands</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">were a man to live a thousand years,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לָא</div><div class="tr">la</div><div class="fr">not</div></div>
+      <div class="word"><div class="he">יֵעוֹל</div><div class="tr">ye-<b>OL</b></div><div class="fr">it would enter</div></div>
+      <div class="word"><div class="he">גְּבוּרְתֵּךְ</div><div class="tr">gvur-<b>TECH</b></div><div class="fr">Your might</div></div>
+      <div class="word"><div class="he">בְּחוּשְׁבָּנַיָּא</div><div class="tr">be-chush-ba-na-<b>YA</b></div><div class="fr">into the reckonings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">he could not enter Your might into any reckoning.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִבּוֹן</div><div class="tr">ri-<b>BON</b></div><div class="fr">master of</div></div>
+      <div class="word"><div class="he">עָלַם</div><div class="tr">a-<b>LAM</b></div><div class="fr">the world</div></div>
+      <div class="word"><div class="he">וְעָלְמַיָּא</div><div class="tr">ve-al-ma-<b>YA</b></div><div class="fr">and the worlds</div></div>
+      <div class="word"><div class="he">אַנְתְּ</div><div class="tr">an-<b>TE</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are</div></div>
+      <div class="word"><div class="he">מַלְכָּא</div><div class="tr">mal-<b>KA</b></div><div class="fr">the King</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">king of</div></div>
+      <div class="word"><div class="he">מַלְכַיָּא</div><div class="tr">mal-cha-<b>YA</b></div><div class="fr">the kings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, Master of this world and all worlds, You are the King, King of kings.</div>
+  </div>
+
+  <div class="verse-summary"><strong>מָכִיךְ</strong> (ma-chich) and <strong>וְזַקִּיף</strong> (ve-za-kif) are opposites in the same line — bringing down, lifting up — which is the shape of Hannah's song and of Psalm 146, both in Hebrew. Najara is translating a Hebrew habit into Aramaic and it survives the crossing intact.</div>
+</div>
+
+<!-- STANZA 5 -->
+<div class="verse">
+  <span class="verse-num">5 · rescue Your flock</span>
+  <div class="verse-full">אֱלָהָא דִּי לֵהּ יְקָר וּרְבוּתָא<br>
+  פְּרוֹק יַת עָנָךְ מִפּוּם אַרְיְוָתָא<br>
+  וְאַפֵּק יַת עַמָּךְ מִגּוֹ גָלוּתָא<br>
+  עַמֵּךְ דִּי בְחַרְתְּ מִכָּל אֻמַּיָּא<br>
+  יָהּ רִבּוֹן עָלַם וְעָלְמַיָּא אַנְתְּ הוּא מַלְכָּא מֶלֶךְ מַלְכַיָּא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֱלָהָא</div><div class="tr">e-la-<b>HA</b></div><div class="fr">God</div></div>
+      <div class="word"><div class="he">דִּי</div><div class="tr">di</div><div class="fr">to whom</div></div>
+      <div class="word"><div class="he">לֵהּ</div><div class="tr">leh</div><div class="fr">belongs to Him</div></div>
+      <div class="word"><div class="he">יְקָר</div><div class="tr">ye-<b>KAR</b></div><div class="fr">honour</div></div>
+      <div class="word"><div class="he">וּרְבוּתָא</div><div class="tr">ur-vu-<b>TA</b></div><div class="fr">and greatness</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, to whom belong honour and greatness,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">פְּרוֹק</div><div class="tr">prok</div><div class="fr">rescue! (2ms)</div></div>
+      <div class="word"><div class="he">יַת</div><div class="tr">yat</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">עָנָךְ</div><div class="tr">a-<b>NACH</b></div><div class="fr">Your flock</div></div>
+      <div class="word"><div class="he">מִפּוּם</div><div class="tr">mi-<b>PUM</b></div><div class="fr">from the mouth of</div></div>
+      <div class="word"><div class="he">אַרְיְוָתָא</div><div class="tr">ari-va-<b>TA</b></div><div class="fr">the lions</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">rescue Your flock from the mouth of the lions,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וְאַפֵּק</div><div class="tr">ve-a-<b>PEK</b></div><div class="fr">and bring out! (2ms)</div></div>
+      <div class="word"><div class="he">יַת</div><div class="tr">yat</div><div class="fr">(marks the object)</div></div>
+      <div class="word"><div class="he">עַמָּךְ</div><div class="tr">a-<b>MACH</b></div><div class="fr">Your people</div></div>
+      <div class="word"><div class="he">מִגּוֹ</div><div class="tr">mi-<b>GO</b></div><div class="fr">from within</div></div>
+      <div class="word"><div class="he">גָלוּתָא</div><div class="tr">ga-lu-<b>TA</b></div><div class="fr">the exile</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and bring Your people out from within exile,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">עַמֵּךְ</div><div class="tr">a-<b>MECH</b></div><div class="fr">Your people</div></div>
+      <div class="word"><div class="he">דִּי</div><div class="tr">di</div><div class="fr">whom</div></div>
+      <div class="word"><div class="he">בְחַרְתְּ</div><div class="tr">ve-char-<b>TE</b></div><div class="fr">You chose</div></div>
+      <div class="word"><div class="he">מִכָּל</div><div class="tr">mi-<b>KAL</b></div><div class="fr">from all</div></div>
+      <div class="word"><div class="he">אֻמַּיָּא</div><div class="tr">u-ma-<b>YA</b></div><div class="fr">the nations</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">Your people whom You chose out of all the nations.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִבּוֹן</div><div class="tr">ri-<b>BON</b></div><div class="fr">master of</div></div>
+      <div class="word"><div class="he">עָלַם</div><div class="tr">a-<b>LAM</b></div><div class="fr">the world</div></div>
+      <div class="word"><div class="he">וְעָלְמַיָּא</div><div class="tr">ve-al-ma-<b>YA</b></div><div class="fr">and the worlds</div></div>
+      <div class="word"><div class="he">אַנְתְּ</div><div class="tr">an-<b>TE</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are</div></div>
+      <div class="word"><div class="he">מַלְכָּא</div><div class="tr">mal-<b>KA</b></div><div class="fr">the King</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">king of</div></div>
+      <div class="word"><div class="he">מַלְכַיָּא</div><div class="tr">mal-cha-<b>YA</b></div><div class="fr">the kings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, Master of this world and all worlds, You are the King, King of kings.</div>
+  </div>
+
+  <div class="verse-summary">The lions are Daniel's, and the exile named in <strong>גָלוּתָא</strong> (ga-lu-ta) is the one Najara was living in — he wrote this in Safed, in an Ottoman province, four hundred years after the poem's Hebrew cousins. <strong>יַת</strong> (yat) and <strong>יַת</strong> (yat) are the Aramaic object marker, the equivalent of Hebrew et, and this is the clearest place in the poem to see the two languages side by side.</div>
+</div>
+
+<!-- STANZA 6 -->
+<div class="verse">
+  <span class="verse-num">6 · to Your sanctuary</span>
+  <div class="verse-full">לְמִקְדָּשֵׁךְ תּוּב וּלְקֹדֶשׁ קֻדְשִׁין<br>
+  אֲתַר דִּי בֵיהּ יֶחֱדוּן רוּחִין וְנַפְשִׁין<br>
+  וִיזַמְּרוּן לָךְ שִׁירִין וְרַחֲשִׁין<br>
+  בִּירוּשְׁלֵם קַרְתָּא דְשׁוּפְרַיָּא<br>
+  יָהּ רִבּוֹן עָלַם וְעָלְמַיָּא אַנְתְּ הוּא מַלְכָּא מֶלֶךְ מַלְכַיָּא</div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">לְמִקְדָּשֵׁךְ</div><div class="tr">le-mik-da-<b>SHECH</b></div><div class="fr">to Your sanctuary</div></div>
+      <div class="word"><div class="he">תּוּב</div><div class="tr">tuv</div><div class="fr">return!</div></div>
+      <div class="word"><div class="he">וּלְקֹדֶשׁ</div><div class="tr">ul-<b>KO</b>-desh</div><div class="fr">and to the holy of</div></div>
+      <div class="word"><div class="he">קֻדְשִׁין</div><div class="tr">kud-<b>SHIN</b></div><div class="fr">holies</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">To Your sanctuary return, and to the Holy of Holies,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">אֲתַר</div><div class="tr">a-<b>TAR</b></div><div class="fr">a place</div></div>
+      <div class="word"><div class="he">דִּי</div><div class="tr">di</div><div class="fr">where</div></div>
+      <div class="word"><div class="he">בֵיהּ</div><div class="tr">veih</div><div class="fr">in it</div></div>
+      <div class="word"><div class="he">יֶחֱדוּן</div><div class="tr">ye-che-<b>DUN</b></div><div class="fr">they will rejoice</div></div>
+      <div class="word"><div class="he">רוּחִין</div><div class="tr">ru-<b>CHIN</b></div><div class="fr">spirits</div></div>
+      <div class="word"><div class="he">וְנַפְשִׁין</div><div class="tr">ve-naf-<b>SHIN</b></div><div class="fr">and souls</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span></div>
+    <div class="stich-translation">the place where spirits and souls will rejoice,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">וִיזַמְּרוּן</div><div class="tr">vi-zam-<b>RUN</b></div><div class="fr">and they will sing</div></div>
+      <div class="word"><div class="he">לָךְ</div><div class="tr">lach</div><div class="fr">to You</div></div>
+      <div class="word"><div class="he">שִׁירִין</div><div class="tr">shi-<b>RIN</b></div><div class="fr">songs</div></div>
+      <div class="word"><div class="he">וְרַחֲשִׁין</div><div class="tr">ve-ra-cha-<b>SHIN</b></div><div class="fr">and whispers</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">and they will sing to You songs and whispers,</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">בִּירוּשְׁלֵם</div><div class="tr">bi-rush-<b>LEM</b></div><div class="fr">in Jerusalem</div></div>
+      <div class="word"><div class="he">קַרְתָּא</div><div class="tr">kar-<b>TA</b></div><div class="fr">the city of</div></div>
+      <div class="word"><div class="he">דְשׁוּפְרַיָּא</div><div class="tr">de-shuf-ra-<b>YA</b></div><div class="fr">the beauty</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">in Jerusalem, city of beauty.</div>
+  </div>
+
+  <div class="stich">
+    <div class="stich-words">
+      <div class="word"><div class="he">יָהּ</div><div class="tr">yah</div><div class="fr">God</div></div>
+      <div class="word"><div class="he">רִבּוֹן</div><div class="tr">ri-<b>BON</b></div><div class="fr">master of</div></div>
+      <div class="word"><div class="he">עָלַם</div><div class="tr">a-<b>LAM</b></div><div class="fr">the world</div></div>
+      <div class="word"><div class="he">וְעָלְמַיָּא</div><div class="tr">ve-al-ma-<b>YA</b></div><div class="fr">and the worlds</div></div>
+      <div class="word"><div class="he">אַנְתְּ</div><div class="tr">an-<b>TE</b></div><div class="fr">You</div></div>
+      <div class="word"><div class="he">הוּא</div><div class="tr">hu</div><div class="fr">are</div></div>
+      <div class="word"><div class="he">מַלְכָּא</div><div class="tr">mal-<b>KA</b></div><div class="fr">the King</div></div>
+      <div class="word"><div class="he">מֶלֶךְ</div><div class="tr">me-<b>LECH</b></div><div class="fr">king of</div></div>
+      <div class="word"><div class="he">מַלְכַיָּא</div><div class="tr">mal-cha-<b>YA</b></div><div class="fr">the kings</div></div>
+    </div>
+    <div class="stich-chords"><span class="sep">|</span> <span class="chord" data-chord="Dm">Dm</span> <span class="chord" data-chord="Gm">Gm</span> <span class="sep">|</span> <span class="chord" data-chord="A">A</span> <span class="chord" data-chord="Dm">Dm</span> <span class="sep">|</span></div>
+    <div class="stich-translation">God, Master of this world and all worlds, You are the King, King of kings.</div>
+  </div>
+
+  <div class="verse-summary"><strong>שִׁירִין</strong> (shi-rin) is songs and <strong>וְרַחֲשִׁין</strong> (ve-ra-cha-shin) is whispers, and pairing them is the poem's last move: the loud and the almost inaudible, both counted as singing. Then one place name and it stops.</div>
+</div>
+</div>
+
+<div class="chant-tip">
+  <h3>♫ Singing notes</h3>
+  <ul>
+    <li>Slower than the other zemirot, and it stays slow. Around 84 BPM, sung sitting, usually after the faster ones have run their course.</li>
+    <li>The refrain is nine words and returns five times. Everyone sings it; the stanzas belong to whoever knows them.</li>
+    <li>The Aramaic will trip a Hebrew reader on the vowels rather than the letters. If you are learning it, learn the refrain by ear before you try to read it.</li>
+    <li>Many Sephardi and Mizrahi communities sing it to a maqam-based melody rather than the Ashkenazi one, and the two sound nothing alike. Both are correct.</li>
+  </ul>
+</div>
+
+<div class="pardes-card">
+  <h3>♦ About this song</h3>
+  <div class="pardes-level">
+    <h4>The acrostic</h4>
+    <p>The first letters of the five stanzas after the refrain spell the poet's name, Israel. He signed his poems this way as a matter of course, which is how the authorship of a sixteenth-century table song is known at all.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>Why Aramaic</h4>
+    <p>Najara worked in Safed among kabbalists for whom Aramaic was the language of the Zohar, and writing a table song in it placed the Friday night meal in that register. It is also the language of the Kaddish, so the sound was familiar to everyone at the table even if the grammar was not.</p>
+  </div>
+
+  <div class="pardes-level">
+    <h4>A poem with no Sabbath in it</h4>
+    <p>Nothing in Yah Ribon mentions the Sabbath. It is sung on Friday night by custom rather than by subject, which sets it apart from every other zemer on this site — those are about the day; this one is about the world.</p>
+  </div>
+</div>
+
+<footer>Yah Ribon · יָהּ רִבּוֹן · <a href="../index.html" style="color:var(--accent)">Back to lessons →</a></footer>
+
+</div>
+
+<div class="t-provenance">
+  <strong>Hebrew:</strong> Siddur Ashkenaz, Shabbat, Shabbat Evening, Zemirot for Shabbat Evening, Yah Ribon · The Metsudah siddur, 1981 · CC-BY, via Sefaria, pinned in this repo at content/songs/source/011.json.
+  English gloss lines authored for this site; the source translation is used as raw material only. Transliteration generated by this site's own engine (assets/translit.js).
+</div>
+
+<script>
+/* This page's harmony. The chord chart itself is shared:
+     assets/chord-theory.js  harmony, fretboard search, progression generator
+     assets/chords.js        drawing, chord popup, shuffle, playback
+   The key is DERIVED from the grid below by tools/chord-key.mjs and never typed:
+   the psalm template held it as a literal and shipped 'Am' over 126 grids that
+   were in other keys, which sent songKey() and the shuffle generator into the
+   wrong scale. */
+window.SONG_CHORDS = {
+  id: 'songs-011-yah-ribon-en',
+  key: 'Dm',
+  tempo: 84,
+  progression: '| Dm Dm | Gm Dm | A A | Dm Dm |'
+};
+</script>
+<script src="../assets/chord-theory.js" defer></script>
+<script src="../assets/chords.js" defer></script>
+<script src="../assets/autoscroll.js" defer></script>
+<script src="../assets/swupdate.js" defer></script>
+</body>
+</html>
