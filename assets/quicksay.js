@@ -67,6 +67,9 @@
   // phoneme-level romanization key: kh==ch (כ/ח), tz==ts (צ), drop everything non-letter.
   // Same normalization as _translit_test.cjs so the reverse-match agrees with the forward test.
   const romNorm = s => (s || '').toLowerCase().replace(/kh/g, 'ch').replace(/tz/g, 'ts').replace(/[^a-z]/g, '');
+  // Consonants only, deliberately: a niqqud mark alone would make a bare vowel point read as
+  // "this is Hebrew", and the question being asked is whether there are any Hebrew WORDS here.
+  const HEBREW_LETTER = /[א-ת]/;
   const stripNiqqud = window.stripNiqqud;
 
   // Normalized Levenshtein similarity in [0,1] (1 = identical). Short strings only.
@@ -353,9 +356,121 @@
       });
   }
 
+  /* Everyone writing Hebrew in Latin letters marks a prefixed particle with a hyphen — ha-bayit,
+     la-lechet, ba-bank — because in Hebrew it IS a prefix and the hyphen is how you show that in
+     Latin script. Input Tools reads that hyphen as a word boundary instead, transliterates the
+     two-letter particle as a word in its own right, and joins the two with the hyphen it was
+     given. The card comes back entirely in Hebrew and entirely wrong, which is the worst shape a
+     wrong answer can have: nothing about it looks broken.
+
+         ha-tachana  -> היא-תכנה   "she-software"     (wanted התחנה, the station)
+         la-lechet   -> לא-ללכת    "not-to go"        (wanted ללכת, to go)
+         ba-bank     -> בא-בנק     "comes-bank"       (wanted בבנק, at the bank)
+
+     Welding the particle to its host fixes it. Measured over 19 candidate particles against what
+     a learner means: 14 go from wrong to right, 5 stay wrong for an unrelated reason (eyfo and
+     achshav are mis-heard by Input Tools whatever you do), and NOT ONE gets worse. The full set
+     is kept rather than only the 14, because even where the meaning stays wrong, welding removes
+     a card that falsely presents itself as two glossed Hebrew words.
+
+     The guard is the whole rule and it is not optional: welding a hyphen that is NOT a particle
+     destroys the answer, also measured — beit-sefer -> בבית-ספר becomes בביצפר, tel-aviv -> תל-אביב
+     becomes תלאביב. So the left side must match a particle EXACTLY (beit and tel do not, be'er
+     does not), and everything else keeps the hyphen the user typed. Stacked particles weld left
+     to right: me-ha-bayit -> mehabayit -> מהבית. */
+  const PROCLITICS = new Set([
+    'h', 'ha', 'b', 'be', 'ba', 'l', 'le', 'la', 'm', 'me', 'mi',
+    'k', 'ke', 'ka', 'v', 've', 'va', 'u', 'sh', 'she'
+  ]);
+
+  /* Three characters break Input Tools outright, and it never says so. Measured one mark at a
+     time in a fixed carrier phrase, everything else — full stop, semicolon, colon, question
+     mark, exclamation, dash, ellipsis, bracket — passes through untouched and is even echoed
+     back. Only these three:
+
+       '  apostrophe    the ENTIRE result is empty. 10 phrases tested, 10 empty, 10 correct once
+                        removed. This is how you romanize the ayin between two vowels — me'od,
+                        she'ela, la'azor, be'er sheva — so it is what a phrasebook prints and what
+                        a learner types. Every one of them got an empty phonetic section, and the
+                        app then fell through to Google's forward translation, which handed back
+                        "בְּ-ychola La'azor לִי רָגָ'ה" as if it were an answer.
+       "  gershayim     the entire result is empty, the same way. It sits INSIDE Hebrew words
+                        (צה"ל), so it is removed rather than spaced, which leaves the consonants
+                        the query needs.
+       ,  comma         worse than empty, because it looks like it worked: everything after the
+                        first comma is silently DROPPED. "ani rotze kafe, bevakasha" came back
+                        אני רוצה קפה — the please is gone — correctly pointed, confidently shown.
+                        "שלום, מה שלומך" came back שלום. Replaced with a space rather than removed,
+                        so "kafe,bevakasha" does not become one welded word.
+
+     None of the three carries information Input Tools uses: it strips punctuation from its own
+     output too. So removing them costs nothing and is the difference between half a sentence and
+     the sentence. */
+  const CLEAN_FOR_IT = q => String(q || '').replace(/['’ʼ׳"״]/g, '').replace(/,/g, ' ');
+
+  function weldProclitics(q) {
+    return CLEAN_FOR_IT(q).split(/(\s+)/).map(word => {
+      if (word.indexOf('-') < 0) return word;
+      const seg = word.split('-');
+      let i = 0;
+      // seg[i + 1] must be non-empty: a particle needs a host. "ha-" on its own is someone
+      // mid-word, and eating their hyphen moves the caret out from under them as they type.
+      while (i < seg.length - 1 && seg[i + 1] && PROCLITICS.has(seg[i].toLowerCase())) i++;
+      return i === 0 ? word : seg.slice(0, i + 1).join('') + seg.slice(i + 1).map(s => '-' + s).join('');
+    }).join('');
+  }
+
+  /* Input Tools ranks its guesses, and the low-ranked ones are routinely the SAME word with a
+     letter repeated: bevakasha came back beside בבבקשה, tovakasha beside תודה רבההה, each one
+     then vocalized and transliterated with exactly as much confidence as the real answer. A
+     learner has no way to tell which of the three is the word.
+
+     Stated absolutely — "no Hebrew word repeats a letter three times" — the rule has real false
+     positives (חנני, ממלכה-class forms: 2 in the 22,252 words of this repository). Stated
+     comparatively it has none, because it fires only when a HIGHER-RANKED sibling collapses to
+     the same skeleton. The defect was never "this word has doubled letters", it was "the same
+     word is offered twice, once padded". */
+  /* When the learner has ALREADY typed Hebrew, the phonetic section has exactly one job: put the
+     vowel points on what they wrote. Input Tools is a phonetic IME built for Latin input, and
+     asked to "correct" real Hebrew it starts proposing other sentences — measured over a capture
+     of the live page, 34 of the 58 cards on the Hebrew-input path were a different sentence from
+     the one typed, and not one of the 34 was a plausible alternative reading:
+
+         בוקר טוב  -> בוקר אוטובוסים   "morning buses"
+         מזל טוב   -> מזל אוטובוסים
+         תודה רבה  -> תודה רבהעליך
+         ...בשעה תשע בבוקר -> ...בשעה תשע בבוקרשט   "at nine in Bucharest"
+
+     So on a Hebrew input, a candidate whose consonants differ from the input's is not a reading
+     of it. Niqqud is ignored in the comparison — adding it is the entire point — and so is
+     punctuation, which Input Tools drops on its own.
+
+     The last line is the one that keeps this honest: if NOTHING matches, the filter stands down
+     and the ranked list is shown untouched. A learner with a typo in their Hebrew is the case
+     where the other readings are worth seeing, and an empty answer is worse than a noisy one. */
+  const heSkeleton = s => String(s || '').replace(/[֑-ׇ]/g, '').replace(/[^א-ת]/g, '');
+  const isHebrewInput = q => { const t = String(q || '').replace(/\s/g, ''); return t.length > 0 && heSkeleton(t).length >= t.length * 0.6; };
+  function keepSameWords(q, cands) {
+    if (!isHebrewInput(q)) return cands;
+    const want = heSkeleton(q);
+    const same = cands.filter(c => heSkeleton(c) === want);
+    return same.length ? same : cands;
+  }
+
+  const collapseRuns = s => String(s || '').replace(/(.)\1+/g, '$1');
+  function dropPadded(cands) {
+    const kept = [];
+    for (const c of cands) {
+      const cc = collapseRuns(c);
+      if (kept.some(p => p.length < c.length && collapseRuns(p) === cc)) continue;
+      kept.push(c);
+    }
+    return kept;
+  }
+
   // --- Reverse: romanized Hebrew -> Hebrew script candidates (ranked = the "si hésitation") ---
   function fetchInputTools(q, signal) {
-    const url = 'https://inputtools.google.com/request?text=' + encodeURIComponent(q) +
+    const url = 'https://inputtools.google.com/request?text=' + encodeURIComponent(weldProclitics(q)) +
       '&itc=he-t-i0-und&num=' + CFG.phoneticMax + '&cp=0&cs=1&ie=utf-8&oe=utf-8';
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
@@ -363,7 +478,7 @@
         if (!Array.isArray(j) || j[0] !== 'SUCCESS') return [];
         const block = j[1] && j[1][0];
         const cands = block && block[1];
-        return Array.isArray(cands) ? cands.filter(Boolean) : [];
+        return Array.isArray(cands) ? dropPadded(keepSameWords(q, cands.filter(Boolean))) : [];
       });
   }
 
@@ -431,6 +546,13 @@
         // whole function exists to surface. The costs are asymmetric: a stray echo card is mild
         // noise, hiding the right word is the bug. Prefer showing too much.
         if (isSoundEcho(q, a.rm)) return;
+        /* And drop the alternate that is not in Hebrew at all. When a language simply does not
+           know the word, gtx does not fail — it hands the input straight back, so asking it to
+           read "aujourd'hui" as Spanish produced a card whose Hebrew side read "aujourd'hui",
+           with a play button and a copy button on it. That is not the "prefer showing too much"
+           case argued above: an extra reading is mild noise, a card offering the learner their
+           own question as the answer is the engine failing silently. */
+        if (!HEBREW_LETTER.test(a.he)) return;
         seen.add(k);
         alts.push(Object.assign({}, a, { en: q + ' (as ' + (LANG_NAME[a.sl] || a.sl) + ')' }));
       });
@@ -1135,5 +1257,11 @@
   // sentence into a per-word morphology micro-lesson, so it's exposed alongside mount.
   // copy/copyTitle are exported so "My phrases" (hub.js) offers the same gesture on a saved
   // phrase as the translator does on a fresh one — one implementation, one fallback path.
-  window.QuickSay = { mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE };
+  /* weldProclitics and dropPadded are exported so tools/translator-units.mjs can exercise the
+     shipped functions in the shipped page instead of re-implementing them in Node. A test that
+     recopies the rule it is testing passes on the copy and says nothing about what users get. */
+  window.QuickSay = {
+    mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE,
+    _weldProclitics: weldProclitics, _dropPadded: dropPadded, _keepSameWords: keepSameWords
+  };
 })();

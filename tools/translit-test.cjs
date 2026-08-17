@@ -124,10 +124,16 @@ if (notIdempotent.length || rewritten.length > CEILING) {
  * transliteration from the Hebrew on the card and had 13 mismatches, every one of them this.
  *
  * The site's scheme is ch/tz — that is what translit.js emits everywhere and what every
- * generated page carries. This counts the verified data that disagrees, and holds the number
- * where it is so it cannot quietly grow.
+ * generated page carries. This counts the verified data that disagrees.
+ *
+ * The count was held at a ceiling of 35 for a while, which recorded the problem without fixing
+ * it. All 35 rows were rewritten on 2026-08-17 by tools/phrasebook-scheme.mjs, which derives the
+ * transliteration from each row's own Hebrew and refuses to write it unless the derived form and
+ * the human one are the same word — so the rewrite could change spelling and could not change
+ * pronunciation. The ceiling is now zero, and zero is the only defensible ceiling: any new row in
+ * the old convention is a new contradiction on the learner's screen.
  */
-const OFF_SCHEME_CEILING = 35;   // measured, not chosen: the number today. Any increase fails.
+const OFF_SCHEME_CEILING = 0;
 const offScheme = [];
 for (const p of data) {
   if (!p.tr) continue;
