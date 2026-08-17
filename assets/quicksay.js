@@ -63,6 +63,20 @@
     return loadPromise;
   }
 
+  /* Romanized words Input Tools is measured to mis-hear (achshav -> ייחשב, eyfo -> איפו, every
+     number from four to ten), and the Hebrew the learner means. Config, not code (LOI 0a) —
+     the list is data/romanization-fixes.json, and its rule for admission is written in the file.
+     Loaded once, best-effort: with the file absent the translator behaves as before. */
+  let ROM_FIXES = {};
+  // Keys are folded with romNorm at load, so the file can be written naturally (atzmecha) and
+  // still match what the learner types under any spelling (atsmecha, ATZMECHA). Without this
+  // fold, one entry in the first version of the file was silently never applied.
+  const setRomFixes = raw => { ROM_FIXES = {}; Object.keys(raw || {}).forEach(k => { ROM_FIXES[romNorm(k)] = raw[k]; }); };
+  fetch((window.ULPAN_BASE || '') + 'data/romanization-fixes.json')
+    .then(r => r.json())
+    .then(d => setRomFixes(d && d.fixes))
+    .catch(() => {});
+
   const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
   // phoneme-level romanization key: kh==ch (כ/ח), tz==ts (צ), drop everything non-letter.
   // Same normalization as _translit_test.cjs so the reverse-match agrees with the forward test.
@@ -378,10 +392,15 @@
      becomes תלאביב. So the left side must match a particle EXACTLY (beit and tel do not, be'er
      does not), and everything else keeps the hyphen the user typed. Stacked particles weld left
      to right: me-ha-bayit -> mehabayit -> מהבית. */
-  const PROCLITICS = new Set([
-    'h', 'ha', 'b', 'be', 'ba', 'l', 'le', 'la', 'm', 'me', 'mi',
-    'k', 'ke', 'ka', 'v', 've', 'va', 'u', 'sh', 'she'
-  ]);
+  /* Each particle with the single letter it is in Hebrew. The letter is needed when the HOST has
+     already been resolved to Hebrew (see resolveSegment): a Latin particle glued to a Hebrew word
+     is measured unreliable — "haחודש" comes back האחודש, "veחבר" comes back ויחבר — while the
+     particle written as its letter is not: "החודש", "וחבר". */
+  const PARTICLE_HE = {
+    h: 'ה', ha: 'ה', b: 'ב', be: 'ב', ba: 'ב', l: 'ל', le: 'ל', la: 'ל', m: 'מ', me: 'מ', mi: 'מ',
+    k: 'כ', ke: 'כ', ka: 'כ', v: 'ו', ve: 'ו', va: 'ו', u: 'ו', sh: 'ש', she: 'ש'
+  };
+  const PROCLITICS = new Set(Object.keys(PARTICLE_HE));
 
   /* Three characters break Input Tools outright, and it never says so. Measured one mark at a
      time in a fixed carrier phrase, everything else — full stop, semicolon, colon, question
@@ -408,15 +427,45 @@
      the sentence. */
   const CLEAN_FOR_IT = q => String(q || '').replace(/['’ʼ׳"״]/g, '').replace(/,/g, ' ');
 
+  /* One hyphen-free Latin piece of what the learner typed, turned into what Input Tools should be
+     shown for it. Two things happen here, in this order:
+
+       1. A word we already KNOW is replaced by its Hebrew, from data/romanization-fixes.json.
+          Input Tools passes Hebrew through untouched (measured on mixed lines), so it is left to
+          guess only the words we do not know — achshav never reaches it as Latin and cannot come
+          back as ייחשב. Held-out, on 129 idioms the list was not built from: 84 -> 91 whole
+          phrases right, 55 -> 44 wrong words, nothing made worse.
+
+       2. A word beginning with "ch" is sent beginning with "h". In this site's scheme a
+          word-initial ch is always ח (a word-initial kaf carries dagesh and is written k), and
+          Input Tools reads "ch" as TWO letters, כ then ח: chadash -> כחדש, chaver -> כבר,
+          cheshbon -> כחשבון. Written h it hears ח from context. Measured on 30 words and phrases:
+          6 right raw, 24 right with h. The rule is per SEGMENT so it also fires after a welded
+          particle: ha-chodesh -> ha + hodesh -> החודש. Every alternative was tried first and
+          none works — kh 0/15, x 0/15, 7 0/15, hh 0/15, ḥ 0/15. Two common words go the other
+          way (cham -> הם) and are in the fix list, which is consulted first. */
+  function resolveSegment(seg) {
+    if (!/^[A-Za-z]+$/.test(seg)) return seg;
+    const known = ROM_FIXES[romNorm(seg)];
+    if (known) return known;
+    return seg.replace(/^ch/i, m => (m[0] === 'C' ? 'H' : 'h'));
+  }
+
   function weldProclitics(q) {
     return CLEAN_FOR_IT(q).split(/(\s+)/).map(word => {
-      if (word.indexOf('-') < 0) return word;
-      const seg = word.split('-');
+      const seg = word.split('-').map(resolveSegment);
+      if (seg.length === 1) return seg[0];
       let i = 0;
       // seg[i + 1] must be non-empty: a particle needs a host. "ha-" on its own is someone
       // mid-word, and eating their hyphen moves the caret out from under them as they type.
       while (i < seg.length - 1 && seg[i + 1] && PROCLITICS.has(seg[i].toLowerCase())) i++;
-      return i === 0 ? word : seg.slice(0, i + 1).join('') + seg.slice(i + 1).map(s => '-' + s).join('');
+      if (i === 0) return seg.join('-');
+      const host = seg[i];
+      // A host resolved to Hebrew takes its particles as Hebrew letters (see PARTICLE_HE).
+      const particles = /[א-ת]/.test(host)
+        ? seg.slice(0, i).map(p => PARTICLE_HE[p.toLowerCase()]).join('')
+        : seg.slice(0, i).join('');
+      return particles + host + seg.slice(i + 1).map(s => '-' + s).join('');
     }).join('');
   }
 
@@ -441,21 +490,18 @@
          תודה רבה  -> תודה רבהעליך
          ...בשעה תשע בבוקר -> ...בשעה תשע בבוקרשט   "at nine in Bucharest"
 
-     So on a Hebrew input, a candidate whose consonants differ from the input's is not a reading
-     of it. Niqqud is ignored in the comparison — adding it is the entire point — and so is
-     punctuation, which Input Tools drops on its own.
+     The first version of this filtered those out and stood down if nothing survived, on the
+     theory that the other readings might be typo corrections. Then that theory was measured:
+     given Hebrew with a typo — שלוום, קפא, צריח — Input Tools returns it UNCHANGED, six out of six.
+     It never corrects Hebrew; it only decorates it. So on an all-Hebrew input the call buys one
+     round trip, a comma-stripped copy of what was typed (its own punctuation handling), and
+     nothing else. It is not made. The candidate is the input, and pointing it is Dicta's job
+     downstream, which keeps the punctuation the learner wrote.
 
-     The last line is the one that keeps this honest: if NOTHING matches, the filter stands down
-     and the ranked list is shown untouched. A learner with a typo in their Hebrew is the case
-     where the other readings are worth seeing, and an empty answer is worse than a noisy one. */
-  const heSkeleton = s => String(s || '').replace(/[֑-ׇ]/g, '').replace(/[^א-ת]/g, '');
-  const isHebrewInput = q => { const t = String(q || '').replace(/\s/g, ''); return t.length > 0 && heSkeleton(t).length >= t.length * 0.6; };
-  function keepSameWords(q, cands) {
-    if (!isHebrewInput(q)) return cands;
-    const want = heSkeleton(q);
-    const same = cands.filter(c => heSkeleton(c) === want);
-    return same.length ? same : cands;
-  }
+     "All-Hebrew" means no Latin letter at all. A mixed line — "איפה hatachana", "אני רוצה kafe"
+     — still goes to Input Tools, which passes the Hebrew words through untouched (measured) and
+     transliterates the Latin ones, exactly what a learner mixing scripts wants. */
+  const isAllHebrew = q => /[א-ת]/.test(q) && !/[A-Za-z]/.test(q);
 
   const collapseRuns = s => String(s || '').replace(/(.)\1+/g, '$1');
   function dropPadded(cands) {
@@ -469,8 +515,17 @@
   }
 
   // --- Reverse: romanized Hebrew -> Hebrew script candidates (ranked = the "si hésitation") ---
+  /* What Input Tools is actually asked: the query cleaned of the three characters that break
+     it, every hyphen-free piece resolved (known word -> its Hebrew; word-initial ch -> h), and
+     particle hyphens welded. All of it lives in weldProclitics; this name says what the result
+     is for. */
+  const phoneticQuery = weldProclitics;
+
   function fetchInputTools(q, signal) {
-    const url = 'https://inputtools.google.com/request?text=' + encodeURIComponent(weldProclitics(q)) +
+    // All-Hebrew: nothing to transliterate, and Input Tools does not correct Hebrew (measured,
+    // 6/6 typos returned unchanged). The candidate is the input; Dicta points it downstream.
+    if (isAllHebrew(q)) return Promise.resolve([String(q).trim()]);
+    const url = 'https://inputtools.google.com/request?text=' + encodeURIComponent(phoneticQuery(q)) +
       '&itc=he-t-i0-und&num=' + CFG.phoneticMax + '&cp=0&cs=1&ie=utf-8&oe=utf-8';
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
@@ -478,7 +533,7 @@
         if (!Array.isArray(j) || j[0] !== 'SUCCESS') return [];
         const block = j[1] && j[1][0];
         const cands = block && block[1];
-        return Array.isArray(cands) ? dropPadded(keepSameWords(q, cands.filter(Boolean))) : [];
+        return Array.isArray(cands) ? dropPadded(cands.filter(Boolean)) : [];
       });
   }
 
@@ -1098,8 +1153,18 @@
   }
 
   let renderToken = 0;
+  /* A single full stop at the end of the query is not part of the question. Google's word choice
+     is not stable across it — "I'm just looking (man)" came back מחפש and, with a full stop,
+     מסתכל, two different verbs for the same phrase, and the phonetic engine drops it anyway. So
+     it is removed HERE, at the one point every path reads the query, which makes the answer
+     independent of it by construction: cache keys, the curated lookup, Google and Input Tools
+     all see the same string. Only a lone terminal full stop: "?" and "!" carry meaning, and
+     "..." is not a full stop. Measured on 26 phrases first — 25 were already stable, and this
+     turns the 26th from a coin toss into a rule. */
+  const normalizeQuery = q => String(q || '').trim().replace(/(?<![.!?])\.$/, '').trim();
+
   function render(container, q) {
-    const nq = q.trim();
+    const nq = normalizeQuery(q);
     if (!nq) {
       container.removeAttribute('aria-busy');
       container.innerHTML = '';   // minimal empty state: no hint text, no example chips
@@ -1262,6 +1327,7 @@
      recopies the rule it is testing passes on the copy and says nothing about what users get. */
   window.QuickSay = {
     mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE,
-    _weldProclitics: weldProclitics, _dropPadded: dropPadded, _keepSameWords: keepSameWords
+    _weldProclitics: weldProclitics, _dropPadded: dropPadded, _isAllHebrew: isAllHebrew,
+    _phoneticQuery: phoneticQuery, _normalizeQuery: normalizeQuery, _setRomFixes: setRomFixes
   };
 })();

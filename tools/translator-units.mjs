@@ -8,8 +8,8 @@
  * WHY A BROWSER FOR THREE PURE FUNCTIONS. Because they must be THE three pure functions. Each is
  * small enough to re-type in Node in a minute, and a re-typed rule is a second program: it passes
  * on itself and says nothing about the one that shipped. This file therefore loads the real page
- * and calls window.QuickSay._weldProclitics, ._dropPadded and ._keepSameWords — the same bytes
- * the learner's browser runs.
+ * and calls window.QuickSay._weldProclitics, ._dropPadded, ._isAllHebrew, ._phoneticQuery and
+ * ._normalizeQuery — the same bytes the learner's browser runs.
  *
  * WHAT THEY GUARD.
  *
@@ -26,13 +26,20 @@
  * "no tripled letters" rule has real false positives in Hebrew, a comparative one has none
  * because it needs an unpadded sibling to fire against.
  *
- * keepSameWords — asked to "correct" Hebrew the learner already typed, Input Tools proposes other
- * sentences (בוקר טוב -> בוקר אוטובוסים). On a Hebrew input the section exists to add vowel points,
- * so a candidate with different consonants is not a reading of it. The stand-down clause, when
- * nothing matches, is what keeps a typo from being answered with an empty screen.
+ * isAllHebrew — on an all-Hebrew input Input Tools is not called at all: it does not correct
+ * Hebrew (6/6 typos returned unchanged) and asked to "improve" it proposes other sentences
+ * (בוקר טוב -> בוקר אוטובוסים, 34 of 58 cards). The candidate is the input; Dicta points it and
+ * keeps the punctuation the learner wrote. A mixed line still goes to Input Tools.
  *
- * --self-test replaces all three functions in the page with plausible WRONG versions and requires
- * the table to go red. A check that has never been shown to fail is not evidence. */
+ * phoneticQuery — the string Input Tools is actually sent: welded, cleaned, and with every Latin
+ * word we already know replaced by its Hebrew from data/romanization-fixes.json. Input Tools
+ * passes Hebrew through, so achshav never reaches it as Latin and cannot come back as ייחשב.
+ *
+ * normalizeQuery — one trailing full stop is removed at the single point every path reads the
+ * query, so Google's unstable word choice across it becomes irrelevant by construction.
+ *
+ * --self-test replaces the functions in the page with plausible WRONG versions and requires the
+ * table to go red. A check that has never been shown to fail is not evidence. */
 import { chromium } from 'playwright-core';
 
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
@@ -56,17 +63,17 @@ const WELD = [
   ['ani tzarich la-lechet la-rofe', 'ani tzarich lalechet larofe'],
   ['HA-Tachana', 'HATachana'],                        // case is the user's, not ours to change
   // the guard: NOT particles, so the hyphen the user typed survives untouched
-  ['beit-sefer', 'beit-sefer'],
+  ['beit-sefer', 'בית-sefer'],                       // beit is a known word (resolved), the hyphen survives
   ['tel-aviv', 'tel-aviv'],
   ['bat-yam', 'bat-yam'],
-  ['ha-beit-sefer', 'habeit-sefer'],                  // welds the particle, stops at the compound
+  ['ha-beit-sefer', 'הבית-sefer'],                   // welds the particle, stops at the compound
   // the apostrophe: Input Tools returns NOTHING for a query containing one, so it goes. The
   // compound guard still has to survive the strip — be'er becomes beer, which is still not a
   // particle, so the hyphen after it stays.
   ["me'od", 'meod'],
   ["la'azor", 'laazor'],
   ["yesh li she'ela", 'yesh li sheela'],
-  ["be'er-sheva", 'beer-sheva'],
+  ["be'er-sheva", 'beer-שבע'],                        // beer is not a particle; sheva is a known word
   ["ha'sefer", 'hasefer'],                            // apostrophe used where a hyphen was meant
   ['me’od', 'meod'],                                  // typographic apostrophe, what phones insert
   ["at yechola la'azor li rega im ha-mismach ha-ze",
@@ -102,20 +109,56 @@ const PADDED = [
   [[], []]
 ];
 
-/* Every case here is (input, candidates, expected). The wrong candidates are verbatim from a
-   capture of the live page — including בוקר אוטובוסים, which is what the app offered a learner
-   who typed "good morning". */
-const SAME_WORDS = [
-  ['בוקר טוב', ['בוקר טוב', 'בוקר אוטובוסים', 'בוקר לטובתו'], ['בוקר טוב']],
-  ['תודה רבה', ['תודה רבה', 'לתודה רבה', 'תודה רבהעליך'], ['תודה רבה']],
-  ['מה קורה?', ['מה קורה', 'אימה קורה', 'מהא קורה'], ['מה קורה']],   // punctuation is not a word
-  ['תודה', ['תּוֹדָה', 'תודה'], ['תּוֹדָה', 'תודה']],                  // niqqud is the point, not a change
-  // a Latin input is none of this function's business — the whole rule is about Hebrew input
-  ['toda raba', ['תודה רבה', 'תודה רבהעליך'], ['תודה רבה', 'תודה רבהעליך']],
-  ['', ['תודה'], ['תודה']],
-  // nothing matches: stand down rather than answer with silence. This is the typo case.
-  ['שלוום', ['שלום', 'שלומו'], ['שלום', 'שלומו']],
-  ['תודה', [], []]
+/* isAllHebrew decides whether Input Tools is called at all. The mixed cases are the ones that
+   matter: a learner who types one Latin word inside Hebrew must still get it transliterated. */
+const ALL_HEBREW = [
+  ['בוקר טוב', true],
+  ['שלום, מה שלומך?', true],
+  ['תּוֹדָה', true],                                     // pointed Hebrew is still Hebrew
+  ['איפה hatachana', false],                          // mixed: Input Tools transliterates the Latin
+  ['אני רוצה kafe', false],
+  ['toda raba', false],
+  ['', false],
+  ['123', false],
+  ['?!', false]
+];
+
+/* phoneticQuery — the fixes are read from the page's own loaded data/romanization-fixes.json, so a
+   case here also proves the file loads and parses on the live page. */
+const ROM_FIX = [
+  ['achshav ani holech', 'עכשיו ani holech'],
+  ['akhshav ani holech', 'עכשיו ani holech'],          // kh spelling folds onto the same key
+  ['ACHSHAV', 'עכשיו'],
+  ['atsmecha', 'עצמך'],                               // file says atzmecha; keys are folded at load
+  ['eyfo ha-tachana', 'איפה hatachana'],               // fix + weld together
+  ['eifo hatachana', 'איפה hatachana'],
+  ['arba, chamesh, shesh', 'ארבע  חמש  שש'],          // commas cleaned first, then fixed
+  ['beit-sefer', 'בית-sefer'],                        // per segment: the compound keeps its hyphen
+  ['beit sefer', 'בית sefer'],
+  ['ani rotze kafe', 'ani rotze kafe'],               // nothing known, nothing touched
+  ['lo, toda', 'lo  toda'],                           // lo is ambiguous (לא/לו) and is NOT in the file
+  // word-initial ch -> h, so Input Tools hears ח and not כ+ח
+  ['chadash', 'hadash'],
+  ['Chaver tov', 'Haver tov'],
+  ['ha-chodesh ha-ba', 'hahodesh haba'],              // segment-initial, so it fires after a particle
+  ['lechem', 'lechem'],                               // mid-word ch is ambiguous (ח/כ): untouched
+  ['cham', 'חם'],                                     // the fix list wins over the ch rule
+  // a Hebrew host takes Hebrew particles: "haחודש" is measured unreliable, "החודש" is not
+  ['ha-cham', 'החם'],
+  ['be-eifo', 'באיפה'],
+  ['ve-ha-cham', 'והחם'],
+  ['ha-beit-sefer', 'הבית-sefer']
+];
+
+const NORMALIZE = [
+  ['I want a coffee.', 'I want a coffee'],
+  ['I want a coffee', 'I want a coffee'],
+  ['Where is it?', 'Where is it?'],                    // a question mark carries meaning
+  ['Really!', 'Really!'],
+  ['Well...', 'Well...'],                              // an ellipsis is not a full stop
+  ['  toda.  ', 'toda'],
+  ['.', ''],
+  ['', '']
 ];
 
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
@@ -135,13 +178,15 @@ if (SELFTEST) {
   await page.evaluate(() => {
     window.QuickSay._weldProclitics = q => String(q || '').replace(/-/g, '');
     window.QuickSay._dropPadded = c => c.filter(x => !/(.)\1\1/.test(x));
-    // The plausible wrong version here is the one without the stand-down clause: filter and
-    // accept whatever is left, including nothing. It answers every good case correctly and
-    // hands an empty screen to the learner with a typo.
-    window.QuickSay._keepSameWords = (q, c) => c.filter(x =>
-      String(x).replace(/[֑-ׇ]/g, '') === String(q).replace(/[֑-ׇ]/g, ''));
+    // "Mostly Hebrew" is the plausible wrong version: it bypasses Input Tools on a mixed line
+    // and leaves the learner's one Latin word untransliterated.
+    window.QuickSay._isAllHebrew = q => { const t = String(q).replace(/\s/g, ''); return t.length > 0 && (t.match(/[א-ת]/g) || []).length >= t.length * 0.6; };
+    // An empty fix table is what a failed fetch of the JSON looks like — the table must notice.
+    window.QuickSay._setRomFixes({});
+    // Stripping any trailing punctuation is the plausible over-reach: it eats the question mark.
+    window.QuickSay._normalizeQuery = q => String(q).trim().replace(/[.?!]+$/, '').trim();
   });
-  console.log('SELF-TEST: all three rules replaced with their plausible wrong versions.\n' +
+  console.log('SELF-TEST: the rules replaced with their plausible wrong versions.\n' +
               'Every line below that says FAIL is this file working.\n');
 }
 
@@ -158,11 +203,24 @@ for (const [input, want] of PADDED) {
   say(ok, `[${input.join(', ')}] -> [${got.join(', ')}]` + (ok ? '' : `   (expected [${want.join(', ')}])`));
 }
 
-console.log(`\nkeepSameWords — ${SAME_WORDS.length} cases`);
-for (const [q, cands, want] of SAME_WORDS) {
-  const got = await page.evaluate(([a, b]) => window.QuickSay._keepSameWords(a, b), [q, cands]);
-  const ok = JSON.stringify(got) === JSON.stringify(want);
-  say(ok, `"${q}" [${cands.join(', ')}] -> [${got.join(', ')}]` + (ok ? '' : `   (expected [${want.join(', ')}])`));
+console.log(`\nisAllHebrew — ${ALL_HEBREW.length} cases`);
+for (const [q, want] of ALL_HEBREW) {
+  const got = await page.evaluate(x => window.QuickSay._isAllHebrew(x), q);
+  say(got === want, `"${q}" -> ${got}` + (got === want ? '' : `   (expected ${want})`));
+}
+
+console.log(`\nphoneticQuery (weld + clean + romanization fixes) — ${ROM_FIX.length} cases`);
+// The fixes file is fetched at module load; wait for it rather than race it.
+await page.waitForFunction(() => window.QuickSay._phoneticQuery('achshav') !== 'achshav', null, { timeout: 10000 }).catch(() => {});
+for (const [q, want] of ROM_FIX) {
+  const got = await page.evaluate(x => window.QuickSay._phoneticQuery(x), q);
+  say(got === want, `"${q}" -> "${got}"` + (got === want ? '' : `   (expected "${want}")`));
+}
+
+console.log(`\nnormalizeQuery — ${NORMALIZE.length} cases`);
+for (const [q, want] of NORMALIZE) {
+  const got = await page.evaluate(x => window.QuickSay._normalizeQuery(x), q);
+  say(got === want, `"${q}" -> "${got}"` + (got === want ? '' : `   (expected "${want}")`));
 }
 
 /* The rule runs on every keystroke of the phonetic path, so a throw here is a dead translator,
