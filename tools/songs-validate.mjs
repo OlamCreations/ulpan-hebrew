@@ -75,6 +75,18 @@ export function validateSong(n) {
     if (!s || typeof s.body !== 'string' || s.body.trim().length < 40) errs.push(`song ${n}: about[${i}] body is missing or too short`);
   });
 
+  /* Optional. A modern song's lyrics are copyrighted and never reproduced here; the page carries
+     the public-domain text its refrain rests on, and sends the learner to the lyrics elsewhere.
+     Each link needs a label and an https URL — an http one, or a bare domain, is a typo waiting
+     to become a dead link on a page a learner has installed. */
+  if (content.links !== undefined) {
+    if (!Array.isArray(content.links)) errs.push(`song ${n}: links must be an array`);
+    else content.links.forEach((l, i) => {
+      if (!l || typeof l.label !== 'string' || !l.label.trim()) errs.push(`song ${n}: links[${i}] has no label`);
+      if (!l || typeof l.url !== 'string' || !/^https:\/\/[^\s"<>]+$/.test(l.url)) errs.push(`song ${n}: links[${i}] url is not an https URL`);
+    });
+  }
+
   // 3. the grid, and the key it must yield
   const prog = content.progression;
   if (typeof prog !== 'string' || !chordsOf(prog).length) {

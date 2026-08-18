@@ -85,7 +85,18 @@ export function buildSong(n) {
      gloss always wins, for the places where context changes the sense. */
   const VOCAB = content.vocab && typeof content.vocab === 'object' ? content.vocab : {};
 
-  const firstWords = source.lines[0].words
+  /* The Hebrew that names the page (subtitle, footer, and the card on the home page) is the
+     source's opening words — the one rule the pipeline is built on, since nobody types Hebrew.
+     A MODERN song is the exception that has to be made explicit: its page carries the
+     public-domain verse under its title, not its lyrics, so the verse's incipit would name the
+     card wrongly (an "Am Yisrael Chai" card reading וַיֹּאמֶר יוֹסֵף). The registry may then carry
+     a `heTitle`, which must be pointed and must name where it was copied from
+     (`heTitleSource`); it is written by a script from that source, never retyped. */
+  if (entry.heTitle !== undefined) {
+    if (!/[֑-ׇ]/.test(entry.heTitle)) throw new Error(`song ${n}: registry heTitle is not vocalized`);
+    if (!entry.heTitleSource) throw new Error(`song ${n}: registry heTitle needs a heTitleSource`);
+  }
+  const firstWords = entry.heTitle || source.lines[0].words
     .slice(0, CONV.page.titleWordCount)
     .map(w => w.he)
     .join(' ');
@@ -137,9 +148,14 @@ export function buildSong(n) {
   }).join('\n\n');
 
   const tips = content.chantTips.map(t => `    <li>${expand(t)}</li>`).join('\n');
+  const links = Array.isArray(content.links) && content.links.length
+    ? `\n\n  <div class="pardes-level">\n    <h4>Listen and sing along</h4>\n    <p>`
+      + content.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join(' · ')
+      + `</p>\n  </div>`
+    : '';
   const about = content.about.map(s =>
     `  <div class="pardes-level">\n    <h4>${esc(s.h)}</h4>\n    <p>${expand(s.body)}</p>\n  </div>`
-  ).join('\n\n');
+  ).join('\n\n') + links;
 
   const progression = content.progression;
   const key = deriveKey(progression, `song ${n}`);
