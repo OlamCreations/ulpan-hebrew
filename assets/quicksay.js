@@ -79,7 +79,12 @@
     .then(d => setRomFixes(d && d.fixes))
     .catch(() => {});
 
-  const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  /* Accents fold before anything else: "où" must become ou, not o. The old rule threw away every
+     non-ASCII letter, so a French learner could never hit a curated card at all — the accented
+     letter simply vanished from the query. NFD splits é into e + combining mark; the mark is
+     then dropped with the rest of the punctuation. */
+  const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();   // marks removed, not spaced: près -> pres, never "pre s"
   // phoneme-level romanization key: kh==ch (כ/ח), tz==ts (צ), drop everything non-letter.
   // Same normalization as _translit_test.cjs so the reverse-match agrees with the forward test.
   const romNorm = s => (s || '').toLowerCase().replace(/kh/g, 'ch').replace(/tz/g, 'ts').replace(/[^a-z]/g, '');
@@ -130,25 +135,45 @@
     const nq = norm(q);
     if (!nq) return [];
     const terms = nq.split(' ');
+    // Two-letter terms are not evidence in a substring rule: "ça va" is inside bevaCAsha / beVAkasha.
+    const longTerms = terms.filter(t => t.length >= 3);
+    /* If the query IS a curated gloss, the learner has finished typing, and the weaker rules stop
+       being evidence: "où" is exact, so "oui" (a word-internal prefix) and, for "près", "après"
+       (a substring) are noise ranked right under the answer. With an exact hit, a prefix must
+       continue at a word boundary ("where is" -> "where is the bathroom") and substrings are off.
+       Without one, everything stays as it was — the typing-in-progress case. */
+    const exact = hasExactForward(q);
     const scored = [];
     for (const p of PHRASES) {
-      const en = norm(p.en);
-      const k = norm(p.en + ' ' + (p.k || ''));
+      /* A row's glosses are its English AND its French, each possibly several variants split on
+         " / " — "où ? / où est... ?" — so that a learner typing où, or where, lands on the same
+         card. French was absent from the phrasebook until 2026-08-18; Google fr->he is measured
+         wrong on où (or), près (to close), ouvert (to open), fermé (to farm), pardon (amnesty),
+         and no retry fixes those, so the curated card is the only right answer a French oleh gets. */
+      const glosses = [p.en, p.fr].filter(Boolean).flatMap(g => g.split(' / ')).map(norm).filter(Boolean);
+      const k = norm(p.en + ' ' + (p.fr || '') + ' ' + (p.k || ''));
       let score = 0;
-      if (en === nq) score = 1000;
-      else if (en.startsWith(nq)) score = 700;
+      if (glosses.some(g => g === nq)) score = 1000;
+      else if (glosses.some(g => g.startsWith(exact ? nq + ' ' : nq))) score = 700;
       else if ((' ' + k + ' ').includes(' ' + nq + ' ')) score = 500;
       // A bare substring is evidence only when it is long enough to be a word and not a syllable:
       // "ici" is inside delICIous, "eau" inside bEAUtiful, and both curated cards were shown as
       // answers to a French learner. Three letters match by accident; from four it is a stem.
-      else if (nq.length >= CFG.substringMin && k.includes(nq)) score = 300;
+      else if (!exact && nq.length >= CFG.substringMin && k.includes(nq)) score = 300;
       // Every word of a MULTI-word query appears somewhere in the keywords. For a single word this
       // would be the substring rule again without its length gate, so it needs two words.
-      else if (terms.length > 1 && terms.every(t => k.includes(t))) score = 150;
+      else if (!exact && terms.length > 1 && longTerms.length && longTerms.every(t => k.includes(t))) score = 150;
       if (score > 0) scored.push({ p, score });
     }
     scored.sort((a, b) => b.score - a.score);
     return scored.slice(0, limit).map(s => s.p);
+  }
+
+  // Did the learner type a curated gloss EXACTLY, in English or French? An exact gloss is verified
+  // content and outranks whatever Google guessed: it leads the section, and the section leads.
+  function hasExactForward(q) {
+    const nq = norm(q);
+    return !!nq && PHRASES.some(p => [p.en, p.fr].filter(Boolean).flatMap(g => g.split(' / ')).some(g => norm(g) === nq));
   }
 
   // Reverse offline lookup: romanized Hebrew -> curated phrase (verified niqqud + meaning).
@@ -1160,8 +1185,20 @@
     return '<div class="qs-sub">Hebrew — did you mean?</div>' + cards.join('');
   }
 
-  function transSectionHtml(fwd, fwdOffline, dupeSet) {
+  function transSectionHtml(fwd, fwdOffline, dupeSet, curatedFirst) {
     const cards = [];
+    // Skip curated matches already shown in the phonetic "did you mean?" section (e.g. "beseder"
+    // surfaces both as romanized-Hebrew and as a keyword) so the same card isn't listed twice.
+    const curated = () => fwdOffline.forEach(p => {
+      const k = stripNiqqud(p.he);
+      if (dupeSet.has(k)) return;
+      dupeSet.add(k); cards.push(card(p, 'curated'));
+    });
+    /* When the learner typed a curated gloss exactly, the verified card leads and Google's is
+       demoted, not dropped: où gave אוֹ "or", pardon gave חֲנִינָה "amnesty", ouvert gave לִפְתוֹחַ
+       "to open" — each shown ABOVE the ✓ lesson card that answered. Google's reading stays second
+       because it is sometimes the other legitimate sense (pardon as amnesty), and it is labelled. */
+    if (curatedFirst) curated();
     if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) { cards.push(card(fwd, 'online')); dupeSet.add(stripNiqqud(fwd.he)); }
     // Homograph alternates (pain = ache in English, bread in French): show the other reading
     // rather than silently betting on Google's language detection.
@@ -1170,13 +1207,7 @@
       if (dupeSet.has(k)) return;
       dupeSet.add(k); cards.push(card(a, 'online'));
     });
-    // Skip curated matches already shown in the phonetic "did you mean?" section (e.g. "beseder"
-    // surfaces both as romanized-Hebrew and as a keyword) so the same card isn't listed twice.
-    fwdOffline.forEach(p => {
-      const k = stripNiqqud(p.he);
-      if (dupeSet.has(k)) return;
-      dupeSet.add(k); cards.push(card(p, 'curated'));
-    });
+    if (!curatedFirst) curated();
     if (!cards.length) return '';
     return '<div class="qs-sub">Translation</div>' + cards.join('');
   }
@@ -1243,13 +1274,18 @@
          תְּוַדְּאִי) above the one card that answered the question, הַיוֹם. Nobody who wants toda
          types today. */
       const exactReverse = hasExactReverse(nq);
-      if (realLang && !exactReverse) { online = []; offline = []; }
+      /* An exact curated GLOSS is the mirror case and at least as strong as Google's confidence:
+         "hier" is French for yesterday and a phrasebook row says so, but Google detected German
+         and could not place it, so the page led with phonetic guesses הַיַּעַר "the forest" and
+         הָהָר "the mountain" above אֶתְמוֹל. Verified content decides. */
+      const exactForward = hasExactForward(nq);
+      if ((realLang || exactForward) && !exactReverse) { online = []; offline = []; }
 
       // Order: lead with Hebrew-you-heard when there's a verified match, or when Google could
       // NOT place the input as a known translation language (its tell for romanized Hebrew,
       // e.g. beseder→"sl", sababa→"om").
-      const phonFirst = offline.length > 0 ||
-        (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd;
+      const phonFirst = exactReverse || (!exactForward && (offline.length > 0 ||
+        (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd));
 
       // Romanized-Hebrew input makes Google "translate" the latin word as some random language
       // (ahava→rw→משם, beseder→sl→מפתח מילים) — a parasitic forward card. When we're confident
@@ -1260,7 +1296,7 @@
 
       const dupe = new Set(offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
       const ph = phonSectionHtml(offline, online);
-      const tr = transSectionHtml(fwdCard, fwdOffline, dupe);
+      const tr = transSectionHtml(fwdCard, fwdOffline, dupe, exactForward);
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
       if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
@@ -1365,6 +1401,6 @@
     mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE,
     _weldProclitics: weldProclitics, _dropPadded: dropPadded, _isAllHebrew: isAllHebrew,
     _phoneticQuery: phoneticQuery, _normalizeQuery: normalizeQuery, _setRomFixes: setRomFixes,
-    _hasExactReverse: hasExactReverse, _reverseOffline: reverseOffline, _search: search
+    _hasExactReverse: hasExactReverse, _reverseOffline: reverseOffline, _search: search, _hasExactForward: hasExactForward
   };
 })();

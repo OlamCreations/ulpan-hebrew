@@ -115,11 +115,29 @@ const PADDED = [
 /* search — the curated forward lookup. A three-letter query is not a stem: "ici" sat inside
    delICIous and "eau" inside bEAUtiful, and both cards were shown to a French learner as answers. */
 const SEARCH = [
-  ['ici', []],                                        // no curated card contains the word ici
-  ['eau', []],
+  ['ici', ['פֹּה']],                                   // curated French, exact: leads. Not delICIous.
+  ['eau', ['מַיִם']],                                  // curated French, exact. Not bEAUtiful.
   ['hello', ['שָׁלוֹם']],                              // exact English gloss still hits
   ['thank', ['תּוֹדָה', 'תּוֹדָה רַבָּה']],              // a 5-letter stem still hits (prefix / keyword)
-  ['where is the bathroom', ['אֵיפֹה הַשֵּׁרוּתִים']]
+  ['where is the bathroom', ['אֵיפֹה הַשֵּׁרוּתִים']],
+  // French, curated: Google fr->he is measured wrong on every one of these (or, to close, to
+  // open, to farm, amnesty, happy) and no retry repairs them. Accents must fold, not vanish.
+  ['où', ['אֵיפֹה']],
+  ['où', ['אֵיפֹה', 'אֵיפֹה הַשֵּׁרוּתִים'], 'only'],   // exact + the whole-word keyword hit (où sont les toilettes); no "oui" by prefix
+  ['près', ['קָרוֹב'], 'only'],                        // exact: not "après" by substring
+  ['where is', ['אֵיפֹה', 'אֵיפֹה הַשֵּׁרוּתִים']],       // exact + a word-boundary continuation still follows
+  ['ou', ['אֵיפֹה']],
+  ['Où ?', ['אֵיפֹה']],
+  ['près', ['קָרוֹב']],
+  ['ouvert', ['פָּתוּחַ']],
+  ['fermé', ['סָגוּר']],
+  ['pardon', ['סְלִיחָה']],
+  ['enchanté', ['נָעִים מְאוֹד']],
+  ['enchantée', ['נָעִים מְאוֹד']],
+  ['de rien', ['בְּבַקָּשָׁה']],
+  ['ça va', ['בְּסֵדֶר', 'מָה שְׁלוֹמְךָ']],              // both the answer and the question; not בְּבַקָּשָׁה (beVAkasha)
+  ["s'il vous plaît", ['בְּבַקָּשָׁה']],
+  ['hier', ['אֶתְמוֹל']]
 ];
 
 /* reverseOffline — the curated lookup from a typed romanization. Exactness decides who leads. */
@@ -242,10 +260,24 @@ for (const [q, want] of ROM_FIX) {
 }
 
 console.log(`\nsearch — ${SEARCH.length} cases`);
-for (const [q, want] of SEARCH) {
+for (const [q, want, mode] of SEARCH) {
   const got = await page.evaluate(x => window.QuickSay._search(x).map(p => p.he), q);
-  const ok = want.every(w => got.includes(w)) && (want.length || got.length === 0);
+  // The first expected card must LEAD (exact beats keyword); the rest must be present. With
+  // mode 'only', nothing else may be shown at all.
+  const ok = want.length
+    ? (got[0] === want[0] && want.every(w => got.includes(w)) && (mode !== 'only' || got.length === want.length))
+    : got.length === 0;
   say(ok, `"${q}" -> [${got.join(', ')}]` + (ok ? '' : `   (expected ${want.length ? 'to include [' + want.join(', ') + ']' : 'nothing'})`));
+}
+
+const FORWARD = [
+  ['où', true], ['Où ?', true], ['près', true], ['enchantée', true], ['ça va', true], ['hello', true], ['sorry', true],
+  ['today', true], ['toda', false], ['where is', true], ['bonjour le monde', false], ['', false]   // "where is...?" is a gloss
+];
+console.log(`\nhasExactForward — ${FORWARD.length} cases`);
+for (const [q, want] of FORWARD) {
+  const got = await page.evaluate(x => window.QuickSay._hasExactForward(x), q);
+  say(got === want, `"${q}" -> ${got}` + (got === want ? '' : `   (expected ${want})`));
 }
 
 console.log(`\nhasExactReverse — ${REVERSE.length} cases`);
