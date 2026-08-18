@@ -31,7 +31,9 @@
     tAlts: 5000,        // ms budget: the "as French" second reading
     tVocalize: 4000,    // ms budget: pointing bare Hebrew via the Worker
     tNat: 16000,        // ms budget: the on-demand "natural version" (70B model, can be slow cold)
-    tForm: 16000        // ms budget: the on-demand gendered/plural version (same 70B model)
+    tForm: 16000,       // ms budget: the on-demand gendered/plural version (same 70B model)
+    reverseCoverage: 0.5, // a curated phrase that merely BEGINS the input counts only if it is at least this share of it
+    substringMin: 4     // shortest query for which "appears inside a keyword" counts as a curated match
   };
 
   // The forms a learner can ask for. Labelled exactly as the breakdown labels what it finds
@@ -136,8 +138,13 @@
       if (en === nq) score = 1000;
       else if (en.startsWith(nq)) score = 700;
       else if ((' ' + k + ' ').includes(' ' + nq + ' ')) score = 500;
-      else if (k.includes(nq)) score = 300;
-      else if (terms.every(t => k.includes(t))) score = 150;
+      // A bare substring is evidence only when it is long enough to be a word and not a syllable:
+      // "ici" is inside delICIous, "eau" inside bEAUtiful, and both curated cards were shown as
+      // answers to a French learner. Three letters match by accident; from four it is a stem.
+      else if (nq.length >= CFG.substringMin && k.includes(nq)) score = 300;
+      // Every word of a MULTI-word query appears somewhere in the keywords. For a single word this
+      // would be the substring rule again without its length gate, so it needs two words.
+      else if (terms.length > 1 && terms.every(t => k.includes(t))) score = 150;
       if (score > 0) scored.push({ p, score });
     }
     scored.sort((a, b) => b.score - a.score);
@@ -146,21 +153,33 @@
 
   // Reverse offline lookup: romanized Hebrew -> curated phrase (verified niqqud + meaning).
   // Matches the typed romanization against both the phrasebook's `tr` and translit.js(he).
+  const reverseKeys = p => {
+    const T = window.Translit;
+    const keys = [romNorm(p.tr)];
+    if (T) keys.push(romNorm(T.transliterate(p.he)));
+    return keys.filter(Boolean);
+  };
+  // Did the learner type a curated romanization exactly (any spelling convention)?
+  function hasExactReverse(q) {
+    const ri = romNorm(q);
+    return !!ri && PHRASES.some(p => reverseKeys(p).some(k => k === ri));
+  }
   function reverseOffline(q, limit = CFG.phoneticMax) {
     const ri = romNorm(q);
     if (ri.length < 2) return [];
-    const T = window.Translit;
     const seen = new Set();
     const scored = [];
     for (const p of PHRASES) {
-      const keys = [romNorm(p.tr)];
-      if (T) keys.push(romNorm(T.transliterate(p.he)));
+      const keys = reverseKeys(p);
       let score = 0;
       for (const k of keys) {
-        if (!k) continue;
         if (k === ri) score = Math.max(score, 1000);
         else if (ri.length >= 3 && k.startsWith(ri)) score = Math.max(score, 600);
-        else if (k.length >= 3 && ri.startsWith(k)) score = Math.max(score, 400);
+        // The learner's input BEGINS with a curated phrase. Useful when it is most of the input
+        // ("toda raba" -> toda); noise when it is a fragment of a long sentence — "kama ze ole,
+        // ha-mechir gavoha midai" led with the lone card כַּמָּה. The key must cover a real share
+        // of what was typed (CFG.reverseCoverage).
+        else if (k.length >= 3 && ri.startsWith(k) && k.length >= ri.length * CFG.reverseCoverage) score = Math.max(score, 400);
       }
       if (score > 0 && !seen.has(p.he)) { seen.add(p.he); scored.push({ p, score }); }
     }
@@ -503,7 +522,11 @@
      transliterates the Latin ones, exactly what a learner mixing scripts wants. */
   const isAllHebrew = q => /[א-ת]/.test(q) && !/[A-Za-z]/.test(q);
 
-  const collapseRuns = s => String(s || '').replace(/(.)\1+/g, '$1');
+  /* Runs of three or more are always padding. A run of two is padding too (אאני, ננא) EXCEPT a
+     doubled ה at the end of a word, which is how Hebrew writes the feminine of an adjective
+     ending in ה: גָּבוֹהַּ / גְּבוֹהָה are two words, not one word twice. */
+  const collapseRuns = s => String(s || '').split(/(\s+)/).map(w =>
+    w.replace(/(.)\1{2,}/g, '$1').replace(/(.)\1(?!$)/g, '$1').replace(/([^ה])\1$/g, '$1')).join('');
   function dropPadded(cands) {
     const kept = [];
     for (const c of cands) {
@@ -675,9 +698,15 @@
         // Compare against Google's RAW rm (the source-side sound echo), not the display `tr`:
         // tr is now a good Hebrew transliteration, which would no longer resemble the typed
         // input and would silently disable this retry.
-        if (!res || !single || !looksTransliterated(q, res.rm)) return res;
+        // Two shapes of "did not translate": the sound echoed in Hebrew letters (above), and the
+        // word handed straight back in Latin letters — oui -> "oui", quoi -> "quoi", ici -> "ici",
+        // cher -> "cher", all with src=en and NO rm at all, so the rm test above never fired and
+        // the learner was shown their own word as the Hebrew. Measured with sl=fr: quoi -> מַה,
+        // oui -> כֵּן, ici -> כָּאן, cher -> יָקָר. Either shape retries with the learner's languages.
+        const untranslated = r => !r || !HEBREW_LETTER.test(r.he);
+        if (!res || !single || !(untranslated(res) || looksTransliterated(q, res.rm))) return res;
         return Promise.all(retrySls().map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
-          .then(alts => alts.find(a => a && a.he && !looksTransliterated(q, a.rm)) || res);
+          .then(alts => alts.find(a => a && a.he && !untranslated(a) && !looksTransliterated(q, a.rm)) || res);
       });
     // Staged budgets, not one big one. The translation itself gets tTranslate; each enrichment
     // then gets its own short budget and degrades to the answer we already have. Folding these
@@ -1206,24 +1235,31 @@
       // Auto-decide: if the input is clearly a confident English/French word AND nothing
       // matched offline as Hebrew, it's a translation query — drop the online phonetic guesses.
       let online = phon.online;
+      let offline = phon.offline;
       const realLang = fwd && TRANSLATE_LANGS.has(fwd.src) && (fwd.conf == null || fwd.conf >= CFG.hiConf);
-      if (realLang && !phon.offline.length) online = [];
+      /* A confident real-language word keeps its Hebrew-you-heard section only if the learner
+         typed a curated romanization EXACTLY. A loose hit is not evidence: "today" begins with
+         "toda", and the page led with תּוֹדָה "thank you" plus two phonetic guesses (תּוֹדִיעִי,
+         תְּוַדְּאִי) above the one card that answered the question, הַיוֹם. Nobody who wants toda
+         types today. */
+      const exactReverse = hasExactReverse(nq);
+      if (realLang && !exactReverse) { online = []; offline = []; }
 
       // Order: lead with Hebrew-you-heard when there's a verified match, or when Google could
       // NOT place the input as a known translation language (its tell for romanized Hebrew,
       // e.g. beseder→"sl", sababa→"om").
-      const phonFirst = phon.offline.length > 0 ||
+      const phonFirst = offline.length > 0 ||
         (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd;
 
       // Romanized-Hebrew input makes Google "translate" the latin word as some random language
       // (ahava→rw→משם, beseder→sl→מפתח מילים) — a parasitic forward card. When we're confident
       // it's Hebrew-you-heard (phonFirst, not a real translate language) and the phonetic section
       // already has the real word, drop that card. Curated forward matches (fwdOffline) stay.
-      const romanizedHebrew = phonFirst && !realLang && (phon.offline.length + online.length) > 0;
+      const romanizedHebrew = phonFirst && !realLang && (offline.length + online.length) > 0;
       const fwdCard = romanizedHebrew ? null : fwd;
 
-      const dupe = new Set(phon.offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
-      const ph = phonSectionHtml(phon.offline, online);
+      const dupe = new Set(offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
+      const ph = phonSectionHtml(offline, online);
       const tr = transSectionHtml(fwdCard, fwdOffline, dupe);
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
@@ -1328,6 +1364,7 @@
   window.QuickSay = {
     mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE,
     _weldProclitics: weldProclitics, _dropPadded: dropPadded, _isAllHebrew: isAllHebrew,
-    _phoneticQuery: phoneticQuery, _normalizeQuery: normalizeQuery, _setRomFixes: setRomFixes
+    _phoneticQuery: phoneticQuery, _normalizeQuery: normalizeQuery, _setRomFixes: setRomFixes,
+    _hasExactReverse: hasExactReverse, _reverseOffline: reverseOffline, _search: search
   };
 })();

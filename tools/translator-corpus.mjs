@@ -93,7 +93,7 @@ const freePath = join(ROOT, 'tools', 'translator-corpus-free.json');
 let freeCount = 0;
 if (existsSync(freePath)) {
   const free = JSON.parse(await readFile(freePath, 'utf8'));
-  for (const f of free.phrases || []) { add({ path: f.path || 'fr2he', lang: f.lang || 'fr', input: f.input, ref: null, note: f.note || 'free-form' }); freeCount++; }
+  for (const f of free.phrases || []) { add({ path: f.path || 'fr2he', lang: f.lang || 'fr', input: f.input, ref: null, note: f.note || 'free-form', ...(f.lead ? { lead: f.lead } : {}) }); freeCount++; }
 }
 
 const out = reportPath('translator-corpus.json');

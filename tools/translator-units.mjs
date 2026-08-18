@@ -106,7 +106,31 @@ const PADDED = [
   [['תודה רבההה', 'תודה רבה'], ['תודה רבההה', 'תודה רבה']],
   // different words that merely share letters are not padding
   [['שהוא', 'שהו'], ['שהוא', 'שהו']],
+  // a doubled final ה is the feminine, not padding: both readings stay
+  [['כמה זה עולה המצהיר גבוה מדי', 'כמה זה עולה המצהיר גבוהה מדי'], ['כמה זה עולה המצהיר גבוה מדי', 'כמה זה עולה המצהיר גבוהה מדי']],
+  [['אני', 'אאני'], ['אני']],                           // a doubled initial letter is padding
   [[], []]
+];
+
+/* search — the curated forward lookup. A three-letter query is not a stem: "ici" sat inside
+   delICIous and "eau" inside bEAUtiful, and both cards were shown to a French learner as answers. */
+const SEARCH = [
+  ['ici', []],                                        // no curated card contains the word ici
+  ['eau', []],
+  ['hello', ['שָׁלוֹם']],                              // exact English gloss still hits
+  ['thank', ['תּוֹדָה', 'תּוֹדָה רַבָּה']],              // a 5-letter stem still hits (prefix / keyword)
+  ['where is the bathroom', ['אֵיפֹה הַשֵּׁרוּתִים']]
+];
+
+/* reverseOffline — the curated lookup from a typed romanization. Exactness decides who leads. */
+const REVERSE = [
+  ['toda', true], ['TODA', true], ['to-da', true], ['toda raba', true],
+  ['today', false], ['tod', false], ['todaa', false], ['', false]
+];
+const REVERSE_LIST = [
+  ['toda raba', ['תּוֹדָה רַבָּה', 'תּוֹדָה']],           // exact first, then the phrase that begins it
+  ['tod', ['תּוֹדָה', 'תּוֹדָה רַבָּה']],               // typing in progress: keys that begin with the input
+  ['kama ze ole hamechir gavoha midai', []]           // a fragment covering 30% of the input is not a match
 ];
 
 /* isAllHebrew decides whether Input Tools is called at all. The mixed cases are the ones that
@@ -215,6 +239,25 @@ await page.waitForFunction(() => window.QuickSay._phoneticQuery('achshav') !== '
 for (const [q, want] of ROM_FIX) {
   const got = await page.evaluate(x => window.QuickSay._phoneticQuery(x), q);
   say(got === want, `"${q}" -> "${got}"` + (got === want ? '' : `   (expected "${want}")`));
+}
+
+console.log(`\nsearch — ${SEARCH.length} cases`);
+for (const [q, want] of SEARCH) {
+  const got = await page.evaluate(x => window.QuickSay._search(x).map(p => p.he), q);
+  const ok = want.every(w => got.includes(w)) && (want.length || got.length === 0);
+  say(ok, `"${q}" -> [${got.join(', ')}]` + (ok ? '' : `   (expected ${want.length ? 'to include [' + want.join(', ') + ']' : 'nothing'})`));
+}
+
+console.log(`\nhasExactReverse — ${REVERSE.length} cases`);
+for (const [q, want] of REVERSE) {
+  const got = await page.evaluate(x => window.QuickSay._hasExactReverse(x), q);
+  say(got === want, `"${q}" -> ${got}` + (got === want ? '' : `   (expected ${want})`));
+}
+console.log(`\nreverseOffline — ${REVERSE_LIST.length} cases`);
+for (const [q, want] of REVERSE_LIST) {
+  const got = await page.evaluate(x => window.QuickSay._reverseOffline(x).map(p => p.he), q);
+  const ok = want.length ? want.every((w, i) => got[i] === w) : got.length === 0;
+  say(ok, `"${q}" -> [${got.join(', ')}]` + (ok ? '' : `   (expected [${want.join(', ')}])`));
 }
 
 console.log(`\nnormalizeQuery — ${NORMALIZE.length} cases`);
