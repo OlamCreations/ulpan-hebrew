@@ -154,3 +154,30 @@ this reason and Shabbat HaYom took its slot; see the `_was` note in the registry
 
 Nothing should duplicate a page the site already ships. Psalms 133, 121 and 126 already
 have singable pages, so Hine Ma Tov, Esa Einai and Shir HaMa'alot are absent.
+
+## Modern songs (family `lyrics`)
+
+A modern song has no pointed edition anywhere, and its words are copyrighted. On 2026-08-18 the
+site owner decided to reproduce lyrics for learning; the pipeline handles them with the same
+contract (you type no Hebrew) and two honest differences that end up on the page:
+
+1. Registry row: `"family": "lyrics"`, `ref` = the lyrics site URL, `credits` = the writers as
+   that site prints them, and usually `heTitle` + `heTitleSource` (the pointed title, copied by a
+   script from a source, never retyped) because the first line of a song is not its name.
+2. Pin the text: `content/songs/source/NNN.lyrics.txt`, verbatim from the site apart from
+   blank-line normalisation — one sung line per line, a blank line between stanzas.
+3. `node tools/songs-scaffold-lyrics.mjs NNN` — points every line through the site's Worker
+   (Dicta Nakdan), folds Dicta's encoding with `cleanDictaForDisplay`, transliterates with the
+   engine, and PRINTS EVERY LINE. Read them all: this is a model's pointing, not an edition's.
+   The two allowed edits (a split prefix rejoined, a numeral written as the sung word copied from
+   a verified page) are reported in `droppedByScaffold`, and a verified pointed word can be put
+   back over the pointer's guess (it read the anthem's *alpayim* as *alafim*).
+4. Author `content/songs/NNN.json` exactly as for a traditional song. `links` (optional,
+   https) render as "Listen and sing along". The provenance footer prints `heLicense`, which
+   names the rights holders and says the site's CC licence does not cover the words, and
+   `heVia`, which replaces "via Sefaria".
+
+If the pointing is wrong on a word and it is a *reading* (stress, a silent letter), use
+`readAs` in `data/songs-conventions.json`, keyed on the exact pointed string — copy it out of
+the pinned source, do not type it.
+

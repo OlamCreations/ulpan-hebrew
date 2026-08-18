@@ -188,6 +188,8 @@ export function buildSong(n) {
     .replaceAll('{{REF}}', esc(source.ref))
     .replaceAll('{{HE_VERSION}}', esc(source.heVersion))
     .replaceAll('{{HE_LICENSE}}', esc(source.heLicense))
+    // Sefaria for every pinned edition; a lyrics-family source names its own route.
+    .replaceAll('{{HE_VIA}}', esc(source.heVia || 'via Sefaria'))
     .replaceAll('{{ATTR_EN}}', esc(CONV.attribution.english))
     .replaceAll('{{ATTR_TR}}', esc(CONV.attribution.transliteration));
 

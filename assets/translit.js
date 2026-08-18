@@ -258,6 +258,24 @@
         // and dropping it deleted a whole letter: עַכְשָׁיו -> "achshai" (achshav), תָּו -> "ta"
         // (tav), סְתָיו -> "stai" (stav).
         if (vmark === null && prevHadVowel && (lastVowel === 'o' || lastVowel === 'u')) continue;
+        /* Full spelling doubles a consonantal vav in the middle of a word — הלוואי, התקווה,
+           וואלה — and a pointer keeps both letters and puts the vowel on the first: הַלְוַואי,
+           הַתִּקְוָוה, וָואלָּה. The second vav is then a spelling mark, not a sound. Read as a
+           consonant it produced "hal-VAVI", "ha-tik-VO", "vo-LA". So: a bare vav (no mark at
+           all) directly after a vav that carried its own vowel, and NOT itself followed by
+           another vav, is silent. The previous-letter test is by identity, so a bare vav after
+           any other consonant (עַכְשָׁיו, תָּו) is untouched — that class was fixed above and stays. */
+        const prevLetter = idxLetters > 0 ? letters[idxLetters - 1] : null;
+        const prevIsVowelledVav = prevLetter && prevLetter.base === 0x05D5 && [...prevLetter.marks].some(x => VOWELS.has(x));
+        const nextIsVav = nextLetter && nextLetter.base === 0x05D5;
+        if (vmark === null && !dagesh && prevIsVowelledVav && !nextIsVav) { prevHadVowel = false; continue; }
+        // The mirror image, when the pointer puts the vowel on the SECOND vav instead (שָׁווַרְמָה,
+        // זָווִית, אָווִיר): the bare first vav is the spelling mark and the vowelled one is the sound.
+        // "Vowelled" here means a vowel OTHER than holam/shuruk: וֹ and וּ after a bare vav are
+        // consonant + mater (מִצְווֹת = mitz-VOT), and that first vav must stay a consonant.
+        const nextIsVowelledVav = nextIsVav && !nextLetter.marks.has(DAGESH) &&
+          [...nextLetter.marks].some(x => VOWELS.has(x) && x !== HOLAM && x !== HOLAM_HASER);
+        if (vmark === null && !dagesh && nextIsVowelledVav) { continue; }
         // consonantal vav
         let v = vmark === SHEVA ? shevaSound(u, isFirst, nextLetter, wasSheva) : vowelSound(vmark);
         if (v) openSyllable();
@@ -277,6 +295,13 @@
             letters.indexOf(nextLetter) === letters.length - 1) {
           prevHadVowel = true; continue;
         }
+        /* A bare yod whose NEXT letter is a vav carrying holam or shuruk is a consonant with that
+           vav as its vowel — יוֹ "yo", יוּ "yu" — whatever came before it. The glide rule below
+           read it as a diphthong off the previous vowel and gave וְיוֹם "vei-OM", וְיוֹנָה "vei-o-NA",
+           בְּיוֹם "bei-OM": the commonest word after a conjunction in the language, wrong. */
+        const materVavNext = nextLetter && nextLetter.base === 0x05D5 &&
+          (nextLetter.marks.has(HOLAM) || nextLetter.marks.has(HOLAM_HASER) || nextLetter.marks.has(DAGESH));
+        if (bareOrShevaGlide && vmark === null && materVavNext) { res += 'y'; prevHadVowel = false; continue; }
         if (bareOrShevaGlide) {
           // mater / glide based on the previous vowel
           if (lastVowel === 'e' || lastVowel === 'a' || lastVowel === 'o' || lastVowel === 'u') {
@@ -435,8 +460,13 @@
     // a dagesh lands BETWEEN the qamats and the vav (תּ -> tav, qamats, dagesh, vav). A regex that
     // expects dagesh-then-qamats matches nothing — the exact trap that silently defeated the first
     // version of this fold. Keep every mark except the qamats/qubuts, drop that, holam/shuruk the vav.
-    s = s.replace(/([א-ת])([֑-ׇ]*)ָ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-ת])/g, (_, c, a, b) => c + a + b + 'וֹ'); // holam male
-    s = s.replace(/([א-ת])([֑-ׇ]*)ֻ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-ת])/g, (_, c, a, b) => c + a + b + 'וּ'); // shuruk
+    /* Two guards on both folds, found by measurement on a modern song. The CARRIER must not be
+       a vav and the letter AFTER the bare vav must not be a vav either — otherwise the ktiv-malé
+       double vav is eaten as a mater: הַתִּקְוָוה became "tik-VO", וָואלָּה "vo-LA", שָׁווַרְמָה
+       "sho-var-MA". A genuine Dicta holam/shuruk on a consonant is never on a vav and is never
+       followed by a second vav, so nothing that the folds were written for is lost. */
+    s = s.replace(/([א-הז-ת])([֑-ׇ]*)ָ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-הז-ת])/g, (_, c, a, b) => c + a + b + 'וֹ'); // holam male
+    s = s.replace(/([א-הז-ת])([֑-ׇ]*)ֻ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-הז-ת])/g, (_, c, a, b) => c + a + b + 'וּ'); // shuruk
     return s.normalize('NFC');
   }
 
@@ -544,6 +574,13 @@
     if (!s) return s;
     s = s.normalize('NFC').replace(/ֽ/g, '');
     s = s.replace(/([א-הז-ת])([֑-ׇ]*)ֹ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-ת])/g, (_, c, a, b) => c + a + b + 'וֹ');
+    /* Same encoding, other vowel: Nakdan writes shuruk as qubuts on the consonant plus a bare
+       vav — כֻּולָּם, מְאֻוחָדִים — where a reader expects כּוּלָּם, מְאוּחָדִים. Move the vowel onto the
+       vav as a dagesh. Guarded exactly like the holam rule: the vav must be bare and followed
+       by a letter that is NOT a vav, so consonantal double-vav words are left alone; and it
+       runs after the holam rule, never on its own output (a shuruk vav carries a dagesh, so it
+       cannot match again — idempotent). */
+    s = s.replace(/([א-הז-ת])([֑-ׇ]*)ֻ([֑-ׇ]*)ו(?![֑-ׇ])(?=[א-הז-ת])/g, (_, c, a, b) => c + a + b + 'וּ');
     return s.normalize('NFC');
   }
 
