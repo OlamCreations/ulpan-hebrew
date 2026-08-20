@@ -219,7 +219,7 @@
       '</div>' +
       '<div class="ph-text">' +
         '<div class="ph-he" dir="rtl" lang="he">' + esc(he) + '</div>' +
-        (e.tr ? '<div class="ph-tr">' + esc(e.tr) + '</div>' : '') +
+        (e.tr ? '<div class="ph-tr">' + ((window.Translit && window.Translit.markup) ? window.Translit.markup(e.tr) : esc(e.tr)) + '</div>' : '') +
         (e.en ? '<div class="ph-en">' + esc(e.en) + '</div>' : '') +
         (tab === 'journal' ? '<div class="ph-date">' + esc(fmtDate(e.date)) + '</div>' : '') +
         '<input class="ph-note" placeholder="add a note…" value="' + esc(e.note || '') + '">' +

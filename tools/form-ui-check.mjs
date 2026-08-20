@@ -86,8 +86,8 @@ async function askForm(page, label) {
     const c = o.querySelector('.qs-card');
     return {
       hint: (o.querySelector('.qs-hint') || {}).textContent || '',
-      he: c ? (c.querySelector('.qs-he') || {}).textContent || '' : '',
-      tr: c ? (c.querySelector('.qs-tr') || {}).textContent || '' : '',
+      he: c ? (c.querySelectorAll('.qs-wp-he').length ? [...c.querySelectorAll('.qs-wp-he')].map(x => x.textContent).join(' ') : (c.querySelector('.qs-he') || {}).textContent || '') : '',
+      tr: c ? (c.querySelectorAll('.qs-wp-tr').length ? [...c.querySelectorAll('.qs-wp-tr')].map(x => x.textContent).join(' ') : (c.querySelector('.qs-tr') || {}).textContent || '') : '',
       tag: c ? (c.querySelector('.qs-tag') || {}).textContent || '' : ''
     };
   });
@@ -99,7 +99,7 @@ console.log('Control appears only where it makes sense');
 await translate(page, 'I want a coffee');
 say(await page.locator('.qs-form').count() === 1, 'chips shown for a translation query');
 say(await page.locator('.qs-form-btn').count() === 4, 'four forms offered');
-const base = await page.locator('.qs-card .qs-he').first().textContent();
+const base = await page.evaluate(() => { const c = document.querySelector('.qs-card'); const ps = c.querySelectorAll('.qs-wp-he'); return ps.length ? [...ps].map(x => x.textContent).join(' ') : c.querySelector('.qs-he').textContent; });
 console.log('       base card: ' + base.trim());
 
 console.log('\nThe requested gender reaches the niqqud, not just the label');

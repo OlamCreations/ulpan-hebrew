@@ -179,6 +179,11 @@ export const READ = () => {
   out.inputAtRead = (document.getElementById('qs-input') || {}).value;
   const hint = res.querySelector('.qs-hint');
   if (hint) out.hint = hint.textContent.trim();
+  /* A card renders EITHER the ribbon (.qs-he + .qs-tr) or the word-paired grid (.qs-pairs,
+     Hebrew word over its reading). Read what the user reads: aggregate the pair cells back
+     into the full strings, so captures stay comparable across the two layouts. */
+  const heOf = c => { const ps = c.querySelectorAll('.qs-wp-he'); if (ps.length) return Array.from(ps).map(x => x.textContent).join(' '); const e = c.querySelector('.qs-he'); return e ? e.textContent : null; };
+  const trOf = c => { const ps = c.querySelectorAll('.qs-wp-tr'); if (ps.length) return Array.from(ps).map(x => x.textContent).join(' '); const e = c.querySelector('.qs-tr'); return e ? e.textContent : null; };
   let current = null;
   for (const el of res.children) {
     if (el.classList.contains('qs-sub')) { current = { title: el.textContent.trim(), cards: [] }; out.sections.push(current); continue; }
@@ -186,9 +191,9 @@ export const READ = () => {
     for (const c of cards) {
       if (!current) { current = { title: '(unlabelled)', cards: [] }; out.sections.push(current); }
       current.cards.push({
-        he: (c.querySelector('.qs-he') || {}).textContent || null,
+        he: heOf(c),
         cursive: (c.querySelector('.qs-he-cursive') || {}).textContent || null,
-        tr: (c.querySelector('.qs-tr') || {}).textContent || null,
+        tr: trOf(c),
         en: (c.querySelector('.qs-en') || {}).textContent || null,
         breakdown: (c.querySelector('.qs-break-out') || {}).textContent || null,
       });
@@ -197,8 +202,8 @@ export const READ = () => {
   const nat = res.querySelector('.qs-nat-out');
   if (nat && nat.textContent.trim()) {
     out.natural = Array.from(nat.querySelectorAll('.qs-card')).map((c) => ({
-      he: (c.querySelector('.qs-he') || {}).textContent || null,
-      tr: (c.querySelector('.qs-tr') || {}).textContent || null,
+      he: heOf(c),
+      tr: trOf(c),
       en: (c.querySelector('.qs-en') || {}).textContent || null,
     }));
   }

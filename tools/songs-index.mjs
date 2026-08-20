@@ -45,8 +45,14 @@ const pages = files.map(file => {
   if (!h1) throw new Error(`${file}: no h1 to read a title from`);
 
   /* The Hebrew shown on a card is the page's own opening words, taken off the
-     page rather than retyped — the one rule this whole pipeline is built on. */
-  const he = sub ? (sub[1].split('·').pop() || '').trim() : '';
+     page rather than retyped — the one rule this whole pipeline is built on.
+     The subtitle is a `·`-separated list and the Hebrew is the one segment that
+     contains Hebrew letters: LAST on the built pages ("Eyal Golan, 2023 · עַם…"),
+     FIRST on the seven hand-written ones ("הַתִּקְוָה · National anthem of Israel").
+     Taking "the last segment" put "National anthem of Israel" in the Hebrew slot
+     of seven cards, in the Hebrew serif, for as long as this script existed. */
+  const segs = sub ? sub[1].split('·').map(x => x.trim()) : [];
+  const he = segs.find(x => /[א-ת]/.test(x)) || '';
   if (!he) throw new Error(`${file}: no Hebrew in the subtitle to put on the card`);
 
   return {

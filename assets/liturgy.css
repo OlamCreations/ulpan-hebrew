@@ -167,21 +167,29 @@ html.light .word .tr b { color: #000; }
  unicode-bidi: plaintext;
  }
 
+/* The note under a stanza is ENGLISH prose with Hebrew words dropped in. It used to inherit
+   the grid's RTL with `unicode-bidi: plaintext`, which picks the paragraph direction from the
+   first strong character: a note opening with an English word read fine, a note opening with
+   a Hebrew word (songs-030, bridge: "עַם הַנֶּצַח ... is a fixed phrase") became an RTL paragraph
+   and the bidi algorithm scrambled every English run around the Hebrew — quotes, parens and
+   dashes jumping to the wrong side, clauses out of order. The paragraph is English, so it is
+   LTR, left-aligned, with the accent bar on the reading side; each Hebrew insert is an
+   isolated run so its neighbours' punctuation stays put. */
 .verse-summary {
  background: rgba(74, 158, 219, 0.05);
- border-right: 3px solid var(--accent);
+ border-left: 3px solid var(--accent);
  padding: 14px 18px;
  margin-top: 18px;
  font-size: 14px;
  color: var(--text);
  line-height: 1.6;
- border-radius: 4px 0 0 4px;
- text-align: right;
- direction: rtl;
- unicode-bidi: plaintext;
+ border-radius: 0 4px 4px 0;
+ text-align: left;
+ direction: ltr;
+ unicode-bidi: isolate;
  }
 
-.verse-summary strong { color: var(--accent); }
+.verse-summary strong { color: var(--accent); unicode-bidi: isolate; }
 
 .chant-tip {
  background: var(--bg-card);

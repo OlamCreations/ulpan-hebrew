@@ -584,7 +584,32 @@
     return s.normalize('NFC');
   }
 
-  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay, setLoanwords };
+  /*
+   * Display markup for a romanization. The syllable hyphen and the word space carry almost the
+   * same visual weight ("a-TA mit-ra-GESH she-a-nach-NU"), so a sentence reads as one ribbon and
+   * the word boundaries disappear — the exact thing a learner needs to see. Wrap each syllable
+   * hyphen in a span the stylesheet can fade (.tr-h), so the word stands out and the hyphen
+   * recedes. Only a hyphen BETWEEN letters is a syllable break: "1-280" or a leading dash is
+   * left alone. The text is HTML-escaped here, so callers pass the raw string and insert the
+   * result as HTML. textContent of the result is the input, unchanged (the probes read that).
+   */
+  const HYPHEN_BETWEEN_LETTERS = /([A-Za-zÀ-ɏ'’])-(?=[A-Za-zÀ-ɏ'’])/g;
+  function escapeForMarkup(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function markup(tr) {
+    if (!tr) return '';
+    // Each word is also wrapped (.tr-w, white-space: nowrap): browsers treat a hyphen as a line
+    // break opportunity, so without this a wrapped card showed "me-tak-" on one line and "NIM"
+    // on the next — a word cut in two, the opposite of what the fading is for.
+    return escapeForMarkup(tr).split(/(\s+)/).map((tok, i) => {
+      if (i % 2) return tok;   // the whitespace between words, kept as text
+      if (!tok) return '';
+      return '<span class="tr-w">' + tok.replace(HYPHEN_BETWEEN_LETTERS, '$1<span class="tr-h">-</span>') + '</span>';
+    }).join('');
+  }
+
+  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay, setLoanwords, markup };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.Translit = api;
 })(typeof window !== 'undefined' ? window : globalThis);

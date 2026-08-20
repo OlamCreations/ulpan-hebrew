@@ -284,7 +284,12 @@
     // A learner needs to know how to SAY the number, not just see the glyph. The Hebrew keeps the
     // digit (that's how Hebrew writes numbers); only the romanization is spelled.
     const trText = (window.Translit && window.Translit.spellNumbersInText) ? window.Translit.spellNumbersInText(p.tr) : p.tr;
-    const tr = (trText && (!window.QSPrefs || window.QSPrefs.translit())) ? '<div class="qs-tr">' + escapeHtml(trText) + '</div>' : '';
+    // Syllable hyphens are wrapped so CSS can fade them: word boundaries were unreadable in a
+    // sentence-long romanization (see Translit.markup). textContent is unchanged, so the probes
+    // that read .qs-tr keep measuring the same string.
+    const trHtml = (window.Translit && window.Translit.markup) ? window.Translit.markup(trText) : escapeHtml(trText);
+    const showTr = !!(trText && (!window.QSPrefs || window.QSPrefs.translit()));
+    const tr = showTr ? '<div class="qs-tr">' + trHtml + '</div>' : '';
     const meaning = (p.en || '').trim();
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
@@ -306,6 +311,29 @@
     // Filled asynchronously by wireGnp; stays empty (and CSS-hidden) if the Worker has nothing.
     const gnpSlot = (heWordCount === 1)
       ? '<div class="qs-gnp" data-he="' + escapeHtml(p.he) + '"></div>' : '';
+    /* Word-paired layout, the tehilim way: each Hebrew word with its reading directly under it,
+       columns flowing right to left. A sentence-long romanization on its own line made the reader
+       do the pairing in their head. Pairing is BY INDEX and only when the whitespace token counts
+       match exactly — one count off and we fall back to the two-line layout, because a misaligned
+       pair teaches the wrong reading for every word after the slip, which is worse than no pairing.
+       The translit tokens come from p.tr itself (curated when curated), NEVER re-derived per word:
+       splitting the verified string cannot disagree with it. Numbers are spelled per token, so
+       "33" -> "shloshim ve shalosh" stays inside its own column. */
+    const heTok = heDisp.trim().split(/\s+/).filter(Boolean);
+    const trTokRaw = (p.tr || '').trim().split(/\s+/).filter(Boolean);
+    const canPair = showTr && heWordCount >= 2 && heTok.length === trTokRaw.length;
+    let pairs = '';
+    if (canPair) {
+      pairs = '<div class="qs-pairs" dir="rtl">' + heTok.map((hw, i) => {
+        const t = (window.Translit && window.Translit.spellNumbersInText)
+          ? window.Translit.spellNumbersInText(trTokRaw[i]) : trTokRaw[i];
+        const tHtml = (window.Translit && window.Translit.markup) ? window.Translit.markup(t) : escapeHtml(t);
+        // The translit cell is hidden from assistive tech: a screen reader walking the pairs
+        // would otherwise hear word, reading, word, reading — the Hebrew alone IS the sentence.
+        return '<span class="qs-wp"><bdi class="qs-wp-he" lang="he">' + escapeHtml(hw) + '</bdi>'
+          + '<span class="qs-wp-tr" aria-hidden="true">' + tHtml + '</span></span>';
+      }).join('') + '</div>';
+    }
     // Tools column: listen, copy, save. Round icon buttons, same visual language as the lesson
     // word-row, so the same three gestures mean the same thing everywhere in the app.
     const tools =
@@ -317,9 +345,9 @@
     return '' +
       '<div class="qs-card' + (breakable ? ' has-break' : '') + '">' +
         '<div class="qs-text">' +
-          '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(heDisp) + '</div>' +
-          cursive +
-          tr +
+          (pairs
+            ? pairs + cursive
+            : '<div class="qs-he" dir="rtl" lang="he">' + escapeHtml(heDisp) + '</div>' + cursive + tr) +
           en +
           gnpSlot +
         '</div>' +

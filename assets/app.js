@@ -472,10 +472,47 @@ function revealAll(state) {
   });
 }
 
+// Fade the syllable hyphens of a romanization already in the DOM (lesson word-rows are static
+// HTML, 1000+ pages). Walks TEXT nodes only, so any markup the page author put in the cell is
+// kept, and textContent is unchanged (SRS and the print view read it). Same rule as
+// Translit.markup: only a hyphen between letters is a syllable break.
+// No lookbehind here: a lookbehind in a regex LITERAL is a parse error on Safari < 16.4 and would
+// take the whole of app.js down on those phones. Capture group + sentinel instead.
+const TR_HYPHEN = /([A-Za-zÀ-ɏ'’])-(?=[A-Za-zÀ-ɏ'’])/g;
+function markTranslitHyphens(el) {
+  if (!el || el.querySelector('.tr-w')) return;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) { TR_HYPHEN.lastIndex = 0; if (TR_HYPHEN.test(n.nodeValue)) nodes.push(n); }
+  nodes.forEach(n => {
+    const frag = document.createDocumentFragment();
+    // Words become unbreakable spans (.tr-w), the whitespace between them stays text. Inside a
+    // word, the hyphens become .tr-h spans. textContent of the cell is unchanged.
+    n.nodeValue.split(/(\s+)/).forEach((tok, ti) => {
+      if (ti % 2 || !tok) { if (tok) frag.appendChild(document.createTextNode(tok)); return; }
+      const w = document.createElement('span'); w.className = 'tr-w';
+      tok.replace(TR_HYPHEN, '$1 ').split(' ').forEach((part, i) => {
+        if (i) { const h = document.createElement('span'); h.className = 'tr-h'; h.textContent = '-'; w.appendChild(h); }
+        w.appendChild(document.createTextNode(part));
+      });
+      frag.appendChild(w);
+    });
+    n.parentNode.replaceChild(frag, n);
+  });
+}
+
+// HTML for a romanization string (escaped, syllable hyphens wrapped). Falls back to plain escaping
+// if translit.js has not loaded yet (it is injected after app.js).
+function trHtml(tr) {
+  tr = tr || '';
+  return (window.Translit && window.Translit.markup) ? window.Translit.markup(tr) : escHtml(tr);
+}
+
 function wrapRevealCards() {
   const targets = document.querySelectorAll('.word-row .translit, .word-row .fr, .tb-translit, .tb-fr');
   targets.forEach(el => {
     if (el.querySelector(':scope > .reveal-inner')) return;
+    if (el.matches('.translit, .tb-translit')) markTranslitHyphens(el);
     const original = el.innerHTML;
     if (!original.trim()) return;
     // The answer (.reveal-front) starts hidden from assistive tech too — otherwise a screen-reader
@@ -760,7 +797,7 @@ function openSRSReview() {
       <div class="srs-he" data-he="${escHtml(current.he)}">${escHtml(heShown)}</div>
       <button class="srs-listen" type="button" aria-label="Play audio">▶</button>
       <div class="srs-answer">
-        <div class="srs-translit">${escHtml(current.translit||'')}</div>
+        <div class="srs-translit">${trHtml(current.translit)}</div>
         <div class="srs-fr">${escHtml(current.fr||'')}</div>
       </div>
       <div class="srs-actions">
@@ -1195,7 +1232,7 @@ function renderFlashcard(stage, items) {
       <div class="flashcard" id="fc-card">
         <div class="fc-side fc-front">
           <div class="fc-he">${w.he}</div>
-          <div class="fc-translit">${w.translit}</div>
+          <div class="fc-translit">${trHtml(w.translit)}</div>
           <div class="fc-hint">tap/space to flip · swipe ← for next</div>
         </div>
       </div>
@@ -1210,9 +1247,9 @@ function renderFlashcard(stage, items) {
     card.addEventListener('click', () => {
       flipped = !flipped;
       if (flipped) {
-        card.innerHTML = `<div class="fc-side fc-back"><div class="fc-fr">${w.fr}</div><div class="fc-translit">${w.translit}</div><div class="fc-hint">tap to flip back</div></div>`;
+        card.innerHTML = `<div class="fc-side fc-back"><div class="fc-fr">${w.fr}</div><div class="fc-translit">${trHtml(w.translit)}</div><div class="fc-hint">tap to flip back</div></div>`;
       } else {
-        card.innerHTML = `<div class="fc-side fc-front"><div class="fc-he">${w.he}</div><div class="fc-translit">${w.translit}</div><div class="fc-hint">tap/space to flip · swipe ← for next</div></div>`;
+        card.innerHTML = `<div class="fc-side fc-front"><div class="fc-he">${w.he}</div><div class="fc-translit">${trHtml(w.translit)}</div><div class="fc-hint">tap/space to flip · swipe ← for next</div></div>`;
       }
     });
     // Touch swipe
@@ -1765,7 +1802,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> conjugate -> quicksay (uses window.Translit and window.Conjugate) -> hub. */
 (function loadSharedModules() {
-  var SHARED_V = '1786737613000';
+  var SHARED_V = '1787202071173';
   ['track.js', 'translit.js', 'conjugate.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

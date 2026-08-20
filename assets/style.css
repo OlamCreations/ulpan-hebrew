@@ -1486,6 +1486,21 @@ html.light .qs-card:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.06); }
    instead of drifting to the opposite side of the card. */
 .qs-tr, .qs-en { direction: ltr; text-align: right; }
 .qs-tr { font-size: 14px; color: var(--accent); margin-top: 5px; }
+/* Word-paired result (the tehilim layout): Hebrew word over its reading, columns flowing right
+   to left, wrapping like text. Rendered by card() only when the Hebrew and translit token counts
+   match — the ribbon .qs-he/.qs-tr layout below stays as the fallback. */
+.qs-pairs { display: flex; flex-wrap: wrap; direction: rtl; column-gap: 16px; row-gap: 10px; justify-content: flex-start; }
+.qs-wp { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.qs-wp-he { font-family: 'Frank Ruhl Libre', serif; font-size: var(--he-size); line-height: 1.25; color: var(--text); direction: rtl; }
+.qs-wp-tr { direction: ltr; font-size: 13px; color: var(--accent); margin-top: 2px; }
+/* Romanization legibility. In "a-TA mit-ra-GESH she-a-nach-NU" the syllable hyphen and the word
+   space weigh the same, so a sentence reads as one ribbon. Two moves, both quiet: widen the word
+   gap, and fade the hyphen (wrapped in .tr-h by Translit.markup / markTranslitHyphens) so the
+   word stands and the hyphen recedes. Opacity, not a colour, so it follows whatever colour the
+   romanization has (accent on cards, dim italic in word-rows) in both themes. */
+.qs-tr, .ph-tr, .tb-translit, .srs-translit, .fc-translit { word-spacing: 0.45em; }
+.tr-h { opacity: 0.42; }
+.tr-w { white-space: nowrap; }   /* a hyphen is a break opportunity; a word must never split across lines */
 .qs-en { font-size: 13px; color: var(--text-dim); margin-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 /* Inline grammar under a one-word result (gender/number, and the dictionary form when it differs).
    Filled asynchronously — `:empty` keeps it out of the layout entirely until it has something to
