@@ -98,6 +98,11 @@
   // "this is Hebrew", and the question being asked is whether there are any Hebrew WORDS here.
   const HEBREW_LETTER = /[א-ת]/;
   const stripNiqqud = window.stripNiqqud;
+  /* Comparison key for "is this string the same word as that one": niqqud, whitespace and
+     punctuation off, so a pointed answer and the bare query the learner typed compare equal.
+     Same normalisation as vocalizeBare's guard, which learned the hard way that normalising one
+     side only makes every sentence with a comma look like a mismatch. */
+  const bareKey = s => stripNiqqud(String(s || '')).replace(/[\s,.?!;:'"״׳()־-]/g, '');
 
   // Normalized Levenshtein similarity in [0,1] (1 = identical). Short strings only.
   function levSim(a, b) {
@@ -296,7 +301,16 @@
     const trHtml = (window.Translit && window.Translit.markup) ? window.Translit.markup(trText) : escapeHtml(trText);
     const showTr = !!(trText && (!window.QSPrefs || window.QSPrefs.translit()));
     const tr = showTr ? '<div class="qs-tr">' + trHtml + '</div>' : '';
-    const meaning = (p.en || '').trim();
+    /* A card may never present its own Hebrew as its meaning. Every upstream that fails softly
+       echoes the query back — fetchGoogle and fetchMyMemory both set `en: q` unconditionally, and
+       the forward path always asks tl=he, so a Hebrew query translated to Hebrew comes back as
+       itself. The learner then reads his own word in the slot where the English should be, on a
+       card that looks answered. Measured 2026-08-23 with translate.googleapis.com refused:
+       ספר -> he=סֵפֶר en=ספר, labelled "Translation · online". The real fix is upstream (render()
+       no longer runs the forward path on Hebrew) but this is the display invariant that holds
+       whatever any future path does, and it is what invariant I6 asserts from the outside. */
+    let meaning = (p.en || '').trim();
+    if (meaning && bareKey(meaning) && bareKey(meaning) === bareKey(p.he || '')) meaning = '';
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
     // Preference-aware Hebrew: strip niqqud when the user turned it off; echo the word in
@@ -792,8 +806,14 @@
     return withTimeout(fetchInputTools(q, signal), CFG.tPhon).then(cands => {
       cands = (cands || []).filter(c => c && !offHe.has(stripNiqqud(c)));
       const top = cands.slice(0, CFG.enrichTop);
+      /* Retried once inside ONE shared budget, the same shape as vocalizeBare. On a Hebrew query
+         this single call carries the whole answer — the meaning — and it was the only enrichment
+         with no second chance, so one dropped request on a phone rendered a card with the Hebrew
+         and nothing else. The retry stays inside tGloss so a failing upstream still cannot make
+         the learner watch "Translating" for twice as long. */
+      const gloss = c => { const once = () => fetchGloss(c, signal); return once().catch(() => once()); };
       return Promise.all(top.map(c =>
-        withTimeout(fetchGloss(c, signal), CFG.tGloss)
+        withTimeout(gloss(c), CFG.tGloss)
           .then(gl => ({ he: c, tr: (gl && gl.tr) || null, rm: (gl && gl.rm) || null, en: (gl && gl.en) || '', bare: c }))
           // Input Tools hands back bare Hebrew, so point it through the Worker before showing a
           // transliteration — otherwise the app answers "beseder" with Google's "basder" and
@@ -1320,7 +1340,17 @@
     qAbort = new AbortController();
     const sig = qAbort.signal;
 
-    Promise.all([translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline)]).then(([fwd, phon]) => {
+    /* An all-Hebrew query has no forward answer, by construction: the forward path asks Google
+       for tl=he, so asking it to translate Hebrew returns the Hebrew. It is not a degraded
+       answer, it is the question handed back, and on 2026-08-23 that is exactly what a learner
+       typing מקרר was shown when the gloss call failed — a card headed "Translation", badged
+       online, whose meaning field held his own word. The MyMemory fallback made it worse: it
+       stamps src from guessLangpair() (a guess, 'en|he') rather than from detection, so its echo
+       passed the realLang test and SUPPRESSED the "Hebrew — did you mean?" section that had the
+       right English in it. The meaning of a Hebrew word comes from fetchGloss (sl=iw) on the
+       phonetic path and from nowhere else, so that is the only path we run here. */
+    const heQuery = isAllHebrew(nq);
+    Promise.all([heQuery ? Promise.resolve(null) : translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline)]).then(([fwd, phon]) => {
       if (token !== renderToken) return; // a newer keystroke superseded this
       container.removeAttribute('aria-busy');
 
@@ -1361,6 +1391,13 @@
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
       if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
+      /* A Hebrew word with its niqqud and its reading, and no English, is a card that looks
+         answered and is not — the question was "what does this mean". When the gloss call is the
+         one thing that failed, say which half is missing instead of letting the pointing stand in
+         for an answer. Silence here is what made the failure unreadable from the outside. */
+      else if (heQuery && !(offline.concat(online, fwdOffline).some(p => (p.en || '').trim()))) {
+        html += '<div class="qs-hint">The meaning could not be fetched — the reading above is correct, the English is missing. Try again in a moment.</div>';
+      }
       // On-demand "natural version": only for a translation query (not Hebrew-you-heard, where the
       // learner already has the word). Idiomatic phrases are exactly where Google calques and this
       // 70B layer earns its keep — but it's slow and metered, so it stays a button, not automatic.

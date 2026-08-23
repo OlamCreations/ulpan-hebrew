@@ -1802,7 +1802,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> conjugate -> quicksay (uses window.Translit and window.Conjugate) -> hub. */
 (function loadSharedModules() {
-  var SHARED_V = '1787300000000';
+  var SHARED_V = '1787400000000';
   ['track.js', 'translit.js', 'conjugate.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }
