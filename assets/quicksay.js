@@ -32,6 +32,12 @@
     tVocalize: 4000,    // ms budget: pointing bare Hebrew via the Worker
     tNat: 16000,        // ms budget: the on-demand "natural version" (70B model, can be slow cold)
     tForm: 16000,       // ms budget: the on-demand gendered/plural version (same 70B model)
+    /* Plafond de longueur, appliqué dans render() et pas seulement par l'attribut maxlength de
+       l'input. Mesuré le 2026-08-23 : un collage clavier EST tronqué à 200, mais une écriture
+       par programme (le chemin des chips, ligne ~1400) passe à 203 sans être coupée. Une entrée
+       de 200 caractères rend une carte de 515 px et 30 mots hébreux — illisible, et elle fait
+       payer au Worker une phrase que personne ne peut apprendre d'un coup. */
+    maxQuery: 200,
     reverseCoverage: 0.5, // a curated phrase that merely BEGINS the input counts only if it is at least this share of it
     substringMin: 4     // shortest query for which "appears inside a keyword" counts as a curated match
   };
@@ -903,12 +909,20 @@
      case the consonants are identical and the niqqud IS the whole difference. Ask for the feminine
      of "I want a coffee" without that and Dicta's default answers רוֹצֶה, so the card would say
      "f. sing." above a masculine word and the learner would say it out loud, wrong. */
-  function fetchForm(q, g, n, signal) {
-    const key = g + n + ':' + q.toLowerCase();
+  /* `base` = l'hébreu DÉJÀ AFFICHÉ sur la carte, transmis depuis le 2026-08-23.
+     Sans lui, /form recevait la requête française seule et RETRADUISAIT la phrase avec une
+     consigne de genre : mesuré sur « tu es émue que nous révisons », la carte de base faisait
+     quatre mots, la « forme féminine » cinq, dont un seul en commun — נרגש devenait מוטרדת et
+     מתקנים devenait עוברים על. Ce n'était pas un accord, c'était une autre phrase. Les phrases
+     courtes s'en tiraient par chance, faute de place pour diverger.
+     La base entre AUSSI dans la clé de cache : deux cartes différentes pour la même requête
+     doivent s'accorder séparément, sinon la seconde reçoit la réponse de la première. */
+  function fetchForm(q, base, g, n, signal) {
+    const key = g + n + ':' + q.toLowerCase() + '|' + stripNiqqud(base || '');
     if (formCache.has(key)) return Promise.resolve(formCache.get(key));
     const run = fetch(FORM_URL, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: q, gender: g, number: n }), signal: signal
+      body: JSON.stringify({ text: q, base: base || '', gender: g, number: n }), signal: signal
     })
       .then(r => { if (!r.ok) throw new Error('form ' + r.status); return r.json(); })
       .then(j => (j && j.options) || []);
@@ -930,7 +944,8 @@
       if (wrap._wired) return; wrap._wired = true;
       const out = wrap.querySelector('.qs-form-out');
       const q = wrap.dataset.q || '';
-      const base = sameKey(wrap.dataset.base || '');
+      const baseHe = wrap.dataset.base || '';        // l'hébreu affiché, envoyé au Worker
+      const base = sameKey(baseHe);                  // sa clé de comparaison « a-t-il changé ? »
       wrap.querySelectorAll('.qs-form-btn').forEach(b => {
         b.addEventListener('click', () => {
           if (wrap.classList.contains('loading')) return;
@@ -949,7 +964,7 @@
           const done = () => wrap.classList.remove('loading');
           const fail = () => { out.innerHTML = '<div class="qs-hint">That form isn’t available right now.</div>'; done(); };
           const prefer = { g: form.g, n: form.n };
-          fetchForm(q, form.g, form.n, sig).then(opts => {
+          fetchForm(q, baseHe, form.g, form.n, sig).then(opts => {
             if (!opts || !opts.length) return fail();
             return Promise.all(opts.map(o => {
               // The heading above the card already names the form, so the tag carries only what it
@@ -1249,13 +1264,31 @@
      all see the same string. Only a lone terminal full stop: "?" and "!" carry meaning, and
      "..." is not a full stop. Measured on 26 phrases first — 25 were already stable, and this
      turns the 26th from a coin toss into a rule. */
-  const normalizeQuery = q => String(q || '').trim().replace(/(?<![.!?])\.$/, '').trim();
+  /* Sans lookbehind, à dessein (2026-08-23). `(?<![.!?])` est une erreur de PARSE sur Safari
+     < 16.4 : le fichier entier meurt, donc plus de traducteur du tout sur ces téléphones. La
+     règle avait déjà été appliquée à app.js le 20/08 et ce fichier avait été oublié — c'est le
+     dernier lookbehind du site (vérifié sur les six fichiers livrés).
+     Équivalence gardée sur les cinq cas, y compris le point isolé « . » -> "" que la version
+     lookbehind produisait aussi (la position initiale satisfait un lookbehind négatif). */
+  const normalizeQuery = q => {
+    const s = String(q || '').trim();
+    return (/\.$/.test(s) && !/[.!?]\.$/.test(s)) ? s.slice(0, -1).trim() : s;
+  };
 
   function render(container, q) {
     const nq = normalizeQuery(q);
     if (!nq) {
       container.removeAttribute('aria-busy');
       container.innerHTML = '';   // minimal empty state: no hint text, no example chips
+      return;
+    }
+    /* Le plafond vit ICI, pas seulement sur l'attribut de l'input : maxlength ne s'applique pas
+       à une écriture par programme, et le dire vaut mieux que tronquer en silence — l'apprenant
+       verrait une carte confiante sur une phrase amputée sans savoir qu'elle l'est. */
+    if (nq.length > CFG.maxQuery) {
+      container.removeAttribute('aria-busy');
+      container.innerHTML = '<div class="qs-hint">Trop long (' + nq.length + ' caractères, maximum '
+        + CFG.maxQuery + '). Traduisez phrase par phrase : une carte de cette taille ne s\'apprend pas.</div>';
       return;
     }
     const token = ++renderToken;

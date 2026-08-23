@@ -49,6 +49,23 @@ Rules:
 Output ONLY these lines and nothing else, one option per line:
 HEBREW | note
 Do not number the lines. Do not write anything before or after the list.`;
+/* Consigne d'ACCORD, utilisée dès que le client transmet l'hébreu déjà affiché (2026-08-23).
+   FORM_SYS ci-dessus demande une TRADUCTION dans la forme voulue : le modèle repart du français
+   et choisit librement ses mots, ce qui sur une phrase longue rend une autre phrase. Mesuré sur
+   « tu es émue que nous révisons » : quatre mots en base, cinq en sortie, un seul en commun.
+   Ici la phrase hébraïque est donnée et la seule liberté laissée est la désinence. */
+const FORM_AGREE_SYS = `You are a Hebrew grammar assistant. You are given ONE Hebrew sentence and a requested GENDER and NUMBER. Rewrite that exact sentence so its agreement matches the request.
+Rules:
+- This is NOT a translation task. Keep EVERY word of the given Hebrew sentence. Change only the endings, prefixes and pronouns that grammar forces to change.
+- Never substitute a synonym, never reorder, never add or drop a word. If a word does not agree, it must come back letter for letter.
+- The word count must stay the same unless Hebrew grammar itself forces otherwise.
+- NEVER change who is speaking or who is addressed. Only the agreement may move.
+- Give EXACTLY ONE option. One line, never two.
+- If nothing in the sentence can carry the requested form, return it unchanged and write exactly "invariable" as the note.
+- The note is French, 5 words maximum, and names WHO carries the requested form. Examples: "femme qui parle", "on s'adresse a une femme", "invariable".
+Output ONLY this line and nothing else:
+HEBREW | note
+Do not number the line. Do not write anything before or after it.`;
 const FORM_LABEL = { m: 'masculine', f: 'feminine' };
 const NUM_LABEL = { sg: 'singular', pl: 'plural' };
 
@@ -481,12 +498,20 @@ async function natTranslate(text, env) {
 // sentence ("I want"). Tightening the instruction did not stop it. Its FIRST line was right in every
 // case tried, so the tail is cut here rather than trusted. The note still names who carries the form,
 // so the reading being shown is stated rather than left for the learner to assume.
-async function formTranslate(text, g, n, env) {
+async function formTranslate(text, base, g, n, env) {
   if (!env || !env.AI) throw new Error('no AI binding');
   const want = (FORM_LABEL[g] || 'masculine') + ' ' + (NUM_LABEL[n] || 'singular');
+  /* Deux régimes, et le choix ne se devine pas : il dépend de ce que le client a envoyé.
+     Avec `base`, on accorde la phrase hébraïque affichée (le bon travail). Sans, on retombe sur
+     l'ancienne traduction depuis le texte source — gardé pour qu'un client plus ancien, ou une
+     carte sans hébreu à accorder, continue de répondre au lieu de casser. */
+  const hasBase = !!(base && base.trim());
   const r = await env.AI.run(FORM_MODEL, {
-    messages: [{ role: 'system', content: FORM_SYS },
-      { role: 'user', content: 'Sentence: ' + text + '\nRequested form: ' + want }],
+    messages: hasBase
+      ? [{ role: 'system', content: FORM_AGREE_SYS },
+        { role: 'user', content: 'Hebrew sentence: ' + base + '\nRequested form: ' + want }]
+      : [{ role: 'system', content: FORM_SYS },
+        { role: 'user', content: 'Sentence: ' + text + '\nRequested form: ' + want }],
     temperature: 0, max_tokens: 400
   });
   return parsePipeOptions(r && (r.response || r.result || ''), 1);
@@ -626,15 +651,21 @@ export default {
       let fb;
       try { fb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
       const fText = ((fb && fb.text) || '').toString().slice(0, 300);
+      const fBase = ((fb && fb.base) || '').toString().slice(0, 300);
       const fG = (fb && fb.gender) === 'f' ? 'f' : 'm';
       const fN = (fb && fb.number) === 'pl' ? 'pl' : 'sg';
-      if (!fText.trim()) return json({ options: [] }, 200, origin);
+      if (!fText.trim() && !fBase.trim()) return json({ options: [] }, 200, origin);
       const fCache = caches.default;
-      const fKey = new Request('https://form.cache/v3/' + fG + fN + '/' + encodeURIComponent(fText));
+      /* v4 : la sémantique de la réponse a changé (accord de la phrase hébraïque plutôt que
+         retraduction du texte source), et la base entre dans la clé — deux cartes différentes
+         pour une même requête s'accordent séparément. Sans le bump, on relirait pendant sept
+         jours les retraductions produites par l'ancienne version. */
+      const fKey = new Request('https://form.cache/v4/' + fG + fN + '/'
+        + encodeURIComponent(fText) + '/' + encodeURIComponent(fBase));
       const fHit = await fCache.match(fKey);
       if (fHit) return new Response(await fHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
       let fOpts;
-      try { fOpts = await formTranslate(fText, fG, fN, env); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
+      try { fOpts = await formTranslate(fText, fBase, fG, fN, env); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
       const fPayload = JSON.stringify({ options: fOpts });
       if (fOpts.length && ctx && ctx.waitUntil) ctx.waitUntil(fCache.put(fKey, new Response(fPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
       return new Response(fPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
