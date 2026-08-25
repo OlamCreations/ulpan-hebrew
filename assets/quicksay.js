@@ -17,7 +17,6 @@
   const CFG = {
     phoneticMax: 5,     // max phonetic-Hebrew candidates to request from Input Tools
     enrichTop: 3,       // how many phonetic candidates get niqqud + gloss (extra API calls)
-    glossLang: 'en',    // meaning language for phonetic candidates (UI is English)
     hiConf: 0.85,       // detected-lang confidence above which en/fr is "clearly a translation query"
     tTranslate: 8000,   // ms budget: forward EN/FR -> HE
     tPhon: 5000,        // ms budget: Input Tools phonetic candidates
@@ -57,6 +56,29 @@
 
   // Enabled source languages (window.QSPrefs.langs) drive which sources we retry.
   const prefLangs = () => (window.QSPrefs && window.QSPrefs.langs) ? window.QSPrefs.langs() : ['en', 'fr', 'es', 'ru'];
+
+  /* The language the MEANING is written in, which until 2026-08-25 was always English.
+   *
+   * The phrasebook has carried a French gloss on all 118 rows since 2026-08-18 and it was used
+   * only to SEARCH: a French speaker typed "où", matched on the French field, and was shown the
+   * English one. On a Hebrew word he got English too, because CFG.glossLang was the constant
+   * 'en'. Measured 2026-08-25 over 130 inputs: on every French and English query the meaning
+   * line carried no information at all (33 cards out of 231 repeated the learner's own words
+   * back at him), and a French oleh looking for what the Hebrew means found nothing he asked for
+   * in the one place meant to hold it.
+   *
+   * Rule: the meaning follows the INPUT. A query Google places as French/Spanish/Russian is
+   * answered in that language; anything else (Hebrew typed in Hebrew, romanized Hebrew, an
+   * undetectable fragment) falls back to the browser's own language, then to English. */
+  const MEANING_LANGS = new Set(['en', 'fr', 'es', 'ru']);
+  const navLang = () => {
+    const n = String((navigator.languages && navigator.languages[0]) || navigator.language || 'en').slice(0, 2).toLowerCase();
+    return MEANING_LANGS.has(n) ? n : 'en';
+  };
+  const meaningLang = src => (src && MEANING_LANGS.has(src)) ? src : navLang();
+  /* A curated row keeps its glosses per language (en, fr). Falls back to English rather than
+     showing nothing: a meaning in the wrong language beats an empty line. */
+  const glossOf = (p, lang) => ((p && p[lang]) || (p && p.en) || '').trim();
 
   let PHRASES = [];
   let loaded = false;
@@ -200,6 +222,21 @@
     const ri = romNorm(q);
     return !!ri && PHRASES.some(p => reverseKeys(p).some(k => k === ri));
   }
+  /* The learner typed HEBREW that the phrasebook already holds.
+   *
+   * reverseOffline() matches on the ROMANIZATION, so it never fires when the word is typed in
+   * Hebrew letters — and until 2026-08-25 nothing else looked either. Typing שלום therefore
+   * skipped a verified row carrying "hello / peace" and "bonjour / salut / paix", asked Google
+   * instead, and rendered "paix". The verified gloss was on disk, in the learner's language,
+   * and unreachable from the one input that names it exactly.
+   *
+   * Matched on the bare consonants so it works whether or not the learner typed the niqqud. */
+  function forwardByHebrew(q, limit = CFG.phoneticMax) {
+    const k = bareKey(q);
+    if (!k || !HEBREW_LETTER.test(q)) return [];
+    return PHRASES.filter(p => bareKey(p.he) === k).slice(0, limit);
+  }
+
   function reverseOffline(q, limit = CFG.phoneticMax) {
     const ri = romNorm(q);
     if (ri.length < 2) return [];
@@ -284,7 +321,11 @@
     });
   }
 
-  function card(p, kind) {
+  /* lang = the language the meaning should be written in (see meaningLang). Defaults to the
+     browser's, so a caller that does not care still gets the learner's language rather than a
+     hardcoded English. */
+  function card(p, kind, lang) {
+    const mLang = lang || navLang();
     let tag = '';
     if (kind === 'online') tag = '<span class="qs-tag qs-tag-online" title="Translated online">online</span>';
     else if (kind === 'curated') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
@@ -309,7 +350,10 @@
        ספר -> he=סֵפֶר en=ספר, labelled "Translation · online". The real fix is upstream (render()
        no longer runs the forward path on Hebrew) but this is the display invariant that holds
        whatever any future path does, and it is what invariant I6 asserts from the outside. */
-    let meaning = (p.en || '').trim();
+    /* The gloss in the learner's language when the row carries one (curated rows have en + fr),
+       English otherwise. Before 2026-08-25 this read p.en unconditionally and a French speaker
+       was answered in English on every single card. */
+    let meaning = glossOf(p, mLang);
     if (meaning && bareKey(meaning) && bareKey(meaning) === bareKey(p.he || '')) meaning = '';
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
@@ -638,8 +682,8 @@
   // one call that glosses a candidate also transliterates it. Dicta Nakdan (which we used
   // before) has no browser CORS and is blocked outright on GitHub Pages; gtx (CORS *) covers
   // both needs with no proxy or backend. Returns { en: meaning, tr: romanization }.
-  function fetchGloss(he, signal) {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=iw&tl=' + CFG.glossLang + '&dt=t&dt=rm&q=' + encodeURIComponent(he);
+  function fetchGloss(he, signal, lang) {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=iw&tl=' + (lang || navLang()) + '&dt=t&dt=rm&q=' + encodeURIComponent(he);
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(j => {
@@ -816,10 +860,12 @@
 
   // Phonetic pipeline: offline reverse-match (instant) + online Input Tools candidates
   // (enriched with niqqud + gloss). Returns { offline:[phrase], online:[{he,tr,en,bare}] }.
-  function lookupPhonetic(q, signal, offlineMatches) {
+  function lookupPhonetic(q, signal, offlineMatches, lang) {
     const offline = offlineMatches || (loaded ? reverseOffline(q) : []);
     if (!navigator.onLine) return Promise.resolve({ offline: offline, online: [] });
-    const key = 'p:' + q.toLowerCase();
+    // The language is part of the key: without it a session that switched language served
+    // the meaning cached in the previous one.
+    const key = 'p:' + (lang || navLang()) + ':' + q.toLowerCase();
     if (phonCache.has(key)) return Promise.resolve({ offline: offline, online: phonCache.get(key) });
     const offHe = new Set(offline.map(p => stripNiqqud(p.he)));
     return withTimeout(fetchInputTools(q, signal), CFG.tPhon).then(cands => {
@@ -830,7 +876,7 @@
          with no second chance, so one dropped request on a phone rendered a card with the Hebrew
          and nothing else. The retry stays inside tGloss so a failing upstream still cannot make
          the learner watch "Translating" for twice as long. */
-      const gloss = c => { const once = () => fetchGloss(c, signal); return once().catch(() => once()); };
+      const gloss = c => { const once = () => fetchGloss(c, signal, lang); return once().catch(() => once()); };
       return Promise.all(top.map(c =>
         withTimeout(gloss(c), CFG.tGloss)
           .then(gl => ({ he: c, tr: (gl && gl.tr) || null, rm: (gl && gl.rm) || null, en: (gl && gl.en) || '', bare: c }))
@@ -1158,7 +1204,9 @@
           if (known) return Promise.resolve({ en: known, verified: true });
           const inCtx = ctxGloss && ctxGloss[stripNiqqud(voc)];
           if (inCtx) return Promise.resolve({ en: inCtx, context: true });
-          return withTimeout(fetchGloss(stripNiqqud(voc), signal), CFG.tGloss)
+          /* 'en' pinned: verifiedGloss() and fetchContextGloss() above both answer in
+             English, and a word-by-word grid mixing two languages reads as a defect. */
+          return withTimeout(fetchGloss(stripNiqqud(voc), signal, 'en'), CFG.tGloss)
             .then(g => ({ en: (g && g.en) || '', verified: false }));
         }))).then(glosses => {
           out.innerHTML = '<div class="qs-sub">Word by word</div>' +
@@ -1261,33 +1309,33 @@
   }
 
   // --- Section builders ---------------------------------------------------------
-  function phonSectionHtml(offline, online) {
-    const cards = offline.map(p => card(p, 'phonetic-lesson')).concat(online.map(p => card(p, 'phonetic')));
+  function phonSectionHtml(offline, online, lang) {
+    const cards = offline.map(p => card(p, 'phonetic-lesson', lang)).concat(online.map(p => card(p, 'phonetic', lang)));
     if (!cards.length) return '';
     return '<div class="qs-sub">Hebrew — did you mean?</div>' + cards.join('');
   }
 
-  function transSectionHtml(fwd, fwdOffline, dupeSet, curatedFirst) {
+  function transSectionHtml(fwd, fwdOffline, dupeSet, curatedFirst, lang) {
     const cards = [];
     // Skip curated matches already shown in the phonetic "did you mean?" section (e.g. "beseder"
     // surfaces both as romanized-Hebrew and as a keyword) so the same card isn't listed twice.
     const curated = () => fwdOffline.forEach(p => {
       const k = stripNiqqud(p.he);
       if (dupeSet.has(k)) return;
-      dupeSet.add(k); cards.push(card(p, 'curated'));
+      dupeSet.add(k); cards.push(card(p, 'curated', lang));
     });
     /* When the learner typed a curated gloss exactly, the verified card leads and Google's is
        demoted, not dropped: où gave אוֹ "or", pardon gave חֲנִינָה "amnesty", ouvert gave לִפְתוֹחַ
        "to open" — each shown ABOVE the ✓ lesson card that answered. Google's reading stays second
        because it is sometimes the other legitimate sense (pardon as amnesty), and it is labelled. */
     if (curatedFirst) curated();
-    if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) { cards.push(card(fwd, 'online')); dupeSet.add(stripNiqqud(fwd.he)); }
+    if (fwd && !dupeSet.has(stripNiqqud(fwd.he))) { cards.push(card(fwd, 'online', lang)); dupeSet.add(stripNiqqud(fwd.he)); }
     // Homograph alternates (pain = ache in English, bread in French): show the other reading
     // rather than silently betting on Google's language detection.
     if (fwd && fwd.alts) fwd.alts.forEach(a => {
       const k = stripNiqqud(a.he);
       if (dupeSet.has(k)) return;
-      dupeSet.add(k); cards.push(card(a, 'online'));
+      dupeSet.add(k); cards.push(card(a, 'online', lang));
     });
     if (!curatedFirst) curated();
     if (!cards.length) return '';
@@ -1332,12 +1380,17 @@
     }
     const token = ++renderToken;
     const fwdOffline = loaded ? search(nq) : [];
-    const revOffline = loaded ? reverseOffline(nq) : [];
+    /* Curated rows reachable from BOTH spellings of the same word: the romanization the
+       learner may have typed, and the Hebrew itself. Hebrew-keyed hits lead, because an
+       exact match on the word as written beats a phonetic near-match. */
+    const revOffline = loaded
+      ? forwardByHebrew(nq).concat(reverseOffline(nq).filter(p => bareKey(p.he) !== bareKey(nq)))
+      : [];
 
     if (!navigator.onLine) {
       // Plane mode: curated phrasebook only, both directions.
-      const ph = phonSectionHtml(revOffline, []);
-      const tr = fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated')).join('') : '';
+      const ph = phonSectionHtml(revOffline, [], navLang());
+      const tr = fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated', navLang())).join('') : '';
       if (ph || tr) {
         container.innerHTML = ph + tr + '<div class="qs-hint qs-offline">Offline — showing saved phrases only.</div>';
       } else {
@@ -1351,8 +1404,8 @@
     container.setAttribute('aria-busy', 'true');
     container.innerHTML =
       skeleton('Translating', 3) +
-      phonSectionHtml(revOffline, []) +
-      (fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated')).join('') : '');
+      phonSectionHtml(revOffline, [], navLang()) +
+      (fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated', navLang())).join('') : '');
     wirePlay(container);
 
     if (qAbort) { try { qAbort.abort(); } catch (e) {} }
@@ -1370,10 +1423,14 @@
        phonetic path and from nowhere else, so that is the only path we run here. */
     const heQuery = isAllHebrew(nq);
     const NO_FWD = { res: null, failed: false };
-    Promise.all([heQuery ? Promise.resolve(NO_FWD) : translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline)]).then(([fwdOut, phon]) => {
+    Promise.all([heQuery ? Promise.resolve(NO_FWD) : translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline, navLang())]).then(([fwdOut, phon]) => {
       if (token !== renderToken) return; // a newer keystroke superseded this
       container.removeAttribute('aria-busy');
       const fwd = fwdOut.res;
+      /* The meaning follows the input: a query Google places as French is answered in
+         French, a Hebrew word falls back to the browser's language. Computed once, here,
+         so every card of one screen speaks one language. */
+      const mLang = meaningLang(fwd && fwd.src);
       // True only when the sources could not be REACHED (see translateOnline). Never true on a
       // Hebrew query, which has no forward path by construction.
       const fwdFailed = fwdOut.failed;
@@ -1410,8 +1467,8 @@
       const fwdCard = romanizedHebrew ? null : fwd;
 
       const dupe = new Set(offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
-      const ph = phonSectionHtml(offline, online);
-      const tr = transSectionHtml(fwdCard, fwdOffline, dupe, exactForward);
+      const ph = phonSectionHtml(offline, online, mLang);
+      const tr = transSectionHtml(fwdCard, fwdOffline, dupe, exactForward, mLang);
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
       /* The forward sources could not be reached. Say it, whatever else is on screen. Without

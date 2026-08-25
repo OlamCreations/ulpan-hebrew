@@ -85,3 +85,75 @@ rien du tout ?** et **est-ce que ça arrive sur le téléphone, sur le fixe, ou 
 La piste de fond du 23/08 reste la vraie : rien à l'écran ne distingue une réponse **vérifiée**
 d'une **devinette**. Les trois badges (`✓ lesson`, `online`, `phonetic`) font 10 px, même forme,
 même bleu. Trois pistes chiffrées en fin de `translator-reliability-2026-08-23.md`.
+
+---
+
+# Deuxième passe : « en fonction de l'input »
+
+Jonas a précisé : la carte hébreu s'affiche, c'est **la ligne du sens** qui ne donne rien, et
+c'est vrai sur les trois appareils. Un défaut indépendant de l'appareil ne dépend pas du réseau,
+donc il devait se voir en sonde. Il s'y voyait, il n'était pas cherché.
+
+## Mesure
+
+130 entrées mêlées (60 mots hébreux tirés au hasard des 465 leçons, 40 romanisées, 15 françaises,
+15 anglaises) jouées contre la production, 231 cartes :
+
+| Constat | n |
+|---|---|
+| sens vide | 4 (dont 3 sans un mot d'explication) |
+| **sens qui répète l'entrée de l'apprenant** | **33** |
+| sens en anglais pour un francophone | toutes les autres |
+
+Sur chaque requête française et anglaise, la ligne censée porter le sens rendait les mots que
+l'apprenant venait de taper. Sur un mot hébreu, elle rendait de l'anglais. Un francophone n'avait
+donc, dans la case prévue pour ça, jamais rien qu'il ait demandé.
+
+## Cause
+
+Deux choses, et la seconde est la plus bête.
+
+1. `CFG.glossLang` était la constante `'en'`. La langue du sens ne suivait rien.
+2. Le carnet porte un champ `fr` sur ses **118 lignes** depuis le 18/08, et il ne servait **qu'à
+   chercher** : on tapait « où », on matchait sur le champ français, on se faisait répondre en
+   anglais. La traduction vérifiée était sur le disque, dans la bonne langue, et l'affichage ne
+   la regardait pas.
+
+Et une troisième, trouvée en écrivant le contrôle : `reverseOffline()` matche sur la
+**romanisation**, donc taper שלום en lettres hébraïques n'atteignait jamais sa fiche curée. On
+demandait à Google, qui rendait « paix ».
+
+## Correctif
+
+- `meaningLang(src)` : la langue de la requête si Google la place (fr, es, ru, en), sinon celle du
+  navigateur, sinon l'anglais. Calculée une fois par écran, donc toutes les cartes d'un même
+  résultat parlent la même langue.
+- `glossOf(row, lang)` : la fiche curée rend son champ dans cette langue, l'anglais en repli (un
+  sens dans la mauvaise langue vaut mieux qu'une ligne vide).
+- `fetchGloss(he, signal, lang)` : la glose en ligne suit la même langue.
+- `forwardByHebrew(q)` : un mot tapé **en hébreu** atteint sa fiche curée, par les consonnes nues,
+  avec ou sans niqqud.
+- Le **mot par mot reste en anglais**, exprès : sa source vérifiée (`data/gloss.json`, 6 871 mots)
+  l'est, et un tableau qui mélange deux langues se lit comme un bug.
+
+## Ce que ça coûte, mesuré
+
+La glose française de Google est moins bonne que l'anglaise : **33/45 contre 37/45** sur les
+lignes curées du carnet (référence : leur champ `fr` écrit à la main, un synonyme suffit). Les
+vraies erreurs françaises sont `מי` → « OMS », `כמה` → « quelques », `לא` → « pas ». C'est accepté :
+les 118 phrases du carnet passent maintenant par le français **vérifié** et ne touchent plus
+Google du tout ; l'écart ne porte que sur les mots hors corpus.
+
+Piège de mesure au passage : la première métrique donnait 26/45 en comparant à la liste entière
+de synonymes, donc « paix » comptait comme un échec face à « bonjour / salut / paix ». Elle
+mesurait la richesse de la référence, pas la justesse de la réponse.
+
+Et un piège d'outil : `gtx` rend une **page HTML** à un `fetch` Node nu (il refuse les clients
+non-navigateur), ce qui a donné un franc `0/0` avant d'être vu. Toute mesure de gloss doit tourner
+dans la page.
+
+## Le contrôle
+
+`tools/meaning-lang-check.mjs`, 8 assertions dans les deux locales. Ses attentes sont **lues dans
+`data/phrasebook.json` au moment du run**, jamais recopiées. Il était rouge avant le correctif,
+sur le vrai défaut : 3/6, שלום rendant « paix » en français et « peace » en anglais.
