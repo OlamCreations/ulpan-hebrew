@@ -287,3 +287,64 @@ Piège de mesure au passage, à ne pas refaire : ma première vérification comp
 /track partie quand même ». C'était le **script** `assets/track.js`, attrapé par un filtre
 `url().includes('/track')`. Vérifier la méthode et le type de ressource avant de croire qu'une
 balise est partie.
+
+---
+
+# Capacité : et si 10 personnes utilisent l'app en même temps ?
+
+À l'ulpan elles sont derrière **un seul wifi, donc une seule IP**, et tous les quotas en jeu se
+comptent par IP. La question est donc arithmétique. Il manquait le chiffre qui permet de la
+poser : le coût unitaire d'une requête. Mesuré (`tools/upstream-cost.mjs`, cache vidé, service
+worker bloqué) :
+
+| saisie | gtx | Input Tools | MyMemory | notre Worker | total |
+|---|---|---|---|---|---|
+| mot hébreu couvert par le corpus | 1 | 0 | 0 | 2 | **3** |
+| mot hébreu hors corpus | 1 | 0 | 0 | 2 | **3** |
+| phrase hébreu déjà dans le carnet | 0 | 0 | 0 | 0 | **0** |
+| romanisé | 4 | 1 | 0 | 4 | **9** |
+| **français, un mot** | **6** | 1 | 0 | 5 | **12** |
+| français, une phrase | 4 | 1 | 0 | 4 | **9** |
+| anglais, une phrase | 4 | 1 | 0 | 4 | **9** |
+
+Moyenne **6,4 appels externes par requête**. Dix personnes cherchant trois mots par minute :
+**≈ 193 appels/minute depuis une seule IP.**
+
+## Ce qui casse en premier — et ce n'est pas Google
+
+**C'est notre propre limiteur.** `worker/src/index.js` limite à **100 requêtes / 60 s par IP**
+(`env.RL.limit({ key: ip })`), et les chemins IA à **12 / 60 s**. À 3,9 appels Worker par requête,
+dix personnes à trois mots par minute font **≈ 117 appels Worker/minute** : la classe est coupée
+par notre propre garde avant même que Google s'en aperçoive. Le limiteur a été écrit contre
+l'abus scripté, et il traite un NAT partagé comme un attaquant.
+
+Ordre de rupture prévu, à dix utilisateurs :
+
+1. **notre Worker** (100/60s/IP) → niqqud et mot-à-mot tombent
+2. **`/nat` et `/form`** (12/60s/IP) → indisponibles dès la deuxième personne qui les touche
+3. **gtx** → 429, quota non documenté (mesuré atteint aujourd'hui, retombé depuis)
+4. MyMemory et Input Tools : non mesurés sous charge, à ne pas supposer
+
+## Le levier, dans l'ordre du rapport qualité/effort
+
+1. **Ne pas appeler.** Un mot hébreu couvert par les 6 871 mots vérifiés coûte déjà 0 appel de
+   glose depuis aujourd'hui. Le vocabulaire des 465 leçons fait ~15 000 mots : étendre
+   `data/gloss.json` déplace la majorité des recherches hors réseau, définitivement et gratuitement.
+2. **Les 3 retries de langue.** Un mot français coûte 6 appels gtx parce que `addLangAlts` demande
+   fr + es + ru en plus de la détection. Par défaut, seules la langue du navigateur et l'anglais
+   suffisent : 6 → 3, soit -25 % du trafic total sans rien perdre pour un francophone.
+3. **Re-keyer notre limiteur.** L'identifiant anonyme (`ulpan-aid`) distingue dix personnes
+   derrière une IP là où l'IP les confond. Garder une borne par IP, plus large, contre l'abus.
+4. **Cache partagé côté Worker.** Il existe déjà (7 jours) : la deuxième personne qui cherche le
+   même mot ne paie pas. Il ne protège pas du limiteur, qui compte avant le cache.
+
+## Le piège à ne pas prendre
+
+**Ne pas déplacer les appels Google vers le Worker** pour « sortir du quota de la classe ». Les
+Workers Cloudflare sortent d'un pool d'IP partagé par toute la plateforme, et c'est exactement ce
+qui a tué l'intégration Dicta (note du 24/07 : requête identique, 200 depuis un navigateur, 503
+depuis le Worker, blocage par IP côté Dicta). Un endpoint non documenté bloque le trafic
+datacenter avant tout le reste : on échangerait un quota qui se recharge contre un blocage qui ne
+se recharge pas.
+
+La sortie durable n'est pas de mieux emprunter, c'est d'avoir moins besoin d'emprunter.
