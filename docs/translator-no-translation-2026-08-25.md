@@ -229,3 +229,61 @@ Le held-out est le seul chiffre à regarder. À rejouer quand le quota est retom
 français** : « cool / OK / awesome », « broken heart ». La page `reference/expressions.html`
 l'affiche tel quel dans `.xp-fr`. Un francophone y lit donc de l'anglais dans un champ qui promet
 du français. Corriger, c'est traduire 129 idiomes : contenu, donc décision de Jonas.
+
+---
+
+# « Y a du monde qui utilise l'app ? » — ce que dit la télémétrie, et ce qu'elle ne dit pas
+
+## D'abord : le quota est par CONNEXION, pas global
+
+Vérifié dans le code, pas supposé. Les quatre appels externes du traducteur partent tous du
+navigateur du visiteur (`assets/quicksay.js` lignes 486, 512, 683, 701) : gtx, MyMemory, Input
+Tools. Aucun ne passe par le Worker. C'est donc **l'IP de chaque utilisateur** que Google compte.
+Mes tests n'ont dégradé personne d'autre.
+
+**Mais la conséquence à l'ulpan est réelle** : plusieurs personnes derrière un même wifi sortent
+sur une seule IP. Une classe qui utilise l'app en même temps partage donc un seul quota Google et
+peut le faire tomber ensemble. C'est le cas d'usage le plus probable de cette app, et l'échelle
+de glose ajoutée aujourd'hui est ce qui le rend supportable : un mot couvert par les 6 871 mots
+vérifiés ne coûte plus aucune requête.
+
+## Ensuite : les chiffres bruts ne valent rien tels quels
+
+30 jours, hors trafic tagué `owner` : **1 474 événements, 147 « devices »**, dont 1 485 en Israël.
+
+Sauf que **143 de ces 147 sont des navigateurs sans tête**. Chaque contexte Playwright démarre
+avec un localStorage vide, donc chaque run de sonde forge un nouvel `ulpan-aid` et le rapport le
+compte comme une personne de plus. Les pics tombent exactement sur les jours de travail sur ce
+dépôt (16, 17, 18, 20, 23, 25 août) et `breakdown_used` fait 1 092 événements sur 21 « devices »,
+ce qui est la signature d'une sonde, pas d'un apprenant.
+
+Le tag `owner` ne pouvait pas les attraper : il vit dans le même localStorage que le harnais
+efface à chaque run.
+
+## Le seul signal honnête : le mobile
+
+Mes sondes envoient un User-Agent desktop. En filtrant sur `device = mobile` :
+
+| | |
+|---|---|
+| appareils distincts sur 30 jours | **4** |
+| usage typique | **1 appareil par jour**, 1 à 17 événements |
+| événements mobiles au total | 128 sur 1 474 |
+
+C'est petit, c'est régulier, et c'est probablement surtout Jonas. **Aucune preuve, à ce jour,
+d'un usage tiers significatif.** Ce n'est pas un verdict sur l'app : c'est le constat que la
+télémétrie ne pouvait pas répondre à la question tant qu'elle comptait le harnais.
+
+## Correctif
+
+`assets/track.js` coupe la télémétrie quand `navigator.webdriver === true`. C'est le seul témoin
+que le harnais ne peut pas ne pas porter (le drapeau `owner`, lui, vit dans le localStorage que
+le harnais efface). Vérifié : sous Playwright, `off = true` et zéro balise part.
+
+Les 30 derniers jours restent pollués et le resteront ; les chiffres redeviennent lisibles à
+partir d'aujourd'hui.
+
+Piège de mesure au passage, à ne pas refaire : ma première vérification comptait « 1 requête
+/track partie quand même ». C'était le **script** `assets/track.js`, attrapé par un filtre
+`url().includes('/track')`. Vérifier la méthode et le type de ressource avant de croire qu'une
+balise est partie.

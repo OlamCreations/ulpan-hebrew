@@ -15,7 +15,16 @@
   var off = false;
   try {
     off = localStorage.getItem('ulpan-analytics-off') === '1' ||
-      navigator.doNotTrack === '1' || navigator.doNotTrack === 'yes' || window.doNotTrack === '1';
+      navigator.doNotTrack === '1' || navigator.doNotTrack === 'yes' || window.doNotTrack === '1' ||
+      /* An automated browser is not a learner. Every Playwright context starts with an empty
+         localStorage, so each probe run minted a FRESH anon id and the report counted it as a new
+         person: read on 2026-08-25, 143 of the 147 "devices" of the past month were desktop, in
+         bursts landing exactly on the days this app was being tested, while the mobile figure
+         (the honest one) sat at one device a day. The owner flag could not catch them - it lives
+         in the same localStorage the harness wipes - so the tell has to be something the harness
+         cannot help carrying. navigator.webdriver is set by every CDP-driven browser and by no
+         ordinary one. */
+      navigator.webdriver === true;
   } catch (e) {}
 
   // Random anonymous id (no PII). Resettable by the user; only used to count returning sessions.
