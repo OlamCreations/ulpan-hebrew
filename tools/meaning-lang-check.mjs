@@ -79,7 +79,16 @@ for (const [locale, lang] of [['fr-FR', 'fr'], ['en-US', 'en']]) {
     else console.log(`  ok   ${c.id} "${c.q}" -> ${want}: ${JSON.stringify(got[0]).slice(0, 60)}`);
   }
 
-  // L2: a French query is answered in French, whatever the session language.
+  /* L2 : une requete francaise est repondue en francais QUAND le francais fait partie des langues
+     actives de la session. Ce n'etait pas la formulation d'origine ("quelle que soit la langue de
+     la session"), et la nuance est le prix mesure du levier de capacite du 2026-08-25 : les
+     langues de retry sont passees des quatre a "celle du navigateur + l'anglais", ce qui fait
+     tomber un mot francais de 6 a 4 appels gtx. Sans le retry sl=fr, Google classe parfois
+     "bonjour" en anglais (c'est le sauvetage d'homographe que documente addLangAlts : pain, chat,
+     main, coin) et la carte repond alors en anglais.
+     Concretement : sur un navigateur francais - celui de l'apprenant vise - rien ne change, et
+     c'est l'assertion qui compte. Sur un navigateur anglais ou l'on tape du francais, la reponse
+     est en anglais, ce qui reste defendable. Les autres langues sont a un clic dans Preferences. */
   {
     await ask(page, L2.q).catch(() => {});
     const read = await page.evaluate(READ);
@@ -87,9 +96,12 @@ for (const [locale, lang] of [['fr-FR', 'fr'], ['en-US', 'en']]) {
     checks++;
     // French, not English: the curated row for שלום reads "bonjour / salut / paix" in French and
     // "hello / peace" in English, so the two are unambiguous.
-    const ok = got.some(g => /bonjour|salut|paix|matin/i.test(g)) && !got.some(g => /^hello \/ peace/i.test(g));
-    if (!ok) { bad++; console.log(`  FAIL L2 "${L2.q}" wanted French, got ${JSON.stringify(got)}`); }
-    else console.log(`  ok   L2 "${L2.q}" -> French: ${JSON.stringify(got[0]).slice(0, 60)}`);
+    const frEnabled = lang === 'fr';
+    const ok = frEnabled
+      ? got.some(g => /bonjour|salut|paix|matin/i.test(g)) && !got.some(g => /^hello \/ peace/i.test(g))
+      : got.length > 0;   // session anglaise : on exige une reponse, pas sa langue
+    if (!ok) { bad++; console.log(`  FAIL L2 "${L2.q}" (fr actif: ${frEnabled}) got ${JSON.stringify(got)}`); }
+    else console.log(`  ok   L2 "${L2.q}" -> ${frEnabled ? 'French: ' + JSON.stringify(got[0]).slice(0, 50) : 'session anglaise, reponse en anglais (cout assume du levier)'}`);
   }
 
   // L3: the word-by-word breakdown stays English whatever the session language.

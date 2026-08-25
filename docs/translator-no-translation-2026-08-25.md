@@ -348,3 +348,74 @@ datacenter avant tout le reste : on échangerait un quota qui se recharge contre
 se recharge pas.
 
 La sortie durable n'est pas de mieux emprunter, c'est d'avoir moins besoin d'emprunter.
+
+---
+
+# Les trois leviers, appliqués — avec deux corrections de ma part
+
+## Avant / après, mesuré des deux côtés
+
+La production tournant encore l'ancien code, le « avant » n'est pas une estimation : c'est la même
+table jouée contre `github.io`, une page neuve par cas.
+
+| saisie | avant (prod) | après (local) |
+|---|---|---|
+| mot hébreu couvert par le corpus | 3 | 3 |
+| mot hébreu hors corpus | 3 | 3 |
+| **phrase hébreu (carnet)** | 2 | **0** |
+| phrase hébreu (leçon) | 2 | 2 |
+| romanisé | 9 | 9 |
+| **français, un mot** | 12 | **10** |
+| français, une phrase | 9 | 9 |
+| anglais, une phrase | 9 | 9 |
+| **moyenne** | **6,1** | **5,6** |
+
+## Correction n°1 : le levier 1 n'était pas un levier de capacité
+
+J'avais annoncé que l'index de phrases vérifiées ferait tomber une phrase de leçon de 9 à 2
+appels. **Faux** : je n'avais jamais mesuré le « avant ». Une phrase hébraïque coûtait déjà 2
+appels en production, parce qu'une requête tout-hébreu saute le chemin avant. Les 13 029 phrases
+apportent la **justesse** — niqqud vérifié, sens vérifié, badge ✓ lesson au lieu d'une glose
+Google — et non de la capacité. Le gain global est de **−8 %**, pas les −25 % annoncés.
+
+Le vrai poste, ce sont les saisies **latines** à 9-10 appels : 4 gtx + 1 Input Tools + 4 Worker,
+dont l'essentiel part en glose et vocalisation des **trois** candidats phonétiques (`CFG.enrichTop`).
+Descendre à deux candidats économiserait environ 2 appels par saisie latine. C'est un changement
+visible pour l'apprenant (une carte de moins), donc une décision de Jonas.
+
+## Correction n°2 : le levier 2 a un coût, et le contrôle l'a attrapé
+
+Réduire les langues de retry (les quatre → celle du navigateur + l'anglais) fait tomber un mot
+français de 6 à 4 appels gtx. Mais sans le retry `sl=fr`, Google classe parfois « bonjour » comme
+de l'anglais, et le sauvetage d'homographe que documente `addLangAlts` (pain, chat, main, coin)
+ne se déclenche plus. `meaning-lang-check` est passé à 7/8 en session anglaise.
+
+Pour l'apprenant visé — navigateur français — **rien ne change** : le français reste actif, le
+retry aussi. Le coût ne tombe que sur une session anglaise où l'on tape du français, et les autres
+langues sont à un clic dans Préférences. L'assertion a été réécrite pour dire exactement cela,
+avec le pourquoi, plutôt que supprimée.
+
+## Levier 3 : découverte plus grave que le levier lui-même
+
+Le re-keying est fait (seau par appareil `ip|aid`, l'identifiant anonyme voyage en `?d=` et non en
+en-tête, pour ne pas déclencher un préflight OPTIONS sur chaque appel) et le Worker est déployé.
+
+**Mais le limiteur n'a jamais rien limité.** Mesuré :
+
+| test | résultat |
+|---|---|
+| 140 appels en rafale, même identifiant (limite 100/60 s) | 140 × 200 |
+| 20 appels `/gloss`, chemin IA (limite 12/60 s, fail-closed) | 20 × 200 |
+| **limite abaissée à 5/60 s, 12 appels** | **12 × 200** |
+
+Un endpoint de diagnostic temporaire a confirmé que `env.RL`, `RL_DEV`, `RL_AI`, `RL_AI_DEV` sont
+tous présents et que `limit` est bien une fonction : l'appel répond donc « autorisé » malgré le
+dépassement. `wrangler 4.33.1` transmet `[[unsafe.bindings]]` en « Unsafe Metadata » sans le
+valider, et la clé moderne `[[ratelimits]]` est **ignorée en silence** (les bindings disparaissent
+du déploiement). Le diagnostic a été retiré, les limites voulues remises, et le fait est écrit
+dans `worker/wrangler.toml` au-dessus des bindings.
+
+**Conséquence à dire clairement : la protection anti-abus que le dépôt décrit n'existe pas, et ça
+précède tout ce qui a été fait aujourd'hui.** Le re-keying par appareil reste correct et
+inoffensif, mais il ne protège rien tant que ceci n'est pas résolu. Deux sorties : activer le Rate
+Limiting côté compte Cloudflare, ou compter nous-mêmes (Durable Object ou KV). À trancher.

@@ -602,12 +602,32 @@ export default {
     if (clen > 10000) return json({ error: 'too large' }, 413, origin);
 
     const ip = request.headers.get('CF-Connecting-IP') || 'anon';
-    // Per-IP rate limit. AI paths (Llama 70B) fail CLOSED if the limiter errors — an unmetered path
-    // to a 70B model lets one IP drain the daily neuron allowance in under an hour. Cheap paths fail
-    // open (availability over strictness). AI paths also get a second, much tighter budget.
+    /* One IP is not one person. Ten learners on the ulpan wifi share a single CF-Connecting-IP,
+       and a query costs ~3.9 Worker calls, so the old single 100/60s per-IP bucket cut off a whole
+       class before Google's quota ever noticed (measured 2026-08-25). So: a tight bucket per
+       DEVICE, and a wide one per IP as the anti-abuse backstop.
+
+       The device id arrives in the query string (?d=), never a header: a custom header is not
+       CORS-safelisted and would add an OPTIONS preflight to every call, doubling the traffic this
+       is meant to relieve. It is the same rotatable non-PII token /track uses, which is exactly
+       why the IP backstop stays. */
+    const did = (new URL(request.url).searchParams.get('d') || '').slice(0, 32);
+    const devKey = did ? ip + '|' + did : ip;
+
+    // AI paths (Llama 70B) fail CLOSED if the limiter errors — an unmetered path to a 70B model
+    // lets one caller drain the daily neuron allowance in under an hour. Cheap paths fail open
+    // (availability over strictness).
+    if (env && env.RL_DEV) {
+      try { const { success } = await env.RL_DEV.limit({ key: devKey }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
+      catch (e) { if (isAI) return json({ error: 'rate limited' }, 429, origin); }
+    }
     if (env && env.RL) {
       try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
       catch (e) { if (isAI) return json({ error: 'rate limited' }, 429, origin); }
+    }
+    if (isAI && env && env.RL_AI_DEV) {
+      try { const { success } = await env.RL_AI_DEV.limit({ key: devKey }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
+      catch (e) { return json({ error: 'rate limited' }, 429, origin); }
     }
     if (isAI && env && env.RL_AI) {
       try { const { success } = await env.RL_AI.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); }

@@ -23,7 +23,10 @@ const LOCALE = arg('--locale', 'fr-FR');
 const CASES = [
   { label: 'mot hébreu couvert par le corpus', q: 'ספר' },
   { label: 'mot hébreu hors corpus', q: 'זזזז' },
-  { label: 'phrase hébreu', q: 'אני רוצה קפה' },
+  { label: 'phrase hébreu (carnet)', q: 'אני רוצה קפה' },
+  // Une phrase qui vient des LEÇONS, pas du carnet : c'est ce que l'index vérifié de 13 029
+  // phrases (data/phrases.json) est censé résoudre sans toucher au réseau.
+  { label: 'phrase hébreu (leçon)', q: 'בסופו של דבר' },
   { label: 'romanisé', q: 'ani rotze kafe' },
   { label: 'français (mot)', q: 'bonjour' },
   { label: 'français (phrase)', q: 'je voudrais un café' },
@@ -46,23 +49,33 @@ page.on('request', r => {
   if (h) counts[h] = (counts[h] || 0) + 1;
 });
 
-await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
-await page.waitForSelector('#qs-input', { timeout: 20000 });
-await page.waitForTimeout(1500);
-
 console.log(`locale ${LOCALE} — appels externes par requête (cache off, service worker bloqué)\n`);
 console.log('  ' + 'saisie'.padEnd(36) + HOSTS.map(h => shortHost(h).slice(0, 9).padStart(10)).join('') + '   TOTAL');
 let grand = 0;
+let unmeasured = 0;
 for (const c of CASES) {
+  /* Une page NEUVE par cas.
+     Première version : une seule page pour toute la table. Les caches EN MÉMOIRE du moteur
+     (transCache, phonCache, le dictionnaire vérifié) survivent d'un cas au suivant, et le dernier
+     cas est ressorti à 0 appel alors que la même requête en coûte 9 en isolation. Un coût mesuré
+     sur un moteur déjà chaud n'est pas celui que paie un apprenant qui arrive. */
+  await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#qs-input', { timeout: 20000 });
+  await page.waitForTimeout(1200);
   counts = {};
   try { await ask(page, c.q); } catch {}
-  await page.waitForTimeout(800);          // laisser retomber les enrichissements tardifs
+  await page.waitForTimeout(900);          // laisser retomber les enrichissements tardifs
+  // Un cas qui n'a rien rendu ne mesure rien, et un zéro silencieux se lit comme une victoire.
+  const cards = await page.evaluate(() => document.querySelectorAll('.qs-card').length);
+  if (!cards) unmeasured++;
   const row = HOSTS.map(h => String(counts[h] || 0).padStart(10)).join('');
   const total = HOSTS.reduce((a, h) => a + (counts[h] || 0), 0);
   grand += total;
-  console.log('  ' + `${c.label} "${c.q}"`.slice(0, 35).padEnd(36) + row + String(total).padStart(8));
+  console.log('  ' + `${c.label} "${c.q}"`.slice(0, 35).padEnd(36) + row + String(total).padStart(8)
+    + (cards ? '' : '   RIEN RENDU — non mesuré'));
 }
 console.log('\n  ' + 'moyenne par requête'.padEnd(36) + String(Math.round((grand / CASES.length) * 10) / 10).padStart(48));
+if (unmeasured) console.log(`  ATTENTION : ${unmeasured} cas n'ont rien rendu ; la moyenne les compte à zéro et ment.`);
 
 /* Ce que ça vaut à l'échelle. Une frappe rend UNE requête (l'entrée est debouncée à 350ms), donc
    un apprenant qui cherche un mot en dépense une, deux s'il ouvre le mot-à-mot. */

@@ -2,22 +2,54 @@ name = "ulpan-morph"
 main = "src/index.js"
 compatibility_date = "2025-01-01"
 
-# Per-IP rate limit (native Workers binding): 100 requests / 60s. Blocks scripted abuse of the
-# public endpoint without touching the free-tier quota for real use.
+# !! MESURE 2026-08-25 : CES LIMITEURS SONT INERTES. Limite declaree a 5/60s, 12 appels
+# passent tous en 200. /diag confirmait pourtant env.RL, RL_DEV, RL_AI, RL_AI_DEV presents et
+# limit() bien une fonction : l'appel repond donc "autorise" malgre le depassement. Le
+# binding declare en [[unsafe.bindings]] est transmis par wrangler 4.33.1 en "Unsafe
+# Metadata", sans validation ; la cle moderne [[ratelimits]] est, elle, ignoree en silence
+# (les bindings disparaissent du deploiement). Conclusion mesuree : ce Worker n'a JAMAIS
+# limite quoi que ce soit, avant comme apres le re-keying ci-dessous. Le re-keying par
+# appareil reste correct et inoffensif, mais il ne protege rien tant que ceci n'est pas
+# resolu. A trancher : activer le Rate Limiting cote compte Cloudflare, ou implementer le
+# comptage nous-memes (Durable Object ou KV).
+# TWO buckets, because one IP is not one person.
+#
+# Measured 2026-08-25: a single translator query costs ~3.9 Worker calls, so ten learners on one
+# ulpan wifi make ~117 calls/minute from ONE IP. The old single per-IP bucket (100/60s) therefore
+# cut off a classroom before Google's own quota ever noticed. The guard was written against
+# scripted abuse and could not tell a shared NAT from an attacker.
+#
+# RL_DEV keeps that tight budget per DEVICE (ip + anonymous id, see the `d` query parameter), so
+# one learner is bounded exactly as before. RL is now a wide per-IP backstop: a class passes, a
+# script does not. New namespace ids because the semantics changed, not just the number.
+[[unsafe.bindings]]
+name = "RL_DEV"
+type = "ratelimit"
+namespace_id = "1003"
+simple = { limit = 100, period = 60 }
+
 [[unsafe.bindings]]
 name = "RL"
 type = "ratelimit"
-namespace_id = "1001"
-simple = { limit = 100, period = 60 }
+namespace_id = "1005"
+simple = { limit = 600, period = 60 }
 
-# Tighter per-IP budget for the expensive AI paths (/nat, /gloss, /form = Llama 70B). Distinct namespace
-# so it counts separately from the general limiter above. One IP can't drain the daily neuron
-# allowance: 12 AI calls / 60s is ample for a real learner, ruinous for a scripted drain.
+# Same split for the expensive AI paths (/nat, /gloss, /form = Llama 70B). 12/60s stays the budget
+# of one DEVICE - ample for a learner, ruinous for a drain - and the per-IP backstop is 60/60s
+# rather than 12, so five people in the same room can press "natural version" without the second
+# one being refused. Deliberately not raised to 10x the device budget: the neuron allowance is
+# a daily account-wide quota, and a wide door on an unmetered 70B path is exactly how it empties.
+[[unsafe.bindings]]
+name = "RL_AI_DEV"
+type = "ratelimit"
+namespace_id = "1004"
+simple = { limit = 12, period = 60 }
+
 [[unsafe.bindings]]
 name = "RL_AI"
 type = "ratelimit"
-namespace_id = "1002"
-simple = { limit = 12, period = 60 }
+namespace_id = "1006"
+simple = { limit = 60, period = 60 }
 
 # Anonymous usage analytics for /track (free tier). No cookies, no PII — the client sends
 # a random anon id + event names; country/device are derived server-side from the request.

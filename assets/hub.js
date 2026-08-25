@@ -12,7 +12,24 @@
     { code: 'es', label: 'Español' },
     { code: 'ru', label: 'Русский' }
   ];
-  const DEFAULT_LANGS = ALL_LANGS.map(l => l.code);
+  /* Par defaut : la langue du navigateur, plus l'anglais. Pas les quatre.
+   *
+   * Ces langues ne pilotent qu'une chose, les RETRIES du traducteur (quicksay retrySls) : pour un
+   * mot isole il redemande la traduction en fr, es et ru afin d'attraper les homographes
+   * (pain = douleur en anglais, du pain en francais). Avec les quatre actives par defaut, un seul
+   * mot francais coutait 6 appels a Google, mesure le 2026-08-25 ; c'est le poste le plus lourd
+   * du budget, et dix personnes derriere le wifi de l'ulpan partagent une seule IP et un seul
+   * quota. Un francophone n'a besoin ni de l'espagnol ni du russe pour lever SES homographes.
+   * Les autres restent a un clic dans Preferences. */
+  const DEFAULT_LANGS = (function () {
+    var out = ['en'];
+    try {
+      var n = String((navigator.languages && navigator.languages[0]) || navigator.language || 'en')
+        .slice(0, 2).toLowerCase();
+      if (ALL_LANGS.some(l => l.code === n) && out.indexOf(n) < 0) out.push(n);
+    } catch (e) {}
+    return out;
+  })();
 
   const Prefs = {
     langs() {

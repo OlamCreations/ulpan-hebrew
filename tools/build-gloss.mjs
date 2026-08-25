@@ -45,6 +45,37 @@ const byVoc = new Map();
 /** consonantal skeleton -> Set of vocalized forms (used only to detect ambiguity) */
 const bySkel = new Map();
 
+/* bare consonants of a whole phrase -> Set of "vocalized\0gloss" */
+const byPhrase = new Map();
+const bareKey = (x) => strip(x).replace(/[\s,.?!;:'"״׳()־-]/g, '');
+
+/* Multi-word entries, which add() drops on purpose (a phrase is not a word gloss).
+ *
+ * Added 2026-08-25 for a different job: resolving a whole Hebrew phrase the learner types,
+ * offline, instead of spending 3 to 9 upstream calls on it. Measured that day, one query costs
+ * 6.4 external calls on average, and ten people behind one ulpan wifi share a single IP and so
+ * a single quota. A phrase already verified in a lesson should not cost a request at all.
+ *
+ * Keyed on the BARE consonants of the WHOLE phrase, which is safe here in a way it is not for a
+ * single word. The single-word skeleton fallback was removed from this file because our corpus
+ * made almost every skeleton look unambiguous purely by absence (it emitted the market as "in
+ * shock"). A phrase is a far longer string, and the claim is measured rather than assumed:
+ * across the 465 lessons, 14225 distinct bare phrases, of which 2.9% carry more than one
+ * vocalization and 7.8% more than one meaning. Those are DROPPED, never merged. */
+function addPhrase(he, en) {
+  if (!he || !en) return;
+  he = he.trim();
+  en = en.trim();
+  if (!he || !en) return;
+  if (!hasNiqqud(he)) return;
+  if (strip(he).split(/\s+/).length < 2) return;   // single words are add()'s job
+  if (en.length > MAX_LEN) return;
+  const k = bareKey(he);
+  if (!k) return;
+  if (!byPhrase.has(k)) byPhrase.set(k, new Set());
+  byPhrase.get(k).add(he + '\u0000' + en);
+}
+
 function add(he, en) {
   if (!he || !en) return;
   he = he.trim();
@@ -62,11 +93,11 @@ function add(he, en) {
 
 /* ---------- sources: everything we have already verified by hand ---------- */
 const pb = JSON.parse(await readFile(dataPath('phrasebook.json'), 'utf8'));
-for (const p of pb.phrases) add(p.he, p.en);
+for (const p of pb.phrases) { add(p.he, p.en); addPhrase(p.he, p.en); }
 
 try {
   const ex = JSON.parse(await readFile(dataPath('expressions.json'), 'utf8'));
-  for (const e of ex.expressions || []) add(e.he, e.en || e.literal);
+  for (const e of ex.expressions || []) { add(e.he, e.en || e.literal); addPhrase(e.he, e.en || e.literal); }
 } catch { /* generated file; fine if absent */ }
 
 const lessonsDir = join(ROOT, cfg.toolScopes.lessons[0]);
@@ -77,10 +108,12 @@ for (const f of (await readdir(lessonsDir)).filter((x) => x.endsWith('.html'))) 
   for (const m of s.matchAll(/\{[^{}]*?"he"\s*:\s*"([^"]+)"[^{}]*?\}/g)) {
     const en = (m[0].match(/"(?:en|fr)"\s*:\s*"([^"]+)"/) || [])[1];
     add(m[1], en);
+    addPhrase(m[1], en);
   }
   for (const m of s.matchAll(/\{[^{}]*?he:\s*'([^']+)'[^{}]*?\}/g)) {
     const en = (m[0].match(/(?:en|fr):\s*'([^']+)'/) || [])[1];
     add(m[1], en);
+    addPhrase(m[1], en);
   }
 }
 
@@ -105,6 +138,32 @@ const out = {
   v,
 };
 await writeFile(dataPath('gloss.json'), JSON.stringify(out) + '\n', 'utf8');
+
+/* ---------- phrases: a separate file, fetched only when a phrase is typed ---------- */
+let kept = 0;
+let droppedVoc = 0;
+let droppedGloss = 0;
+const ph = {};
+for (const [k, set] of byPhrase) {
+  const pairs = [...set].map((x) => x.split('\u0000'));
+  const vocs = new Set(pairs.map((x) => x[0]));
+  const glosses = new Set(pairs.map((x) => x[1].toLowerCase()));
+  // Disagreement inside our own corpus is a signal, not noise to average away.
+  if (vocs.size > 1) { droppedVoc++; continue; }
+  if (glosses.size > 1) { droppedGloss++; continue; }
+  ph[k] = { h: pairs[0][0], g: pairs[0][1] };
+  kept++;
+}
+const phOut = {
+  _note: 'Verified multi-word phrases from the phrasebook, the expressions and the lessons, keyed '
+       + 'on the BARE consonants of the whole phrase. An entry whose bare form carries more than one '
+       + 'vocalization or more than one meaning inside the corpus is dropped, never merged. See the '
+       + 'addPhrase header in tools/build-gloss.mjs. Generated; do not edit.',
+  p: ph,
+};
+await writeFile(dataPath('phrases.json'), JSON.stringify(phOut) + '\n', 'utf8');
+console.log(`phrases.json: ${kept} verified phrases (dropped ${droppedVoc} ambiguous vocalization, ${droppedGloss} ambiguous meaning)`);
+console.log(`size: ${(JSON.stringify(phOut).length / 1024).toFixed(0)} KB -> ${dataPath('phrases.json')}`);
 
 const bytes = JSON.stringify(out).length;
 console.log(`gloss.json: ${Object.keys(v).length} vocalized entries (no skeleton fallback, by design)`);

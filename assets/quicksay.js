@@ -964,6 +964,25 @@
   // Config: the Cloudflare Worker that relays Dicta Nakdan (CORS-blocked in the browser) and
   // returns per-word vocalization + root (lemma). Point this at another deployment to move it.
   const MORPH_URL = 'https://ulpan-morph.olamcreations.workers.dev';
+
+  /* The anonymous device id, appended to every Worker call as ?d=.
+
+     Its only job is the rate limiter. Ten learners on the ulpan wifi share one IP, and a
+     query costs about 3.9 Worker calls, so a per-IP bucket cut the whole class off at once
+     (measured 2026-08-25). With this, each device gets its own budget and the per-IP limit
+     stays as the anti-abuse backstop.
+
+     In the query string on purpose, NOT a header: a custom header is not CORS-safelisted, so
+     it would add an OPTIONS preflight to every single call and double the traffic this is
+     meant to relieve. Same non-PII token track.js already uses; absent (analytics off, no
+     storage) the Worker simply falls back to the IP, which is the old behaviour. */
+  function devQ(url) {
+    var id = '';
+    try { id = (window.__ulpanTrack && window.__ulpanTrack.aid) || localStorage.getItem('ulpan-aid') || ''; } catch (e) {}
+    if (!id || id === 'anon') return url;
+    return url + (url.indexOf('?') < 0 ? '?' : '&') + 'd=' + encodeURIComponent(id.slice(0, 32));
+  }
+
   const NAT_URL = MORPH_URL + '/nat';
   const FORM_URL = MORPH_URL + '/form';
   const isHeb = s => /[֐-׿]/.test(s || '');
@@ -982,7 +1001,7 @@
   function fetchNatural(q, signal) {
     const key = 'n:' + q.toLowerCase();
     if (natCache.has(key)) return Promise.resolve(natCache.get(key));
-    const run = fetch(NAT_URL, {
+    const run = fetch(devQ(NAT_URL), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: q }), signal: signal
     })
@@ -1049,7 +1068,7 @@
   function fetchForm(q, base, g, n, signal) {
     const key = g + n + ':' + q.toLowerCase() + '|' + stripNiqqud(base || '');
     if (formCache.has(key)) return Promise.resolve(formCache.get(key));
-    const run = fetch(FORM_URL, {
+    const run = fetch(devQ(FORM_URL), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: q, base: base || '', gender: g, number: n }), signal: signal
     })
@@ -1143,6 +1162,39 @@
       .catch(() => { glossDict = {}; return glossDict; });   // offline: fall back to Google
     return glossPromise;
   }
+  /* Verified PHRASES, 13029 of them, compiled from the phrasebook, the expressions and the 465
+     lessons (tools/build-gloss.mjs). A whole Hebrew phrase the learner types and that we have
+     already verified should cost ZERO upstream calls: measured 2026-08-25, a phrase otherwise
+     costs 3 to 9 external requests, and ten people behind one ulpan wifi share one IP and one
+     quota. 1.1 MB, so it is fetched only when a multi-word Hebrew query actually appears, and
+     the service worker keeps it afterwards.
+
+     Keyed on the bare consonants of the whole phrase. Safe here and NOT for a single word: the
+     single-word skeleton fallback was deleted from build-gloss.mjs because our corpus made
+     almost every skeleton look unambiguous by absence. The phrase claim was measured instead of
+     assumed, and the 1215 phrases the corpus disagrees with itself about were dropped. */
+  let phraseDict = null;
+  let phrasePromise = null;
+  function loadLessonPhrases() {
+    if (phrasePromise) return phrasePromise;
+    phrasePromise = fetch((window.ULPAN_BASE || '') + 'data/phrases.json')
+      .then(function (r) { return r.json(); })
+      .then(function (d) { phraseDict = (d && d.p) || {}; return phraseDict; })
+      .catch(function () { phraseDict = {}; return phraseDict; });
+    return phrasePromise;
+  }
+
+  /* Returns a curated-shaped row, or null. The reading is derived by translit.js from the
+     VOCALIZED form we stored, never re-derived from the bare input. */
+  function lessonPhrase(q) {
+    if (!phraseDict) return null;
+    var hit = phraseDict[bareKey(q)];
+    if (!hit || !hit.h) return null;
+    var tr = null;
+    try { tr = (window.Translit && window.Translit.transliterate) ? window.Translit.transliterate(hit.h) : null; } catch (e) {}
+    return { he: hit.h, tr: tr, en: hit.g, cat: null };
+  }
+
   function verifiedGloss(voc) {
     if (!glossDict || !voc) return null;
     // Match on the same cleaned form the cell displays, or Dicta's raw encoding would miss
@@ -1156,7 +1208,7 @@
      from. One request per breakdown, not per word — and only for words our verified corpus
      does not already cover. Returns {} on any failure so the caller degrades to Google. */
   function fetchContextGloss(sentence, words, signal) {
-    return fetch(MORPH_URL + '/gloss', {
+    return fetch(devQ(MORPH_URL + '/gloss'), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: sentence, words: words }), signal: signal
     })
@@ -1172,7 +1224,7 @@
   function fetchMorph(text, signal, prefer) {
     const key = 'm:' + (prefer ? prefer.g + (prefer.n || '') : '') + '|' + text;
     if (morphCache.has(key)) return Promise.resolve(morphCache.get(key));
-    return fetch(MORPH_URL, {
+    return fetch(devQ(MORPH_URL), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(prefer ? { text: text, prefer: prefer } : { text: text }), signal: signal
     })
@@ -1467,7 +1519,14 @@
        phonetic path and from nowhere else, so that is the only path we run here. */
     const heQuery = isAllHebrew(nq);
     const NO_FWD = { res: null, failed: false };
-    Promise.all([heQuery ? Promise.resolve(NO_FWD) : translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline, navLang())]).then(([fwdOut, phon]) => {
+    /* A multi-word Hebrew query gets the verified phrase index first. Fetched here rather
+       than at startup: it is 1.1 MB and most queries never need it. */
+    const wantPhrases = heQuery && stripNiqqud(nq).trim().split(/\s+/).filter(Boolean).length >= 2;
+    Promise.all([
+      heQuery ? Promise.resolve(NO_FWD) : translateOnline(nq, sig),
+      lookupPhonetic(nq, sig, revOffline, navLang()),
+      wantPhrases ? loadLessonPhrases().then(() => lessonPhrase(nq)).catch(() => null) : Promise.resolve(null),
+    ]).then(([fwdOut, phon, versePhrase]) => {
       if (token !== renderToken) return; // a newer keystroke superseded this
       container.removeAttribute('aria-busy');
       const fwd = fwdOut.res;
@@ -1511,6 +1570,12 @@
       const fwdCard = romanizedHebrew ? null : fwd;
 
       const dupe = new Set(offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
+      /* The verified phrase leads: it is the only card on screen that nobody has to trust
+         an upstream for. Deduped by its bare form so the online candidates do not repeat it. */
+      if (versePhrase && !offline.some(p => bareKey(p.he) === bareKey(versePhrase.he))) {
+        offline = [versePhrase].concat(offline);
+        online = online.filter(p => bareKey(p.he) !== bareKey(versePhrase.he));
+      }
       const ph = phonSectionHtml(offline, online, mLang);
       const tr = transSectionHtml(fwdCard, fwdOffline, dupe, exactForward, mLang);
 
