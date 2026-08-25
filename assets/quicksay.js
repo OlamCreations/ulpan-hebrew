@@ -758,13 +758,26 @@
       .catch(() => res);   // offline / Dicta down -> keep Google's rm rather than nothing
   }
 
+  /* Resolves { res, failed }, never a bare result.
+   *
+   * "No translation" has two opposite causes and they were indistinguishable here: the sources
+   * ANSWERED and had nothing to give (rephrase), or no source could be reached at all (check the
+   * connection). Both `.catch(() => null)` below swallowed the difference, so render() could only
+   * say "Nothing found — try rephrasing", which is a lie when the network is what failed. Measured
+   * 2026-08-25 with both forward sources refused: "I want a coffee" rendered three unglossed
+   * phonetic guesses (י וַעֲנָת א צוֹפִי) and no word about it — the shape of "it doesn't even give
+   * the translation any more".
+   *
+   * failed = we produced nothing AND at least one source threw (or the whole stage timed out).
+   * A source that answers with no Hebrew is not a failure, it is an absence. */
   function translateOnline(q, signal) {
     const key = q.toLowerCase();
-    if (transCache.has(key)) return Promise.resolve(transCache.get(key));
+    if (transCache.has(key)) return Promise.resolve({ res: transCache.get(key), failed: false });
     const single = !/\s/.test(q.trim());  // the failure is isolated words; phrases translate fine
+    let threw = 0;
     const run = fetchGoogle(q, signal, 'auto')
-      .catch(() => null)
-      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => null))
+      .catch(() => { threw++; return null; })
+      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => { threw++; return null; }))
       .then(res => {
         // sl=auto echoed the sound (bonjour->בונז'ור) rather than translating it: retry with
         // explicit romance sources and keep the first result that isn't itself a transliteration.
@@ -780,18 +793,24 @@
         if (!res || !single || !(untranslated(res) || looksTransliterated(q, res.rm))) return res;
         return Promise.all(retrySls().map(sl => fetchGoogle(q, signal, sl).catch(() => null)))
           .then(alts => alts.find(a => a && a.he && !untranslated(a) && !looksTransliterated(q, a.rm)) || res);
-      });
+      })
+      /* Wrapped, so that null out of withTimeout means ONE thing: the budget ran out. Resolving
+         the bare result made "no source answered" and "the stage timed out" the same value, and
+         a timeout is a failure the learner must be told about while an absence is not. */
+      .then(res => ({ res: res }), () => { threw++; return { res: null }; });
     // Staged budgets, not one big one. The translation itself gets tTranslate; each enrichment
     // then gets its own short budget and degrades to the answer we already have. Folding these
     // into a single withTimeout made every phrase hang: vocalizeBare could burn the whole
     // tTranslate on a Dicta 502, and the learner just watched "Translating" forever.
+    let timedOut = false;
     return withTimeout(run, CFG.tTranslate)
+      .then(w => { if (!w) { timedOut = true; return null; } return w.res; })
       .then(res => res && withTimeout(addLangAlts(res, q, signal, single), CFG.tAlts).then(r => r || res))
       .then(res => res && withTimeout(vocalizeBare(res, signal), CFG.tVocalize).then(r => r || res))
       .then(res => {
-        if (!res) return null;
+        if (!res) return { res: null, failed: threw > 0 || timedOut };
         transCache.set(key, res);
-        return res;
+        return { res: res, failed: false };
       });
   }
 
@@ -1350,9 +1369,14 @@
        right English in it. The meaning of a Hebrew word comes from fetchGloss (sl=iw) on the
        phonetic path and from nowhere else, so that is the only path we run here. */
     const heQuery = isAllHebrew(nq);
-    Promise.all([heQuery ? Promise.resolve(null) : translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline)]).then(([fwd, phon]) => {
+    const NO_FWD = { res: null, failed: false };
+    Promise.all([heQuery ? Promise.resolve(NO_FWD) : translateOnline(nq, sig), lookupPhonetic(nq, sig, revOffline)]).then(([fwdOut, phon]) => {
       if (token !== renderToken) return; // a newer keystroke superseded this
       container.removeAttribute('aria-busy');
+      const fwd = fwdOut.res;
+      // True only when the sources could not be REACHED (see translateOnline). Never true on a
+      // Hebrew query, which has no forward path by construction.
+      const fwdFailed = fwdOut.failed;
 
       // Auto-decide: if the input is clearly a confident English/French word AND nothing
       // matched offline as Hebrew, it's a translation query — drop the online phonetic guesses.
@@ -1390,7 +1414,24 @@
       const tr = transSectionHtml(fwdCard, fwdOffline, dupe, exactForward);
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
-      if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
+      /* The forward sources could not be reached. Say it, whatever else is on screen. Without
+         this the page had two ways to lie about a dead network: "Nothing found — try rephrasing"
+         (the learner rephrases forever), and a set of unglossed phonetic guesses standing alone
+         as if they were the answer. Both were measured on 2026-08-25 with both sources refused.
+         navigator.onLine does NOT cover this: on a captive or half-dead wifi it stays true while
+         every request fails, which is the ordinary phone case. */
+      if (fwdFailed) {
+        /* Two wordings, because two different things are on screen. A curated hit is a verified
+           phrase and calling it guesswork would be the mirror of the bug being fixed; an Input
+           Tools candidate with no gloss is exactly guesswork and must be labelled as such. */
+        const curated = fwdOffline.length + offline.length > 0;
+        const lead = curated
+          ? 'Showing saved phrases only — the translation sources could not be reached.'
+          : 'The translation could not be fetched — check the connection and try again.'
+            + (html ? ' What follows is guesswork from the spelling.' : '');
+        html = '<div class="qs-hint">' + lead + '</div>' + html;
+      }
+      else if (!html) html = '<div class="qs-hint">Nothing found for “' + escapeHtml(nq) + '”. Try rephrasing.</div>';
       /* A Hebrew word with its niqqud and its reading, and no English, is a card that looks
          answered and is not — the question was "what does this mean". When the gloss call is the
          one thing that failed, say which half is missing instead of letting the pointing stand in
@@ -1414,7 +1455,9 @@
             escapeHtml(f.label) + '</button>').join('') +
           '</span><div class="qs-form-out"></div></div>';
       }
-      if (!isHeb(nq)) {
+      // Not offered when the sources are unreachable: it goes to the same network and would only
+      // hand the learner a second failure under a button that promises a better answer.
+      if (!isHeb(nq) && !fwdFailed) {
         html += '<div class="qs-nat">' +
           '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">✦ natural version</button>' +
           '<div class="qs-nat-out"></div></div>';

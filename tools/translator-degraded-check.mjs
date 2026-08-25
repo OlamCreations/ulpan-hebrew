@@ -66,6 +66,11 @@ export const CHECKS = [
        + 'holding the correct English. The learner lost the right answer to a fallback that had '
        + 'no answer at all.',
     check(screen) {
+      /* Hebrew queries only. Added 2026-08-25 with the non-Hebrew cases: without it this rule
+         fired on every "I want a coffee", which HAS a forward answer and must not carry a
+         "did you mean" section at all — the bench would have reported 13 defects in a healthy
+         engine and buried the one real finding. */
+      if (screen.heQuery === false) return [];
       if (!screen.sections.length) return [];
       const titles = screen.sections.map(s => s.title);
       return titles.some(t => /did you mean/i.test(t)) ? []
@@ -83,6 +88,26 @@ export const CHECKS = [
       if (!cards.length) return [];
       if (cards.some(c => meaningOf(c))) return [];
       return screen.hint ? [] : ['every card came back without a meaning and the page says nothing about it'];
+    }
+  },
+  {
+    id: 'D4',
+    what: 'a non-Hebrew query whose translation failed says so',
+    why: 'Added 2026-08-25, from "the live translator does not even give the translation any '
+       + 'more". With both forward sources refused, "I want a coffee" rendered three unglossed '
+       + 'phonetic guesses (י וַעֲנָת א צוֹפִי) and not one word about the failure; a query with no '
+       + 'phonetic guess got "Nothing found — try rephrasing", which sends the learner to '
+       + 'rephrase a sentence that was never the problem. translateOnline could not tell an '
+       + 'absence from an unreachable source, so render() could not either. navigator.onLine is '
+       + 'no substitute: on a captive wifi it stays true while every request fails.',
+    check(screen) {
+      if (screen.heQuery) return [];              // no forward path by construction
+      const cards = screen.sections.flatMap(s => s.cards);
+      if (cards.some(c => meaningOf(c))) return [];   // something was actually answered
+      const hint = String(screen.hint || '');
+      if (/could not be fetched|could not be reached|offline/i.test(hint)) return [];
+      if (/rephras/i.test(hint)) return [`the network failed and the page blamed the wording: "${hint}"`];
+      return [`nothing was translated and the page says nothing about it (${cards.length} unglossed card${cards.length === 1 ? '' : 's'})`];
     }
   }
 ];
@@ -105,13 +130,36 @@ const FIXTURES = {
   D3: {
     bad: { q: 'ספר', hint: null, sections: [{ title: 'Hebrew — did you mean?', cards: [{ he: 'סֵפֶר', tr: 'SE-fer', en: 'phonetic' }] }] },
     good: { q: 'ספר', hint: 'The meaning could not be fetched — the reading above is correct, the English is missing. Try again in a moment.', sections: [{ title: 'Hebrew — did you mean?', cards: [{ he: 'סֵפֶר', tr: 'SE-fer', en: 'phonetic' }] }] }
+  },
+  /* Recorded 2026-08-25 against production with both forward sources refused (bad), and after
+     the fix (good). The garbage Hebrew is verbatim: it is Input Tools reading the English
+     letters of "I want a coffee" as if they spelled Hebrew sounds. */
+  D4: {
+    bad: { q: 'I want a coffee', heQuery: false, hint: null, sections: [{ title: 'Hebrew — did you mean?', cards: [
+      { he: 'י וַעֲנָת א צוֹפִי', tr: null, en: 'phonetic' },
+      { he: 'י וַעֲנָת ע צוֹפִי', tr: null, en: 'phonetic' }] }] },
+    good: { q: 'I want a coffee', heQuery: false, hint: 'The translation could not be fetched — check the connection and try again. What follows is guesswork from the spelling.', sections: [{ title: 'Hebrew — did you mean?', cards: [
+      { he: 'י וַעֲנָת א צוֹפִי', tr: null, en: 'phonetic' }] }] }
+  },
+  /* The other half of the same defect: no phonetic guess at all, so the page had nothing to show
+     and blamed the wording of a sentence that was never the problem. */
+  D4b: {
+    bad: { q: 'where is the pharmacy', heQuery: false, hint: 'Nothing found for “where is the pharmacy”. Try rephrasing.', sections: [] },
+    good: { q: 'where is the pharmacy', heQuery: false, hint: 'The translation could not be fetched — check the connection and try again.', sections: [] }
   }
 };
 
+/* Iterates the FIXTURES, not the CHECKS, so one rule can carry several recorded screens: D4 and
+   D4b are the two shapes of the same failure (guesses with no word about it / the wording
+   blamed) and a rule proved on only one of them is proved on half its job. The key's leading
+   id names the rule ("D4b" -> D4); a fixture whose rule does not exist is itself a failure. */
 function selfTest() {
   let bad = 0, total = 0;
-  for (const c of CHECKS) {
-    const f = FIXTURES[c.id];
+  for (const key of Object.keys(FIXTURES)) {
+    const id = key.match(/^[A-Z]+\d+/)[0];
+    const c = CHECKS.find(x => x.id === id);
+    if (!c) { console.log(`FAIL fixture ${key} names no rule`); bad += 2; total += 2; continue; }
+    const f = FIXTURES[key];
     total += 2;
     const onBad = c.check(f.bad), onGood = c.check(f.good);
     if (!onBad.length) { console.log(`FAIL ${c.id} stayed green on its own defect`); bad++; }
@@ -124,12 +172,22 @@ function selfTest() {
 }
 
 /* ------------------------------------------------------------------ live run */
-const WORDS = ['ספר', 'חתול', 'מקרר', 'אני רוצה קפה'];
+/* Hebrew queries exercise D1-D3 (the meaning comes from the gloss and nowhere else). The
+   non-Hebrew ones exercise D4 and were missing until 2026-08-25: the whole bench only ever asked
+   the engine questions in Hebrew, so the plain "translate this for me" path — the one the app is
+   for — had never been run with an upstream down. "where is the pharmacy" is in neither the
+   phrasebook nor Input Tools' comfort zone, so it is the case where the page has nothing at all
+   to show and must say why. */
+const WORDS = ['ספר', 'חתול', 'מקרר', 'אני רוצה קפה', 'I want a coffee', 'where is the pharmacy', 'je voudrais un café'];
+const HEB_Q = w => HEB.test(w);
 const CASES = [
   { name: 'healthy', block: [] },
   { name: 'gloss + forward down (translate.googleapis.com refused)', block: ['**translate.googleapis.com**'] },
   { name: 'worker down (ulpan-morph refused)', block: ['**ulpan-morph.olamcreations.workers.dev**'] },
   { name: 'both down', block: ['**translate.googleapis.com**', '**ulpan-morph.olamcreations.workers.dev**'] },
+  /* No forward source reachable at all. This is the ordinary phone failure — a wifi that is
+     connected and dead — and it is the one navigator.onLine cannot see. */
+  { name: 'no forward source (gtx + mymemory refused)', block: ['**translate.googleapis.com**', '**api.mymemory.translated.net**'] },
 ];
 
 /* The host each pattern stands for, so a request that got through DESPITE the block can be
@@ -168,7 +226,7 @@ async function live() {
       leaks = [];
       await ask(page, w);
       const read = await page.evaluate(READ);
-      const screen = { q: w, hint: read.hint, sections: read.sections };
+      const screen = { q: w, heQuery: HEB_Q(w), hint: read.hint, sections: read.sections };
       const found = judge(screen);
       const shown = screen.sections.flatMap(s => s.cards)
         .map(x => `${x.he || ''} = ${meaningOf(x) || '(no meaning)'}`).join(' | ');
