@@ -126,6 +126,21 @@
      side only makes every sentence with a comma look like a mismatch. */
   const bareKey = s => stripNiqqud(String(s || '')).replace(/[\s,.?!;:'"״׳()־-]/g, '');
 
+
+  /* gtx n'est pas une API publique : ni cle, ni quota documente, et elle rend 429 avec une page
+     HTML des qu'une connexion a trop demande. Mesure le 2026-08-25 sur cette machine, apres
+     quelques centaines de requetes de test. Un 429 n'est PAS une panne reseau et ne doit pas
+     etre annonce comme telle : le wifi va bien, c'est le quota qui ne va pas. Le statut voyage
+     donc sur l'erreur, et le dernier vu sert a choisir le message. */
+  function httpError(status) {
+    const e = new Error('http ' + status);
+    e.status = status;
+    if (status === 429) lastRateLimitAt = Date.now();
+    return e;
+  }
+  let lastRateLimitAt = 0;
+  const RATE_LIMIT_MEMORY_MS = 120000;
+  const rateLimited = () => lastRateLimitAt > 0 && (Date.now() - lastRateLimitAt) < RATE_LIMIT_MEMORY_MS;
   // Normalized Levenshtein similarity in [0,1] (1 = identical). Short strings only.
   function levSim(a, b) {
     a = a || ''; b = b || '';
@@ -470,7 +485,7 @@
   function fetchGoogle(q, signal, sl) {
     const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + (sl || 'auto') + '&tl=he&dt=t&dt=rm&q=' + encodeURIComponent(q);
     return fetch(url, { signal: signal })
-      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(r => { if (!r.ok) throw httpError(r.status); return r.json(); })
       .then(j => {
         const segs = j && j[0];
         if (!Array.isArray(segs)) return null;
@@ -685,7 +700,7 @@
   function fetchGloss(he, signal, lang) {
     const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=iw&tl=' + (lang || navLang()) + '&dt=t&dt=rm&q=' + encodeURIComponent(he);
     return fetch(url, { signal: signal })
-      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(r => { if (!r.ok) throw httpError(r.status); return r.json(); })
       .then(j => {
         const segs = j && j[0];
         if (!Array.isArray(segs)) return null;
@@ -877,15 +892,44 @@
          and nothing else. The retry stays inside tGloss so a failing upstream still cannot make
          the learner watch "Translating" for twice as long. */
       const gloss = c => { const once = () => fetchGloss(c, signal, lang); return once().catch(() => once()); };
-      return Promise.all(top.map(c =>
-        withTimeout(gloss(c), CFG.tGloss)
-          .then(gl => ({ he: c, tr: (gl && gl.tr) || null, rm: (gl && gl.rm) || null, en: (gl && gl.en) || '', bare: c }))
-          // Input Tools hands back bare Hebrew, so point it through the Worker before showing a
-          // transliteration — otherwise the app answers "beseder" with Google's "basder" and
-          // contradicts the very spelling the learner typed.
-          .then(p => vocalizeBare(p, signal).then(v => Object.assign({}, v, { bare: c })))
+      /* A LADDER, not a single rung — and the order matters.
+       *
+       * Input Tools hands back bare Hebrew, so the candidate is pointed through the Worker FIRST:
+       * otherwise the app answers "beseder" with Google's "basder" and contradicts the spelling
+       * the learner just typed. Pointing first also unlocks the rung that was missing entirely
+       * until 2026-08-25: data/gloss.json holds 6871 verified vocalized words with their
+       * meanings, and it was consulted only when a breakdown was opened, never for a card. Every
+       * meaning on a card therefore came from one upstream with nothing behind it.
+       *
+       * That is how an empty meaning line happens with a complete-looking card. Google's gtx is
+       * not a public API and answers 429 once a connection has asked too often (measured here,
+       * on this machine, the same day). The forward path survives it — MyMemory is behind it —
+       * and the Hebrew survives it — Input Tools is a different host — so the card renders and
+       * only its meaning is gone.
+       *
+       * Keyed on the FULL vocalization, never the consonant skeleton: that skeleton IS the
+       * ambiguity this corpus exists to resolve. An English session now needs no gloss call at
+       * all for a covered word; a French one still asks Google (the corpus is English) and falls
+       * back to the verified English rather than to nothing. */
+      return loadGloss().then(() => Promise.all(top.map(c =>
+        vocalizeBare({ he: c, tr: null, rm: null, en: '' }, signal)
+          .then(v => {
+            const verified = verifiedGloss(v.he);
+            if (verified && (lang || navLang()) === 'en') {
+              return { he: v.he, tr: v.tr, rm: v.rm, en: verified, bare: c };
+            }
+            return withTimeout(gloss(c), CFG.tGloss)
+              .then(gl => ({
+                he: v.he,
+                tr: v.tr || (gl && gl.tr) || null,
+                rm: (gl && gl.rm) || v.rm || null,
+                en: (gl && gl.en) || verified || '',
+                bare: c,
+              }))
+              .catch(() => ({ he: v.he, tr: v.tr, rm: v.rm, en: verified || '', bare: c }));
+          })
           .catch(() => ({ he: c, tr: null, en: '', bare: c }))
-      )).then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
+      ))).then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
     });
   }
 
@@ -1482,9 +1526,14 @@
            phrase and calling it guesswork would be the mirror of the bug being fixed; an Input
            Tools candidate with no gloss is exactly guesswork and must be labelled as such. */
         const curated = fwdOffline.length + offline.length > 0;
+        const throttled = rateLimited();
         const lead = curated
-          ? 'Showing saved phrases only — the translation sources could not be reached.'
-          : 'The translation could not be fetched — check the connection and try again.'
+          ? (throttled
+            ? 'Showing saved phrases only — the translation service is rate-limiting this connection.'
+            : 'Showing saved phrases only — the translation sources could not be reached.')
+          : (throttled
+            ? 'The translation service is rate-limiting this connection — it usually clears within a minute or two.'
+            : 'The translation could not be fetched — check the connection and try again.')
             + (html ? ' What follows is guesswork from the spelling.' : '');
         html = '<div class="qs-hint">' + lead + '</div>' + html;
       }
@@ -1494,7 +1543,13 @@
          one thing that failed, say which half is missing instead of letting the pointing stand in
          for an answer. Silence here is what made the failure unreadable from the outside. */
       else if (heQuery && !(offline.concat(online, fwdOffline).some(p => (p.en || '').trim()))) {
-        html += '<div class="qs-hint">The meaning could not be fetched — the reading above is correct, the English is missing. Try again in a moment.</div>';
+        /* Naming the 429 matters more here than anywhere: this is the exact screen a learner
+           sees when the quota runs out (the Hebrew and its reading arrive, the meaning does
+           not), and "check the connection" sends him to look at a wifi that is working. */
+        html += '<div class="qs-hint">' + (rateLimited()
+          ? 'The translation service is rate-limiting this connection, so the meaning is missing — the reading above is correct. It usually clears within a minute or two.'
+          : 'The meaning could not be fetched — the reading above is correct, the English is missing. Try again in a moment.')
+          + '</div>';
       }
       // On-demand "natural version": only for a translation query (not Hebrew-you-heard, where the
       // learner already has the word). Idiomatic phrases are exactly where Google calques and this

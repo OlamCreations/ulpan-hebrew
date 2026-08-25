@@ -294,6 +294,8 @@ function showVoiceBanner(force) {
         <div class="voice-banner-title">🔊 Install a Hebrew voice for instant offline audio</div>
         <button class="voice-banner-close" aria-label="Dismiss">×</button>
       </div>
+      <details class="voice-banner-more">
+      <summary>How to install</summary>
       <div class="voice-banner-sub">
         Without a system voice, the page uses a slow online fallback that some browsers block.
         Install once, the page detects it automatically on next refresh.
@@ -363,6 +365,7 @@ function showVoiceBanner(force) {
       <div class="voice-banner-foot">
         Skip install? The <span class="forvo-icon">🔊</span> next to each word opens Forvo (real native recordings), works on every browser without setup.
       </div>
+      </details>
     </div>
   `;
   document.body.insertBefore(banner, document.body.firstChild);
@@ -409,15 +412,31 @@ if ('speechSynthesis' in window) {
   setTimeout(() => pickHebrewVoice(), 200);
 }
 
+/* What KIND of page is this? The page says so on the app.js tag itself
+   (<script src=".../app.js" data-ulpan-page="liturgy">). Liturgy pages want the hamburger hub
+   and the live translator - a learner reading a prayer is exactly who needs to look a word up -
+   but none of the lesson furniture: no niqqud/cursive toggles, no floating Show all / Listen all
+   bar, no exercises, no streak. Reading it from the tag rather than sniffing the URL keeps the
+   folder name in one place (tools/layout.config.json) instead of two. */
+const ULPAN_PAGE = (function () {
+  try {
+    const tag = document.querySelector('script[data-ulpan-page]');
+    return (tag && tag.getAttribute('data-ulpan-page')) || 'lesson';
+  } catch (e) { return 'lesson'; }
+})();
+const isLiturgyPage = () => ULPAN_PAGE === 'liturgy';
+
 window.addEventListener('DOMContentLoaded', () => {
   // Run synchronously so there is no window where the baked-in ▶ buttons expose the raw glyph as
   // their name, and Hebrew nodes are tagged lang/dir before the first screen-reader pass.
   a11yIconButtons();
   a11yLangDir();
-  setupNiqqudToggle();
-  setupCursiveToggle();
+  if (!isLiturgyPage()) { setupNiqqudToggle(); setupCursiveToggle(); }
   setTimeout(() => { if (!voiceCheckDone) setupAudioButtons(); }, 1000);
-  setTimeout(() => { autoInjectExercises(); recordDailyStreak(); injectFloatingControls(); enableTextBlockAutoPlay(); setupRevealToggle(); enhanceIndexNavTooltips(); a11yIconButtons(); }, 250);
+  setTimeout(() => {
+    if (!isLiturgyPage()) { autoInjectExercises(); recordDailyStreak(); injectFloatingControls(); enableTextBlockAutoPlay(); setupRevealToggle(); }
+    enhanceIndexNavTooltips(); a11yIconButtons();
+  }, 250);
 });
 
 // Lesson play buttons are baked into ~500 HTML files as `<button class="icon-btn">▶</button>`
@@ -1802,7 +1821,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> conjugate -> quicksay (uses window.Translit and window.Conjugate) -> hub. */
 (function loadSharedModules() {
-  var SHARED_V = '1787640000000';
+  var SHARED_V = '1787680000000';
   ['track.js', 'translit.js', 'conjugate.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }

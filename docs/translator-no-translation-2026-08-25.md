@@ -157,3 +157,75 @@ dans la page.
 `tools/meaning-lang-check.mjs`, 8 assertions dans les deux locales. Ses attentes sont **lues dans
 `data/phrasebook.json` au moment du run**, jamais recopiées. Il était rouge avant le correctif,
 sur le vrai défaut : 3/6, שלום rendant « paix » en français et « peace » en anglais.
+
+---
+
+# Troisième passe : la vraie cause, Google répond 429
+
+En construisant la batterie d'exemples, presque tous les sens sont revenus vides. Vérifié avant
+de conclure quoi que ce soit :
+
+```
+curl gtx  ->  HTTP 429, corps HTML, 1103 octets
+```
+
+**Google limite cette connexion.** Je l'ai saturée moi-même avec les tests de la journée, mais
+c'est aussi la panne de Jonas, et tout colle :
+
+| Ce qu'il décrit | Ce que fait un 429 |
+|---|---|
+| la carte hébreu s'affiche | Input Tools est un autre hôte, il répond |
+| le champ du sens est vide | la glose ne venait QUE de gtx, sans aucun repli |
+| la traduction avant marche parfois | MyMemory est derrière elle, la glose n'avait rien |
+| sur les trois appareils | le quota est par **connexion**, pas par appareil |
+| pas reproductible à la demande | ça va et vient avec la fenêtre de quota |
+
+`gtx` n'est pas une API publique : ni clé, ni quota documenté, ni palier. C'est le même genre
+d'emprunt que Dicta l'était (cf. la note du 24/07 : « un endpoint interne non documenté n'est pas
+une API »). Et l'app en tire **plusieurs appels par écran rendu** : la traduction avant, un retry
+par langue activée, puis une glose par candidat phonétique, jusqu'à trois. Quelques dizaines de
+requêtes en une session d'apprentissage.
+
+## Correctif
+
+La glose de carte monte maintenant l'échelle que le mot-à-mot montait déjà, et qui n'avait
+jamais servi pour une carte :
+
+1. **`data/gloss.json`** — 6 871 mots vocalisés vérifiés, sur disque, gratuits. Clé = la forme
+   **pleinement vocalisée**, jamais le squelette consonantique : ce squelette EST l'ambiguïté que
+   ce corpus existe pour lever (un jour il a répondu « in shock » pour בשוק, au marché).
+2. **Google**, dans la langue de l'apprenant.
+3. **Le vérifié en repli** quand Google tombe, plutôt que rien.
+
+Conséquence mesurée sous 429 injecté : `ספר` → « book », `שולחן` → « desk », `מקרר` → « fridge »,
+**avec zéro appel à Google**. Une session anglaise n'appelle plus Google du tout pour un mot
+couvert, ce qui réduit aussi le volume qui déclenche le 429.
+
+Et un 429 se dit maintenant pour ce qu'il est : « the translation service is rate-limiting this
+connection », pas « check the connection » — qui envoyait regarder un wifi qui fonctionne.
+
+## Le contrôle
+
+`tools/ratelimit-check.mjs`, 8 assertions, 429 injecté (corps **HTML**, comme le vrai : servir du
+JSON testerait une panne que Google ne produit pas). Matrice de cassures faite : neutraliser
+`verifiedGloss` fait tomber R1, 5/8.
+
+## Ce qui reste à mesurer
+
+La batterie d'exactitude (`translator-battery.mjs`) demande que gtx ne soit **pas** en 429, sinon
+elle mesure le quota et pas le moteur. Dernier relevé valide, avant que la limite tombe :
+
+| pool | chemin | score |
+|---|---|---|
+| in-sample (carnet) | en2he / fr2he / rom2he / he2mean | 100 % chacun — et ça ne prouve rien, le moteur se cite |
+| **held-out** (129 expressions, non chargées) | rom2he | **84 %** |
+| **held-out** | he2mean | **68 %** |
+
+Le held-out est le seul chiffre à regarder. À rejouer quand le quota est retombé.
+
+## Défaut de données trouvé au passage
+
+`data/expressions.json` porte un champ nommé **`fr`** sur ses 129 lignes et **pas une n'est en
+français** : « cool / OK / awesome », « broken heart ». La page `reference/expressions.html`
+l'affiche tel quel dans `.xp-fr`. Un francophone y lit donc de l'anglais dans un champ qui promet
+du français. Corriger, c'est traduire 129 idiomes : contenu, donc décision de Jonas.

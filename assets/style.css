@@ -621,17 +621,32 @@ footer {
 
 .back:hover { color: var(--accent); }
 
+/* One line by default, the whole procedure behind a disclosure.
+   Measured 2026-08-25 on a 390px viewport: expanded, this banner filled the ENTIRE screen and
+   pushed the translator results ~750px down, so a learner typed a word and looked at an empty
+   page. It also stayed there, sticky, on scroll. It is an offer, not a control: it collapses,
+   it scrolls away, and it still gets dismissed for good with the x. */
 .voice-banner {
   background: #1a1a0e;
   border-bottom: 1px solid #5a4a10;
   color: #eedb8a;
-  padding: 14px 20px;
+  padding: 8px 16px;
   font-size: 13px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  line-height: 1.5;
+  position: static;
+  line-height: 1.4;
 }
+
+.voice-banner-more > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 12px;
+  opacity: 0.85;
+  padding: 2px 0;
+}
+.voice-banner-more > summary::-webkit-details-marker { display: none; }
+.voice-banner-more > summary::before { content: '▸ '; }
+.voice-banner-more[open] > summary::before { content: '▾ '; }
+.voice-banner-more[open] > summary { margin-bottom: 8px; }
 
 .voice-banner-inner {
   max-width: 880px;
@@ -643,12 +658,12 @@ footer {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
 
 .voice-banner-title {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   color: #fcd34d;
 }
 
