@@ -533,3 +533,45 @@ environ deux appels par saisie latine sur une moyenne de neuf à dix.
 D'où le choix adaptatif : **trois normalement, deux dès que la connexion est limitée** (`rateLimited()`,
 qui date du correctif 429 d'hier). Précision pleine tant que les appels sont disponibles, économie
 exactement quand ils ne le sont plus.
+
+---
+
+# 26/08 — pourquoi il a testé trois fois une version périmée
+
+Troisième capture, `כן` (« oui ») répondant « the meaning could not be fetched ». Rejoué **en
+prod** : `כן` → `כֵּן = oui`. Le défaut n'est pas dans le moteur. Sa carte n'avait ni niqqud ni
+badge ✓ lesson, ce que le code déployé produit — son téléphone servait du code en cache.
+
+## La cause, et elle est écrite dans le dépôt depuis des semaines
+
+`app.js` ne demandait s'il existe une version plus récente qu'au **`load`**. Or **une app
+installée est reprise, pas lancée** : on la laisse ouverte sur l'accueil, on y revient le
+lendemain, aucun `load` ne se déclenche, aucune vérification n'a lieu, et le code déjà en mémoire
+continue de tourner. Un déploiement ne l'atteint pas, et rien à l'écran ne le dit : c'est
+indiscernable d'un bug non corrigé.
+
+Ce raisonnement était déjà écrit — mot pour mot — dans `assets/swupdate.js`, ajouté pour les 214
+pages de liturgie qui ne chargent pas `app.js`. **Il n'avait jamais été reporté dans `app.js`**,
+donc l'accueil et les 465 leçons en étaient privés. C'est-à-dire exactement les pages qu'il
+utilise.
+
+Correctif : une ligne, `visibilitychange → swCheck()`. Coût, une requête conditionnelle sur `sw.js`.
+
+## Le contrôle, et ses deux erreurs de mesure
+
+`tools/swupdate-check.mjs`, 9 assertions sur les trois familles de pages. Matrice de cassures
+faite : retirer la ligne fait tomber S2 partout.
+
+Il a fallu le corriger deux fois, et les deux erreurs sont de la même famille — **mesurer ce qui
+est observable plutôt que ce qui est pertinent** :
+
+1. Première version : compter les requêtes vers `/sw.js` vues par la page. Rend **0 partout**,
+   parce que `register()` va chercher `sw.js` depuis les entrailles du navigateur, hors du fil de
+   requêtes de la page. Elle rapportait un échec total sur du code correct — tout en affirmant par
+   ailleurs (S3) qu'un enregistrement existait. Remplacé par un espion sur `registration.update()`.
+   Même famille que le filtre qui avait compté le *script* `track.js` pour une balise d'analytics.
+2. Deuxième version : `waitForTimeout(2500)` puis lecture. `register()` rend une promesse et
+   `update()` n'est appelé qu'à sa résolution ; quand elle arrive après la fenêtre, la sonde
+   rapporte un échec sur du code correct. Mesuré : **9/9, puis 8/9, puis 7/9 sur le même code**.
+   Remplacé par une attente de l'appel. Une sonde instable est pire qu'aucune : on finit par croire
+   le résultat qui arrange.

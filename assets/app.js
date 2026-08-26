@@ -1806,12 +1806,24 @@ function openSituations(situations, lessonId) {
       navigator.serviceWorker.addEventListener('controllerchange', function () {
         if (swRefreshing || !hadController) return; swRefreshing = true; window.location.reload();
       });
-      window.addEventListener('load', function () {
+      var swCheck = function () {
         // sw.js stays at the site root so its scope covers every folder, whatever page registers it.
         navigator.serviceWorker.register(window.ULPAN_BASE + 'sw.js', { scope: window.ULPAN_BASE, updateViaCache: 'none' })
           .then(function (reg) { try { reg.update(); } catch (e) {} })
           .catch(function () {});
-      });
+      };
+      window.addEventListener('load', swCheck);
+      /* Et au retour au premier plan. Une app INSTALLEE est reprise, pas lancee : quelqu'un qui
+         laisse l'app ouverte sur l'accueil et y revient le lendemain ne declenche jamais de `load`,
+         donc ne demande jamais s'il existe une version plus recente, et continue de faire tourner
+         le code deja en memoire. Un deploiement ne l'atteint pas.
+
+         Ce raisonnement etait deja ecrit - dans assets/swupdate.js, ajoute pour les 214 pages de
+         liturgie qui ne chargent pas app.js - et il n'avait jamais ete reporte ICI, donc l'accueil
+         et les 465 lecons en etaient prives. C'est ce qui a fait tester trois fois de suite a
+         Jonas une version dont il ne pouvait pas savoir qu'elle etait perimee. Cout : une requete
+         conditionnelle sur sw.js. */
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) swCheck(); });
     }
   } catch (e) {}
 })();
@@ -1821,7 +1833,7 @@ function openSituations(situations, lessonId) {
    each file. Ship a shared change by editing the module and bumping SHARED_V. Order matters:
    translit -> conjugate -> quicksay (uses window.Translit and window.Conjugate) -> hub. */
 (function loadSharedModules() {
-  var SHARED_V = '1787830000000';
+  var SHARED_V = '1787880000000';
   ['track.js', 'translit.js', 'conjugate.js', 'quicksay.js', 'hub.js'].forEach(function (m) {
     var present = Array.prototype.some.call(document.scripts, function (s) {
       try { return new URL(s.src, location.href).pathname.split('/').pop() === m; } catch (e) { return false; }
