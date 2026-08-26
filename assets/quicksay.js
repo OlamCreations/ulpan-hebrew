@@ -885,12 +885,22 @@
     // into a single withTimeout made every phrase hang: vocalizeBare could burn the whole
     // tTranslate on a Dicta 502, and the learner just watched "Translating" forever.
     let timedOut = false;
+    /* Une reponse sans une seule lettre hebraique n'est pas une traduction.
+       gtx rend parfois le mot tel quel en lettres latines (oui, quoi, ici, cher : src=en, aucune
+       rm, donc le test d'echo ne voit rien) et le retry sl=fr rattrapait ces cas. Depuis que les
+       langues de retry suivent celles de la session, une session anglaise n'a plus ce filet et le
+       mot latin atterrissait dans le champ hebreu de la carte - c'est l'invariant I6 qui rougit,
+       mesure le 2026-08-26 sur « cher ».
+       Le correctif ne retablit pas les retries : il ferme la porte cote AFFICHAGE, la ou elle
+       tient quel que soit l'upstream qui se comporte mal. Sans hebreu, pas de carte, et le chemin
+       d'echec honnete prend le relais. */
+    const isRealHebrew = r => !!(r && r.he && HEBREW_LETTER.test(r.he));
     return withTimeout(run, CFG.tTranslate)
       .then(w => { if (!w) { timedOut = true; return null; } return w.res; })
       .then(res => res && withTimeout(addLangAlts(res, q, signal, single), CFG.tAlts).then(r => r || res))
       .then(res => res && withTimeout(vocalizeBare(res, signal), CFG.tVocalize).then(r => r || res))
       .then(res => {
-        if (!res) return { res: null, failed: threw > 0 || timedOut };
+        if (!isRealHebrew(res)) return { res: null, failed: threw > 0 || timedOut };
         transCache.set(key, res);
         return { res: res, failed: false };
       });
