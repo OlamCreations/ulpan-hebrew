@@ -388,6 +388,15 @@
     // Hebrew word, the gender is half the answer: Hebrew has no neuter, and every adjective, verb
     // and number that follows has to agree with it — so "table" is not learnable as שולחן alone.
     // Filled asynchronously by wireGnp; stays empty (and CSS-hidden) if the Worker has nothing.
+    /* Pas de garde ici, et c'est une decision mesuree.
+       Deux tentatives ce 2026-08-26, toutes deux fausses :
+         - "pas de sens -> pas de grammaire" ne se declenche jamais, parce que Google FABRIQUE un
+           sens pour un non-mot (il rend "Nord" pour צמתוני) ;
+         - "a une lettre d'un mot verifie -> pas de grammaire" supprime la grammaire de vrais
+           verbes : mesure sur לכתוב et ללמוד, supprimee dans les deux cas. L'espace consonantique
+           hebreu est trop dense pour qu'un voisin a une lettre signifie une faute de frappe.
+       Le voisin verifie reste utile, mais comme SUGGESTION ajoutee, jamais comme motif de
+       retirer quelque chose de correct. */
     const gnpSlot = (heWordCount === 1)
       ? '<div class="qs-gnp" data-he="' + escapeHtml(p.he) + '"></div>' : '';
     /* Word-paired layout, the tehilim way: each Hebrew word with its reading directly under it,
@@ -1186,6 +1195,77 @@
 
   /* Returns a curated-shaped row, or null. The reading is derived by translit.js from the
      VOCALIZED form we stored, never re-derived from the bare input. */
+  /* The learner typed a Hebrew word that is one letter away from one we have verified.
+
+     From the 2026-08-26 screenshot: a single letter wrong (ת for ח) and the app had no meaning
+     to give, while the right word sat in data/gloss.json with its gloss. Hebrew makes this
+     ordinary - a learner writes down what he heard, and the letters that share a sound are
+     exactly the ones he cannot choose between.
+
+     Edit distance ONE, on the bare consonants, same length or one apart, and only for words of
+     at least four letters: shorter than that, one edit reaches half the language and the
+     suggestion would be noise. Capped at three, and only ever offered when nothing else
+     answered - a suggestion is not allowed to outrank a real result. */
+  /* Le mot tape est-il, tel quel, dans le corpus verifie ? Consonnes nues. */
+  function inVerified(he) {
+    if (!glossDict) return true;   // pas charge : ne rien proposer plutot que proposer au hasard
+    var k = bareKey(he);
+    for (var voc in glossDict) if (bareKey(voc) === k) return true;
+    return false;
+  }
+
+  function nearVerified(q, limit) {
+    if (!glossDict) return [];
+    var k = bareKey(q);
+    if (k.length < 4) return [];
+    var out = [];
+    for (var voc in glossDict) {
+      var b = bareKey(voc);
+      if (b === k) continue;
+      if (Math.abs(b.length - k.length) > 1) continue;
+      // Un vav ou un yod en plus/en moins n'est pas une faute : c'est le ktiv male contre le
+      // ktiv haser, la meme graphie autrement. Mesure : c'est de la que venaient les faux
+      // positifs observes (לכתוב proposant לכתב, ללמוד proposant לימוד).
+      if (editDistance1(b, k) && !materOnly(b, k)) {
+        out.push({ he: voc, tr: (window.Translit && window.Translit.transliterate) ? window.Translit.transliterate(voc) : null, en: glossDict[voc] });
+        if (out.length >= (limit || 3)) break;
+      }
+    }
+    return out;
+  }
+
+  /* True when a and b differ by exactly one insertion, deletion or substitution. Written as an
+     early-exit walk rather than a full Levenshtein matrix because it runs over 6857 entries on
+     a phone, and it only ever needs the answer for distance 1. */
+  /* Les deux formes ne different-elles que par une mater lectionis ajoutee ou retiree ?
+     Appelee uniquement quand la distance vaut deja 1, donc il suffit de regarder la lettre en
+     trop du plus long. */
+  function materOnly(a, b) {
+    if (a.length === b.length) return false;   // substitution, pas une insertion
+    var lng = a.length > b.length ? a : b;
+    var shr = a.length > b.length ? b : a;
+    var i = 0;
+    while (i < shr.length && lng[i] === shr[i]) i++;
+    var extra = lng[i];
+    return extra === "\u05d5" || extra === "\u05d9";   // vav, yod
+  }
+
+  function editDistance1(a, b) {
+    if (a === b) return false;
+    var la = a.length, lb = b.length;
+    if (Math.abs(la - lb) > 1) return false;
+    var i = 0, j = 0, seen = 0;
+    while (i < la && j < lb) {
+      if (a[i] === b[j]) { i++; j++; continue; }
+      if (++seen > 1) return false;
+      if (la > lb) i++;
+      else if (lb > la) j++;
+      else { i++; j++; }
+    }
+    if (i < la || j < lb) seen++;
+    return seen === 1;
+  }
+
   function lessonPhrase(q) {
     if (!phraseDict) return null;
     var hit = phraseDict[bareKey(q)];
@@ -1526,6 +1606,10 @@
       heQuery ? Promise.resolve(NO_FWD) : translateOnline(nq, sig),
       lookupPhonetic(nq, sig, revOffline, navLang()),
       wantPhrases ? loadLessonPhrases().then(() => lessonPhrase(nq)).catch(() => null) : Promise.resolve(null),
+      /* The verified word list must be in memory before the no-meaning branch can look for a
+         typo. lookupPhonetic loads it too, but returns early on a cache hit, and then the
+         suggestion would appear or not depending on whether this phrase had been typed before. */
+      heQuery ? loadGloss().catch(() => null) : Promise.resolve(null),
     ]).then(([fwdOut, phon, versePhrase]) => {
       if (token !== renderToken) return; // a newer keystroke superseded this
       container.removeAttribute('aria-busy');
@@ -1607,14 +1691,31 @@
          answered and is not — the question was "what does this mean". When the gloss call is the
          one thing that failed, say which half is missing instead of letting the pointing stand in
          for an answer. Silence here is what made the failure unreadable from the outside. */
+      /* Proposer le voisin verifie des qu'il en existe un et que le mot tape n'est PAS dans le
+         corpus. Ne pas attendre que le sens manque : Google fabrique un sens pour un non-mot
+         ("Nord" pour צמתוני), donc attendre le vide revient a ne jamais proposer. Additif : la
+         suggestion s'ajoute sous la reponse, elle n'en retire aucune. */
+      else if (heQuery && !inVerified(nq) && nearVerified(nq, 1).length) {
+        const near = nearVerified(nq, 3);
+        html += '<div class="qs-sub">Did you mean?</div>'
+          + near.map(p => card(p, 'phonetic-lesson', mLang)).join('')
+          + '<div class="qs-hint">' + escapeHtml(nq) + ' is not in the lessons; the word above is one letter away and is.</div>';
+      }
       else if (heQuery && !(offline.concat(online, fwdOffline).some(p => (p.en || '').trim()))) {
-        /* Naming the 429 matters more here than anywhere: this is the exact screen a learner
-           sees when the quota runs out (the Hebrew and its reading arrive, the meaning does
-           not), and "check the connection" sends him to look at a wifi that is working. */
-        html += '<div class="qs-hint">' + (rateLimited()
-          ? 'The translation service is rate-limiting this connection, so the meaning is missing — the reading above is correct. It usually clears within a minute or two.'
-          : 'The meaning could not be fetched — the reading above is correct, the English is missing. Try again in a moment.')
-          + '</div>';
+        /* Before blaming the network, look for a typo. A Hebrew word one letter away from one we
+           have verified is the likeliest explanation for "no meaning anywhere", not an outage:
+           the letters a learner cannot choose between are exactly the ones that share a sound.
+           Measured on the 2026-08-26 screenshot — ת typed for ח, and the right word was sitting
+           in the corpus with its gloss while the page talked about fetching. */
+        {
+          /* Naming the 429 matters more here than anywhere: this is the exact screen a learner
+             sees when the quota runs out (the Hebrew and its reading arrive, the meaning does
+             not), and "check the connection" sends him to look at a wifi that is working. */
+          html += '<div class="qs-hint">' + (rateLimited()
+            ? 'The translation service is rate-limiting this connection, so the meaning is missing — the reading above is correct. It usually clears within a minute or two.'
+            : 'The meaning could not be fetched — the reading above is correct, the English is missing. Try again in a moment.')
+            + '</div>';
+        }
       }
       // On-demand "natural version": only for a translation query (not Hebrew-you-heard, where the
       // learner already has the word). Idiomatic phrases are exactly where Google calques and this

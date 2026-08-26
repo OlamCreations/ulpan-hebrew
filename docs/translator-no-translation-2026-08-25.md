@@ -419,3 +419,56 @@ dans `worker/wrangler.toml` au-dessus des bindings.
 précède tout ce qui a été fait aujourd'hui.** Le re-keying par appareil reste correct et
 inoffensif, mais il ne protège rien tant que ceci n'est pas résolu. Deux sorties : activer le Rate
 Limiting côté compte Cloudflare, ou compter nous-mêmes (Durable Object ou KV). À trancher.
+
+---
+
+# 26/08 — la capture de Jonas : « regarde, toujours pas la traduction »
+
+Deux choses, et la première est de ma faute.
+
+## 1. Il testait la production, qui était six commits derrière
+
+Rien de ce qui a été corrigé le 25/08 n'était en ligne. La capture montre le message d'échec de
+glose ajouté le 24/08, pas l'échelle de glose du 25.
+
+## 2. Le mot n'existe pas — et l'app lui a quand même donné une grammaire
+
+Il a tapé `צמתוני`. Le mot n'existe pas : une lettre le sépare de `צמחוני`, « vegetarian »,
+**qui est dans notre corpus vérifié avec son sens**. L'app n'avait donc rien à traduire, l'a dit
+honnêtement… et a affiché sous la ligne d'aveu une racine √צום, « verb · Pa'al · m. pl. » et
+quatre formes du présent.
+
+L'en-tête de `renderConjugation` nommait déjà ce risque : « le seul analyseur que cette app peut
+joindre étiquette des mots inventés comme un Pa'al propre ». Son garde demandait si le PATRON est
+reconnu, jamais si le MOT existe.
+
+## Deux gardes faux avant d'arriver au bon
+
+C'est le vrai enseignement de la séance, et il vaut d'être écrit :
+
+1. **« pas de sens → pas de grammaire »** : ne se déclenche jamais. Google **fabrique** un sens
+   pour un non-mot — il rend « Nord » pour `צמתוני` — donc la carte paraît complète.
+2. **« à une lettre d'un mot vérifié → pas de grammaire »** : supprime la grammaire de **vrais**
+   verbes. Mesuré sur `לכתוב` et `ללמוד`, supprimée dans les deux cas. L'espace consonantique
+   hébreu est trop dense pour qu'un voisin à une lettre signifie une faute de frappe.
+
+Et une troisième erreur, de manipulation : la deuxième tentative a laissé une référence à une
+variable supprimée (`looksTypo`), ce qui faisait rendre « Translation failed » à **toutes** les
+requêtes. Le `.catch()` global du rendu avalait l'erreur sans la logger, donc rien n'apparaissait
+en console ; il a fallu instrumenter le catch pour la voir. J'ai d'abord cru à un 429.
+
+## Ce qui a été retenu
+
+**Rien n'est supprimé. La suggestion est ajoutée.** Quand le mot tapé n'est pas dans le corpus
+vérifié et qu'un mot vérifié en est à une lettre, une section « Did you mean? » s'ajoute sous la
+réponse, avec le mot et son sens vérifié. Une suggestion additive ne peut pas détruire une
+réponse correcte ; un garde, si.
+
+Faux positifs mesurés : **4 sur 200** mots réels absents du corpus (2 %). Les cas observés à la
+main venaient tous de la mater lectionis (`לכתוב` proposant `לכתב`) : un vav ou un yod en plus ou
+en moins est le ktiv malé contre le ktiv haser, le même mot autrement écrit. Ceux-là sont filtrés.
+Il reste du bruit — `ללמוד` propose `תלמוד` — assumé, parce qu'il s'affiche **sous** la bonne
+réponse.
+
+Résultat sur le cas réel : `צמתוני` → **צִמְחוֹנִי = vegetarian**, plus la ligne « צמתוני is not in
+the lessons; the word above is one letter away and is. »
