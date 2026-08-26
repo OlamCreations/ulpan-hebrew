@@ -1551,11 +1551,33 @@ body.cursive .qs-cj-he { font-family: 'KtavYad', cursive; font-size: 22px; }
   font-size: 10px; text-transform: uppercase; letter-spacing: .04em;
   color: var(--text-faint); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
 }
-/* All tags stay in the blue accent family (no off-brand green/amber); the ✓ / word marks
-   already distinguish curated vs phonetic without relying on color. */
-.qs-tag-online { color: var(--accent); border-color: var(--accent-dim); }
-.qs-tag-curated { color: var(--accent); border-color: var(--accent); font-weight: 600; }
-.qs-tag-phonetic { color: var(--text-dim); border-color: var(--border); }
+/* Hierarchie de POIDS, pas de couleur (2026-08-26). Jusqu'ici `curated` et `online` portaient
+   la MEME declaration `color: var(--accent)` — mesure : 6,37:1 en sombre et 5,17:1 en clair,
+   deux fois le meme nombre. La phrase relue a la main et la devinette de Google avaient donc
+   exactement la meme autorite visuelle, et `online` recevait en prime la couleur qui signifie
+   « ceci compte » partout ailleurs dans l'app.
+
+   Trois tiers lisibles d'un coup d'oeil, sans sortir de la famille bleue et sans introduire de
+   rouge ou d'ambre (la contrainte que portait le commentaire precedent, conservee) :
+     plein      → verifie   : la reponse
+     contour    → machine   : une proposition
+     sans bord  → approchant: un indice
+
+   La distinction tient au REMPLISSAGE et au BORD, jamais a la teinte seule : elle survit donc
+   au daltonisme, a l'impression en noir et blanc, et a un ecran de telephone en plein soleil.
+
+   `color: var(--bg)` sur l'aplat n'est pas une astuce : c'est la seule valeur qui passe WCAG AA
+   dans les DEUX themes avec une seule declaration (sombre #0a0a0a sur #4A9EDB = 6,79:1 ; clair
+   #fafafa sur #0071B9 = 4,96:1). Le blanc, lui, tombe a 2,91:1 en sombre — il aurait echoue.
+   `tools/badge-contrast-check.mjs` lit ces regles et rougit si une teinte bouge. */
+.qs-tag-curated {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+}
+.qs-tag-online { color: var(--text-dim); border-color: var(--border); }
+.qs-tag-phonetic { color: var(--text-dim); border-color: transparent; }
 
 /* --- Loading: a card-shaped shimmer, so nothing jumps when the real card lands.
    Keeps the `.qs-loading` class — the translator probe synchronises on it. --- */
