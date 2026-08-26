@@ -99,6 +99,14 @@ async function build() {
   const pool = await buildPool();
   const curation = JSON.parse(await readFile(CURATION, 'utf8'));
   const catIds = new Set(curation.categories.map((c) => c.id));
+/* Glose francaise ecrite a la main, rattachee par la romanisation (cle ASCII : l'hebreu ne
+   survit pas a un argv Windows). Absente -> l'entree n'a pas de `fr` et la page retombe sur `en`,
+   ce qui est visible plutot que silencieux. */
+let FR = {};
+try {
+  FR = JSON.parse(await readFile(dataPath('expressions-fr.json'), 'utf8')).fr || {};
+} catch { FR = {}; }
+
   const entries = [];
   const orphans = [];
   const problems = [];
@@ -116,7 +124,12 @@ async function build() {
     entries.push({
       he: cur.fix || he,
       translit: cur.translit_fix || p.translit,
-      fr: p.fr,
+      /* `en` et non `fr`, et c'est une correction du 2026-08-26 : ce champ s'appelait `fr` et
+         portait de l'anglais sur les 129 lignes ("cool / OK / awesome", "broken heart"), que la
+         page affichait tel quel. Un nom de champ qui ment est le defaut d'origine ; le vrai
+         francais vit maintenant dans data/expressions-fr.json, rattache par la romanisation. */
+      en: p.fr,
+      ...(FR[cur.translit_fix || p.translit] ? { fr: FR[cur.translit_fix || p.translit] } : {}),
       // P4 (plan §5) branches showSRSReview on card type; without a discriminant it would have to
       // retrofit or leave this layer out of SRS forever. One field now, cheap.
       kind: 'expression',

@@ -114,10 +114,19 @@
   // Hebrew half of the search was dead. Strip the marks from both haystack and query.
   const bare = (s) => (s || '').replace(/[֑-ׇ]/g, '');
 
+  /* La glose dans la langue du lecteur, l'anglais en repli. Jusqu'au 2026-08-26 cette page
+     affichait un champ nomme `fr` qui contenait de l'anglais sur ses 129 lignes ; la
+     recherche, elle, regarde les deux langues. */
+  const navLang = () => {
+    try { return String((navigator.languages && navigator.languages[0]) || navigator.language || 'en').slice(0, 2).toLowerCase(); }
+    catch (e) { return 'en'; }
+  };
+  const gloss = (e) => (navLang() === 'fr' && e.fr) ? e.fr : (e.en || e.fr || '');
+
   function matches(e) {
     if (cat !== 'all' && e.cat !== cat) return false;
     if (!q) return true;
-    const hay = bare((e.he + ' ' + e.translit + ' ' + e.fr + ' ' + e.usage + ' ' + (e.literal || '')).toLowerCase());
+    const hay = bare((e.he + ' ' + e.translit + ' ' + (e.en || '') + ' ' + (e.fr || '') + ' ' + e.usage + ' ' + (e.literal || '')).toLowerCase());
     return hay.includes(bare(q));
   }
 
@@ -127,7 +136,7 @@
         '<div class="xp-text">' +
           '<div class="xp-he" dir="rtl" lang="he">' + esc(e.he) + '</div>' +
           '<div class="xp-tr">' + esc(e.translit) + '</div>' +
-          '<div class="xp-fr">' + esc(e.fr) + '</div>' +
+          '<div class="xp-fr">' + esc(gloss(e)) + '</div>' +
           (e.literal ? '<div class="xp-lit">literally: ' + esc(e.literal) + '</div>' : '') +
         '</div>' +
         '<div class="xp-actions">' +

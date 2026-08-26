@@ -472,3 +472,64 @@ réponse.
 
 Résultat sur le cas réel : `צמתוני` → **צִמְחוֹנִי = vegetarian**, plus la ligne « צמתוני is not in
 the lessons; the word above is one letter away and is. »
+
+---
+
+# 26/08 — les trois points ouverts, fermés
+
+## 1. Le limiteur : trois tentatives, deux échecs mesurés
+
+| approche | mesure | verdict |
+|---|---|---|
+| bindings `ratelimit` de Cloudflare | limite déclarée 5/60 s → **12 appels passent** | inerte |
+| compteur en mémoire d'isolate | **150 requêtes parallèles passent toutes** | inerte sous concurrence |
+| **Durable Object** | rafale de 150 → **100 passent, 50 refusés** | **refuse vraiment** |
+
+Le deuxième échec est instructif : 150 requêtes concurrentes atterrissent sur autant d'isolates,
+chacun avec sa `Map` vide. Un compteur en mémoire ne compte que la charge *séquentielle*, c'est-à-dire
+exactement pas la menace. Le Durable Object est le seul endroit de la plateforme où un compteur
+partagé existe réellement — une instance par clé, épinglée, mono-thread. Il a été accepté sur le
+plan gratuit (`new_sqlite_classes`).
+
+Budgets : **100/60 s par appareil**, **600/60 s par IP** ; sur les chemins IA, **12** et **60**. Un
+autre appareil derrière la même IP passe toujours — c'est la classe derrière un wifi, le cas qui a
+motivé tout ceci, et c'est vérifié (règle L2). La fenêtre vit en mémoire du DO, sans storage :
+elle dure 60 s, et une éviction remet le compteur à zéro, ce que fait de toute façon un seau qui
+s'est rechargé.
+
+Les bindings inertes ont été retirés de `wrangler.toml`, avec le pourquoi écrit à leur place :
+**un limiteur qui ne refuse jamais est pire qu'aucun, il fait croire à une protection.**
+
+Nouveau contrôle `tools/limiter-check.mjs`, 3 assertions. Rafale en **parallèle**, jamais en série :
+130 appels séquentiels durent aussi longtemps que la fenêtre, donc le seau se recharge pendant la
+mesure et le test ne peut pas rougir — l'erreur commise le 25/08, qui avait rendu un faux vert.
+
+## 2. Les expressions : le champ `fr` contenait de l'anglais, 129 fois sur 129
+
+Deux corrections, dans cet ordre :
+1. le champ est **renommé `en`** — c'est ce qu'il a toujours contenu, et un nom qui ment est le
+   défaut d'origine ;
+2. un vrai `fr` est ajouté, écrit à la main (`data/expressions-fr.json`, 128 clés pour 129 entrées,
+   `be'emet?` apparaissant deux fois), et la page sert la langue du navigateur avec repli sur
+   l'anglais. Le registre est conservé : l'argot reste de l'argot. Les notes d'usage restent en
+   anglais, elles n'ont pas été traduites.
+
+Vérifié dans un vrai navigateur : `fr-FR` → « allez ! / on y va ! / dépêche », `en-US` → « let's go!
+/ hurry up! », 129 cartes, 0 erreur JS.
+
+Nouveau contrôle `tools/expressions-lang-check.mjs` (E1 à E4, fixtures = l'état réel d'avant et
+d'après). Il a lui-même dû être corrigé deux fois, et les deux corrections valent d'être notées :
+- `\b` en JavaScript est **ASCII**, donc `/\ba\b/` trouve le « a » **dans** « ça » et « l'a » : sept
+  faux positifs sur du français parfaitement correct. Remplacé par un ensemble de mots entiers.
+- identique n'est pas recopié : « excellent » s'écrit pareil dans les deux langues.
+Une règle qui rougit sur du bon travail finit désactivée, et c'est ainsi qu'on perd une règle.
+
+## 3. `enrichTop` : adaptatif plutôt que figé
+
+Mesuré sur le jeu **retenu** : à trois candidats **21/25**, à deux **20/25**. Une entrée sur
+vingt-cinq, donc dans le bruit d'un seul item — le troisième candidat sert, rarement, et coûte
+environ deux appels par saisie latine sur une moyenne de neuf à dix.
+
+D'où le choix adaptatif : **trois normalement, deux dès que la connexion est limitée** (`rateLimited()`,
+qui date du correctif 429 d'hier). Précision pleine tant que les appels sont disponibles, économie
+exactement quand ils ne le sont plus.

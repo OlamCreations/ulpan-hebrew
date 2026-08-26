@@ -556,6 +556,47 @@ async function glossInContext(text, words, env) {
 // text/plain, no preflight, sendBeacon on page hide). We write one Analytics Engine data point
 // per event: no cookies, no IP stored — country/device are derived, the only id is the client's
 // random anon key (for DAU/retention counting), which the user can reset or disable.
+/* --------------------------------------------------------------- limiteur
+ * Fenetre glissante dans un Durable Object : une instance par cle, pinnee et mono-thread, donc
+ * un compteur reellement partage. Les deux approches precedentes ne refusaient rien, et les deux
+ * echecs sont mesures : les bindings ratelimit de Cloudflare laissaient passer 12 appels sur une
+ * limite declaree de 5, et un compteur en memoire d'isolate laissait passer 150 requetes
+ * paralleles parce qu'elles atterrissent sur autant d'isolates.
+ *
+ * La fenetre vit en memoire, sans storage : elle dure 60 secondes, une instance sous charge vit
+ * bien plus longtemps, et une eviction remet le compteur a zero - ce qui est exactement ce que
+ * fait un seau qui s'est recharge. Une ecriture disque par requete pour un compteur d'une minute
+ * serait du gaspillage.
+ */
+export class RateLimiter {
+  constructor() { this.hits = []; }
+
+  async fetch(request) {
+    const u = new URL(request.url);
+    const limit = Number(u.searchParams.get('limit')) || 100;
+    const windowMs = (Number(u.searchParams.get('window')) || 60) * 1000;
+    const now = Date.now();
+    while (this.hits.length && now - this.hits[0] > windowMs) this.hits.shift();
+    if (this.hits.length >= limit) return new Response('0', { status: 200 });
+    this.hits.push(now);
+    return new Response('1', { status: 200 });
+  }
+}
+
+/* Rend true si l'appel passe. Echoue OUVERT sur les chemins bon marche (disponibilite) et FERME
+ * sur les chemins IA : une porte ouverte sans compteur sur un modele 70B vide l'allocation
+ * quotidienne de neurones en moins d'une heure. */
+async function allow(env, key, limit, isAI) {
+  if (!env || !env.LIMITER) return !isAI;
+  try {
+    const stub = env.LIMITER.get(env.LIMITER.idFromName(key));
+    const r = await stub.fetch('https://limiter/?limit=' + limit + '&window=60');
+    return (await r.text()) === '1';
+  } catch (e) {
+    return !isAI;
+  }
+}
+
 function track(request, env) {
   return request.json().then(body => {
     const evs = Array.isArray(body && body.events) ? body.events.slice(0, 30) : [];
@@ -614,24 +655,14 @@ export default {
     const did = (new URL(request.url).searchParams.get('d') || '').slice(0, 32);
     const devKey = did ? ip + '|' + did : ip;
 
-    // AI paths (Llama 70B) fail CLOSED if the limiter errors — an unmetered path to a 70B model
-    // lets one caller drain the daily neuron allowance in under an hour. Cheap paths fail open
-    // (availability over strictness).
-    if (env && env.RL_DEV) {
-      try { const { success } = await env.RL_DEV.limit({ key: devKey }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
-      catch (e) { if (isAI) return json({ error: 'rate limited' }, 429, origin); }
-    }
-    if (env && env.RL) {
-      try { const { success } = await env.RL.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
-      catch (e) { if (isAI) return json({ error: 'rate limited' }, 429, origin); }
-    }
-    if (isAI && env && env.RL_AI_DEV) {
-      try { const { success } = await env.RL_AI_DEV.limit({ key: devKey }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
-      catch (e) { return json({ error: 'rate limited' }, 429, origin); }
-    }
-    if (isAI && env && env.RL_AI) {
-      try { const { success } = await env.RL_AI.limit({ key: ip }); if (!success) return json({ error: 'rate limited' }, 429, origin); }
-      catch (e) { return json({ error: 'rate limited' }, 429, origin); }
+    /* Budgets, en clair et au meme endroit. Un appareil garde le budget serre d'avant ; l'IP
+       est un garde-fou large, parce qu'une classe derriere un wifi partage une seule IP et
+       qu'une requete du traducteur coute ~3,9 appels a ce Worker (mesure 2026-08-25). */
+    const budgets = isAI
+      ? [[devKey + '|ai', 12], [ip + '|ai', 60]]
+      : [[devKey, 100], [ip, 600]];
+    for (const [key, limit] of budgets) {
+      if (!(await allow(env, key, limit, isAI))) return json({ error: 'rate limited' }, 429, origin);
     }
 
     // Analytics ingest — always 204 (never let tracking break or slow the app). Awaited (not

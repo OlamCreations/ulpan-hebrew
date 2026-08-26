@@ -17,6 +17,7 @@
   const CFG = {
     phoneticMax: 5,     // max phonetic-Hebrew candidates to request from Input Tools
     enrichTop: 3,       // how many phonetic candidates get niqqud + gloss (extra API calls)
+    enrichTopTight: 2,  // ... and how many once the connection is being throttled (see the slice below)
     hiConf: 0.85,       // detected-lang confidence above which en/fr is "clearly a translation query"
     tTranslate: 8000,   // ms budget: forward EN/FR -> HE
     tPhon: 5000,        // ms budget: Input Tools phonetic candidates
@@ -894,7 +895,15 @@
     const offHe = new Set(offline.map(p => stripNiqqud(p.he)));
     return withTimeout(fetchInputTools(q, signal), CFG.tPhon).then(cands => {
       cands = (cands || []).filter(c => c && !offHe.has(stripNiqqud(c)));
-      const top = cands.slice(0, CFG.enrichTop);
+      /* Trois candidats normalement, deux quand la connexion est deja limitee.
+         Mesure du 2026-08-26 sur le jeu RETENU (les 129 expressions, que le moteur ne
+         charge pas) : a trois, 21/25 ; a deux, 20/25. Une entree sur vingt-cinq, donc
+         dans le bruit d'un seul item - le 3e candidat sert, rarement. Il coute environ
+         deux appels par saisie latine, sur une moyenne de 9 a 10.
+         D'ou le choix adaptatif plutot qu'un chiffre fige : la precision pleine tant que
+         les appels sont disponibles, et l'economie exactement quand ils ne le sont plus
+         (Google rend 429 par connexion, et une classe derriere un wifi partage une IP). */
+      const top = cands.slice(0, rateLimited() ? CFG.enrichTopTight : CFG.enrichTop);
       /* Retried once inside ONE shared budget, the same shape as vocalizeBare. On a Hebrew query
          this single call carries the whole answer — the meaning — and it was the only enrichment
          with no second chance, so one dropped request on a phone rendered a card with the Hebrew
