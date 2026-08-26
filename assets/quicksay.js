@@ -511,25 +511,33 @@
       });
   }
 
-  function guessLangpair(q) {
-    if (/[Ѐ-ӿ]/.test(q)) return 'ru|he';         // Cyrillic -> Russian
-    if (/[ñ¿¡]/i.test(q)) return 'es|he';                 // unambiguous Spanish
-    if (/[àâçéèêëîïôûùÿœæ]/i.test(q)) return 'fr|he';      // French diacritics
-    return 'en|he';
-  }
 
-  function fetchMyMemory(q, signal, langpair) {
-    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=' + (langpair || 'en|he');
-    return fetch(url, { signal: signal })
-      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-      .then(j => {
-        const he = j && j.responseData && j.responseData.translatedText;
-        if (!he || !/[֐-׿]/.test(he)) return null;
-        // MyMemory returns bare (unvocalized) Hebrew, where translit.js is unreliable (סבא -> "sv"),
-        // so bestTranslit yields null rather than a confident-looking wrong answer.
-        return { he: he.trim(), tr: bestTranslit(he.trim(), null), rm: null, en: q, src: (langpair || '').split('|')[0] || null, conf: null };
-      });
-  }
+  /* RETIREE du chemin avant le 2026-08-26, et conservee ici avec la raison plutot que supprimee
+     sans trace - pour que personne ne la rebranche en croyant ajouter une securite.
+
+     MyMemory est une memoire de traduction collaborative : elle rend un segment stocke par
+     quelqu'un, et l'appariement peut etre arbitrairement faux. Mesure du 26/08 :
+       - « test » -> לילה טוב (« bonne nuit »), avec match 0.99, quality 80, source Wikipedia,
+         soit le MEILLEUR score du lot : ses metadonnees de qualite ne discriminent rien, il n'y a
+         donc pas de filtre possible ;
+       - exactitude contre le carnet : mots isoles 9/12, phrases 8/25 ;
+       - elle injecte du balisage dans l'hebreu affiche : « כ<g id="1">''</g>א », « (MAN) ».
+     Dans une app ou l'apprenant PRONONCE ce qu'il lit, une reponse confiante et fausse est le pire
+     resultat. Le chemin d'echec, lui, le dit depuis le 25/08. */
+  /* Le corps de fetchMyMemory a ete SUPPRIME le 2026-08-26, pas seulement debranche : du code
+     mort finit toujours par etre rebranche par quelqu'un qui le prend pour une securite dormante.
+     Ce qu'il faut garder, c'est la RAISON, et git garde le code.
+
+     MyMemory est une memoire de traduction collaborative : elle rend un segment stocke par
+     quelqu'un, et l'appariement peut etre arbitrairement faux. Mesures du 26/08 :
+       - « test » -> « laila tov » (bonne nuit), avec match 0.99, quality 80, source Wikipedia,
+         soit le MEILLEUR score du lot : ses metadonnees de qualite ne discriminent rien, donc
+         aucun filtre n'est possible ;
+       - exactitude contre le carnet : mots isoles 9/12, phrases 8/25 ;
+       - elle injecte du balisage TMX et des annotations de source dans l'hebreu affiche.
+     Dans une app ou l'apprenant PRONONCE ce qu'il lit, une reponse confiante et fausse est le
+     pire resultat. Le chemin d'echec le dit honnetement depuis le 25/08. */
+
 
   /* Everyone writing Hebrew in Latin letters marks a prefixed particle with a hyphen — ha-bayit,
      la-lechet, ba-bank — because in Hebrew it IS a prefix and the hyphen is how you show that in
@@ -844,9 +852,10 @@
     if (transCache.has(key)) return Promise.resolve({ res: transCache.get(key), failed: false });
     const single = !/\s/.test(q.trim());  // the failure is isolated words; phrases translate fine
     let threw = 0;
+    /* Plus de repli MyMemory : voir le commentaire de fetchMyMemory. Une seule source, et quand
+       elle tombe on le DIT au lieu de servir autre chose. */
     const run = fetchGoogle(q, signal, 'auto')
       .catch(() => { threw++; return null; })
-      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => { threw++; return null; }))
       .then(res => {
         // sl=auto echoed the sound (bonjour->בונז'ור) rather than translating it: retry with
         // explicit romance sources and keep the first result that isn't itself a transliteration.
@@ -872,12 +881,22 @@
     // into a single withTimeout made every phrase hang: vocalizeBare could burn the whole
     // tTranslate on a Dicta 502, and the learner just watched "Translating" forever.
     let timedOut = false;
+    /* Une reponse sans une seule lettre hebraique n'est pas une traduction.
+       gtx rend parfois le mot tel quel en lettres latines (oui, quoi, ici, cher : src=en, aucune
+       rm, donc le test d'echo ne voit rien) et le retry sl=fr rattrapait ces cas. Depuis que les
+       langues de retry suivent celles de la session, une session anglaise n'a plus ce filet et le
+       mot latin atterrissait dans le champ hebreu de la carte - c'est l'invariant I6 qui rougit,
+       mesure le 2026-08-26 sur « cher ».
+       Le correctif ne retablit pas les retries : il ferme la porte cote AFFICHAGE, la ou elle
+       tient quel que soit l'upstream qui se comporte mal. Sans hebreu, pas de carte, et le chemin
+       d'echec honnete prend le relais. */
+    const isRealHebrew = r => !!(r && r.he && HEBREW_LETTER.test(r.he));
     return withTimeout(run, CFG.tTranslate)
       .then(w => { if (!w) { timedOut = true; return null; } return w.res; })
       .then(res => res && withTimeout(addLangAlts(res, q, signal, single), CFG.tAlts).then(r => r || res))
       .then(res => res && withTimeout(vocalizeBare(res, signal), CFG.tVocalize).then(r => r || res))
       .then(res => {
-        if (!res) return { res: null, failed: threw > 0 || timedOut };
+        if (!isRealHebrew(res)) return { res: null, failed: threw > 0 || timedOut };
         transCache.set(key, res);
         return { res: res, failed: false };
       });
@@ -1547,6 +1566,90 @@
     return (/\.$/.test(s) && !/[.!?]\.$/.test(s)) ? s.slice(0, -1).trim() : s;
   };
 
+  /* Les deux blocs proposes SOUS la reponse : demander un autre accord, et demander la version
+     idiomatique. Sortis de render() le 2026-08-26 : ce sont deux morceaux de HTML sans decision,
+     et ils encombraient une fonction de 216 lignes ou vit la logique qui compte.
+
+     Les conditions sont conservees telles quelles, et chacune a une raison :
+       - rien de tout cela sur une requete hebraique : le mot est deja en main, et « comment une
+         femme dirait-elle ceci » n'est pas la question posee ;
+       - « Say it as » exige une carte a faire varier, et data-base porte l'hebreu POINTE affiche,
+         qui sert a distinguer une vraie variante d'une phrase qui ne s'accorde pas ;
+       - « version naturelle » disparait quand le reseau est injoignable : elle taperait la meme
+         adresse et rendrait un second echec sous un bouton qui promet mieux. */
+  /* Decide quelle section mene et quelles cartes y figurent. Extraite de render() le 2026-08-26,
+     sans changer une seule condition : chacune a ete payee par un defaut observe, et elles sont
+     conservees mot pour mot avec leur raison.
+
+     Rend { ph, tr, phonFirst, fwdCard, offline, online } : les deux blocs HTML, l'ordre, la carte
+     avant retenue (que les appelants suivants interrogent), et les listes finales dont depend le
+     choix du message d'echec. */
+  function layoutSections(ctx) {
+    const { fwd, phon, versePhrase, nq, fwdOffline, mLang } = ctx;
+    let online = phon.online;
+    let offline = phon.offline;
+
+    const realLang = fwd && TRANSLATE_LANGS.has(fwd.src) && (fwd.conf == null || fwd.conf >= CFG.hiConf);
+    /* Un mot d'une vraie langue, detecte avec confiance, ne garde sa section « Hebrew you heard »
+       que si l'apprenant a tape EXACTEMENT une romanisation curee. Une correspondance approchante
+       n'est pas une preuve : « today » commence par « toda », et la page menait avec תּוֹדָה plus
+       deux devinettes au-dessus de la seule carte qui repondait, הַיוֹם. Personne qui veut toda ne
+       tape today. */
+    const exactReverse = hasExactReverse(nq);
+    /* Le cas miroir, au moins aussi fort que la confiance de Google : « hier » est du francais et
+       une ligne du carnet le dit, mais Google a detecte de l'allemand sans pouvoir le placer, et
+       la page menait avec les devinettes הַיַּעַר « la foret » et הָהָר « la montagne » au-dessus de
+       אֶתְמוֹל. Le contenu verifie tranche. */
+    const exactForward = hasExactForward(nq);
+    if ((realLang || exactForward) && !exactReverse) { online = []; offline = []; }
+
+    /* Mener avec « Hebrew you heard » quand il y a une correspondance verifiee, ou quand Google
+       n'a PAS su placer l'entree parmi les langues qu'il traduit - c'est son tell pour de
+       l'hebreu romanise (beseder -> « sl », sababa -> « om »). */
+    const phonFirst = exactReverse || (!exactForward && (offline.length > 0 ||
+      (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd));
+
+    /* De l'hebreu romanise fait « traduire » a Google le mot latin comme une langue quelconque
+       (ahava -> rw -> משם, beseder -> sl -> מפתח מילים) : une carte avant parasite. Quand on est
+       sur que c'est de l'hebreu entendu et que la section phonetique porte deja le vrai mot, on
+       jette cette carte. Les correspondances curees, elles, restent. */
+    const romanizedHebrew = phonFirst && !realLang && (offline.length + online.length) > 0;
+    const fwdCard = romanizedHebrew ? null : fwd;
+
+    const dupe = new Set(offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
+
+    /* La phrase verifiee mene : c'est la seule carte de l'ecran dont personne n'a a croire un
+       upstream. Dedupliquee par sa forme nue pour que les candidats en ligne ne la repetent pas. */
+    if (versePhrase && !offline.some(p => bareKey(p.he) === bareKey(versePhrase.he))) {
+      offline = [versePhrase].concat(offline);
+      online = online.filter(p => bareKey(p.he) !== bareKey(versePhrase.he));
+    }
+
+    return {
+      ph: phonSectionHtml(offline, online, mLang),
+      tr: transSectionHtml(fwdCard, fwdOffline, dupe, exactForward, mLang),
+      phonFirst, fwdCard, offline, online,
+    };
+  }
+
+  function interactiveHtml(nq, fwdCard, fwdFailed) {
+    let out = '';
+    if (!isHeb(nq) && fwdCard && fwdCard.he) {
+      out += '<div class="qs-form" data-q="' + escapeHtml(nq) + '" data-base="' + escapeHtml(fwdCard.he) + '">' +
+        '<span class="qs-form-lbl">Say it as</span>' +
+        '<span class="seg" role="group" aria-label="Grammatical form">' +
+        FORMS.map((f, i) => '<button type="button" class="seg-btn qs-form-btn" data-i="' + i + '">' +
+          escapeHtml(f.label) + '</button>').join('') +
+        '</span><div class="qs-form-out"></div></div>';
+    }
+    if (!isHeb(nq) && !fwdFailed) {
+      out += '<div class="qs-nat">' +
+        '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">\u2726 natural version</button>' +
+        '<div class="qs-nat-out"></div></div>';
+    }
+    return out;
+  }
+
   function render(container, q) {
     const nq = normalizeQuery(q);
     if (!nq) {
@@ -1631,46 +1734,10 @@
       // Hebrew query, which has no forward path by construction.
       const fwdFailed = fwdOut.failed;
 
-      // Auto-decide: if the input is clearly a confident English/French word AND nothing
-      // matched offline as Hebrew, it's a translation query — drop the online phonetic guesses.
-      let online = phon.online;
-      let offline = phon.offline;
-      const realLang = fwd && TRANSLATE_LANGS.has(fwd.src) && (fwd.conf == null || fwd.conf >= CFG.hiConf);
-      /* A confident real-language word keeps its Hebrew-you-heard section only if the learner
-         typed a curated romanization EXACTLY. A loose hit is not evidence: "today" begins with
-         "toda", and the page led with תּוֹדָה "thank you" plus two phonetic guesses (תּוֹדִיעִי,
-         תְּוַדְּאִי) above the one card that answered the question, הַיוֹם. Nobody who wants toda
-         types today. */
-      const exactReverse = hasExactReverse(nq);
-      /* An exact curated GLOSS is the mirror case and at least as strong as Google's confidence:
-         "hier" is French for yesterday and a phrasebook row says so, but Google detected German
-         and could not place it, so the page led with phonetic guesses הַיַּעַר "the forest" and
-         הָהָר "the mountain" above אֶתְמוֹל. Verified content decides. */
-      const exactForward = hasExactForward(nq);
-      if ((realLang || exactForward) && !exactReverse) { online = []; offline = []; }
-
-      // Order: lead with Hebrew-you-heard when there's a verified match, or when Google could
-      // NOT place the input as a known translation language (its tell for romanized Hebrew,
-      // e.g. beseder→"sl", sababa→"om").
-      const phonFirst = exactReverse || (!exactForward && (offline.length > 0 ||
-        (fwd && fwd.src && !TRANSLATE_LANGS.has(fwd.src)) || !fwd));
-
-      // Romanized-Hebrew input makes Google "translate" the latin word as some random language
-      // (ahava→rw→משם, beseder→sl→מפתח מילים) — a parasitic forward card. When we're confident
-      // it's Hebrew-you-heard (phonFirst, not a real translate language) and the phonetic section
-      // already has the real word, drop that card. Curated forward matches (fwdOffline) stay.
-      const romanizedHebrew = phonFirst && !realLang && (offline.length + online.length) > 0;
-      const fwdCard = romanizedHebrew ? null : fwd;
-
-      const dupe = new Set(offline.map(p => stripNiqqud(p.he)).concat(online.map(p => stripNiqqud(p.he))));
-      /* The verified phrase leads: it is the only card on screen that nobody has to trust
-         an upstream for. Deduped by its bare form so the online candidates do not repeat it. */
-      if (versePhrase && !offline.some(p => bareKey(p.he) === bareKey(versePhrase.he))) {
-        offline = [versePhrase].concat(offline);
-        online = online.filter(p => bareKey(p.he) !== bareKey(versePhrase.he));
-      }
-      const ph = phonSectionHtml(offline, online, mLang);
-      const tr = transSectionHtml(fwdCard, fwdOffline, dupe, exactForward, mLang);
+      /* Quelle section mene, et avec quelles cartes. Sortie de render() le 2026-08-26 : c'est la
+         seule vraie decision de cette fonction, elle merite un nom et de tenir seule. */
+      const laid = layoutSections({ fwd, phon, versePhrase, nq, fwdOffline, mLang });
+      const { ph, tr, phonFirst, fwdCard, offline, online } = laid;
 
       let html = phonFirst ? (ph + tr) : (tr + ph);
       /* The forward sources could not be reached. Say it, whatever else is on screen. Without
@@ -1726,29 +1793,7 @@
             + '</div>';
         }
       }
-      // On-demand "natural version": only for a translation query (not Hebrew-you-heard, where the
-      // learner already has the word). Idiomatic phrases are exactly where Google calques and this
-      // 70B layer earns its keep — but it's slow and metered, so it stays a button, not automatic.
-      // Ask for a different agreement. Offered only when there is a translation to vary and the
-      // learner typed a language rather than Hebrew — on Hebrew-you-heard the word is already in
-      // hand, and the question "how would a woman say this" is not what was asked.
-      // data-base carries the POINTED Hebrew on screen, which is what the answer is compared
-      // against to tell a real variant from a sentence that simply does not inflect.
-      if (!isHeb(nq) && fwdCard && fwdCard.he) {
-        html += '<div class="qs-form" data-q="' + escapeHtml(nq) + '" data-base="' + escapeHtml(fwdCard.he) + '">' +
-          '<span class="qs-form-lbl">Say it as</span>' +
-          '<span class="seg" role="group" aria-label="Grammatical form">' +
-          FORMS.map((f, i) => '<button type="button" class="seg-btn qs-form-btn" data-i="' + i + '">' +
-            escapeHtml(f.label) + '</button>').join('') +
-          '</span><div class="qs-form-out"></div></div>';
-      }
-      // Not offered when the sources are unreachable: it goes to the same network and would only
-      // hand the learner a second failure under a button that promises a better answer.
-      if (!isHeb(nq) && !fwdFailed) {
-        html += '<div class="qs-nat">' +
-          '<button type="button" class="qs-nat-btn" data-q="' + escapeHtml(nq) + '">✦ natural version</button>' +
-          '<div class="qs-nat-out"></div></div>';
-      }
+      html += interactiveHtml(nq, fwdCard, fwdFailed);
       container.innerHTML = html;
       wirePlay(container);
       wireNat(container);

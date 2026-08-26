@@ -109,6 +109,25 @@ export const CHECKS = [
       if (/rephras/i.test(hint)) return [`the network failed and the page blamed the wording: "${hint}"`];
       return [`nothing was translated and the page says nothing about it (${cards.length} unglossed card${cards.length === 1 ? '' : 's'})`];
     }
+  },
+  {
+    id: 'D5',
+    what: 'le champ hebreu ne contient ni balisage ni annotation en lettres latines',
+    why: 'Ajoutee le 2026-08-26. MyMemory, alors utilise en repli du chemin avant, rendait du '
+       + 'balisage TMX dans l\'hebreu (une balise <g id=1> au milieu de credit card) et collait '
+       + '(MAN) a ses traductions : des annotations de source, affichees a un apprenant qui va '
+       + 'les prononcer. La source a ete retiree ; la regle reste, parce que le defaut est celui '
+       + 'de tout upstream qui rend un segment stocke plutot qu\'une traduction.',
+    check(screen) {
+      const out = [];
+      for (const s of screen.sections) for (const c of s.cards) {
+        const he = String(c.he || '');
+        if (!he) continue;
+        if (/<[^>]+>/.test(he)) out.push(`[${s.title}] balisage dans l'hebreu : "${he}"`);
+        else if (/[A-Za-z]{2,}/.test(he)) out.push(`[${s.title}] lettres latines dans l'hebreu : "${he}"`);
+      }
+      return out;
+    }
   }
 ];
 
@@ -143,6 +162,12 @@ const FIXTURES = {
   },
   /* The other half of the same defect: no phonetic guess at all, so the page had nothing to show
      and blamed the wording of a sentence that was never the problem. */
+  /* Recorde le 2026-08-26 : ce que MyMemory rendait reellement pour "credit card", et la carte
+     correcte que rend gtx. */
+  D5: {
+    bad: { q: 'credit card', heQuery: false, hint: null, sections: [{ title: 'Translation', cards: [{ he: "כ<g id=\"1\">''</g>א", tr: null, en: 'credit card online' }] }] },
+    good: { q: 'credit card', heQuery: false, hint: null, sections: [{ title: 'Translation', cards: [{ he: 'כַּרְטִיס אַשְׁרַאי', tr: 'kar-TIS ash-RAI', en: 'credit card online' }] }] }
+  },
   D4b: {
     bad: { q: 'where is the pharmacy', heQuery: false, hint: 'Nothing found for “where is the pharmacy”. Try rephrasing.', sections: [] },
     good: { q: 'where is the pharmacy', heQuery: false, hint: 'The translation could not be fetched — check the connection and try again.', sections: [] }
