@@ -518,7 +518,19 @@
     return 'en|he';
   }
 
-  function fetchMyMemory(q, signal, langpair) {
+  /* RETIREE du chemin avant le 2026-08-26, et conservee ici avec la raison plutot que supprimee
+     sans trace - pour que personne ne la rebranche en croyant ajouter une securite.
+
+     MyMemory est une memoire de traduction collaborative : elle rend un segment stocke par
+     quelqu'un, et l'appariement peut etre arbitrairement faux. Mesure du 26/08 :
+       - « test » -> לילה טוב (« bonne nuit »), avec match 0.99, quality 80, source Wikipedia,
+         soit le MEILLEUR score du lot : ses metadonnees de qualite ne discriminent rien, il n'y a
+         donc pas de filtre possible ;
+       - exactitude contre le carnet : mots isoles 9/12, phrases 8/25 ;
+       - elle injecte du balisage dans l'hebreu affiche : « כ<g id="1">''</g>א », « (MAN) ».
+     Dans une app ou l'apprenant PRONONCE ce qu'il lit, une reponse confiante et fausse est le pire
+     resultat. Le chemin d'echec, lui, le dit depuis le 25/08. */
+  function fetchMyMemoryRetired(q, signal, langpair) {
     const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=' + (langpair || 'en|he');
     return fetch(url, { signal: signal })
       .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
@@ -844,9 +856,10 @@
     if (transCache.has(key)) return Promise.resolve({ res: transCache.get(key), failed: false });
     const single = !/\s/.test(q.trim());  // the failure is isolated words; phrases translate fine
     let threw = 0;
+    /* Plus de repli MyMemory : voir le commentaire de fetchMyMemory. Une seule source, et quand
+       elle tombe on le DIT au lieu de servir autre chose. */
     const run = fetchGoogle(q, signal, 'auto')
       .catch(() => { threw++; return null; })
-      .then(res => res || fetchMyMemory(q, signal, guessLangpair(q)).catch(() => { threw++; return null; }))
       .then(res => {
         // sl=auto echoed the sound (bonjour->בונז'ור) rather than translating it: retry with
         // explicit romance sources and keep the first result that isn't itself a transliteration.
