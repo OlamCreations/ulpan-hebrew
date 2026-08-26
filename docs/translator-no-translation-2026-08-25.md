@@ -575,3 +575,26 @@ est observable plutôt que ce qui est pertinent** :
    rapporte un échec sur du code correct. Mesuré : **9/9, puis 8/9, puis 7/9 sur le même code**.
    Remplacé par une attente de l'appel. Une sonde instable est pire qu'aucune : on finit par croire
    le résultat qui arrange.
+
+## Vérification en production, et pourquoi la sonde a d'abord menti
+
+Contre la prod, la sonde rendait **6/9** de façon stable alors que le local rendait 9/9 trois fois
+de suite. Ce n'était pas du bruit, et je ne l'ai pas laissé passer.
+
+Cause : sur un **profil neuf**, le service worker précache 1231 entrées. Mesuré contre la
+production : **54 secondes** avant activation. Tant qu'il n'est pas actif, la page n'est contrôlée
+par personne — la sonde mesurait une *première visite*, pas le régime dans lequel vit quelqu'un
+dont l'app est installée depuis des semaines.
+
+Une fois le worker activé, en production :
+
+```
+worker actif après 54 s
+page contrôlée : true
+update() au retour au premier plan : 0,5 s
+```
+
+C'est la troisième erreur de mesure de la journée et elles ont toutes la même forme : **la sonde
+observait un état transitoire et le rapportait comme le régime permanent.** La correction est
+toujours la même — attendre le signal positif (le worker est actif, l'appel a eu lieu) plutôt
+qu'une durée fixe.

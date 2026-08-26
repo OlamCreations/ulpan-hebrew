@@ -72,6 +72,22 @@ for (const pg of PAGES) {
   };
 
   await page.goto(BASE + pg.path, { waitUntil: 'load' });
+
+  /* Attendre que le worker soit ACTIF avant de juger quoi que ce soit.
+     Sur un profil neuf il precache 1231 entrees : mesure contre la production, 54 secondes avant
+     activation. Tant qu'il n'est pas actif la page n'est controlee par personne, et la sonde
+     rapportait alors 6/9 sur du code dont on venait de verifier qu'il marchait - elle mesurait
+     une premiere visite, pas le regime dans lequel vit un apprenant dont l'app est installee
+     depuis des semaines. */
+  for (let i = 0; i < 300; i++) {
+    const active = await page.evaluate(async () => {
+      const r = await navigator.serviceWorker.getRegistration();
+      return !!(r && r.active);
+    });
+    if (active) break;
+    await page.waitForTimeout(500);
+  }
+
   const atLoad = await waitCalls();
 
   checks++;
