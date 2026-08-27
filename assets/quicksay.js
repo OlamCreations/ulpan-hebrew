@@ -340,6 +340,25 @@
   /* lang = the language the meaning should be written in (see meaningLang). Defaults to the
      browser's, so a caller that does not care still gets the learner's language rather than a
      hardcoded English. */
+  /* La requête en cours, posée par render() et lue par card().
+   *
+   * Une variable de module plutôt qu'un paramètre de plus : card() a une dizaine de sites
+   * d'appel, et le jour où l'un d'eux serait oublié, l'écho reviendrait sur ce chemin-là
+   * seulement — un défaut qui ne se voit qu'en tapant exactement le bon genre de mot. Ici, un
+   * seul endroit la pose, et elle vaut pour tout l'écran. */
+  let CURRENT_Q = '';
+
+  /* Le sens est-il la question, réécrite ? On compare sur les lettres seules, minuscules : la
+     casse et la ponctuation changent entre ce qu'on tape et ce que l'upstream renvoie
+     (« Je n'ai pas compris » contre « je n'ai pas compris »), et un écho reste un écho. */
+  const latFold = s => String(s || '').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '');
+  function latEcho(meaning, q) {
+    const a = latFold(meaning), b = latFold(q);
+    return !!a && a === b;
+  }
+
   function card(p, kind, lang) {
     const mLang = lang || navLang();
     let tag = '';
@@ -374,6 +393,18 @@
        was answered in English on every single card. */
     let meaning = glossOf(p, mLang);
     if (meaning && bareKey(meaning) && bareKey(meaning) === bareKey(p.he || '')) meaning = '';
+    /* Et le miroir latin du même défaut, resté ouvert jusqu'au 2026-08-27.
+     *
+     * L'invariant ci-dessus interdit à une carte de présenter son propre HÉBREU comme son sens.
+     * Mais sur une requête latine, fetchGoogle pose `en: q` sans condition, et la carte rendait
+     * alors la question de l'apprenant dans la case de la réponse : « bureau » -> מִשׂרָד, sens
+     * « bureau ». Mesuré le 25/08 : 33 cartes sur 231 renvoyaient à l'apprenant les mots qu'il
+     * venait de taper. Le comptage était fait, le correctif ne portait que sur l'hébreu.
+     *
+     * Un mot qu'on vient de traduire n'a pas besoin qu'on lui répète sa source : elle est dans
+     * le champ, deux centimètres au-dessus. La case du sens vide vaut mieux qu'un écho, qui
+     * occupe la place et fait croire à une information. */
+    if (meaning && latEcho(meaning, CURRENT_Q)) meaning = '';
     const en = (meaning || tag)
       ? '<div class="qs-en">' + escapeHtml(meaning) + (meaning ? ' ' : '') + tag + '</div>' : '';
     // Preference-aware Hebrew: strip niqqud when the user turned it off; echo the word in
@@ -1647,6 +1678,49 @@
      Rend { ph, tr, phonFirst, fwdCard, offline, online } : les deux blocs HTML, l'ordre, la carte
      avant retenue (que les appelants suivants interrogent), et les listes finales dont depend le
      choix du message d'echec. */
+  /* Garde la PREMIÈRE carte à l'air libre et replie tout ce qui suit.
+   *
+   * Le découpage se fait sur le DOM, pas sur la chaîne : une expression régulière sur du HTML
+   * casse au premier attribut contenant `<` ou `>` (une note d'usage, un sens avec une flèche),
+   * et le symptôme serait une carte tronquée au milieu, pas une erreur. Le navigateur sait
+   * découper son propre balisage ; on le lui laisse faire.
+   *
+   * Les titres de section survivent dans le repli : ils disent D'OÙ vient chaque variante, et
+   * c'est l'information qui reste utile une fois qu'on a ouvert. */
+  function collapseAfterFirst(html) {
+    const box = document.createElement('div');
+    box.innerHTML = html;
+    const cards = box.querySelectorAll('.qs-card');
+    if (cards.length < 2) return html;
+
+    const lead = document.createElement('div');
+    const rest = document.createElement('div');
+    let seenFirst = false;
+    Array.prototype.slice.call(box.childNodes).forEach(node => {
+      const isCard = node.nodeType === 1 && node.classList && node.classList.contains('qs-card');
+      if (isCard && !seenFirst) { seenFirst = true; lead.appendChild(node); return; }
+      /* Un titre de section AVANT la première carte appartient à la réponse ; après, il
+         appartient aux variantes. La bascule est la première carte, pas le titre. */
+      (seenFirst ? rest : lead).appendChild(node);
+    });
+
+    const n = rest.querySelectorAll('.qs-card').length;
+    if (!n) return html;
+
+    /* Le titre au-dessus de la réponse disparaît, et c'est le repli qui le rend faux.
+       « Hebrew — more than one reading » coiffait une seule lecture visible ; « Translation »
+       coiffait une seule traduction. Un en-tête qui annonce un groupe au-dessus d'un élément
+       unique n'informe pas, il fait douter — et c'est exactement le défaut qu'on répare. Ceux
+       du repli RESTENT : là, ils disent d'où vient chaque variante, ce qui est l'information
+       utile une fois qu'on a ouvert. */
+    Array.prototype.forEach.call(lead.querySelectorAll('.qs-sub'), s => s.remove());
+    const label = navLang() === 'fr'
+      ? (n === 1 ? 'une autre possibilité' : n + ' autres possibilités')
+      : (n === 1 ? 'one other possibility' : n + ' other possibilities');
+    return lead.innerHTML +
+      '<details class="qs-alts"><summary>' + escapeHtml(label) + '</summary>' + rest.innerHTML + '</details>';
+  }
+
   function layoutSections(ctx) {
     const { fwd, phon, versePhrase, nq, fwdOffline, mLang } = ctx;
     let online = phon.online;
@@ -1715,6 +1789,7 @@
 
   function render(container, q) {
     const nq = normalizeQuery(q);
+    CURRENT_Q = nq;   // lu par card() pour ne jamais rendre la question dans la case du sens
     if (!nq) {
       container.removeAttribute('aria-busy');
       container.innerHTML = '';   // minimal empty state: no hint text, no example chips
@@ -1802,6 +1877,21 @@
       const laid = layoutSections({ fwd, phon, versePhrase, nq, fwdOffline, mLang });
       const { ph, tr, phonFirst, fwdCard, offline, online } = laid;
 
+      /* UNE réponse en tête, le reste replié. Ajouté le 2026-08-27, et c'est le dernier des
+       * défauts que Jonas décrivait par « ça embrouille tout ».
+       *
+       * Avant : deux sections côte à côte, chacune avec autant de cartes qu'elle en avait
+       * trouvé, toutes au même niveau visuel. Mesuré en production le même jour :
+       *   « beseder »    -> 4 cartes sur 2 sections, dont « in Sadr » et « in order »
+       *                     exactement aussi visibles que la bonne réponse ;
+       *   « מזלות »      -> la réponse, puis trois suggestions dépliées sous elle ;
+       *   « kacha kacha » -> trois devinettes, aucune vérifiée.
+       * Trouver quatre réponses à une question n'est pas quatre fois mieux que d'en trouver
+       * une : c'est renvoyer le tri à l'apprenant, qui est précisément la personne qui ne sait
+       * pas trier — sinon il n'aurait pas cherché le mot.
+       *
+       * Le repli est un <details> et pas une troncature : rien n'est retiré, tout reste à un
+       * clic. La différence est qu'on DIT laquelle est la réponse. */
       let html = phonFirst ? (ph + tr) : (tr + ph);
       /* The forward sources could not be reached. Say it, whatever else is on screen. Without
          this the page had two ways to lie about a dead network: "Nothing found — try rephrasing"
@@ -1856,6 +1946,14 @@
             + '</div>';
         }
       }
+      /* Le repli s'applique ICI, sur l'écran COMPLET, et pas plus tôt.
+       *
+       * Première tentative : replier juste après l'assemblage des deux sections. Le bloc
+       * « Did you mean? » (la suggestion du voisin à une lettre, ajoutée le 26/08) arrive
+       * APRÈS, si bien que מזלות rendait quatre cartes dépliées alors que beseder en repliait
+       * trois. Le repli marchait, il ne voyait simplement pas tout l'écran. Un traitement de
+       * mise en page doit s'appliquer là où la mise en page est finie. */
+      html = collapseAfterFirst(html);
       html += interactiveHtml(nq, fwdCard, fwdFailed);
       container.innerHTML = html;
       wirePlay(container);
