@@ -346,6 +346,9 @@
     if (kind === 'online') tag = '<span class="qs-tag qs-tag-online" title="Translated online">online</span>';
     else if (kind === 'curated') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
     else if (kind === 'phonetic') tag = '<span class="qs-tag qs-tag-phonetic" title="Matched from what you typed phonetically">phonetic</span>';
+    /* `lookup` : de l'hébreu tapé en hébreu, cherché tel quel. Aucun badge — c'est le cas
+       normal, et le cas normal ne se signale pas. Les badges existent pour l'exception. */
+    else if (kind === 'lookup') tag = '';
     else if (kind === 'phonetic-lesson') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
     else if (p.cat) tag = '<span class="qs-tag">' + escapeHtml(p.cat) + '</span>';
     // Spell digits out in the transliteration: "ani ben 33" -> "ani ben shloshim ve shalosh".
@@ -906,6 +909,38 @@
   // (enriched with niqqud + gloss). Returns { offline:[phrase], online:[{he,tr,en,bare}] }.
   function lookupPhonetic(q, signal, offlineMatches, lang) {
     const offline = offlineMatches || (loaded ? reverseOffline(q) : []);
+
+    /* Hébreu DÉJÀ POINTÉ par l'apprenant : on ne demande rien à personne pour le lire.
+     *
+     * Mesuré en production le 2026-08-27 : אֲנִי, כּוֹחַ et גַּב s'affichaient SANS ligne de
+     * lecture. La cause n'était pas le moteur de lecture — translit.js les lit correctement
+     * hors ligne (a-NI, KO-ach, gav) et il est déjà chargé dans la page. C'était ce chemin :
+     * il envoyait la requête à Input Tools, puis repointait les consonnes nues via le Worker,
+     * et quand cet aller-retour perdait le niqqud, la carte n'avait plus de quoi produire une
+     * lecture. Autrement dit, on jetait la réponse que l'apprenant avait lui-même fournie pour
+     * aller la redemander au réseau, et on la perdait.
+     *
+     * Quand la requête porte son niqqud, elle EST le candidat, et le seul. Le sens reste à
+     * chercher, mais son absence n'a jamais justifié de retenir la lecture. */
+    if (isHeb(q) && hasNiqqud(q)) {
+      const he = q.trim();
+      const local = { he: he, tr: bestTranslit(he, null), rm: null, en: '', bare: stripNiqqud(he) };
+      const key = 'p:' + (lang || navLang()) + ':' + he.toLowerCase();
+      if (phonCache.has(key)) return Promise.resolve({ offline: offline, online: phonCache.get(key) });
+      return loadGloss().then(() => {
+        const verified = verifiedGloss(he);
+        if (verified && (lang || navLang()) === 'en') {
+          const list = [Object.assign({}, local, { en: verified })];
+          phonCache.set(key, list);
+          return { offline: offline, online: list };
+        }
+        return withTimeout(fetchGloss(he, signal, lang), CFG.tGloss)
+          .then(gl => [Object.assign({}, local, { en: (gl && gl.en) || verified || '' })])
+          .catch(() => [Object.assign({}, local, { en: verified || '' })])
+          .then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
+      });
+    }
+
     if (!navigator.onLine) return Promise.resolve({ offline: offline, online: [] });
     // The language is part of the key: without it a session that switched language served
     // the meaning cached in the previous one.
@@ -1513,10 +1548,38 @@
   }
 
   // --- Section builders ---------------------------------------------------------
-  function phonSectionHtml(offline, online, lang) {
-    const cards = offline.map(p => card(p, 'phonetic-lesson', lang)).concat(online.map(p => card(p, 'phonetic', lang)));
+  /* Le titre et le badge disent ce que la carte EST, pas par quel chemin le code y est arrivé.
+   *
+   * Mesuré en production le 2026-08-27, sur 19 requêtes : 14 s'affichaient sous
+   * « Hebrew — did you mean? » et 18 portaient un badge de devinette — y compris אֲנִי, tapé
+   * correctement, sans la moindre ambiguïté. Les deux venaient de la même cause : une requête
+   * hébraïque emprunte le chemin PHONÉTIQUE, et le chemin donnait son nom à l'affichage.
+   *
+   * « Did you mean? » est une question, et une question posée sur une réponse juste apprend à
+   * l'apprenant à douter de tout. Elle n'a de sens que s'il y a réellement plusieurs
+   * candidats, ou si l'entrée était romanisée — c'est-à-dire quand on a vraiment deviné.
+   * De même, `phonetic` veut dire « correspondance approchée depuis ce que vous avez tapé » ;
+   * sur de l'hébreu tapé en hébreu, ce n'est pas une approximation, c'est une recherche.
+   *
+   * Un signe affiché sur presque tout ne distingue plus rien, et c'est très exactement ce que
+   * « on ne sait plus à quoi se fier » veut dire. */
+  function phonSectionHtml(offline, online, lang, queryWasHebrew) {
+    const guessed = !queryWasHebrew;
+    const cards = offline.map(p => card(p, 'phonetic-lesson', lang))
+      .concat(online.map(p => card(p, guessed ? 'phonetic' : 'lookup', lang)));
     if (!cards.length) return '';
-    return '<div class="qs-sub">Hebrew — did you mean?</div>' + cards.join('');
+    /* Le titre n'apparaît que s'il y a un choix à faire. Une carte unique se passe d'en-tête :
+       elle est la réponse.
+       Et une section qui COMMENCE par une carte vérifiée n'est pas une devinette, même sur une
+       entrée romanisée : « beseder » rendait בְּסֵדֶר, relu à la main, sous un titre qui demandait
+       si c'était bien ce qu'on voulait dire. Les devinettes qui suivent restent, badgées ; c'est
+       la question posée sur la bonne réponse qui partait. */
+    const many = cards.length > 1;
+    const ledByVerified = offline.length > 0;
+    const title = (guessed && !ledByVerified)
+      ? 'Hebrew — did you mean?'
+      : (many ? 'Hebrew — more than one reading' : '');
+    return (title ? '<div class="qs-sub">' + title + '</div>' : '') + cards.join('');
   }
 
   function transSectionHtml(fwd, fwdOffline, dupeSet, curatedFirst, lang) {
@@ -1626,7 +1689,7 @@
     }
 
     return {
-      ph: phonSectionHtml(offline, online, mLang),
+      ph: phonSectionHtml(offline, online, mLang, isHeb(nq)),
       tr: transSectionHtml(fwdCard, fwdOffline, dupe, exactForward, mLang),
       phonFirst, fwdCard, offline, online,
     };
@@ -1677,7 +1740,7 @@
 
     if (!navigator.onLine) {
       // Plane mode: curated phrasebook only, both directions.
-      const ph = phonSectionHtml(revOffline, [], navLang());
+      const ph = phonSectionHtml(revOffline, [], navLang(), isHeb(nq));
       const tr = fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated', navLang())).join('') : '';
       if (ph || tr) {
         container.innerHTML = ph + tr + '<div class="qs-hint qs-offline">Offline — showing saved phrases only.</div>';
@@ -1692,7 +1755,7 @@
     container.setAttribute('aria-busy', 'true');
     container.innerHTML =
       skeleton('Translating', 3) +
-      phonSectionHtml(revOffline, [], navLang()) +
+      phonSectionHtml(revOffline, [], navLang(), isHeb(nq)) +
       (fwdOffline.length ? '<div class="qs-sub">Translation</div>' + fwdOffline.map(p => card(p, 'curated', navLang())).join('') : '');
     wirePlay(container);
 
