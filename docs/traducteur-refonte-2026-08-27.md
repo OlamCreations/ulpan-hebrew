@@ -119,18 +119,25 @@ un acte sortant.
 
 ## 6. Ce qui reste ouvert
 
-1. **ulpan-hebrew tourne toujours sur `quicksay.js`.** Le nouveau moteur est en service dans
-   kita10 seulement. Migrer ulpan-hebrew coûterait quatre fonctions que `quicksay.js` porte et
-   que le nouveau moteur n'a pas : la version naturelle (`/nat`), les formes genrées (`/form`),
-   le mot-à-mot, et « enregistrer dans mes phrases ». C'est un arbitrage, pas un oubli.
+1. **ulpan-hebrew tourne toujours sur `quicksay.js`** — mais ses trois défauts ont été corrigés
+   sur place le soir même, et il a reçu le corpus de la classe. Sur les mêmes 19 requêtes :
+   titre « did you mean? » 14/19 → **3/19** (dont zéro sur une carte vérifiée), badge de
+   devinette 18/19 → **6/19**, lectures manquantes 4 → **0**. Couverture hors ligne 58 % →
+   **67 %** des occurrences réelles.
+   La migration COMPLÈTE vers le moteur partagé reste un chantier distinct : elle touche
+   `hub.js`, `reference/expressions.html` et l'API publique `QuickSay` (`mount`, `copy`,
+   `copyTitle`, `renderBreakdown`). Les quatre fonctions qui manquaient au moteur ont depuis été
+   écrites (`ulpan-engine/src/extras.js`) et testées, donc le blocage n'est plus là : il est
+   dans les trois points d'intégration ci-dessus.
 2. **Le hé mappiq final.** Le moteur lit `שֶׁלָּהּ` « she-LAH » ; la classe écrit « shela », et elle
    a raison **en hébreu moderne**. Mais `translit.js` sert aussi 214 pages de liturgie, où ce hé
    se prononce. Deux réponses correctes selon le registre : arbitrage de Jonas, pas correctif.
 3. **Le sheva na.** 400 désaccords subsistent entre le moteur et les lectures manuscrites de la
    classe, très majoritairement de convention : le moteur écrit `mla-MED`, la classe `melamed`.
    Aucun des deux n'est faux. À trancher une fois, pas mot par mot.
-4. **`GOOGLE_TRANSLATE_KEY`** n'est pas posée : `/tr` tomberait sur Workers AI. Poser la clé
-   demande une action dans la console Google Cloud.
+4. **`GOOGLE_TRANSLATE_KEY`** n'est pas posée : `/tr` tomberait sur Workers AI. `gcloud` est
+   installé et authentifié en `jonas@olam-creations.com`, mais son jeton a expiré et le
+   renouvellement est interactif. Runbook complet : `ulpan-engine/DEPLOY.md`.
 5. **Les lectures manuscrites de kita10 sont un jeu d'évaluation humain** de 3 462 entrées pour le
    moteur de lecture, découvert sans le chercher. 88 % d'accord une fois la mise en forme
    neutralisée. C'est le seul jeu tenu à l'écart dont ce moteur ait jamais disposé.
