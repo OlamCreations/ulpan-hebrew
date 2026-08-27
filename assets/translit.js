@@ -61,18 +61,71 @@
   }
 
   // Split into units: { base, marks:Set, isLetter }
+  /* Geresh and gershayim, added 2026-08-27 after measuring 339 corpus words read wrong.
+   *
+   * The geresh (׳ or a plain apostrophe) is how Hebrew writes the three sounds its alphabet
+   * does not have — ג׳ = j, צ׳ = ch, ז׳ = zh — which means it appears on essentially every
+   * loanword an oleh uses daily. It was handled as PUNCTUATION here, so it split the word in
+   * two and the letter was read at its plain value: צִ'יפְּס ("chips") came out "tzi'yps",
+   * גִּ'ין ("gin") came out "gi'yn", זָ'קֶט ("jacket") came out "za'ket".
+   *
+   * The gershayim (״ or a plain double quote) marks an acronym and is not pronounced at all:
+   * מַמַּ״ד is "mamad", not "ma-MA\"d".
+   *
+   * Both are recognised only when a Hebrew letter is directly to their left, so an ordinary
+   * quotation mark around a Hebrew word is still punctuation and still separates words. */
+  const GERESH = new Set([0x05F3, 0x0027, 0x2019]);       // ׳  '  ’
+  const GERSHAYIM = new Set([0x05F4, 0x0022, 0x201D]);    // ״  "  ”
+  /* La marque est le VRAI point de code du guéresh, pas un pseudo-code négatif. hebrewKey()
+     reconstruit une chaîne à partir des marques avec String.fromCodePoint : un -1 y lève.
+     0x05F3 se reconstruit correctement, ne tombe dans aucune plage de niqqud, et donne au
+     passage une clé de cache exacte pour les mots à guéresh. */
+  const MARK_GERESH = 0x05F3;
+
   function units(text) {
     const out = [];
-    for (const ch of text) {
+    const chars = Array.from(text);
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
       const c = ch.codePointAt(0);
       if (c === 0x7C) continue;                 // "|" = Dicta morpheme boundary, not pronounced
       if (c === 0x05BE) { out.push({ base: 0, marks: new Set(), nonletter: ' ' }); continue; } // maqaf -> space
-      if (isHebrewLetter(c)) out.push({ base: c, marks: new Set(), nonletter: null });
-      else if (isMark(c)) { if (out.length && out[out.length - 1].base) out[out.length - 1].marks.add(c); }
-      else out.push({ base: 0, marks: new Set(), nonletter: ch }); // space / punctuation passthrough
+      if (isHebrewLetter(c)) { out.push({ base: c, marks: new Set(), nonletter: null }); continue; }
+      if (isMark(c)) { if (out.length && out[out.length - 1].base) out[out.length - 1].marks.add(c); continue; }
+
+      const prev = out.length ? out[out.length - 1] : null;
+      const afterLetter = prev && prev.base && isHebrewLetter(prev.base);
+      if (afterLetter && GERESH.has(c)) { prev.marks.add(MARK_GERESH); continue; }
+      if (afterLetter && GERSHAYIM.has(c)) {
+        /* Silencieux, et il ne coupe pas le mot : un acronyme est UN mot. On ne l'absorbe que
+           s'il est réellement à l'intérieur, sinon un guillemet fermant se mettrait à disparaître. */
+        const next = chars[i + 1];
+        if (next && isHebrewLetter(next.codePointAt(0))) continue;
+      }
+      out.push({ base: 0, marks: new Set(), nonletter: ch }); // space / punctuation passthrough
     }
     return out;
   }
+
+  /* Ce que la lettre devient sous un guéresh. Les trois premiers sont l'usage courant de
+     l'hébreu moderne ; les suivants viennent des emprunts à l'arabe et sont plus rares. Une
+     lettre absente de cette table garde son son ordinaire : on ne devine pas. */
+  const GERESH_SOUND = {
+    0x05D2: 'j',    // ג׳  jeans, gin, jachnun
+    0x05E6: 'ch',   // צ׳  chips, cholent
+    0x05E5: 'ch',   // ץ׳  la finale, et elle compte : sandwich s'écrit סנדוויץ׳
+    0x05D6: 'zh',   // ז׳  jacket (zhaket)
+    0x05D3: 'dh',   // ד׳
+    0x05EA: 'th',   // ת׳
+    0x05D7: 'kh',   // ח׳  khalas
+    0x05E8: 'r',    // ר׳
+  };
+  /* Les cinq finales ont leur propre point de code, et l'oublier ne se voit que sur les mots
+     qui finissent par la lettre concernée — c'est-à-dire rarement, et jamais dans un test
+     écrit à partir de mots courants. Mesuré : סֶנְדְוִיץ׳ se lisait « sen-de-VITZ » parce que la
+     table ne portait que le צ médian. */
+  const FINAL_OF = { 0x05DA: 0x05DB, 0x05DD: 0x05DE, 0x05DF: 0x05E0, 0x05E3: 0x05E4, 0x05E5: 0x05E6 };
+  const gereshSound = c => GERESH_SOUND[c] || GERESH_SOUND[FINAL_OF[c]] || null;
 
   /* --- Syllable stress ---------------------------------------------------------------------
    *
@@ -347,7 +400,10 @@
       // --- generic consonant ---
       const pair = CONS[c];
       if (!pair) { if (u.nonletter) res += u.nonletter; continue; }
-      const cons = dagesh ? pair[1] : pair[0];
+      // Le guéresh l'emporte sur le daguech : ג׳ est « j », avec ou sans point.
+      const cons = (u.marks.has(MARK_GERESH) && gereshSound(c))
+        ? gereshSound(c)
+        : (dagesh ? pair[1] : pair[0]);
       let v;
       if (vmark === SHEVA) v = shevaSound(u, isFirst, nextLetter, wasSheva);
       else v = vowelSound(vmark);
@@ -414,6 +470,7 @@
   function consOf(u) {
     if (!u || !u.base) return '';
     const c = u.base;
+    if (u.marks.has(MARK_GERESH) && gereshSound(c)) return gereshSound(c);
     if (c === 0x05E9) return u.marks.has(SIN_DOT) ? 's' : 'sh';
     if (c === 0x05D9) return 'y';
     const pair = CONS[c];

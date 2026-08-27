@@ -105,15 +105,27 @@ for (const f of (await readdir(lessonsDir)).filter((x) => x.endsWith('.html'))) 
   const s = await readFile(join(lessonsDir, f), 'utf8');
   // Lesson word rows are object literals; pull he together with the meaning in the SAME object,
   // so a gloss can never be paired with a neighbouring word's Hebrew.
-  for (const m of s.matchAll(/\{[^{}]*?"he"\s*:\s*"([^"]+)"[^{}]*?\}/g)) {
-    const en = (m[0].match(/"(?:en|fr)"\s*:\s*"([^"]+)"/) || [])[1];
-    add(m[1], en);
-    addPhrase(m[1], en);
+  /* Les deux motifs acceptent les guillemets ÉCHAPPÉS à l'intérieur de la chaîne, et c'est un
+     correctif, pas une précaution.
+     Mesuré le 2026-08-27 : 94 clés de gloss.json portaient un antislash littéral et étaient
+     tronquées à cet endroit — צֶ\ pour « check », גִּ\ pour « gin », גְּ\ pour le jachnoun,
+     וַה\ pour un verset entier. Le point commun n'était pas le hasard : ce sont tous des mots
+     à GUÉRESH (ג׳ = j, צ׳ = tch, ז׳ = zh), plus l'abréviation ה׳ du Nom.
+     Dans une leçon, ce guéresh est un apostrophe à l'intérieur d'une chaîne JavaScript entre
+     apostrophes, donc écrit \'. L'ancien motif [^']+ s'arrêtait sur cet antislash-apostrophe et
+     capturait le début du mot. Autrement dit : le corpus perdait exactement les emprunts dont un
+     olé se sert tous les jours, et il les perdait silencieusement, en les remplaçant par un
+     fragment qui avait l'air d'un mot. */
+  const unescape = s2 => s2.replace(/\\(['"\\])/g, '$1');
+  for (const m of s.matchAll(/\{[^{}]*?"he"\s*:\s*"((?:[^"\\]|\\.)+)"[^{}]*?\}/g)) {
+    const en = (m[0].match(/"(?:en|fr)"\s*:\s*"((?:[^"\\]|\\.)+)"/) || [])[1];
+    add(unescape(m[1]), en && unescape(en));
+    addPhrase(unescape(m[1]), en && unescape(en));
   }
-  for (const m of s.matchAll(/\{[^{}]*?he:\s*'([^']+)'[^{}]*?\}/g)) {
-    const en = (m[0].match(/(?:en|fr):\s*'([^']+)'/) || [])[1];
-    add(m[1], en);
-    addPhrase(m[1], en);
+  for (const m of s.matchAll(/\{[^{}]*?he:\s*'((?:[^'\\]|\\.)+)'[^{}]*?\}/g)) {
+    const en = (m[0].match(/(?:en|fr):\s*'((?:[^'\\]|\\.)+)'/) || [])[1];
+    add(unescape(m[1]), en && unescape(en));
+    addPhrase(unescape(m[1]), en && unescape(en));
   }
 }
 

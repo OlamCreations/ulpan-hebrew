@@ -90,18 +90,87 @@ Output ONLY these lines, one per listed word, in the same order:
 HEBREW WORD = gloss
 Do not number the lines. Do not write anything before or after the list.`;
 
+/* ------------------------------------------------------------------ traduction (/tr)
+ *
+ * Deux moteurs derrière une seule forme de retour : { text, engine, detected }.
+ *
+ * L'invariant que les deux DOIVENT respecter, et qui n'était vérifié nulle part avant :
+ * une traduction vers l'hébreu qui ne contient pas une lettre hébraïque n'est pas une
+ * traduction. Les deux upstreams échouent en douceur en RENVOYANT L'ENTRÉE — gtx le faisait
+ * déjà, et la carte affichait alors le mot de l'apprenant dans la case du résultat, avec
+ * l'apparence d'une réponse. On refuse ici, une fois, pour les deux moteurs.
+ */
+const HAS_HEB = /[א-ת]/;
+
+function checkedOut(text, to, engine, detected) {
+  const s = String(text || '').trim();
+  if (!s) return null;
+  if (to === 'he' && !HAS_HEB.test(s)) return null;
+  if (to !== 'he' && HAS_HEB.test(s)) return null;   // le sens demandé en anglais/français ne peut pas être hébreu
+  return { text: s, engine, detected: detected || null };
+}
+
+/* Google Cloud Translation v2. Documentée, à clé, 500 000 caractères/mois gratuits à vie.
+   v2 et non v3 : v3 exige un projet + OAuth ; v2 accepte une clé d'API simple, ce qui est le
+   seul secret qu'un Worker peut porter sans dépendre d'un flux d'authentification. */
+async function gTranslate(text, from, to, key) {
+  const body = new URLSearchParams({ q: text, target: to, format: 'text' });
+  if (from && from !== 'auto') body.set('source', from);
+  const r = await fetch('https://translation.googleapis.com/language/translate/v2?key=' + encodeURIComponent(key), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
+  });
+  if (!r.ok) throw new Error('gtranslate ' + r.status);
+  const j = await r.json();
+  const tr = j && j.data && j.data.translations && j.data.translations[0];
+  if (!tr) return null;
+  /* On décode les entités HTML : l'API rend « l&#39;hôpital » même en format=text. */
+  const txt = String(tr.translatedText || '')
+    .replace(/&#(\d+);/g, (m, d) => String.fromCharCode(+d))
+    .replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return checkedOut(txt, to, 'google', tr.detectedSourceLanguage);
+}
+
+/* Le repli quand aucune clé n'est posée : Workers AI, déjà lié, budget gratuit quotidien.
+   Température 0 et une consigne stricte, comme /nat : la mesure de /nat donnait 8/10 phrases
+   naturelles à ce réglage, et toute température plus haute hallucine. */
+const TR_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+async function aiTranslate(text, from, to, env) {
+  if (!env || !env.AI) throw new Error('no AI binding');
+  const target = to === 'he' ? 'modern spoken Israeli Hebrew'
+    : to === 'fr' ? 'French' : to === 'ru' ? 'Russian' : to === 'es' ? 'Spanish' : 'English';
+  const sys = `Translate the user's text into ${target}. Output ONLY the translation, nothing else: no quotes, no transliteration, no explanation, no alternatives, no notes. Preserve the meaning exactly; do not add or drop anything. If the text is a single word, output a single word or the shortest natural equivalent.`;
+  const r = await env.AI.run(TR_MODEL, {
+    messages: [{ role: 'system', content: sys }, { role: 'user', content: text }],
+    temperature: 0, max_tokens: 120,
+  });
+  let out = String((r && (r.response || r.result)) || '').trim();
+  /* Le modèle ajoute volontiers des guillemets ou une ligne d'explication malgré la consigne :
+     on garde la première ligne non vide et on retire l'habillage. Mesuré sur /nat, même modèle. */
+  out = (out.split('\n').map(s => s.trim()).filter(Boolean)[0] || '')
+    .replace(/^["'«»\s]+|["'«»\s]+$/g, '');
+  return checkedOut(out, to, 'workers-ai', null);
+}
+
 // CORS restricted to the app origins (still open to direct curl — that's a rate-limit concern,
 // not a CORS one — but this stops other sites embedding the endpoint in visitors' browsers).
+/* Les origines de NOS apps, en clair. Une liste explicite et pas un motif : le motif précédent
+   autorisait tout *.github.io, et comme l'URL du Worker est écrite en dur dans un front-end
+   open-source, n'importe quel fork déployé ailleurs pouvait consommer notre budget de neurones
+   depuis le navigateur de ses visiteurs. Ajouter une app = ajouter une ligne ici, consciemment.
+   Depuis le 2026-08-27 : kita10 (ulpan-etzion.pages.dev) partage ce Worker, parce qu'il partage
+   le même moteur (ulpan-engine). */
+const APP_ORIGINS = [
+  'olamcreations.github.io',   // ulpan-hebrew
+  'ulpan-etzion.pages.dev',    // kita10
+];
 function allowOrigin(origin) {
   try {
     if (!origin) return 'https://olamcreations.github.io';
     const u = new URL(origin);
     const h = u.hostname;
-    // ONLY our Pages origin (https) + local dev. This used to allow any *.github.io, but MORPH_URL is
-    // hardcoded to this deployment in the (open-source) front-end, so a fork deployed to another
-    // github.io could freeload on our Workers AI neuron budget from its visitors' browsers.
-    // Self-hosters deploy their own Worker and point MORPH_URL at it (see README).
-    if (h === 'olamcreations.github.io' && u.protocol === 'https:') return origin;
+    if (APP_ORIGINS.includes(h) && u.protocol === 'https:') return origin;
     if (h === 'localhost' || h === '127.0.0.1') return origin;
   } catch (e) {}
   return 'https://olamcreations.github.io';
@@ -635,7 +704,12 @@ export default {
     if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
     const path = new URL(request.url).pathname;
-    const isAI = path === '/nat' || path === '/gloss' || path === '/form';
+    /* /tr compte comme un chemin IA seulement quand il TOMBE sur le modèle. Avec une clé Google
+       Cloud c'est un appel de traduction ordinaire, bien moins cher qu'une inférence, et le
+       plafonner à 12/60 s couperait la classe sans raison. Le vrai arbitrage se fait plus bas,
+       une fois qu'on sait quel moteur répond. */
+    const isAI = path === '/nat' || path === '/gloss' || path === '/form'
+      || (path === '/tr' && !(env && env.GOOGLE_TRANSLATE_KEY));
 
     // Reject oversized bodies before reading/parsing/joining them — an unbounded words[] on /gloss
     // could otherwise materialize past the isolate memory limit and kill the worker.
@@ -671,6 +745,55 @@ export default {
     if (new URL(request.url).pathname === '/track') {
       await track(request, env);
       return new Response(null, { status: 204, headers: cors(origin) });
+    }
+
+    /* --------------------------------------------------------------------- /tr : traduire
+     *
+     * Existe depuis le 2026-08-27, et son existence EST le correctif.
+     *
+     * Avant, la traduction partait du NAVIGATEUR vers translate.googleapis.com (« gtx ») : pas
+     * une API publique, pas de clé, pas de quota documenté, et compté par IP. Une classe entière
+     * derrière le wifi de l'ulpan sort sur une seule IP, donc le 429 tombait sur tout le monde
+     * en même temps — c'est la panne du 25/08, cherchée pendant des heures du mauvais côté.
+     *
+     * Deux moteurs, choisis par la présence du secret, et pas par une préférence :
+     *   1. GOOGLE_TRANSLATE_KEY posée -> Cloud Translation v2, documentée, avec un quota écrit
+     *      (500 000 caractères/mois gratuits, ~25 000 requêtes) et facturée à l'app, pas à l'IP
+     *      de l'apprenant.
+     *   2. absente -> Workers AI, déjà lié, sur le budget de neurones gratuit.
+     * Dans les deux cas l'appel part de NOTRE infrastructure : le quota est le nôtre, il ne
+     * s'épuise plus par salle de classe, et le cache de 7 jours le partage entre apprenants.
+     *
+     * On ne prend du modèle QUE l'hébreu consonantique — même discipline que /nat : sa
+     * romanisation est fausse et son niqqud est irrégulier ; la vocalisation vient de Dicta et
+     * la lecture de translit.js, comme pour tout le reste.
+     */
+    if (path === '/tr') {
+      let tb;
+      try { tb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
+      const src = ((tb && tb.text) || '').toString().slice(0, 300).trim();
+      const to = ((tb && tb.to) || 'he').toString().slice(0, 5);
+      const from = ((tb && tb.from) || 'auto').toString().slice(0, 5);
+      if (!src) return json({ he: '' }, 200, origin);
+
+      const tCache = caches.default;
+      const tKey = new Request('https://tr.cache/v1/' + encodeURIComponent(JSON.stringify([src, from, to])));
+      const tHit = await tCache.match(tKey);
+      if (tHit) return new Response(await tHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
+
+      let out = null;
+      try {
+        out = env.GOOGLE_TRANSLATE_KEY
+          ? await gTranslate(src, from, to, env.GOOGLE_TRANSLATE_KEY)
+          : await aiTranslate(src, from, to, env);
+      } catch (e) {
+        return json({ error: 'translate unavailable' }, 502, origin);
+      }
+      if (!out) return json({ he: '' }, 200, origin);
+
+      const tPayload = JSON.stringify({ he: out.text, engine: out.engine, detected: out.detected || null });
+      if (ctx && ctx.waitUntil) ctx.waitUntil(tCache.put(tKey, new Response(tPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
+      return new Response(tPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
     }
 
     // Natural-version layer: French/English -> idiomatic Hebrew via Workers AI. On-demand (the
