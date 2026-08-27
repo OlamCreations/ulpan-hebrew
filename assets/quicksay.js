@@ -222,7 +222,15 @@
   // content and outranks whatever Google guessed: it leads the section, and the section leads.
   function hasExactForward(q) {
     const nq = norm(q);
-    return !!nq && PHRASES.some(p => [p.en, p.fr].filter(Boolean).flatMap(g => g.split(' / ')).some(g => norm(g) === nq));
+    if (!nq) return false;
+    if (PHRASES.some(p => [p.en, p.fr].filter(Boolean).flatMap(g => g.split(' / ')).some(g => norm(g) === nq))) return true;
+    /* Le corpus des leçons compte aussi. Sans cette ligne, l'index inverse trouvait les 2339 mots
+       et la mise en page les rangeait quand même DERRIÈRE la réponse en ligne, repliés : mesuré
+       le 2026-08-28, « drill » menait avec לִקְדוֹחַ (le verbe) et cachait מַקְדֵּחָה (l'outil, celui
+       du corpus) dans le repli. Un index qui trouve et dont la trouvaille est reléguée est
+       indiscernable, à l'écran, d'un index qui ne trouve rien — c'est le même défaut que celui
+       réparé la veille, un cran plus haut. */
+    return glossReverse(q, 1).length > 0;
   }
 
   // Reverse offline lookup: romanized Hebrew -> curated phrase (verified niqqud + meaning).
@@ -1265,6 +1273,72 @@
       .catch(() => { glossDict = {}; return glossDict; });   // offline: fall back to Google
     return glossPromise;
   }
+
+  /* ---- La recherche dans l'AUTRE sens, sur le corpus entier ----------------------------------
+   *
+   * Le corpus tient 7136 mots hébreux avec leur sens vérifié, et la recherche hébreu -> sens les
+   * voit tous. Celle du sens -> hébreu ne consultait que le phrasebook : 118 lignes. 2339 mots
+   * anglais étaient donc sur le disque, vérifiés, et partaient quand même demander une réponse
+   * en ligne.
+   *
+   * Ce n'était pas seulement des appels réseau inutiles. Mesuré le 2026-08-28 sur 20 mots pris à
+   * pas fixe : 0 répondu hors ligne, 20 partis en ligne, et 7 revenus avec un AUTRE mot que celui
+   * du corpus. « drill » rendait לִקְדוֹחַ, le verbe percer, quand le corpus tient מַקְדֵּחָה, la
+   * perceuse ; « attack » rendait le verbe pour un nom ; « manhole » rendait un mot sans rapport.
+   * L'apprenant révisait un mot que sa classe n'avait pas donné.
+   *
+   * L'index est construit une fois, à la première recherche, et jamais au chargement : sur les
+   * 7136 entrées il coûte quelques millisecondes, mais les payer pendant que la page s'ouvre les
+   * paie même pour qui ne cherchera jamais rien.
+   */
+  let glossRev = null;
+
+  /* La clé d'un sens. Les qualificatifs entre parenthèses sortent — « come (m.) » se cherche en
+     tapant « come » — mais le sens affiché, lui, les garde : c'est là qu'est le genre. */
+  const glossKey = s => String(s || '')
+    .toLowerCase()
+    .replace(/\([^)]*\)/g, ' ')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+  function buildGlossRev() {
+    glossRev = Object.create(null);
+    if (!glossDict) return glossRev;
+    for (const he in glossDict) {
+      const full = glossDict[he];
+      if (!full) continue;
+      /* Découpage sur les séparateurs de SYNONYMES seulement. Pas sur la virgule : dans ce
+         corpus elle sépare les propositions d'une glose longue, et indexer « thank you » comme
+         clé d'une phrase entière parce qu'elle s'y termine est exactement le défaut mesuré en
+         face, côté kita10, sur cette même requête. */
+      const parts = String(full).split(/[\/;]/);
+      parts.push(String(full));
+      for (const part of parts) {
+        const k = glossKey(part);
+        if (!k || k.length < 2) continue;
+        if (!glossRev[k]) glossRev[k] = [];
+        if (glossRev[k].length < 8 && glossRev[k].indexOf(he) < 0) glossRev[k].push(he);
+      }
+    }
+    return glossRev;
+  }
+
+  /* Rend des lignes de la même forme que celles du phrasebook, pour que l'affichage n'ait pas à
+     savoir d'où elles viennent. La lecture est calculée par translit.js : la forme est pointée,
+     donc c'est une lecture de voyelles, jamais une lecture de consonnes nues. */
+  function glossReverse(q, limit) {
+    const k = glossKey(q);
+    if (!k) return [];
+    if (!glossRev) buildGlossRev();
+    const hits = glossRev[k] || [];
+    const T = window.Translit;
+    return hits.slice(0, limit || 4).map(he => ({
+      he: he,
+      tr: (T && T.transliterate) ? (T.transliterate(he) || null) : null,
+      en: glossDict[he] || '',
+    }));
+  }
   /* Verified PHRASES, 13029 of them, compiled from the phrasebook, the expressions and the 465
      lessons (tools/build-gloss.mjs). A whole Hebrew phrase the learner types and that we have
      already verified should cost ZERO upstream calls: measured 2026-08-25, a phrase otherwise
@@ -1691,7 +1765,19 @@
     const box = document.createElement('div');
     box.innerHTML = html;
     const cards = box.querySelectorAll('.qs-card');
-    if (cards.length < 2) return html;
+    /* Une seule carte : il n'y a rien à replier, mais la règle « pas de titre de groupe au-dessus
+       d'un élément unique » vaut quand même. Elle ne valait que dans la branche du repli, si bien
+       que « Translation » coiffait seul la carte de « bureau » : le défaut réparé pour les
+       réponses multiples restait entier pour la plus fréquente, la réponse unique.
+       Seuls les titres de PREMIER niveau tombent. Ceux des panneaux ouverts à la demande
+       (mot-à-mot, version naturelle, formes) sont à l'intérieur d'une carte et nomment un
+       contenu qui, lui, existe bien en plusieurs morceaux. */
+    if (cards.length < 2) {
+      const subs = Array.prototype.filter.call(box.children, n => n.classList && n.classList.contains('qs-sub'));
+      if (!subs.length) return html;
+      subs.forEach(s => s.remove());
+      return box.innerHTML;
+    }
 
     const lead = document.createElement('div');
     const rest = document.createElement('div');
@@ -1805,7 +1891,19 @@
       return;
     }
     const token = ++renderToken;
-    const fwdOffline = loaded ? search(nq) : [];
+    /* Le phrasebook d'abord : ses 118 lignes sont écrites à la main, portent le français et une
+       lecture relue. Le corpus des leçons derrière, pour les 2339 mots que le phrasebook n'a
+       pas. Dédoublonné sur les consonnes, sinon un mot présent des deux côtés rend deux cartes
+       qui disent la même chose. */
+    const fwdOffline = loaded ? (function () {
+      const rows = search(nq);
+      const seen = new Set(rows.map(p => bareKey(p.he)));
+      for (const g of glossReverse(nq)) {
+        const k = bareKey(g.he);
+        if (k && !seen.has(k)) { seen.add(k); rows.push(g); }
+      }
+      return rows;
+    })() : [];
     /* Curated rows reachable from BOTH spellings of the same word: the romanization the
        learner may have typed, and the Hebrew itself. Hebrew-keyed hits lead, because an
        exact match on the word as written beats a phonetic near-match. */
@@ -2003,7 +2101,13 @@
       input.focus();
       render(results, input.value);
     });
-    loadPhrases().then(() => { if (input.value) render(results, input.value); });
+    /* Les deux corpus, pas seulement le phrasebook. gloss.json n'était chargé qu'au moment
+       d'ouvrir un mot-à-mot : la recherche par le sens ne pouvait donc pas s'en servir même une
+       fois le fichier sur le disque du navigateur. Le re-rendu attend les DEUX, sinon la
+       première recherche d'une session répond sans le corpus et la suivante répond avec, sur la
+       même question. */
+    Promise.all([loadPhrases(), loadGloss()])
+      .then(() => { if (input.value) render(results, input.value); });
     syncClear();
     render(results, '');
   }
@@ -2035,6 +2139,7 @@
     mount: mount, renderBreakdown: renderBreakdown, copy: copyToClipboard, copyTitle: COPY_TITLE,
     _weldProclitics: weldProclitics, _dropPadded: dropPadded, _isAllHebrew: isAllHebrew,
     _phoneticQuery: phoneticQuery, _normalizeQuery: normalizeQuery, _setRomFixes: setRomFixes,
-    _hasExactReverse: hasExactReverse, _reverseOffline: reverseOffline, _search: search, _hasExactForward: hasExactForward
+    _hasExactReverse: hasExactReverse, _reverseOffline: reverseOffline, _search: search, _hasExactForward: hasExactForward,
+    _glossReverse: glossReverse, _loadGloss: loadGloss
   };
 })();
