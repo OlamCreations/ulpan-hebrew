@@ -100,6 +100,44 @@ try {
   for (const e of ex.expressions || []) { add(e.he, e.en || e.literal); addPhrase(e.he, e.en || e.literal); }
 } catch { /* generated file; fine if absent */ }
 
+/* Corpus EXTERNES déclarés dans layout.config.json. Aujourd'hui : kita10, le journal de classe
+ * de Jonas.
+ *
+ * Pourquoi une app en lit une autre : mesuré le 2026-08-27, le corpus vérifié d'ici ne couvrait
+ * que 33 % (702/2149) des mots réellement vus en cours. Les 465 leçons sont un programme
+ * générique ; kita10 est ce que son prof a écrit au tableau cette semaine. Chacun rate ce que
+ * l'autre a.
+ *
+ * Source OPTIONNELLE, et le dire est la moitié du travail : sur une machine sans le dépôt
+ * frère, le générateur continue avec un corpus plus petit — qui a exactement l'air d'un corpus
+ * normal. Un manque silencieux ne se verrait qu'en production, sous la forme d'un mot connu
+ * parti chercher le réseau. Donc on l'écrit.
+ */
+for (const src of cfg.externalCorpora || []) {
+  const dir = join(ROOT, src.path);
+  let files;
+  try {
+    files = (await readdir(dir)).filter((x) => x.endsWith('.json')).sort();
+  } catch {
+    console.log(`corpus externe "${src.id}" ABSENT de cette machine (${src.path}) — corpus réduit d'autant.`);
+    continue;
+  }
+  let n = 0;
+  const walk = (o) => {
+    if (!o) return;
+    if (Array.isArray(o)) return o.forEach(walk);
+    if (typeof o !== 'object') return;
+    /* On ne prend QUE les entrées qui portent un sens. Une entrée sans glose n'apprend rien à ce
+       corpus-ci (dont l'objet est le sens) mais créerait de l'ambiguïté de squelette, donc
+       supprimerait de vraies entrées : elle coûterait sans rien rendre. */
+    const gl = (o.en || o.fr || '').trim();
+    if (typeof o.he === 'string' && gl) { add(o.he.trim(), gl); addPhrase(o.he.trim(), gl); n++; }
+    Object.values(o).forEach(walk);
+  };
+  for (const f of files) walk(JSON.parse(await readFile(join(dir, f), 'utf8')));
+  console.log(`corpus externe "${src.id}" : ${n} entrées glosées lues depuis ${files.length} fichiers`);
+}
+
 const lessonsDir = join(ROOT, cfg.toolScopes.lessons[0]);
 for (const f of (await readdir(lessonsDir)).filter((x) => x.endsWith('.html'))) {
   const s = await readFile(join(lessonsDir, f), 'utf8');
