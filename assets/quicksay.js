@@ -373,6 +373,10 @@
     if (kind === 'online') tag = '<span class="qs-tag qs-tag-online" title="Translated online">online</span>';
     else if (kind === 'curated') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, with niqqud">✓ lesson</span>';
     else if (kind === 'phonetic') tag = '<span class="qs-tag qs-tag-phonetic" title="Matched from what you typed phonetically">phonetic</span>';
+    /* Trouvé par le son, confirmé par les leçons. Il emprunte la couleur du curé, parce que le
+       contenu EST curé, et dit « by sound » pour ne pas laisser croire que l'orthographe tapée
+       était la bonne. */
+    else if (kind === 'phonetic-verified') tag = '<span class="qs-tag qs-tag-curated" title="From the lessons, found from the sound you typed">✓ lesson · by sound</span>';
     /* `lookup` : de l'hébreu tapé en hébreu, cherché tel quel. Aucun badge — c'est le cas
        normal, et le cas normal ne se signale pas. Les badges existent pour l'exception. */
     else if (kind === 'lookup') tag = '';
@@ -1025,9 +1029,24 @@
       return loadGloss().then(() => Promise.all(top.map(c =>
         vocalizeBare({ he: c, tr: null, rm: null, en: '' }, signal)
           .then(v => {
+            /* Le corpus des PHRASES d'abord quand le candidat en compte plusieurs : כָּךְ כָּךְ est
+               deux mots, et verifiedGloss ne connaît que des mots isolés — il rendait donc null
+               sur une expression pourtant présente dans les leçons. On reprend alors la forme
+               pointée DU CORPUS, pas celle qu'Input Tools a rendue : c'est la vocalisation
+               relue, et c'est elle qu'on veut apprendre. */
+            const lp = lessonPhrase(v.he);
+            if (lp && lp.en) {
+              return { he: lp.he, tr: lp.tr || v.tr, rm: v.rm, en: lp.en, bare: c, vf: true };
+            }
             const verified = verifiedGloss(v.he);
+            /* `vf` : le corpus reconnaît ce candidat. L'information était déjà calculée ici et
+               servait à s'épargner un appel — elle ne remontait pas jusqu'à la carte, qui
+               portait donc « phonetic », le badge d'une devinette, au-dessus d'un mot que la
+               classe a donné. Le contenu était vérifié, l'étiquette disait le contraire.
+               Ce qui est approximatif, c'est la ROUTE (l'apprenant a écrit le son), pas le mot.
+               Règle miroir de celle du moteur partagé, écrite le même jour. */
             if (verified && (lang || navLang()) === 'en') {
-              return { he: v.he, tr: v.tr, rm: v.rm, en: verified, bare: c };
+              return { he: v.he, tr: v.tr, rm: v.rm, en: verified, bare: c, vf: true };
             }
             return withTimeout(gloss(c), CFG.tGloss)
               .then(gl => ({
@@ -1036,11 +1055,27 @@
                 rm: (gl && gl.rm) || v.rm || null,
                 en: (gl && gl.en) || verified || '',
                 bare: c,
+                vf: !!verified,
               }))
-              .catch(() => ({ he: v.he, tr: v.tr, rm: v.rm, en: verified || '', bare: c }));
+              .catch(() => ({ he: v.he, tr: v.tr, rm: v.rm, en: verified || '', bare: c, vf: !!verified }));
           })
           .catch(() => ({ he: c, tr: null, en: '', bare: c }))
-      ))).then(list => { phonCache.set(key, list); return { offline: offline, online: list }; });
+      ))).then(list => {
+        /* Le candidat que le CORPUS confirme passe devant, quel que soit le rang qu'Input Tools
+           lui a donné. Mesuré le 2026-08-28 : sur « kacha kacha », le service classait כָּךְ כָּךְ
+           en tête — une graphie plausible mais absente des leçons — et כָּכָה כָּכָה, qui est dans
+           le corpus avec son sens relu, arrivait deuxième, sous un badge de devinette. La page
+           tenait la bonne réponse et menait avec l'autre.
+           Tri STABLE : entre deux candidats de même statut, l'ordre du service est conservé —
+           c'est lui qui sait lequel ressemble le plus à ce qui a été tapé. On ne réordonne que
+           selon ce que le service ne peut pas savoir : ce que la classe a donné. */
+        const ranked = list
+          .map((p, i) => ({ p: p, i: i }))
+          .sort((a, b) => ((b.p && b.p.vf ? 1 : 0) - (a.p && a.p.vf ? 1 : 0)) || (a.i - b.i))
+          .map(x => x.p);
+        phonCache.set(key, ranked);
+        return { offline: offline, online: ranked };
+      });
     });
   }
 
@@ -1671,7 +1706,11 @@
   function phonSectionHtml(offline, online, lang, queryWasHebrew) {
     const guessed = !queryWasHebrew;
     const cards = offline.map(p => card(p, 'phonetic-lesson', lang))
-      .concat(online.map(p => card(p, guessed ? 'phonetic' : 'lookup', lang)));
+      /* Un candidat que le corpus reconnaît (p.vf) n'est pas une devinette : le son a servi de
+         chemin, le mot vient des leçons. Il porte donc son propre badge, ni « phonetic » (qui
+         ferait douter d'un mot enseigné) ni « ✓ lesson » nu (qui cacherait que l'app a
+         interprété une orthographe). */
+      .concat(online.map(p => card(p, p && p.vf ? 'phonetic-verified' : (guessed ? 'phonetic' : 'lookup'), lang)));
     if (!cards.length) return '';
     /* Le titre n'apparaît que s'il y a un choix à faire. Une carte unique se passe d'en-tête :
        elle est la réponse.
@@ -2106,7 +2145,7 @@
        fois le fichier sur le disque du navigateur. Le re-rendu attend les DEUX, sinon la
        première recherche d'une session répond sans le corpus et la suivante répond avec, sur la
        même question. */
-    Promise.all([loadPhrases(), loadGloss()])
+    Promise.all([loadPhrases(), loadGloss(), loadLessonPhrases()])
       .then(() => { if (input.value) render(results, input.value); });
     syncClear();
     render(results, '');

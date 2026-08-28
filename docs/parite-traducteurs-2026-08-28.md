@@ -84,12 +84,63 @@ d'un index qui ne trouve rien.
 5. *P4* — `thank you` → תּוֹדָה affichait « thank you » comme sens. Règle
    d'ulpan-hebrew, mise en miroir dans le moteur.
 
-## Ce qui reste ouvert
+## Le portage du phonétique (même jour)
 
-`kacha kacha` : ulpan-hebrew rend כָּךְ כָּךְ (« so so ») par correspondance
-phonétique, kita10 rend une traduction en ligne fausse. **Le moteur n'a pas de
-correspondance phonétique** ; ulpan-hebrew en a une. Ce n'est pas un réglage,
-c'est une fonction à porter, et elle n'est pas commencée.
+`kacha kacha` est de l'hébreu écrit en lettres latines. Aucune clé du corpus ne
+l'atteint, donc kita10 tombait sur le traducteur, qui le lisait comme du
+français et rendait הֲכִי הַרְבֵּה הֲכִי הַרְבֵּה : quatre mots faux pour une question
+de deux.
+
+Ce qui manquait au moteur, c'est le seul service qui sache rendre le **son** en
+lettres hébraïques (Input Tools). Il est maintenant porté — mais pas recopié.
+
+|  | ulpan-hebrew (avant) | moteur (porté) |
+|---|---|---|
+| candidats affichés | tous, badgés « phonetic » | **seulement ceux que le corpus confirme** |
+| rang | celui du service | le confirmé passe devant |
+| ce que coûte un candidat non confirmé | pointage + glose (2 appels) | rien, il n'est pas montré |
+
+La règle qui rend l'appel utile n'est pas « on interroge le service », c'est **un
+candidat confirmé par le corpus n'est plus une devinette** : c'est une entrée
+vérifiée atteinte par une autre porte, et elle hérite du rang du corpus. C'est la
+hiérarchie que le moteur tient déjà partout — le vérifié bat le réseau — et non
+une exception écrite pour ce cas.
+
+Deux mutations de la matrice de cassures gardent les deux moitiés séparément :
+débrancher l'étage, et laisser passer un candidat **non** confirmé. Sans la
+seconde, l'assertion ne prouverait que « l'appel part ».
+
+### Et le retour dans l'autre sens
+
+Une fois kita10 réparé, la barre a signalé ulpan-hebrew : il rendait כָּךְ כָּךְ
+sous le badge `phonetic`, alors que son propre corpus tenait כָּכָה כָּכָה avec son
+sens relu — classé deuxième par le service, donc affiché en second sous une
+étiquette de devinette. **La page tenait la bonne réponse et menait avec
+l'autre.** Trois corrections en miroir :
+
+1. le corpus des **phrases** est consulté, pas seulement celui des mots
+   (כָּךְ כָּךְ fait deux mots, `verifiedGloss` n'en connaît qu'un) ;
+2. le candidat confirmé passe devant, par un tri **stable** — entre deux
+   candidats de même statut, l'ordre du service est conservé, car lui seul sait
+   lequel ressemble le plus à ce qui a été tapé ;
+3. il porte son propre badge, « ✓ lesson · by sound » : ni « phonetic », qui
+   ferait douter d'un mot enseigné, ni « ✓ lesson » nu, qui cacherait que l'app a
+   interprété une orthographe.
+
+**Résultat : 0 violation des deux côtés, sur les dix questions.**
+
+## Le contrôle qui manquait
+
+`latKey` et `romKey` sont écrits en double — une fois dans le constructeur d'index
+(module Node), une fois dans le moteur (script de navigateur sans imports). Si une
+règle diverge d'un caractère, les clés de l'index ne sont plus celles que la
+recherche calcule et **le corpus a l'air vide** : aucune erreur, aucune trace.
+
+Un commentaire du moteur annonçait un contrôle de parité de clés depuis le début.
+**Le fichier n'existait pas.** Il existe maintenant
+(`tools/key-parity-check.mjs`, dans `npm test`), il compare ce que les deux
+implémentations RENDENT sur 43 entrées plutôt que leur texte source, et il porte
+son propre contrôle négatif.
 
 ## Lancer la barre
 
