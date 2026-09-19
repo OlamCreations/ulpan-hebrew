@@ -76,7 +76,7 @@ quand tout le corpus était hébreu suppose l'hébreu sans le dire.
 
 ## Ce qui reste ouvert
 
-**Ce correctif n'est pas prouvé être la panne de Jonas.** Il corrige une panne qui produit
+**Ce correctif n'est pas prouvé être la panne de l'auteur.** Il corrige une panne qui produit
 exactement le symptôme décrit, et il rend le moteur capable de dire ce qui lui arrive, ce qui,
 la prochaine fois, remplacera une enquête par une capture d'écran lisible. La question qui
 trancherait : **est-ce que l'écran disait quelque chose (un message), ou est-ce qu'il n'y avait
@@ -90,7 +90,7 @@ même bleu. Trois pistes chiffrées en fin de `translator-reliability-2026-08-23
 
 # Deuxième passe : « en fonction de l'input »
 
-Jonas a précisé : la carte hébreu s'affiche, c'est **la ligne du sens** qui ne donne rien, et
+L'auteur a précisé : la carte hébreu s'affiche, c'est **la ligne du sens** qui ne donne rien, et
 c'est vrai sur les trois appareils. Un défaut indépendant de l'appareil ne dépend pas du réseau,
 donc il devait se voir en sonde. Il s'y voyait, il n'était pas cherché.
 
@@ -170,7 +170,7 @@ curl gtx  ->  HTTP 429, corps HTML, 1103 octets
 ```
 
 **Google limite cette connexion.** Je l'ai saturée moi-même avec les tests de la journée, mais
-c'est aussi la panne de Jonas, et tout colle :
+c'est aussi la panne de l'auteur, et tout colle :
 
 | Ce qu'il décrit | Ce que fait un 429 |
 |---|---|
@@ -228,7 +228,7 @@ Le held-out est le seul chiffre à regarder. À rejouer quand le quota est retom
 `data/expressions.json` porte un champ nommé **`fr`** sur ses 129 lignes et **pas une n'est en
 français** : « cool / OK / awesome », « broken heart ». La page `reference/expressions.html`
 l'affiche tel quel dans `.xp-fr`. Un francophone y lit donc de l'anglais dans un champ qui promet
-du français. Corriger, c'est traduire 129 idiomes : contenu, donc décision de Jonas.
+du français. Corriger, c'est traduire 129 idiomes : contenu, donc décision de l'auteur.
 
 ---
 
@@ -270,7 +270,7 @@ Mes sondes envoient un User-Agent desktop. En filtrant sur `device = mobile` :
 | usage typique | **1 appareil par jour**, 1 à 17 événements |
 | événements mobiles au total | 128 sur 1 474 |
 
-C'est petit, c'est régulier, et c'est probablement surtout Jonas. **Aucune preuve, à ce jour,
+C'est petit, c'est régulier, et c'est probablement surtout l'auteur. **Aucune preuve, à ce jour,
 d'un usage tiers significatif.** Ce n'est pas un verdict sur l'app : c'est le constat que la
 télémétrie ne pouvait pas répondre à la question tant qu'elle comptait le harnais.
 
@@ -381,7 +381,7 @@ Google — et non de la capacité. Le gain global est de **−8 %**, pas les −
 Le vrai poste, ce sont les saisies **latines** à 9-10 appels : 4 gtx + 1 Input Tools + 4 Worker,
 dont l'essentiel part en glose et vocalisation des **trois** candidats phonétiques (`CFG.enrichTop`).
 Descendre à deux candidats économiserait environ 2 appels par saisie latine. C'est un changement
-visible pour l'apprenant (une carte de moins), donc une décision de Jonas.
+visible pour l'apprenant (une carte de moins), donc une décision de l'auteur.
 
 ## Correction n°2 : le levier 2 a un coût, et le contrôle l'a attrapé
 
@@ -422,7 +422,7 @@ Limiting côté compte Cloudflare, ou compter nous-mêmes (Durable Object ou KV)
 
 ---
 
-# 26/08 — la capture de Jonas : « regarde, toujours pas la traduction »
+# 26/08 — la capture de l'auteur : « regarde, toujours pas la traduction »
 
 Deux choses, et la première est de ma faute.
 

@@ -101,7 +101,7 @@ try {
 } catch { /* generated file; fine if absent */ }
 
 /* Corpus EXTERNES déclarés dans layout.config.json. Aujourd'hui : kita10, le journal de classe
- * de Jonas.
+ * de l'auteur.
  *
  * Pourquoi une app en lit une autre : mesuré le 2026-08-27, le corpus vérifié d'ici ne couvrait
  * que 33 % (702/2149) des mots réellement vus en cours. Les 465 leçons sont un programme

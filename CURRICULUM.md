@@ -243,15 +243,15 @@ The Yiddish layer beneath modern Hebrew: loanwords, emotional register, haredi m
 
 ## BLOCK 18 — Water, Sanitation, Irrigation, Agriculture (171-180) — DONE
 
-Direct alignment with David's BTS GEMEAU credential, KKL formation post-aliyah, and Hemp of Negev pilot trajectory. Career-grade technical Hebrew for water/agri sector.
+Career-grade technical Hebrew for the water and agriculture sector.
 
-171. Water Cycle & Sources — aquifers · Kinneret · climate · BTS GEMEAU vocabulary
+171. Water Cycle & Sources — aquifers · Kinneret · climate · water technician vocabulary
 172. Mekorot & National Water Carrier — state company · jobs · regulators · interview
 173. Desalination — Sorek · RO · IDE · brine · 80% household supply
 174. Wastewater & Sanitation — Shafdan · primary/secondary/tertiary · 90% reuse
 175. Drip Irrigation — Netafim · Simcha Blass · Hatzerim · fertigation · story
-176. Negev Agriculture — Ramat HaNegev R&D · KKL formation · Bedouin · career path
-177. Crops & Seasons — wheat · dates · Tu BiShvat · Hemp of Negev pilot conversation
+176. Negev Agriculture — Ramat HaNegev R&D · KKL forestry · Bedouin
+177. Crops & Seasons — wheat · dates · Tu BiShvat · industrial hemp vocabulary
 178. Kibbutz & Moshav — renewed kibbutz · mazkir · candidacy · governance
 179. Water Diplomacy — Jordan 50M · Oslo JWC · Abraham Accords · 110 countries
 180. Water-Agri Summary + Career Hebrew — CV · interview · 7 concepts · institutions

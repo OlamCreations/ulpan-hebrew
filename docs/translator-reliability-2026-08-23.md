@@ -5,7 +5,7 @@
 
 ## Le point de départ, qui a orienté tout le reste
 
-Les trois requêtes exactes ont été rejouées, **en local puis sur github.io là où Jonas est**.
+Les trois requêtes exactes ont été rejouées, **en local puis sur github.io là où l'auteur est**.
 Les deux rendent la même chose, et c'est correct :
 
 | Requête | Rendu aujourd'hui, local et prod |
@@ -28,7 +28,7 @@ Aucune n'a été retenue au flair : chacune a été mesurée, y compris celles q
 | Google varie sa réponse pour « hard » | **réfutée aujourd'hui** | 10 exécutions, 10 fois `קָשֶׁה` |
 | La cursive supprime le niqqud de l'hébreu principal | **réfutée** | cursive ON garde `אַחֲרֵי` vocalisé ; seule la ligne d'écho est nue |
 | `qs-niqqud = off` produit l'hébreu nu de la capture 2 | **CONFIRMÉE** | niqqud OFF rend exactement `אחרי` + `a-cha-REI` correct |
-| Le Worker injoignable explique la capture 2 | **partielle** | il produit bien l'hébreu nu, mais dégrade aussi la lecture (`achari`), or Jonas avait `a-cha-REI` juste |
+| Le Worker injoignable explique la capture 2 | **partielle** | il produit bien l'hébreu nu, mais dégrade aussi la lecture (`achari`), or l'auteur avait `a-cha-REI` juste |
 | Un jeton étranger empoisonne la lecture de la carte | **réfutée** | latin, `@`, `~`, emoji, `✦`, `▾`, chiffres, point collé : 100 % de lectures vérifiées ; seule une URL descend à 88 % |
 | L'espace insécable de WhatsApp ressort en « Â » | **réfutée** | aucun `Â` produit |
 | Un remplissage asynchrone écrit dans la carte d'une autre requête | **réfutée** | `wireGnp` écrit dans une référence capturée ; si la carte a été remplacée, l'élément est détaché et l'écriture ne va nulle part |
@@ -59,7 +59,7 @@ Le plafond vit désormais dans `render()`, le seul entonnoir que toutes les voie
 il **le dit** au lieu de tronquer en silence. Vérifié : 200 passe, 201 est refusé avec un
 message.
 
-## La cause de fond, et c'est une décision de Jonas
+## La cause de fond, et c'est une décision de l'auteur
 
 Les trois badges de provenance font **10 px, même forme, même famille de bleu** :
 
@@ -71,13 +71,13 @@ Les trois badges de provenance font **10 px, même forme, même famille de bleu*
 
 Sur un téléphone, dans un coin, en capitales de 10 px, **une devinette machine et une phrase
 vérifiée ont la même autorité visuelle**. Quelle que soit la réponse que Google a servie à
-Jonas à 09:01, rien sur la carte ne lui disait qu'elle n'avait été relue par personne.
+l'auteur à 09:01, rien sur la carte ne lui disait qu'elle n'avait été relue par personne.
 
 C'est exactement ce que dit « n'est plus fiable » : le problème n'est pas que le moteur se
 trompe parfois (un traducteur automatique se trompe). Le problème est qu'**on ne peut pas voir
 lesquelles de ses réponses sont fiables.**
 
-Trois pistes, par coût croissant, à trancher par Jonas (changement visuel = son domaine) :
+Trois pistes, par coût croissant, à trancher par l'auteur (changement visuel = son domaine) :
 1. Marquer les lectures **non vérifiées** mot par mot. Mesuré : au-delà de 14 mots, 6 à 14 % des
    mots portent une romanisation qui n'est pas passée par le moteur vérifié (`saliha` au lieu de
    `sli-CHA`), sans aucune marque.
@@ -117,7 +117,7 @@ debounce et du réseau.
 **Le M5 instable est le même phénomène que la capture 08:47.** Il casse quand le moteur n'arrive
 pas à repointer sa propre réponse : « a répondu `מָחָר`, mais repointer ses consonnes a rendu
 `מחר` ». C'est un appel Worker qui n'a pas abouti, et le symptôme est exactement l'hébreu nu que
-Jonas a vu. La clôture du 20/08 notait déjà cette instabilité comme du bruit réseau non
+L'auteur a vu. La clôture du 20/08 notait déjà cette instabilité comme du bruit réseau non
 expliqué ; elle a maintenant un nom et un mécanisme.
 
 ## Sondes laissées dans `tools/`

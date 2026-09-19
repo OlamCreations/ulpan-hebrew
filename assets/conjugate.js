@@ -15,7 +15,7 @@
  * up are exactly the irregular ones, and a table that is right most of the time is not a table
  * you can use.
  *
- * Scored against 57 verb paradigms written down in Jonas's ulpan class (tools/conjugate-test.mjs):
+ * Scored against 57 verb paradigms written down in an ulpan class (tools/conjugate-test.mjs):
  * 152 of 152 forms exact, niqqud included, across the seven classes below; the other 19 verbs are
  * refused. Coverage grows by adding a class and its test rows, never by loosening the test.
  *

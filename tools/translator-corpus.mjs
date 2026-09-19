@@ -59,7 +59,7 @@ for (const p of spread(multiWord.length >= PER ? multiWord : anyWord, PER)) {
         note: 'phrasebook reference (niqqud stripped on input)' });
 }
 
-/* ---------- ulpan class notes: real French glosses from Jonas's own sheets ---------- */
+/* ---------- ulpan class notes: real French glosses from the author's own sheets ---------- */
 const daysDir = join(ROOT, '..', 'ulpan-etzion', 'data', 'days');
 let ulpanCount = 0;
 if (existsSync(daysDir)) {

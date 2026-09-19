@@ -1,6 +1,6 @@
 /* repro-degraded-2026-08-23.mjs — le moteur sous réseau dégradé.
  *
- * Les captures de Jonas du 23/08 montrent trois choses que ni le local ni la prod ne
+ * Les captures de l'auteur du 23/08 montrent trois choses que ni le local ni la prod ne
  * reproduisent à HEAD : hébreu SANS niqqud, champ sens qui répète l'hébreu, et une carte
  * illisible. Les trois captures montrent aussi un signal mobile faible.
  *

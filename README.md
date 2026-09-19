@@ -1,17 +1,30 @@
 # Ulpan Hebrew
 
-Pre-Ulpan crash course — 460+ interactive Hebrew lessons.
+A Hebrew course for new immigrants to Israel: 465 lessons, a roots atlas (250 roots), the 150 psalms, prayers, songs, and a live translator.
 
-Static site (no build step). Open `index.html` in a browser.
+**Live:** https://olamcreations.github.io/ulpan-hebrew/
+
+Static site, no build step. It installs as an app on a phone and works offline.
 
 ## Features
 
-- 460+ lessons covering A1 → C1, ethnic heritages, arts & culture
+- 465 lessons covering A1 → C1, ethnic heritages, arts & culture
 - Click-to-reveal cards (Hebrew first, then transliteration / translation)
 - Spaced-repetition system (SM-2) with review modal
 - Niqqud toggle (per page and inside SRS)
 - Light / dark mode
 - Listen-all + per-word audio (system TTS, Forvo fallback)
+
+## How this was built
+
+I don't write the code by hand. I direct AI coding agents (Claude Code). I set the goal, review what comes back, and decide what ships. Since August 2026, many commits carry the `Claude-Session:` trailer that Claude Code adds (`git log --grep=Claude-Session:` lists them).
+
+Scripts check what I don't take on trust. Anyone can run them:
+
+1. `node tools/translit-test.cjs` checks the transliteration against a curated phrasebook: 118/118.
+2. `node tools/tehilim-hebrew-check.mjs` compares all 150 psalm pages with the Masoretic source: 19,586 words, codepoint for codepoint (psalms 1-10 through a documented tolerance).
+3. `node tools/tehilim-hebrew-check.mjs --self-test` feeds it 7 deliberately broken pages. It rejects all 7.
+4. `node tools/chords-test.mjs` runs 129 checks on the chord engine.
 
 ## Repo layout
 
@@ -41,8 +54,9 @@ there rather than teaching each script about a new folder.
 ## Local dev
 
 ```bash
-node tools/serve.mjs 8912     # dev server that mimics GitHub Pages (unknown path -> 404.html)
-node tools/smoke.mjs          # one page per folder: assets load, modules install, redirects work
+npm i --no-save --prefix . playwright-core   # once: smoke.mjs drives your installed Chrome through it
+node tools/serve.mjs 8912     # dev server that mimics GitHub Pages (unknown path -> 404.html); leave it running
+node tools/smoke.mjs          # from a second terminal: one page per folder: assets load, modules install, redirects work
 node tools/translit-test.cjs  # transliteration vs the curated phrasebook (must stay 118/118)
 node tools/chords-test.mjs    # the harmony engine, including its injected-defect matrix
 ```
@@ -73,21 +87,34 @@ installed app), so it is scripted rather than remembered.
 
 ## The morphology / translation Worker
 
-The word-by-word breakdown, the bare-Hebrew vocalization, and the "natural version"
-button call a small Cloudflare Worker (`worker/`) that relays Dicta Nakdan, UDPipe,
-and Workers AI. The front-end (`quicksay.js`, `track.js`) points `MORPH_URL` at our
-deployment. If you fork and host this yourself, **deploy your own Worker** and change
-`MORPH_URL` to your own `*.workers.dev` URL — our deployment only accepts requests
-from `olamcreations.github.io`, so a fork will not reach it. Deploy with:
+The word-by-word breakdown, the vowel marks on bare Hebrew, and the "natural version" button
+call a small Cloudflare Worker (`worker/`). It relays Dicta Nakdan (vowels and roots), UDPipe
+(grammar) and Workers AI (the natural version, in-context word glosses).
+
+Its CORS policy only answers browsers on our own app origins, plus `localhost` and `127.0.0.1` for local
+development, so a fork published anywhere else cannot use it.
+If you fork this repo, deploy your own Worker and point `MORPH_URL` in `assets/quicksay.js` and
+`ENDPOINT` in `assets/track.js` at it. The pages' Content-Security-Policy (`connect-src`) names
+our Worker's host too, so add yours there.
 
 ```bash
-cd worker && npx wrangler deploy   # needs your own Cloudflare account (free tier is fine)
+cd worker && npx wrangler deploy   # your own Cloudflare account, the free tier is enough
 ```
 
-Dicta's public API blocks Cloudflare's Worker egress IPs, so the niqqud is served by a small
-self-hosted Hugging Face Space running Dicta's open model (`worker/dicta-space/`). If you fork
-this repo, **deploy your own Space too** (it's free) and point the Worker's `SPACE_URL` at it —
-ours is key-gated and serves only our Worker. See `worker/dicta-space/README.md`.
+`worker/dicta-space/` holds a self-hosted alternative for the vowels: Dicta's open model on a
+Hugging Face Space. It is not wired into the Worker yet. `worker/dicta-space/README.md` explains how.
+
+## Privacy
+
+1. Your progress (lessons done, quiz scores, review cards) stays in your browser. There is no account.
+2. The site counts anonymous usage: page views, which features are used, and JavaScript errors.
+   The Worker stores the event, the country and the device type (mobile, tablet or desktop).
+   No cookie, no IP address. Analytics never include the text you type. The only identifier is
+   a random key kept in your browser.
+3. Do Not Track turns the counting off.
+4. The live translator sends what you type to Google (Translate and Input Tools) and to our
+   Worker, which relays it to Dicta, UDPipe and Workers AI to get the Hebrew, the vowels and the
+   grammar. The Worker caches translation results for up to 7 days, keyed on the text alone.
 
 ## License
 
@@ -98,9 +125,9 @@ ours is key-gated and serves only our Worker. See `worker/dicta-space/README.md`
 - **Fonts**: both are bundled in `assets/` — KtavYadCLM (Culmus, GPL + font exception)
   and Frank Ruhl Libre (SIL OFL). Nothing is fetched from an external host.
 
-**Honest note:** the content is authored and curated by Jonas Nephtali with LLM
-assistance, then hand-corrected. It is a work in progress, not a vetted textbook —
-expect residual niqqud errors. The live translator's default pass is Google Translate
-(literal on idiomatic phrases); an opt-in "natural version" button routes the phrase
-through a larger model for the idiomatic reading, which is better but not infallible.
-Corrections welcome.
+**Honest note:** the lessons were drafted with LLMs, then corrected through scripted checks
+and AI-assisted review, not by a professional editor. It is a work in progress, not a vetted
+textbook. A July 2026 estimate put 700 to 900 niqqud errors left; 41 have been fixed since.
+The live translator's default pass is Google Translate, which is literal on idiomatic phrases.
+The opt-in "natural version" button asks a larger model for the idiomatic reading. It is
+better, not infallible. Corrections are welcome.

@@ -1,6 +1,6 @@
 # Ulpan Hebrew — Plan de refonte pédagogique
 
-_Décidé avec Jonas 2026-07-15, sur review Fable. Objectif : passer d'un moteur de reconnaissance de mots isolés à un moteur de **production de phrases** pour un olé qui doit parler._
+_Décidé avec l'auteur le 2026-07-15, sur review Fable. Objectif : passer d'un moteur de reconnaissance de mots isolés à un moteur de **production de phrases** pour un olé qui doit parler._
 
 ## 0. Principe directeur
 

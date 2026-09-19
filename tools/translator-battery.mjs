@@ -148,7 +148,7 @@ for (const c of RUN) {
        data/expressions.json porte un champ nomme `fr` sur ses 129 lignes et PAS UNE n'est en
        francais ("cool / OK / awesome", "broken heart"). Comparer une reponse francaise a cette
        reference-la fabrique des faux echecs, et le champ mal nomme est un defaut de donnees
-       separe, note pour Jonas. */
+       separe, note pour l'auteur. */
     const refLang = c.held ? 'en' : wantLang;
     ok = cards.some(x => meaningHit(meaningOf(x), c.wantMeaning[refLang] || c.wantMeaning.en));
   }

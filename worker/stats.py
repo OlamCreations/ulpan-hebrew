@@ -26,7 +26,7 @@ env = load_env(ENV)
 TOKEN, ACCOUNT = env["CF_API_TOKEN"], env["CF_ACCOUNT_ID"]
 URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT}/analytics_engine/sql"
 # Exclude owner-tagged devices (blob7='owner', set via ?owner=1) and Claude's known test ids,
-# so the report shows REAL users, not Jonas or test traffic.
+# so the report shows REAL users, not the author or test traffic.
 TEST_AIDS = ("testverify", "seed1", "synctest", "dbg", "errtest")
 EXCL = " AND blob7 != 'owner' AND index1 NOT IN (" + ", ".join(f"'{a}'" for a in TEST_AIDS) + ")"
 TIME = f"timestamp > NOW() - INTERVAL '{DAYS}' DAY"

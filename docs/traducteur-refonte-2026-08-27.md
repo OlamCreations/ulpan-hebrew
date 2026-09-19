@@ -1,6 +1,6 @@
 # Le traducteur : ce qui n'allait pas, et ce qui a été fait (27/08/2026)
 
-Point de départ, dans les mots de Jonas : « je voudrais avoir le live translator d'ulpanhebrew
+Point de départ, dans les mots de l'auteur : « je voudrais avoir le live translator d'ulpanhebrew
 dans kita10, ça pourrait utiliser même code, même worker ? mais le live translator fonctionne
 très mal ! j'ai l'impression que le code est trop compliqué et que ça embrouille tout au final ».
 
@@ -131,12 +131,12 @@ un acte sortant.
    dans les trois points d'intégration ci-dessus.
 2. **Le hé mappiq final.** Le moteur lit `שֶׁלָּהּ` « she-LAH » ; la classe écrit « shela », et elle
    a raison **en hébreu moderne**. Mais `translit.js` sert aussi 214 pages de liturgie, où ce hé
-   se prononce. Deux réponses correctes selon le registre : arbitrage de Jonas, pas correctif.
+   se prononce. Deux réponses correctes selon le registre : arbitrage de l'auteur, pas correctif.
 3. **Le sheva na.** 400 désaccords subsistent entre le moteur et les lectures manuscrites de la
    classe, très majoritairement de convention : le moteur écrit `mla-MED`, la classe `melamed`.
    Aucun des deux n'est faux. À trancher une fois, pas mot par mot.
 4. **`GOOGLE_TRANSLATE_KEY`** n'est pas posée : `/tr` tomberait sur Workers AI. `gcloud` est
-   installé et authentifié en `jonas@olam-creations.com`, mais son jeton a expiré et le
+   installé et authentifié sur le compte de l'auteur, mais son jeton a expiré et le
    renouvellement est interactif. Runbook complet : `ulpan-engine/DEPLOY.md`.
 5. **Les lectures manuscrites de kita10 sont un jeu d'évaluation humain** de 3 462 entrées pour le
    moteur de lecture, découvert sans le chercher. 88 % d'accord une fois la mise en forme

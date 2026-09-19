@@ -1,6 +1,6 @@
 /* probe-gloss-slow-2026-08-25.mjs — le champ SENS quand la glose est LENTE, pas morte.
  *
- * Jonas, 25/08 : « là où ça doit afficher la trad, y a rien ». Réseau sain, le sens n'est jamais
+ * L'auteur, 25/08 : « là où ça doit afficher la trad, y a rien ». Réseau sain, le sens n'est jamais
  * vide (36/36 mots tirés au hasard des leçons, mesuré contre la prod). Reste la panne du
  * téléphone : une connexion vivante mais mauvaise. Un upstream refusé lève tout de suite ; un
  * upstream LENT tient jusqu'à ce que le budget expire, et l'app rend alors une carte sans sens.

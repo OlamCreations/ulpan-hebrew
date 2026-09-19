@@ -3,7 +3,7 @@
  * translator-degraded-check.mjs — type Hebrew into the real translator with ONE upstream cut,
  * and assert that what the learner sees is still honest.
  *
- * WHY THIS FILE EXISTS. On 2026-08-23 Jonas reported that a Hebrew word came back as itself
+ * WHY THIS FILE EXISTS. On 2026-08-23 the author reported that a Hebrew word came back as itself
  * instead of its English. Nothing in the harness had ever gone red: the probe, the invariants
  * and the metamorphic runner all measure a HEALTHY network, and this engine degrades silently
  * by design — every enrichment is wrapped in .catch() so that a slow upstream costs a nicety

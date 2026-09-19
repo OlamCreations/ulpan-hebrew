@@ -1,6 +1,6 @@
 /* parity-2026-08-28.mjs — les DEUX traducteurs, les MÊMES questions, la même barre.
  *
- * Jonas : « ne migre pas mais mirror les deux, que ça marche aussi bien dans ulpan hebrew ».
+ * L'auteur : « ne migre pas mais mirror les deux, que ça marche aussi bien dans ulpan hebrew ».
  * Les deux surfaces gardent donc leur code (2040 lignes ici, 987 dans le moteur partagé) et
  * doivent tenir les mêmes promesses. Ce fichier est la barre commune.
  *

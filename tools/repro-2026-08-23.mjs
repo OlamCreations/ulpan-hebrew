@@ -1,4 +1,4 @@
-/* repro-2026-08-23.mjs — rejoue les requêtes exactes des captures de Jonas (23/08).
+/* repro-2026-08-23.mjs — rejoue les requêtes exactes des captures de l'auteur (23/08).
  *
  * Trois symptômes rapportés, à séparer avant de diagnostiquer :
  *   A. « hard » (un mot anglais) rend une phrase hébraïque de deux mots

@@ -5,7 +5,7 @@
  *   node tools/conjugate-test.mjs            report
  *   node tools/conjugate-test.mjs --misses   list every form that does not match
  *
- * The fixture is 57 verbs from Jonas's ulpan class notes — his teacher's paradigms, not mine —
+ * The fixture is 57 verbs from the author's ulpan class notes — his teacher's paradigms, not mine —
  * frozen into tools/fixtures/verb-paradigms.json. It is ground truth, so this test is the only
  * thing standing between the app and a confidently wrong verb table.
  *
@@ -65,7 +65,7 @@ if (misses.length) {
   if (!showMisses && misses.length > 12) console.log(`  ... ${misses.length - 12} more (--misses)`);
 }
 
-// Jonas's own example from the screenshot, pinned: לנוח is a hollow root, and it is exactly the
+// The author's own example from the screenshot, pinned: לנוח is a hollow root, and it is exactly the
 // shape a naive generator gets wrong.
 const nuach = Conjugate.present('נוח', 'PAAL', 'לָנוּחַ');
 const wantNuach = { 'm.s': 'נָח', 'f.s': 'נָחָה', 'm.pl': 'נָחִים', 'f.pl': 'נָחוֹת' };

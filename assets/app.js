@@ -315,7 +315,7 @@ function showVoiceBanner(force) {
           <pre>Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).GetInstalledVoices() | % { $_.VoiceInfo.Name + ', ' + $_.VoiceInfo.Culture }</pre>
           You should see <code>Microsoft Asaf, he-IL</code>.
         </div>
-        <a class="voice-banner-link" href="https://support.microsoft.com/en-us/windows/download-languages-and-voices-for-narrator-tts-and-speech-recognition-d2503ad3-ad42-4d3b-b3d2-0ae599cc939e" target="_blank" rel="noopener">Microsoft documentation →</a>
+        <a class="voice-banner-link" href="https://support.microsoft.com/en-us/windows/appendix-a-supported-languages-and-voices-4486e345-7730-53da-fcfe-55cc64300f01" target="_blank" rel="noopener">Microsoft documentation →</a>
       </details>
 
       <details class="voice-banner-os"${macOpen}>
@@ -856,7 +856,7 @@ function openSRSReview() {
 
 /* ---------- Theme (light/dark) ---------- */
 function getCurrentTheme() {
-  // Light is the default for new visitors (Jonas's call); dark is opt-in via toggle.
+  // Light is the default for new visitors (the author's call); dark is opt-in via toggle.
   return localStorage.getItem('theme') || 'light';
 }
 function applyTheme(theme) {
@@ -1821,7 +1821,7 @@ function openSituations(situations, lessonId) {
          Ce raisonnement etait deja ecrit - dans assets/swupdate.js, ajoute pour les 214 pages de
          liturgie qui ne chargent pas app.js - et il n'avait jamais ete reporte ICI, donc l'accueil
          et les 465 lecons en etaient prives. C'est ce qui a fait tester trois fois de suite a
-         Jonas une version dont il ne pouvait pas savoir qu'elle etait perimee. Cout : une requete
+         l'auteur une version dont il ne pouvait pas savoir qu'elle etait perimee. Cout : une requete
          conditionnelle sur sw.js. */
       document.addEventListener('visibilitychange', function () { if (!document.hidden) swCheck(); });
     }

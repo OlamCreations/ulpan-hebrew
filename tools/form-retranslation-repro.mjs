@@ -26,9 +26,9 @@ const FORM_AT = (() => {
   return i > 0 && process.argv[i + 1] ? process.argv[i + 1].replace(/\/$/, '') : null;
 })();
 
-/* Phrases qui ont un verbe ET un sujet susceptibles de bouger. La première est celle de Jonas. */
+/* Phrases qui ont un verbe ET un sujet susceptibles de bouger. La première est celle de l'auteur. */
 const CASES = [
-  { id: 'phrase de Jonas', q: 'tu es émue que nous révisons' },
+  { id: 'phrase signalée', q: 'tu es émue que nous révisons' },
   { id: 'je veux un café',  q: 'je veux un café' },
   { id: 'tu es fatigué',    q: 'tu es fatigué' },
   { id: 'je suis prêt',     q: 'je suis prêt' },

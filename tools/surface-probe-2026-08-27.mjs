@@ -1,6 +1,6 @@
 /* surface-probe-2026-08-27.mjs — ce que la carte MONTRE, pas ce que le moteur trouve.
  *
- * Motif : le 27/08 Jonas dit « le live translator fonctionne très mal, le code est trop
+ * Motif : le 27/08 l'auteur dit « le live translator fonctionne très mal, le code est trop
  * compliqué et ça embrouille tout ». Les sondes existantes mesurent la JUSTESSE (le moteur
  * trouve-t-il la bonne réponse). Elles rendent vert. Aucune ne mesure la LISIBILITÉ : combien
  * de cartes, sous quel titre, avec quel mélange de provenances.

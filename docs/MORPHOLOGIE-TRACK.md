@@ -2,10 +2,10 @@
 
 > **Livré 2026-06-07.** 8 leçons `morpho-001..008-en.html` dans `C:/dev/projects/ulpan-hebrew/` (le repo vivant — l'ambiguïté de chemin ci-dessous est résolue, `admin/alyah/...` est un mirror mort). Interface EN (glose dans le champ `fr`, comme les 510 leçons existantes). Liées depuis `index.html` (`#cat-morpho`) + `CURRICULUM.md`. Track transversal (comme cursive/prayers), distinct des leçons séquentielles 28-30 sur les binyanim. Rendu vérifié headless : 0 erreur JS, word-lists/quiz/exercices auto OK. Spec d'origine conservée ci-dessous.
 
-## Intention (mots de Jonas)
+## Intention (mots de l'auteur)
 
 "racines, verbes, noms" — enseigner **la machine de l'hébreu**, pas du vocab à mémoriser.
-Le but : que Jonas **décode et dérive** un mot inconnu (racine + patron → sens + toute la famille),
+Le but : que l'apprenant **décode et dérive** un mot inconnu (racine + patron → sens + toute la famille),
 au lieu d'apprendre les mots un par un. Déclencheur : l'explication de בהצלחה (préposition ב +
 nom הצלחה, ה final = féminin + nom d'action du binyan hif'il, patron הַ_ָ_ָה).
 

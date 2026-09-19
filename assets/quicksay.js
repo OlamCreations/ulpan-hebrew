@@ -1603,7 +1603,7 @@
      standard Hebrew: 29 right, 0 wrong, 1 abstention (כוס, which UDPipe tags Fem,Masc and the
      Worker deliberately refuses to guess on). Silence is the failure mode here, never a guess —
      a confidently wrong gender would teach the learner an error they would then repeat aloud. */
-  /* The whole present tense under a verb, straight away — the thing Jonas asked for after looking
+  /* The whole present tense under a verb, straight away — the thing the author asked for after looking
      up לנוח and getting an infinitive with nothing to inflect. No round trip: conjugate.js builds
      the forms from the root, the binyan and the pointed word, so the table is there in the same
      frame as the card.
@@ -2015,7 +2015,7 @@
       const { ph, tr, phonFirst, fwdCard, offline, online } = laid;
 
       /* UNE réponse en tête, le reste replié. Ajouté le 2026-08-27, et c'est le dernier des
-       * défauts que Jonas décrivait par « ça embrouille tout ».
+       * défauts que l'auteur décrivait par « ça embrouille tout ».
        *
        * Avant : deux sections côte à côte, chacune avec autant de cartes qu'elle en avait
        * trouvé, toutes au même niveau visuel. Mesuré en production le même jour :

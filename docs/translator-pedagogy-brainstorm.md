@@ -1,7 +1,7 @@
 # Brainstorm — faire du live translator un vecteur d'apprentissage
 
 **Date** : 2026-08-04
-**Demande de Jonas** : « ça doit être un véritable vecteur d'apprentissage, pas juste balancer le mot comme ça »
+**Demande de l'auteur** : « ça doit être un véritable vecteur d'apprentissage, pas juste balancer le mot comme ça »
 **Axes retenus** : comprendre · retenir · relier. **Écarté explicitement** : produire (le moteur de production existe déjà côté leçons, P1).
 **Techniques** : First Principles · Analogical Thinking · Assumption Reversal · Five Whys · Alien Anthropologist · Cross-Pollination · SCAMPER · Constraint Mapping
 **Idées** : 80. Pas 100 — le protocole vise la quantité, mais la dernière chose utile ici est du remplissage. Chaque ligne ci-dessous est jouable.

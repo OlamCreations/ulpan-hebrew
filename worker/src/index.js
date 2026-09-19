@@ -387,14 +387,11 @@ async function dicta(text, signal, prefer) {
   const payload = { task: 'nakdan', data: text, genre: 'modern', addmorph: true,
     keepqq: false, nodageshdefault: false, patachma: false, keepmetagim: true };
   const body = JSON.stringify(payload);
-  // Browser-like headers: Dicta's LB 503's the Worker's default egress fingerprint but serves the
-  // same request from a browser, so present as one (real UA + Origin/Referer of the Dicta web app).
-  const dictaHeaders = {
-    'Content-Type': 'application/json',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
-    'Origin': 'https://nakdan.dicta.org.il',
-    'Referer': 'https://nakdan.dicta.org.il/',
-  };
+  // The Worker speaks as itself. An earlier version sent a Chrome User-Agent plus the Origin and
+  // Referer of the Dicta web app, because Dicta's load balancer had answered the Worker's default
+  // fingerprint with 503. It no longer pretends to be Dicta's site: a node that refuses is skipped
+  // by the loop below, and a refusal from every node surfaces as 'upstream' (test/dicta-headers-test.mjs).
+  const dictaHeaders = { 'Content-Type': 'application/json' };
   let toks = null, lastStatus = 0;
   for (const url of NAKDAN_HOSTS) {
     let r;
