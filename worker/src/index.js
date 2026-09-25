@@ -701,11 +701,16 @@ export default {
     if (request.method !== 'POST') return json({ error: 'POST only' }, 405, origin);
 
     const path = new URL(request.url).pathname;
+    // Keep legacy CORS behavior unchanged; disallowed browser callers cannot spend
+    // inference on the new route even when they ignore the returned CORS header.
+    if (path === '/sentence-form' && origin && allowOrigin(origin) !== origin) {
+      return json({ error: 'origin denied' }, 403, origin);
+    }
     /* /tr compte comme un chemin IA seulement quand il TOMBE sur le modèle. Avec une clé Google
        Cloud c'est un appel de traduction ordinaire, bien moins cher qu'une inférence, et le
        plafonner à 12/60 s couperait la classe sans raison. Le vrai arbitrage se fait plus bas,
        une fois qu'on sait quel moteur répond. */
-    const isAI = path === '/nat' || path === '/gloss' || path === '/form'
+    const isAI = path === '/nat' || path === '/gloss' || path === '/form' || path === '/sentence-form'
       || (path === '/tr' && !(env && env.GOOGLE_TRANSLATE_KEY));
 
     // Reject oversized bodies before reading/parsing/joining them — an unbounded words[] on /gloss
@@ -729,11 +734,19 @@ export default {
     /* Budgets, en clair et au meme endroit. Un appareil garde le budget serre d'avant ; l'IP
        est un garde-fou large, parce qu'une classe derriere un wifi partage une seule IP et
        qu'une requete du traducteur coute ~3,9 appels a ce Worker (mesure 2026-08-25). */
+    const sentenceForms = path === '/sentence-form' ? await import('./sentence-form.js') : null;
     const budgets = isAI
       ? [[devKey + '|ai', 12], [ip + '|ai', 60]]
       : [[devKey, 100], [ip, 600]];
     for (const [key, limit] of budgets) {
-      if (!(await allow(env, key, limit, isAI))) return json({ error: 'rate limited' }, 429, origin);
+      const granted = sentenceForms
+        ? await sentenceForms.sentenceFormQuota(() => allow(env, key, limit, isAI))
+        : await allow(env, key, limit, isAI);
+      if (!granted) return json({ error: 'rate limited' }, 429, origin);
+    }
+
+    if (path === '/sentence-form') {
+      return sentenceForms.sentenceForm(request, env, ctx, (body, status) => json(body, status, origin));
     }
 
     // Analytics ingest — always 204 (never let tracking break or slow the app). Awaited (not
