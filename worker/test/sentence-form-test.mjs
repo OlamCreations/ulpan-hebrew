@@ -196,8 +196,9 @@ test('noncanonical compound or prefixed subjects are not pronoun-peeled', async 
 });
 test('route success and validation failure advertise serving revision', async () => {
   const ok = await route(); const bad = await route({ ...analyze, version: 99 });
-  assert.equal(ok.response.headers.get('X-Sentence-Form-Version'), 'v10');
-  assert.equal(bad.response.headers.get('X-Sentence-Form-Version'), 'v10');
+  const rev = JSON.parse(fs.readFileSync(new URL('../src/sentence-form.config.json', import.meta.url), 'utf8')).cacheVersion;
+  assert.equal(ok.response.headers.get('X-Sentence-Form-Version'), rev);
+  assert.equal(bad.response.headers.get('X-Sentence-Form-Version'), rev);
 });
 test('pronoun lexicon is copied exactly from existing verified Kita personTags', () => {
   const cfg = JSON.parse(fs.readFileSync(new URL('../src/sentence-form.config.json', import.meta.url), 'utf8'));
