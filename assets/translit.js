@@ -201,6 +201,52 @@
     return (isFirst || wasSheva) && clusterOk(consOf(u), consOf(next));
   }
 
+  /* SUFFIX STRESS (06.10.2026). The rules above were tuned on the phrasebook, where nearly every
+   * word is a base form. On conjugated and possessive forms the engine agreed with pealim's
+   * stress (the bold syllable of its transcription) only 57 % of the time over 624 real forms.
+   * The misses are suffixes, and Hebrew grammar names them:
+   *   UNSTRESSED (stress stays on the syllable before):
+   *     past 1s ־ְתִּי, past 2ms ־ְתָּ, 1pl ־ְנוּ ־ֵנוּ ־ִינוּ ־ֵינוּ, feminine plural ־ְנָה ־ֶינָה,
+   *     possessive ־ִיהָ ־ֶיהָ ־ִיךָ ־ֶיךָ.  נָשַׁכְתִּי na-SHACH-ti, אַחֶיהָ a-CHE-ha.
+   *   STRESSED (always final, the "heavy" suffixes): ־ְתֶּם ־ְתֶּן, ־ְכֶם ־ְכֶן ־ְהֶם ־ְהֶן and
+   *     their yod forms ־ֵיכֶם ־ֵיהֶם…  נְשַׁכְתֶּם nes-hach-TEM. Without this, Rule S read
+   *     the segol as a segolate and pulled the stress back.
+   * Scope is by shape, every shape measured on pealim pages; a segolate noun such as לֶחֶם or
+   * תֹּכֶן does not match (no sheva or vowelless yod before the כ/ה/ת).
+   * ־ְתִּי is held to three syllables or more: אִשְׁתִּי ish-TI ("my wife", two syllables) has the
+   * same letters and is final. Returns 1 (penultimate), -1 (final, overriding Rule S) or 0. */
+  function suffixStress(letters, nSyl) {
+    const n = letters.length;
+    if (n < 3) return 0;
+    const L = (i) => letters[n - i];                  // L(1) = last letter
+    const v = (u) => (u ? vmarkOf(u) : undefined);
+    const bareYod = (u) => !!u && u.base === 0x05D9 && v(u) === null;
+    const shuruk = (u) => !!u && u.base === 0x05D5 && u.marks.has(DAGESH) && v(u) === null;
+    const sheva = (u) => !!u && v(u) === SHEVA;
+    // heavy suffixes: ם/ן after ת כ ה carrying segol, itself after a sheva or a bare yod
+    if ((L(1).base === 0x05DD || L(1).base === 0x05DF) && v(L(1)) === null
+        && [0x05EA, 0x05DB, 0x05D4].includes(L(2).base) && v(L(2)) === SEGOL
+        && (sheva(L(3)) || bareYod(L(3)))) return -1;
+    // ־נוּ : nun + shuruk after a sheva, or after (tsere|hiriq) + bare yod, or after tsere
+    if (shuruk(L(1)) && L(2).base === 0x05E0 && v(L(2)) === null) {
+      if (sheva(L(3))) return 1;
+      if (bareYod(L(3)) && [TSERE, HIRIQ].includes(v(L(4)))) return 1;
+      if (v(L(3)) === TSERE) return 1;
+    }
+    // ־נָה : nun + qamats + bare he, after a sheva or after segol + bare yod
+    if (L(1).base === 0x05D4 && v(L(1)) === null && !L(1).marks.has(DAGESH)
+        && L(2).base === 0x05E0 && v(L(2)) === QAMATS
+        && (sheva(L(3)) || (bareYod(L(3)) && v(L(4)) === SEGOL))) return 1;
+    // possessive ־ִיהָ ־ֶיהָ ־ִיךָ ־ֶיךָ : he or final kaf under a qamats, after a bare yod
+    if ((L(1).base === 0x05D4 || L(1).base === 0x05DA) && v(L(1)) === QAMATS
+        && bareYod(L(2)) && [HIRIQ, SEGOL].includes(v(L(3)))) return 1;
+    // past 2ms ־ְתָּ
+    if (L(1).base === 0x05EA && v(L(1)) === QAMATS && sheva(L(2))) return 1;
+    // past 1s ־ְתִּי, three syllables or more
+    if (bareYod(L(1)) && L(2).base === 0x05EA && v(L(2)) === HIRIQ && sheva(L(3)) && nSyl >= 3) return 1;
+    return 0;
+  }
+
   // Reconstruct the plain (unromanized) Hebrew for a word's letter-units, NFC-normalized, for
   // the exception lookup below. Marks are stored per-unit in a Set (insertion order = source
   // text order after normalizeDicta's NFC pass), so this round-trips reliably.
@@ -424,8 +470,11 @@
     { let start = 0; for (const b of boundaries) { syl.push(res.slice(start, b)); start = b; } syl.push(res.slice(start)); }
     const key = hebrewKey(us);
     const loan = LOANWORD_STRESS[key];
+    const suffix = suffixStress(letters, syl.length);
     const fromEnd = Number.isInteger(loan) ? loan - 1        // config: 1=final, 2=penult, 3=antepenult
       : STRESS_EXCEPTIONS_PENULT.has(key) ? 1
+      : suffix === 1 ? 1
+      : suffix === -1 ? 0
       : finalSyllableUnstressable(letters) ? 1
       : 0;
     const stressIdx = Math.max(0, syl.length - 1 - fromEnd);

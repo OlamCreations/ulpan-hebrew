@@ -164,3 +164,20 @@ const finalHeBad = FINAL_HE.filter(([he, want]) => !want(norm(transliterate(he.n
 console.log(`\nfinal he: ${FINAL_HE.length - finalHeBad.length}/${FINAL_HE.length}`);
 for (const [he] of finalHeBad) console.log(`  MISS ${he} -> ${transliterate(he.normalize('NFC'))}`);
 if (finalHeBad.length) { console.error('\nFAIL: a final he with a qamats must be read as h + a; a bare final he stays silent.'); process.exit(1); }
+
+/*
+ * Suffix stress (06.10.2026). Measured against pealim's bold syllable on 1 223 real forms:
+ * 57 % → 86 % on the pages the rule was written from, 55 % → 84 % on pages never looked at.
+ * The guards are the words that share the letters and keep the old stress.
+ */
+const SUFFIX_STRESS = [
+  ['אֲנַחְנוּ', 'a-NACH-nu'], ['אֲמַרְתֶּם', 'a-mar-TEM'], ['אֲחִיכֶם', 'a-chi-CHEM'],
+  ['אִיחַרְתִּי', 'i-CHAR-ti'], ['אִיבַּדְתָּ', 'i-BAD-ta'], ['אֱלֹהֶיךָ', 'e-lo-HEI-cha'],
+  ['אָחִיהָ', 'a-CHI-ha'],
+  // guards: a two-syllable ־ְתִּי noun stays final, a segolate stays penultimate
+  ['אִשְׁתִּי', 'ish-TI'], ['לֶחֶם', 'LE-chem'],
+];
+const suffixBad = SUFFIX_STRESS.filter(([he, want]) => transliterate(he.normalize('NFC')) !== want);
+console.log(`\nsuffix stress: ${SUFFIX_STRESS.length - suffixBad.length}/${SUFFIX_STRESS.length}`);
+for (const [he, want] of suffixBad) console.log(`  MISS ${he} want ${want} got ${transliterate(he.normalize('NFC'))}`);
+if (suffixBad.length) { console.error('\nFAIL: suffix stress.'); process.exit(1); }
