@@ -163,6 +163,25 @@ await check('T6 CORS autorise kita10 et refuse un tiers', async () => {
   return p;
 });
 
+// T6b — Les aperçus de kita10 (deploy.ps1 -Branch <nom>, et le <hash> de chaque déploiement)
+// vivent sous *.ulpan-etzion.pages.dev. Mesure du 2026-10-06 : l'aperçu « traduire » recevait
+// l'origine github.io, le navigateur bloquait la réponse, la page disait « sources injoignables ».
+// Un domaine qui ne fait que RESSEMBLER au projet reste refusé, comme http.
+await check('T6b CORS autorise les aperçus de kita10, pas les imitations', async () => {
+  const env = makeEnv({ googleKey: 'k', googleReply: 'שלום' });
+  const allowed = async (origin) => (await worker.fetch(post('/tr', { text: 'x', to: 'he' }, origin), env, ctx))
+    .headers.get('Access-Control-Allow-Origin') === origin;
+  const p = [];
+  for (const o of ['https://traduire.ulpan-etzion.pages.dev', 'https://afb4646f.ulpan-etzion.pages.dev']) {
+    if (!(await allowed(o))) p.push('aperçu refusé : ' + o);
+  }
+  for (const o of ['https://evilulpan-etzion.pages.dev', 'https://ulpan-etzion.pages.dev.evil.example',
+    'http://traduire.ulpan-etzion.pages.dev', 'https://x.olamcreations.github.io']) {
+    if (await allowed(o)) p.push('imitation autorisée : ' + o);
+  }
+  return p;
+});
+
 // T7 — Le cache : la deuxième requête identique ne touche plus l'upstream.
 await check('T7 la deuxième requête identique ne rappelle pas l\'upstream', async () => {
   const env = makeEnv({ googleKey: 'k', googleReply: 'שלום' });

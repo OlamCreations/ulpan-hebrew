@@ -165,12 +165,21 @@ const APP_ORIGINS = [
   'olamcreations.github.io',   // ulpan-hebrew
   'ulpan-etzion.pages.dev',    // kita10
 ];
+/* Les APERCUS d'un projet Cloudflare Pages a nous : <branche>.<projet>.pages.dev, et le <hash>
+   de chaque deploiement. Seul le proprietaire du projet Pages cree ces sous-domaines : les
+   admettre n'ouvre le Worker a personne d'autre, a la difference de l'ancien *.github.io.
+   Mesure du 2026-10-06 : l'apercu « traduire » de kita10 recevait l'origine github.io, le
+   navigateur bloquait chaque reponse, et la page disait « les sources sont injoignables ». */
+const PAGES_PREVIEW_PARENTS = [
+  'ulpan-etzion.pages.dev',    // kita10 : deploy.ps1 -Branch <nom>
+];
 function allowOrigin(origin) {
   try {
     if (!origin) return 'https://olamcreations.github.io';
     const u = new URL(origin);
     const h = u.hostname;
     if (APP_ORIGINS.includes(h) && u.protocol === 'https:') return origin;
+    if (PAGES_PREVIEW_PARENTS.some((p) => h.endsWith('.' + p)) && u.protocol === 'https:') return origin;
     if (h === 'localhost' || h === '127.0.0.1') return origin;
   } catch (e) {}
   return 'https://olamcreations.github.io';
