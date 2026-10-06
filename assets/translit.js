@@ -390,7 +390,9 @@
       }
 
       // --- HE: silent at word end (no mappiq dagesh) ---
-      if (c === 0x05D4 && isLast && !dagesh) {
+      //     Except under a qamats of its own (06.10.2026): אָחִיהָ = a-chi-ha, עָלֶיהָ = a-le-ha.
+      //     That ה falls through to the generic consonant below.
+      if (c === 0x05D4 && isLast && !dagesh && !(vmark === QAMATS && idxLetters > 0)) {
         let v = vowelSound(vmark);
         if (v) openSyllable();
         res += v; if (v) { lockOnset(); lastVowel = v; prevHadVowel = true; }

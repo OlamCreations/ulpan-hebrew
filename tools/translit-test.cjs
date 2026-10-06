@@ -146,3 +146,21 @@ if (offScheme.length > OFF_SCHEME_CEILING) {
   console.error(`\nFAIL: ${offScheme.length} rows use kh/ts where the engine uses ch/tz — the translator will show both spellings side by side.`);
   process.exit(1);
 }
+
+/*
+ * A final ה that carries a qamats is a consonant (06.10.2026). The engine treated every final ה
+ * as a silent mater and kept only its vowel: אָחִיהָ ("her brother") read "achi'a" where pealim
+ * prints "achiha", and the whole ־ֶיהָ family ("her …": עָלֶיהָ, אֵלֶיהָ) lost its h. A final ה
+ * WITHOUT a vowel stays silent (תּוֹדָה), and a patah under it is the furtive one (גָּבוֹהַ),
+ * left as it was.
+ */
+const FINAL_HE = [
+  ['אָחִיהָ', (n) => n === 'achiha'],
+  ['עָלֶיהָ', (n) => /ha$/.test(n)],
+  ['תּוֹדָה', (n) => n === 'toda'],
+  ['גָּבוֹהַ', (n) => !/ha$/.test(n)],
+];
+const finalHeBad = FINAL_HE.filter(([he, want]) => !want(norm(transliterate(he.normalize('NFC')))));
+console.log(`\nfinal he: ${FINAL_HE.length - finalHeBad.length}/${FINAL_HE.length}`);
+for (const [he] of finalHeBad) console.log(`  MISS ${he} -> ${transliterate(he.normalize('NFC'))}`);
+if (finalHeBad.length) { console.error('\nFAIL: a final he with a qamats must be read as h + a; a bare final he stays silent.'); process.exit(1); }
