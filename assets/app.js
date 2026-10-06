@@ -1857,4 +1857,15 @@ function openSituations(situations, lessonId) {
       })();
     }).catch(function () {});
   })();
+  // Same for the stress lexicon (06.10.2026): the forms whose stress the shape rules cannot decide
+  // (תַּסְגִּירִי against תַּלְמִידִי, קָמוּ against קָנוּ), with pealim's stress. A miss keeps the rules.
+  (function loadStressLexicon() {
+    fetch(window.ULPAN_BASE + 'data/stress-lexicon.json').then(function (r) { return r.json(); }).then(function (map) {
+      var tries = 0;
+      (function apply() {
+        if (window.Translit && window.Translit.setStressLexicon) { window.Translit.setStressLexicon(map); return; }
+        if (tries++ < 40) setTimeout(apply, 100);
+      })();
+    }).catch(function () {});
+  })();
 })();

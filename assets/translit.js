@@ -256,7 +256,13 @@
       if (sheva(L(3))) return 1;
       if (bareYod(L(3)) && [TSERE, HIRIQ].includes(v(L(4)))) return 1;
       if (v(L(3)) === TSERE) return 1;
+      /* ־ָנוּ "us" (כֻּלָּנוּ ku-LA-nu, אוֹתָנוּ o-TA-nu), three syllables or more (06.10.2026, video
+         de Jonas). Two syllables are left alone: בָּנוּ ba-NU and קָנוּ ka-NU are verbs written alike. */
+      if (v(L(3)) === QAMATS && nSyl >= 3) return 1;
     }
+    // ־ָהֶם ־ָהֶן after a qamats (בָּהֶם ba-HEM, לָהֶם la-HEM, שֶׁבָּהֶם): final, like the other heavy suffixes
+    if ((L(1).base === 0x05DD || L(1).base === 0x05DF) && v(L(1)) === null
+        && L(2).base === 0x05D4 && v(L(2)) === SEGOL && v(L(3)) === QAMATS) return -1;
     // ־נָה : nun + qamats + bare he, after a sheva or after segol + bare yod
     if (L(1).base === 0x05D4 && v(L(1)) === null && !L(1).marks.has(DAGESH)
         && L(2).base === 0x05E0 && v(L(2)) === QAMATS
@@ -359,6 +365,31 @@
   function setLoanwords(map) { LOANWORD_STRESS = (map && typeof map === 'object') ? map : {}; }
   if (typeof module !== 'undefined' && module.exports) {
     try { setLoanwords(require('../data/loanwords.json')); } catch (e) { /* optional */ }
+  }
+
+  /* THE STRESS LEXICON (06.10.2026). Some forms carry the same niqqud with two stresses:
+   * תַּסְגִּירִי tas-GI-ri ("you will close", a verb) and תַּלְמִידִי tal-mi-DI ("my pupil"), קָמוּ
+   * KA-mu and קָנוּ ka-NU, שַׁכְנַע shach-NA and אַרְבַּע AR-ba. No shape rule can split them. This
+   * map holds, for each form of a pealim entry whose stress the rules get wrong, pealim's stress
+   * (the bold syllable), counted from the end like the loanwords. It is GENERATED from pealim
+   * pages by tools/build-stress-lexicon.mjs, never written by hand, and never used to tune the
+   * rules. A word with one proclitic (וְ, הַ, בְּ, לְ, כְּ, מִ, שֶׁ) in front is looked up without it:
+   * the stress counts from the end, so the prefix does not move it. */
+  let STRESS_LEXICON = (root && root.TranslitStressLexicon) || {};
+  function setStressLexicon(map) { STRESS_LEXICON = (map && typeof map === 'object') ? map : {}; }
+  if (typeof module !== 'undefined' && module.exports) {
+    try { setStressLexicon(require('../data/stress-lexicon.json')); } catch (e) { /* optional */ }
+  }
+  function lexiconStress(us) {
+    const key = hebrewKey(us);
+    if (Number.isInteger(STRESS_LEXICON[key])) return STRESS_LEXICON[key];
+    const letters = us.filter((u) => u.base);
+    if (letters.length > 3 && /[והבלכמש]/.test(String.fromCodePoint(letters[0].base))) {
+      const at = us.indexOf(letters[0]);
+      const rest = hebrewKey(us.slice(at + 1));
+      if (Number.isInteger(STRESS_LEXICON[rest])) return STRESS_LEXICON[rest];
+    }
+    return null;
   }
 
   // Romanize a single Hebrew word (already split into letter-units).
@@ -529,7 +560,9 @@
     const key = hebrewKey(us);
     const loan = LOANWORD_STRESS[key];
     const suffix = suffixStress(letters, syl.length);
+    const lex = Number.isInteger(loan) ? null : lexiconStress(us);
     const fromEnd = Number.isInteger(loan) ? loan - 1        // config: 1=final, 2=penult, 3=antepenult
+      : lex !== null ? lex - 1                                // generated from pealim, same count
       : STRESS_EXCEPTIONS_PENULT.has(key) ? 1
       : suffix === 1 ? 1
       : suffix === -1 ? 0
@@ -775,7 +808,7 @@
     }).join('');
   }
 
-  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay, setLoanwords, markup };
+  const api = { transliterate, spellNumber, spellNumbersInText, cleanDictaForDisplay, setLoanwords, setStressLexicon, markup };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.Translit = api;
 })(typeof window !== 'undefined' ? window : globalThis);

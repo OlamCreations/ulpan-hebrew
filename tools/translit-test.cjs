@@ -195,6 +195,7 @@ const SHAPE_STRESS = [
   // guards
   ['אוֹתִי', 'o-TI'], ['סְלִיחָה', 'sli-CHA'], ['כָּתְבוּ', 'kat-VU'], ['אַחַת', 'a-CHAT'], ['תַּלְמִידִי', 'tal-mi-DI'],
   ['רֶגַע', 'RE-ga'], ['אַרְבַּע', 'AR-ba'], ['רֹבַע', 'RO-va'], ['בָּרֶגַע', 'ba-RE-ga'], ['מֵהַטֶּבַע', 'me-ha-TE-va'],
+  ['שֶׁבָּהֶם', 'she-ba-HEM'], ['וְכֻלָּנוּ', 've-chu-LA-nu'], ['בָּנוּ', 'ba-NU'],
   ['לַקַּרְקַע', 'la-KAR-ka'], ['הָרַע', 'ha-RA'], ['כַּסּוּ', 'ka-SU'], ['אֲמִיתִי', 'a-mi-TI'], ['נְשַׁכְנַע', 'ne-shach-NA'],
 ];
 const posOf = (s) => s.split('-').findIndex((x) => /[A-Z]/.test(x));
@@ -202,3 +203,22 @@ const shapeBad = SHAPE_STRESS.filter(([he, want]) => { const got = transliterate
 console.log(`\nshape stress: ${SHAPE_STRESS.length - shapeBad.length}/${SHAPE_STRESS.length}`);
 for (const [he, want] of shapeBad) console.log(`  MISS ${he} want ${want} got ${transliterate(he.normalize('NFC'))}`);
 if (shapeBad.length) { console.error('\nFAIL: shape stress.'); process.exit(1); }
+
+/*
+ * The stress lexicon (06.10.2026, data/stress-lexicon.json, written by tools/build-stress-lexicon.mjs
+ * from pealim pages). Every entry must apply as written: the engine, lexicon loaded, puts the
+ * stress where the entry says. A key the engine reconstructs differently (NFC, mark order) would
+ * sit in the file and do nothing; this catches it.
+ */
+let lexBad = 0, lexN = 0;
+try {
+  const lex = require(path.join(ROOT, 'data', 'stress-lexicon.json'));
+  for (const [he, fromEnd] of Object.entries(lex)) {
+    if (he.startsWith('_')) continue;
+    lexN++;
+    const syl = transliterate(he).split('-');
+    if (syl.length - syl.findIndex((x) => /[A-Z]/.test(x)) !== fromEnd) lexBad++;
+  }
+} catch (e) { console.log('\nstress lexicon: absent'); }
+console.log(`\nstress lexicon: ${lexN - lexBad}/${lexN} entries apply`);
+if (lexBad) { console.error(`\nFAIL: ${lexBad} lexicon entries do not apply.`); process.exit(1); }
