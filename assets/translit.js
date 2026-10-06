@@ -162,7 +162,31 @@
     // -alef words are all qamats/tsere and all final-stressed) and to patah specifically
     // (נִשְׁמָע nishma trails a silent ayin too but after QAMATS, and is final — excluded by
     // requiring lastV===null here and prev vowel===PATAH, not by word list).
-    if (last.base === 0x05E2 && lastV === null && prev && vmarkOf(prev) === PATAH) return true;
+    // Scoped again on 06.10.2026, against pealim's verbs: שִׁכְנַע shich-NA, נִבְקַע niv-KA, בָּקַע
+    // ba-KA, הִצְטַנַּע hitz-ta-NA, שָׁמַע sha-MA are final. What makes the nouns penultimate is
+    // the SEGOLATE stem: the full vowel before the patah is a segol, tsere or holam (רֶגַע, תֵּשַׁע,
+    // רֹבַע), or a patah closed by a sheva (אַרְבַּע, קַרְקַע). The verbs have a hiriq or qamats
+    // there, or a patah before a doubled letter (הִצְטַנַּע). One prefix may stand in front of the
+    // noun (בָּרֶגַע, הַטֶּבַע, בְּקֶטַע) if it is a proclitic letter; a word opening on another
+    // letter under a sheva or with a third full vowel is a verb form (נְשַׁכְנַע, אֲשַׁכְנַע).
+    // Still wrong by shape and left lexical: שַׁכְנַע shach-NA, קַרְטַע kar-TA (they look like
+    // אַרְבַּע), and אֶבְקַע ev-KA (like אֶצְבַּע).
+    if (last.base === 0x05E2 && lastV === null && prev && vmarkOf(prev) === PATAH) {
+      const full = [];
+      letters.forEach((u, i) => { const x = vmarkOf(u); if (i < n - 2 && x !== null && x !== SHEVA && x !== HATAF_PATAH && x !== HATAF_SEGOL && x !== HATAF_QAMATS) full.push(i); });
+      if (!full.length) return false;
+      const at = full[full.length - 1];
+      const V = vmarkOf(letters[at]);
+      const closed = at + 1 < n - 2 && vmarkOf(letters[at + 1]) === SHEVA;
+      const segolate = [SEGOL, TSERE, HOLAM, HOLAM_HASER].includes(V) || (V === PATAH && closed);
+      if (!segolate) return false;
+      const isProclitic = (i) => /[בכלהומש]/.test(String.fromCodePoint(letters[i].base));
+      if ([SHEVA, HATAF_PATAH, HATAF_SEGOL, HATAF_QAMATS].includes(vmarkOf(letters[0])) && !isProclitic(0)) return false;
+      // Up to two prefixes (מֵהַטֶּבַע, וְהָרֹבַע): every other full vowel sits on a proclitic
+      // letter among the first three.
+      const others = full.slice(0, -1);
+      return others.length <= 2 && others.every((i) => i <= 2 && isProclitic(i));
+    }
     // Rule S — segolate nucleus: final syllable closes on a SEGOL with one real (non-mater,
     // non-alef/ayin) consonant. בְּסֵדֶר seder, בּוֹקֶר boker, עֶרֶב erev, כֶּסֶף kesef, עֶשֶׂר eser —
     // 6/6, 0 contradictions. Deliberately NOT extended to patah-closed (בֶּטַח betakh is
@@ -244,6 +268,40 @@
     if (L(1).base === 0x05EA && v(L(1)) === QAMATS && sheva(L(2))) return 1;
     // past 1s ־ְתִּי, three syllables or more
     if (bareYod(L(1)) && L(2).base === 0x05EA && v(L(2)) === HIRIQ && sheva(L(3)) && nSyl >= 3) return 1;
+    /* (06.10.2026, second pass) The same past suffixes after a LONG vowel instead of a sheva:
+     * ־וֹתִי ־וֹתָ ־וֹנוּ (דַּלּוֹתִי da-LO-ti, geminate and hif'il-hollow pasts), ־ִיתִי ־ִיתָ ־ֵיתִי
+     * (רָפִיתִי ra-FI-ti, the ל"ה pasts), and the heavy ־וֹתֶם ־ִיתֶם, final. Held to three
+     * syllables or more: אוֹתִי o-TI ("me") has the shape and two syllables. */
+    const holamVav = (u) => !!u && u.base === 0x05D5 && (u.marks.has(HOLAM) || u.marks.has(HOLAM_HASER));
+    /* The ־ִי stem must stand on a full vowel two letters back: the verbs read קָנִיתִי, חִכִּיתִי,
+       הָיִיתָ ; the adjective אֲמִיתִי a-mi-TI, final, has a hataf there. */
+    const fullVowel = (u) => !!u && ![null, SHEVA, HATAF_PATAH, HATAF_SEGOL, HATAF_QAMATS].includes(v(u));
+    const longBefore = (i) => holamVav(L(i)) || (bareYod(L(i)) && [HIRIQ, TSERE].includes(v(L(i + 1))) && fullVowel(L(i + 2)));
+    if (nSyl >= 3) {
+      if (bareYod(L(1)) && L(2).base === 0x05EA && v(L(2)) === HIRIQ && longBefore(3)) return 1;
+      if (L(1).base === 0x05EA && v(L(1)) === QAMATS && longBefore(2)) return 1;
+      if (shuruk(L(1)) && L(2).base === 0x05E0 && v(L(2)) === null && holamVav(L(3))) return 1;
+      if ((L(1).base === 0x05DD || L(1).base === 0x05DF) && v(L(1)) === null
+          && L(2).base === 0x05EA && v(L(2)) === SEGOL && longBefore(3)) return -1;
+    }
+    /* A VOWEL SUFFIX AFTER A FULL STEM VOWEL stays unstressed: ־וּ after ־ִיC (hif'il הִסְגִּירוּ
+     * his-GI-ru), after ־וּC or ־וֹC (hollow יָקוּמוּ ya-KU-mu), after a tsere (הֵמֵרוּ he-ME-ru).
+     * Where the stem vowel reduced to a sheva (כָּתְבוּ kat-VU) the stress moves to the suffix, and
+     * nothing here matches. Left alone on purpose, written alike either way: a qamats stem (קָנוּ
+     * ka-NU, קָמוּ KA-mu) and a doubled letter under a patah (דַּלּוּ DA-lu, כַּסּוּ ka-SU). */
+    if (shuruk(L(1)) && L(2).base !== 0x05E0 && v(L(2)) === null) {
+      const s = L(3);
+      if ((bareYod(s) && v(L(4)) === HIRIQ) || shuruk(s) || holamVav(s) || v(s) === TSERE) return 1;
+    }
+    /* Hif'il past 3fs ־ִיCָה on a word that opens with הִ or הֶ or הֵ: הִסְגִּירָה his-GI-ra. Held to that
+     * opening: the nouns in ־ִיכָה (סְלִיחָה sli-CHA) are final and open otherwise. */
+    if (L(1).base === 0x05D4 && v(L(1)) === null && !L(1).marks.has(DAGESH) && v(L(2)) === QAMATS
+        && bareYod(L(3)) && v(L(4)) === HIRIQ
+        && letters[0].base === 0x05D4 && [HIRIQ, SEGOL, TSERE].includes(v(letters[0]))) return 1;
+    /* ־ַעַת ־ַחַת with three syllables or more (מְשַׁכְנַעַת me-shach-NA-at, יוֹדַעַת yo-DA-at):
+     * the guttural's patah is a helper. אַחַת a-CHAT has two syllables and is final. */
+    if (nSyl >= 3 && L(1).base === 0x05EA && v(L(1)) === null
+        && (L(2).base === 0x05E2 || L(2).base === 0x05D7) && v(L(2)) === PATAH && v(L(3)) === PATAH) return 1;
     return 0;
   }
 

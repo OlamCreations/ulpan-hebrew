@@ -181,3 +181,24 @@ const suffixBad = SUFFIX_STRESS.filter(([he, want]) => transliterate(he.normaliz
 console.log(`\nsuffix stress: ${SUFFIX_STRESS.length - suffixBad.length}/${SUFFIX_STRESS.length}`);
 for (const [he, want] of suffixBad) console.log(`  MISS ${he} want ${want} got ${transliterate(he.normalize('NFC'))}`);
 if (suffixBad.length) { console.error('\nFAIL: suffix stress.'); process.exit(1); }
+
+/*
+ * Shape stress, second pass (06.10.2026): long stem vowel before a vowel suffix (hif'il, hollow),
+ * the segolate scope of the final-ayin rule, ־ַעַת/־ַחַת, the ל"ה and hollow pasts. Each pair below
+ * is either a pealim form the rule fixes or a word it must leave alone. Bench after this pass:
+ * 94.7 % on the pages the rules were written from, 95.8 % on pages never looked at.
+ */
+const SHAPE_STRESS = [
+  ['הִסְגִּירוּ', 'his-GI-ru'], ['יָקוּמוּ', 'ya-KU-mu'], ['הִסְגִּירָה', 'his-GI-ra'], ['דַּלּוֹתִי', 'da-LO-ti'],
+  ['מְשַׁכְנַעַת', 'me-shach-NA-at'], ['שִׁכְנַע', 'shich-NA'], ['הִצְטַנַּע', 'hitz-ta-NA'], ['שָׁמַע', 'sha-MA'],
+  ['קָנִיתִי', 'ka-NI-ti'], ['הָיִיתָ', 'ha-YI-ta'],
+  // guards
+  ['אוֹתִי', 'o-TI'], ['סְלִיחָה', 'sli-CHA'], ['כָּתְבוּ', 'kat-VU'], ['אַחַת', 'a-CHAT'], ['תַּלְמִידִי', 'tal-mi-DI'],
+  ['רֶגַע', 'RE-ga'], ['אַרְבַּע', 'AR-ba'], ['רֹבַע', 'RO-va'], ['בָּרֶגַע', 'ba-RE-ga'], ['מֵהַטֶּבַע', 'me-ha-TE-va'],
+  ['לַקַּרְקַע', 'la-KAR-ka'], ['הָרַע', 'ha-RA'], ['כַּסּוּ', 'ka-SU'], ['אֲמִיתִי', 'a-mi-TI'], ['נְשַׁכְנַע', 'ne-shach-NA'],
+];
+const posOf = (s) => s.split('-').findIndex((x) => /[A-Z]/.test(x));
+const shapeBad = SHAPE_STRESS.filter(([he, want]) => { const got = transliterate(he.normalize('NFC')); return posOf(got) !== posOf(want) || got.split('-').length !== want.split('-').length; });
+console.log(`\nshape stress: ${SHAPE_STRESS.length - shapeBad.length}/${SHAPE_STRESS.length}`);
+for (const [he, want] of shapeBad) console.log(`  MISS ${he} want ${want} got ${transliterate(he.normalize('NFC'))}`);
+if (shapeBad.length) { console.error('\nFAIL: shape stress.'); process.exit(1); }
