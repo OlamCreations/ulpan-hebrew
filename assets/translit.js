@@ -398,7 +398,14 @@
   // string itself: openSyllable()/lockOnset() only ever record positions into `boundaries` /
   // `pendingOnsetStart`, called from the exact same branches that already decide a vowel is
   // being emitted. Nothing about what gets appended to res changes as a result.
+  /* Deux emprunts ecrits comme des mots hebreux mais lus a l'etrangere (07.10.2026) : la diphtongue
+     de אֵירוֹפָּה et בֵּירוּת, et les deux ל de יָאלְלָה, הוֹלְלִיווּד, קוֹלְלֶר qui ne se doublent pas a
+     l'oreille. Les regles du yod apres tsere et du shva entre lettres identiques s'arretent la. */
+  const FOREIGN_READING = ['אירופ', 'בירות', 'יאלל', 'אללה', 'הולליווד', 'קוללר'];
+  let currentBare = '';
+  const foreignWord = () => FOREIGN_READING.some(x => currentBare.includes(x));
   function word(us) {
+    currentBare = us.filter(u => u.base).map(u => String.fromCharCode(u.base)).join('');
     let res = '';
     let lastVowel = null;      // last vowel sound emitted (for matres yod)
     let prevHadVowel = false;  // did the previous consonant carry a vowel?
@@ -491,6 +498,19 @@
           (nextLetter.marks.has(HOLAM) || nextLetter.marks.has(HOLAM_HASER) || nextLetter.marks.has(DAGESH));
         if (bareOrShevaGlide && vmark === null && materVavNext) { res += 'y'; prevHadVowel = false; continue; }
         if (bareOrShevaGlide) {
+          /* Le yod de l'ecriture pleine d'un tsere ALLONGE (07.10.2026) : la lettre suivante est
+             ר א ע, qui refuse le dagesh, et porte sa propre voyelle (ou un shva). Ce yod ne
+             s'entend pas : קֵירֵר kerer, בֵּירֵךְ berech, תֵּיאֵר te'er, שֵׁירוּת sherut, לְהֵירָשֵׁם
+             leherashem. Il lisait « ei », la diphtongue de בֵּית, qui reste devant toute autre
+             lettre et en fin de mot. Ni ה ni ח : ils gardent le hiriq au pi'el (טִיהֵר), et ־ֵיהֶם se lit
+             « -eihem » (בָּתֵּיהֶם). */
+          const prevL = idxLetters > 0 ? letters[idxLetters - 1] : null;
+          const afterTsere = prevL && prevL.marks.has(TSERE);
+          const after2 = nextLetter ? letters[letters.indexOf(nextLetter) + 1] : null;
+          const vavVowel = after2 && after2.base === 0x05D5 && (after2.marks.has(HOLAM) || after2.marks.has(DAGESH));
+          const gutturalNext = nextLetter && [0x05E8, 0x05D0, 0x05E2].includes(nextLetter.base)
+            && ([...nextLetter.marks].some(x => VOWELS.has(x)) || vavVowel);
+          if (vmark === null && afterTsere && gutturalNext && !foreignWord()) { prevHadVowel = true; continue; }
           // mater / glide based on the previous vowel
           if (lastVowel === 'e' || lastVowel === 'a' || lastVowel === 'o' || lastVowel === 'u') {
             res += 'i'; lockOnset(); lastVowel = 'i'; prevHadVowel = true; continue;
@@ -637,7 +657,12 @@
     return false;
   }
 
+  /* Une lettre sous shva suivie de la MEME lettre (07.10.2026) : le shva se prononce, sinon les
+     deux lettres se collent en une. חִימְּמוּ chimemu, קֵירְרָה kerera, חָגְגוּ chagegu, שָׁתְתָה
+     shateta, הִתְפַּלְּלוּ hitpalelu — le moteur lisait « chim-MU », « hit-pal-LU ». */
+  const sameLetter = (a, b) => !!a && !!b && (FINAL_OF[a.base] || a.base) === (FINAL_OF[b.base] || b.base);
   function shevaSound(u, isFirst, next, prevWasSheva) {
+    if (sameLetter(u, next) && u.base !== 0x05D5 && u.base !== 0x05D9 && !foreignWord()) return 'e';
     // Word-initially and after another sheva, the sheva is only silent if the resulting cluster
     // is pronounceable. The classical rule ("second of two shevas is na") is right about WHERE to
     // look but too absolute for modern speech: אַנְגְּלִית is anglit, not an-ge-lit, because g+l

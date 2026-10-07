@@ -222,3 +222,28 @@ try {
 } catch (e) { console.log('\nstress lexicon: absent'); }
 console.log(`\nstress lexicon: ${lexN - lexBad}/${lexN} entries apply`);
 if (lexBad) { console.error(`\nFAIL: ${lexBad} lexicon entries do not apply.`); process.exit(1); }
+
+/*
+ * Le pi'el en ktiv male et les racines geminees (07.10.2026, Jonas : « verifier que le traducteur
+ * aussi donne la bonne forme pour piel »). Deux fautes mesurees en ligne :
+ *  1. tsere + yod nu, devant ר א ע ה ח vocalise, lisait la diphtongue « ei » : קֵירֵר « kei-RER ».
+ *     Ce yod est la lettre de l'ecriture pleine du tsere allonge (la gutturale refuse le dagesh) :
+ *     kerer, berech, te'er, sherut. Devant toute autre lettre, ou en fin de mot, « ei » reste : beit.
+ *  2. Un shva suivi de la MEME lettre se prononce : חִימְּמוּ chimemu, pas « chim-MU ».
+ * Compare sans tirets, sans majuscules d'accent ni apostrophes : seule la suite de sons compte ici.
+ */
+const PIEL_YOD = [
+  ['קֵירֵר', 'kerer'], ['בֵּירֵךְ', 'berech'], ['תֵּיאֵר', 'teer'], ['שֵׁירוּת', 'sherut'], ['לְהֵירָשֵׁם', 'leherashem'],
+  ['קֵירְרָה', 'kerera'], ['חִימְּמוּ', 'chimemu'], ['חָגְגוּ', 'chagegu'], ['שָׁתְתָה', 'shateta'], ['הִתְפַּלְּלוּ', 'hitpalelu'],
+  // garde : la diphtongue reste
+  ['בֵּית', 'beit'], ['אֵיךְ', 'eich'], ['הֵיכָן', 'heichan'], ['בֵּיצָה', 'beitza'], ['אֵיפֹה', 'eifo'],
+  // garde : deux lettres differentes, le shva reste muet
+  ['דִּיבַּרְתִּי', 'dibarti'], ['שִׁילַּמְנוּ', 'shilamnu'], ['בִּיקַּרְתָּ', 'bikarta'],
+  // garde : le double vav de l'ecriture pleine, et les emprunts
+  ['נַוְוטָן', 'navtan'], ['אֵירוֹפָּה', 'eiropa'], ['בֵּירוּת', 'beirut'], ['יָאלְלָה', 'yalla'],
+];
+const flat = (x) => x.toLowerCase().replace(/[-']/g, '');
+const pielBad = PIEL_YOD.filter(([he, want]) => flat(transliterate(he.normalize('NFC'))) !== want);
+console.log(`\npiel yod and geminates: ${PIEL_YOD.length - pielBad.length}/${PIEL_YOD.length}`);
+for (const [he, want] of pielBad) console.log(`  MISS ${he} want ${want} got ${transliterate(he.normalize('NFC'))}`);
+if (pielBad.length) { console.error('\nFAIL: piel yod and geminates.'); process.exit(1); }
