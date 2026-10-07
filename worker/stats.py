@@ -6,12 +6,12 @@ countries, devices, top lessons — no PII. Real counts use sum(_sample_interval
 (Analytics Engine samples at high volume; at low volume the interval is 1).
 
 Usage:  python3 stats.py [days]        # window in days, default 7
-Creds:  C:/dev/_secrets/cloudflare-ulpan.env  (CF_API_TOKEN, CF_ACCOUNT_ID)
+Creds:  C:/dev/_secrets/cloudflare.env  (CF_API_TOKEN, CF_ACCOUNT_ID)
 """
 import json, os, sys, urllib.request, re
 
 DAYS = int(sys.argv[1]) if len(sys.argv) > 1 else 7
-ENV = r"C:/dev/_secrets/cloudflare-ulpan.env"
+ENV = r"C:/dev/_secrets/cloudflare.env"
 
 def load_env(path):
     out = {}
