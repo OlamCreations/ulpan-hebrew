@@ -23,10 +23,39 @@ const CACHE_TTL = 604800;        // 7 days — the vocabulary is effectively sta
 // it — its self-generated transliteration is wrong (yoter -> "odar") and its niqqud is patchy,
 // so the client strips both and re-vocalizes through Dicta + translit.js like any other result.
 const NAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
-const NAT_SYS = `You are a careful Hebrew translator for an English-speaking learner at ulpan. Translate the user's sentence FAITHFULLY into natural, modern spoken Israeli Hebrew. Preserve the exact meaning, register, gender and number — do not invent, add, or drop ideas. Prefer how a native Israeli actually says it over a word-for-word calque; if the phrase is idiomatic, give the idiomatic Hebrew, not the literal one.
-Give up to 2 options, most natural first (a second only if it is a genuinely different, correct way to say it — e.g. a feminine-speaker form). Output ONLY these lines and nothing else, one option per line:
-HEBREW | short note on register or usage, written in ENGLISH
-Do not number the lines. Do not write anything before or after the list. The note after the | must be in English, never in French, whatever language the user wrote in.`;
+const NAT_SYS_BASE = `You are a careful Hebrew translator for a learner at ulpan. Translate the user's sentence FAITHFULLY into natural, modern spoken Israeli Hebrew. Preserve the exact meaning and register — do not invent, add, or drop ideas. Prefer how a native Israeli actually says it over a word-for-word calque; if the phrase is idiomatic, give the idiomatic Hebrew, not the literal one.`;
+/* WHO SPEAKS, WHO IS ADDRESSED (11.10.2026). Jonas's screenshots: « j'aime avoir un plan » came
+   back as אוהבת / מוכנת (a woman speaking, Jonas is a man) and « tu as des plans » came back
+   twice, לָךְ then לְךָ, although the page knew he was talking to a woman. The genders were
+   never sent here: the model guessed, then padded with a gender variant. Now the client says who
+   speaks and who is addressed, and the model gives ONE version in those genders; a second line is
+   allowed only for a genuinely different phrasing. Unknown falls back to the masculine, which is
+   the Hebrew default. */
+const NAT_SPEAKER = { m: 'a man', f: 'a woman' };
+const NAT_ADDRESSEE = { m: 'one man', f: 'one woman', mpl: 'several people (masculine plural)', fpl: 'several women (feminine plural)' };
+function natSystem(lang, speaker, to) {
+  const who = NAT_SPEAKER[speaker] || 'not stated (use masculine forms)';
+  const whom = NAT_ADDRESSEE[to] || 'not stated (use masculine singular forms)';
+  const noteLang = lang === 'fr' ? 'French' : 'English';
+  return NAT_SYS_BASE + `
+Agreement: the SPEAKER (first person) is ${who}. The person ADDRESSED (second person) is ${whom}. Apply these genders and numbers to every verb, adjective and pronoun that agrees with them. Never output a line that differs from another only by these genders.
+Give ONE option. Add a second line only if it is a genuinely different, correct and common way to say it (another phrasing, never a gender variant). Output ONLY these lines and nothing else, one option per line:
+HEBREW | short note on register or usage, written in ${noteLang}
+Do not number the lines. Do not write anything before or after the list. The note after the | must be in ${noteLang}, whatever language the user wrote in.`;
+}
+/* THE SENSES OF ONE WORD (11.10.2026, Jonas : « quand j'écris glass ça peut avoir le sens de
+   verres de vue ou verre à boire, pareil en français ! »). The corpus and the translator each
+   give one Hebrew word for a source word; the learner never sees that « verre » is also
+   משקפיים. For a single word the client asks this route, which lists the DISTINCT meanings,
+   most common first, each with a few words of the learner's language that say which one it is.
+   The client shows them as a choice; the corpus's own answer stays first and marked. */
+const SENSES_MAX = 4;
+function sensesSystem(lang) {
+  const L = lang === 'fr' ? 'French' : 'English';
+  return `You are a bilingual ${L}-Hebrew dictionary for a learner at ulpan. The user gives ONE ${L} word. List its DISTINCT meanings as modern Israeli Hebrew words, the most common meaning first, at most ${SENSES_MAX} lines. Two lines must be two different meanings, never two synonyms of one meaning, and the Hebrew word of each line must really mean what the ${L} words after the | say. Example for the French "verre": כוס | verre à boire ; זכוכית | la matière ; משקפיים | lunettes. Example for the English "glass": כוס | drinking glass ; זכוכית | the material ; משקפיים | spectacles. If the word has a single meaning, give one line. Output ONLY these lines and nothing else, one meaning per line:
+HEBREW | two to four ${L} words that say which meaning this is
+Do not number the lines. Do not write anything before or after the list. The words after the | must be in ${L}.`;
+}
 
 // Gendered / numbered variants (/form). Hebrew agrees with the person speaking AND the person
 // spoken to, so "I want a coffee" has no single translation: a man says אני רוצה, a woman אני רוצה
@@ -555,13 +584,23 @@ function parsePipeOptions(raw, max) {
   return options;
 }
 
-async function natTranslate(text, env) {
+async function natTranslate(text, env, who) {
   if (!env || !env.AI) throw new Error('no AI binding');
+  who = who || {};
   const r = await env.AI.run(NAT_MODEL, {
-    messages: [{ role: 'system', content: NAT_SYS }, { role: 'user', content: text }],
+    messages: [{ role: 'system', content: natSystem(who.lang, who.speaker, who.to) }, { role: 'user', content: text }],
     temperature: 0, max_tokens: 400
   });
   return parsePipeOptions(r && (r.response || r.result || ''), 2);
+}
+
+async function sensesOf(word, lang, env) {
+  if (!env || !env.AI) throw new Error('no AI binding');
+  const r = await env.AI.run(NAT_MODEL, {
+    messages: [{ role: 'system', content: sensesSystem(lang) }, { role: 'user', content: word }],
+    temperature: 0, max_tokens: 300
+  });
+  return parsePipeOptions(r && (r.response || r.result || ''), SENSES_MAX).map(o => ({ he: o.he, gloss: o.note }));
 }
 
 // One requested reading of the sentence, and only one.
@@ -719,7 +758,7 @@ export default {
        Cloud c'est un appel de traduction ordinaire, bien moins cher qu'une inférence, et le
        plafonner à 12/60 s couperait la classe sans raison. Le vrai arbitrage se fait plus bas,
        une fois qu'on sait quel moteur répond. */
-    const isAI = path === '/nat' || path === '/gloss' || path === '/form' || path === '/sentence-form'
+    const isAI = path === '/nat' || path === '/senses' || path === '/gloss' || path === '/form' || path === '/sentence-form'
       || (path === '/tr' && !(env && env.GOOGLE_TRANSLATE_KEY));
 
     // Reject oversized bodies before reading/parsing/joining them — an unbounded words[] on /gloss
@@ -823,19 +862,44 @@ export default {
       try { nb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
       const nt = ((nb && nb.text) || '').toString().slice(0, 300);
       if (!nt.trim()) return json({ options: [] }, 200, origin);
+      /* Who speaks and who is addressed, from the page's preferences; anything else is "not
+         stated". The language picks the language of the note. */
+      const who = {
+        lang: (nb && nb.lang) === 'fr' ? 'fr' : 'en',
+        speaker: NAT_SPEAKER[nb && nb.speaker] ? nb.speaker : '',
+        to: NAT_ADDRESSEE[nb && nb.to] ? nb.to : '',
+      };
       const nCache = caches.default;
-      /* v3, not v2: the prompt above used to ask for the register note in French, inside an
-       * app whose every other string is English. Bumping the key is not tidiness — the responses
-       * are cached for seven days, so leaving it at v2 would have kept serving the French notes
-       * to everyone who had already asked, and the fix would have looked like it did nothing. */
-      const nKey = new Request('https://nat.cache/v4/' + encodeURIComponent(nt));
+      /* v5 : the key carries the genders and the note language. v4 cached a single answer per
+       * text whatever the page knew about who speaks — bumping it is what makes the fix visible
+       * to everyone who already asked (the responses live seven days). */
+      const nKey = new Request('https://nat.cache/v5/' + encodeURIComponent(JSON.stringify([nt, who.lang, who.speaker, who.to])));
       const nHit = await nCache.match(nKey);
       if (nHit) return new Response(await nHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
       let options;
-      try { options = await natTranslate(nt, env); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
+      try { options = await natTranslate(nt, env, who); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
       const nPayload = JSON.stringify({ options });
       if (options.length && ctx && ctx.waitUntil) ctx.waitUntil(nCache.put(nKey, new Response(nPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
       return new Response(nPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
+    }
+
+    // The distinct meanings of ONE source word (see sensesSystem). Cached 7 days on word + language.
+    if (path === '/senses') {
+      let sb;
+      try { sb = await request.json(); } catch (e) { return json({ error: 'bad json' }, 400, origin); }
+      const sw = ((sb && sb.word) || '').toString().trim().slice(0, 40);
+      const sl = (sb && sb.lang) === 'fr' ? 'fr' : 'en';
+      /* One word of the learner's language: no Hebrew, no spaces. A sentence has no senses to list. */
+      if (!sw || HAS_HEB.test(sw) || /\s/.test(sw)) return json({ senses: [] }, 200, origin);
+      const sCache = caches.default;
+      const sKey = new Request('https://senses.cache/v1/' + encodeURIComponent(JSON.stringify([sw.toLowerCase(), sl])));
+      const sHit = await sCache.match(sKey);
+      if (sHit) return new Response(await sHit.text(), { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
+      let senses;
+      try { senses = await sensesOf(sw, sl, env); } catch (e) { return json({ error: 'ai unavailable' }, 502, origin); }
+      const sPayload = JSON.stringify({ senses });
+      if (senses.length && ctx && ctx.waitUntil) ctx.waitUntil(sCache.put(sKey, new Response(sPayload, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=' + CACHE_TTL } })));
+      return new Response(sPayload, { headers: { 'Content-Type': 'application/json; charset=utf-8', ...cors(origin) } });
     }
 
     // Gendered / numbered variant of the sentence. Cached 7 days on text + requested form, like
